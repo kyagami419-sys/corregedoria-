@@ -1,0 +1,260 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // =====================================================
+    // FUNÇÕES
+    // =====================================================
+
+    function autenticado() {
+      return request.auth != null;
+    }
+
+    function usuarioExiste() {
+      return autenticado() &&
+        exists(/databases/$(database)/documents/usuarios/$(request.auth.uid));
+    }
+
+    function usuario() {
+      return get(
+        /databases/$(database)/documents/usuarios/$(request.auth.uid)
+      ).data;
+    }
+
+    function usuarioAtivo() {
+      return usuarioExiste() &&
+        usuario().status == "ativo";
+    }
+
+    function administrador() {
+      return usuarioAtivo() &&
+        usuario().cargo == "administrador";
+    }
+
+    function corregedorGeral() {
+      return usuarioAtivo() &&
+        usuario().cargo == "corregedor_geral";
+    }
+
+    function administracao() {
+      return administrador() || corregedorGeral();
+    }
+
+    function temPermissao(permissao) {
+      return usuarioAtivo() &&
+        usuario().permissoes is map &&
+        usuario().permissoes[permissao] == true;
+    }
+
+
+    // =====================================================
+    // USUÁRIOS
+    // =====================================================
+
+    match /usuarios/{uid} {
+
+      // Usuário pode consultar o próprio perfil.
+      // Administração pode consultar todos.
+      allow get: if usuarioAtivo() &&
+        (
+          request.auth.uid == uid ||
+          administracao() ||
+          temPermissao("gerenciarUsuarios")
+        );
+
+      // Listagem da coleção.
+      allow list: if administracao() ||
+        temPermissao("gerenciarUsuarios");
+
+      // Cadastro de perfis.
+      allow create: if administracao() ||
+        temPermissao("gerenciarUsuarios");
+
+      // Alterações.
+      allow update: if administracao() ||
+        temPermissao("gerenciarUsuarios");
+
+      // Exclusão.
+      allow delete: if administracao() ||
+        temPermissao("gerenciarUsuarios");
+    }
+
+
+    // =====================================================
+    // INQUÉRITOS
+    // =====================================================
+
+    match /inqueritos/{inqueritoId} {
+
+      allow read: if usuarioAtivo();
+
+      allow create: if usuarioAtivo() &&
+        (
+          administracao() ||
+          temPermissao("criarInquerito")
+        );
+
+      allow update: if usuarioAtivo() &&
+        (
+          administracao() ||
+          temPermissao("editarInquerito") ||
+          temPermissao("finalizarInquerito") ||
+          temPermissao("arquivarInquerito")
+        );
+
+      allow delete: if usuarioAtivo() &&
+        (
+          administracao() ||
+          temPermissao("excluirInquerito")
+        );
+
+
+      // Subcoleção de envolvidos
+      match /envolvidos/{envolvidoId} {
+
+        allow read: if usuarioAtivo();
+
+        allow write: if usuarioAtivo() &&
+          (
+            administracao() ||
+            temPermissao("editarInquerito")
+          );
+      }
+
+
+      // Subcoleção de crimes
+      match /crimes/{crimeId} {
+
+        allow read: if usuarioAtivo();
+
+        allow write: if usuarioAtivo() &&
+          (
+            administracao() ||
+            temPermissao("editarInquerito")
+          );
+      }
+
+
+      // Subcoleção de depoimentos
+      match /depoimentos/{depoimentoId} {
+
+        allow read: if usuarioAtivo();
+
+        allow write: if usuarioAtivo() &&
+          (
+            administracao() ||
+            temPermissao("editarInquerito")
+          );
+      }
+
+
+      // Subcoleção de evidências
+      match /evidencias/{evidenciaId} {
+
+        allow read: if usuarioAtivo() &&
+          (
+            administracao() ||
+            temPermissao("verEvidencias") ||
+            temPermissao("editarInquerito")
+          );
+
+        allow create, update: if usuarioAtivo() &&
+          (
+            administracao() ||
+            temPermissao("adicionarEvidencias")
+          );
+
+        allow delete: if administracao();
+      }
+    }
+
+
+    // =====================================================
+    // EVIDÊNCIAS
+    // Caso também utilizemos coleção principal
+    // =====================================================
+
+    match /evidencias/{evidenciaId} {
+
+      allow read: if usuarioAtivo() &&
+        (
+          administracao() ||
+          temPermissao("verEvidencias")
+        );
+
+      allow create, update: if usuarioAtivo() &&
+        (
+          administracao() ||
+          temPermissao("adicionarEvidencias")
+        );
+
+      allow delete: if administracao();
+    }
+
+
+    // =====================================================
+    // PROCESSOS
+    // =====================================================
+
+    match /processos/{processoId} {
+
+      allow read: if usuarioAtivo();
+
+      allow create, update: if usuarioAtivo();
+
+      allow delete: if administracao();
+    }
+
+
+    // =====================================================
+    // DEPARTAMENTOS
+    // =====================================================
+
+    match /departamentos/{departamentoId} {
+
+      allow read: if usuarioAtivo();
+
+      allow create, update, delete: if administracao() ||
+        temPermissao("gerenciarDepartamentos");
+    }
+
+
+    // =====================================================
+    // CONFIGURAÇÕES
+    // =====================================================
+
+    match /configuracoes/{configId} {
+
+      allow read: if usuarioAtivo();
+
+      allow create, update, delete: if administrador();
+    }
+
+
+    // =====================================================
+    // LOGS / AUDITORIA
+    // =====================================================
+
+    match /logs/{logId} {
+
+      allow create: if usuarioAtivo();
+
+      allow read: if administracao() ||
+        temPermissao("verLogs");
+
+      // Logs não podem ser alterados pelo navegador.
+      allow update, delete: if false;
+    }
+
+
+    // =====================================================
+    // BLOQUEIO PADRÃO
+    // =====================================================
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+  }
+}
