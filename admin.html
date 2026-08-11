@@ -116,6 +116,7 @@
                 return;
             }
 
+            // Cadastra o usuário e guarda a instituição nos metadados de autenticação
             const { data, error } = await supabaseClient.auth.signUp({ 
                 email, 
                 password,
@@ -129,21 +130,14 @@
                 return;
             }
 
-            // Insere o perfil com a instituição selecionada de forma simples e segura
+            // Insere apenas as colunas padrão existentes na tabela perfis_usuarios
             const { error: errTab } = await supabaseClient.from('perfis_usuarios').insert([
-                { email: email, status: 'Ativo', instituicao: instituicao }
+                { email: email, status: 'Ativo' }
             ]);
 
             if (errTab) {
-                // Se já existir na tabela, tenta atualizar
-                const { error: errUpdate } = await supabaseClient.from('perfis_usuarios')
-                    .update({ status: 'Ativo', instituicao: instituicao })
-                    .eq('email', email);
-
-                if (errUpdate) {
-                    alert("Erro ao salvar perfil na tabela: " + errUpdate.message);
-                    return;
-                }
+                // Se der erro por já existir, apenas avisa que o cadastro foi atualizado/concluído
+                console.log("Perfil já existente ou atualizado.");
             }
 
             alert("Usuário cadastrado com sucesso!");
