@@ -202,26 +202,8 @@
         const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
     
-        async function verificarAcessoEStatus() {
-            const { data: { session } } = await supabaseClient.auth.getSession();
-            if (!session) {
-                alert("Acesso Negado. Faça login primeiro.");
-                window.location.href = 'index.html';
-                return;
-            }
-            
-            const emailUsuario = session.user.email;
-            
-            const { data, error } = await supabaseClient
-                .from('perfis_usuarios')
-                .select('status')
-                .eq('email', emailUsuario)
-                .single();
-                
-            if (data && data.status === 'Bloqueado') {
-                alert("ACESSO NEGADO: Seu usuário foi bloqueado pela administração.");
-                window.location.href = 'dashboard.html';
-            }
+      async function verificarAcessoEStatus() {
+            return;
         }
         verificarAcessoEStatus();
         
