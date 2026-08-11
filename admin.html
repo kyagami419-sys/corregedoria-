@@ -145,9 +145,10 @@
                     <td><span class="badge ${badgeClass}">${statusAtual}</span></td>
                     <td>
                         ${souAdmin ? (
-                            statusAtual === 'Bloqueado' 
+                            (statusAtual === 'Bloqueado' 
                                 ? `<button class="btn btn-sm btn-success me-1" onclick="alterarStatus('${user.email}', 'Ativo')"><i class="fas fa-unlock"></i> Liberar</button>`
-                                : `<button class="btn btn-sm btn-danger me-1" onclick="alterarStatus('${user.email}', 'Bloqueado')"><i class="fas fa-lock"></i> Bloquear</button>`
+                                : `<button class="btn btn-sm btn-danger me-1" onclick="alterarStatus('${user.email}', 'Bloqueado')"><i class="fas fa-lock"></i> Bloquear</button>`) +
+                            `<button class="btn btn-sm btn-outline-danger" onclick="apagarUsuario('${user.email}')"><i class="fas fa-trash"></i> Apagar</button>`
                         ) : `<span class="text-muted small">Acesso Restrito</span>`}
                     </td>
                 `;
@@ -161,6 +162,18 @@
                 alert("Erro ao alterar status: " + error.message);
             } else {
                 alert(`Usuário alterado para: ${novoStatus}`);
+                carregarUsuarios();
+            }
+        }
+
+        async function apagarUsuario(emailUser) {
+            if (!confirm(`Tem certeza que deseja apagar permanentemente o usuário ${emailUser}? Ele perderá todo o acesso.`)) return;
+
+            const { error } = await supabaseClient.from('perfis_usuarios').delete().eq('email', emailUser);
+            if (error) {
+                alert("Erro ao apagar usuário: " + error.message);
+            } else {
+                alert("Usuário apagado com sucesso!");
                 carregarUsuarios();
             }
         }
