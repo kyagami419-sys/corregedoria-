@@ -227,14 +227,12 @@
 
                     const inqInstNormalized = forcaInq.trim().toUpperCase();
 
-                    // REGRA DE VISIBILIDADE ATUALIZADA:
-                    // - Se for PF ou admin, vê tudo.
-                    // - Se for outra força (ex: Militar, Civil), exibe se o inquérito pertencer à sua instituição (verificando tanto no campo extra quanto se o tipo contiver o nome da força).
+                    // BLOQUEIO RIGOROSO:
+                    // Se o usuário logado NÃO for da Polícia Federal (ou admin):
+                    // Ele só pode ver se a força policial do inquérito for EXATAMENTE igual à sua própria instituição.
+                    // Se o inquérito for da Polícia Federal ou de outra força diferente, ele é ocultado.
                     if (!isPoliciaFederal) {
-                        const tipoInqUpper = (item.tipo || '').toUpperCase();
-                        const pertenceInstituicao = inqInstNormalized.includes(userInstNormalized) || userInstNormalized.includes(inqInstNormalized) || tipoInqUpper.includes(userInstNormalized);
-                        
-                        if (!pertenceInstituicao) {
+                        if (inqInstNormalized !== userInstNormalized) {
                             return; 
                         }
                     }
