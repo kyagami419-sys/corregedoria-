@@ -218,7 +218,7 @@
 
                 data.forEach(item => {
                     let forcaInq = 'POLÍCIA FEDERAL';
-                    if (item.dados_extras) {
+                    if (item.tipo === 'Inquérito Interno' && item.dados_extras) {
                         try {
                             const ext = JSON.parse(item.dados_extras);
                             if (ext.forcaPolicial) forcaInq = ext.forcaPolicial;
@@ -227,11 +227,12 @@
 
                     const inqInstNormalized = forcaInq.trim().toUpperCase();
 
-                    // Regra flexível de exibição:
-                    // - Se for PF/Admin, vê tudo.
-                    // - Se for outra instituição, vê apenas os inquéritos correspondentes à sua força (ou seja, se a instituição do inquérito bater com a do usuário).
+                    // REVISÃO DA REGRA DE FILTRAGEM:
+                    // Se o usuário logado NÃO for da Polícia Federal (ou admin):
+                    // - Ele só pode ver inquéritos do tipo 'Inquérito Interno' cuja força policial seja EXATAMENTE a sua própria instituição.
+                    // - Usuários comuns de outras forças não devem ver 'Inquérito Policial' geral nem inquéritos de outras corporações.
                     if (!isPoliciaFederal) {
-                        if (!inqInstNormalized.includes(userInstNormalized) && !userInstNormalized.includes(inqInstNormalized)) {
+                        if (item.tipo !== 'Inquérito Interno' || inqInstNormalized !== userInstNormalized) {
                             return; 
                         }
                     }
