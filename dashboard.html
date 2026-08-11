@@ -34,7 +34,7 @@
     <nav class="navbar navbar-pf d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center">
             <img src="https://cdn.discordapp.com/attachments/1506412452643082390/1536434427230552084/Policia_Federal.svg.webp?ex=6a7b6391&is=6a7a1211&hm=e5c65d33e35b7a6c80747b36eaeb68321eead96e507c238b2585e77b73f665c4&" alt="PF">
-            <span class="brand-title">PAINEL ADMINISTRATIVO - CORREGEDORIAS.</span>
+            <span class="brand-title" id="tituloInstituicao">PAINEL ADMINISTRATIVO - CORREGEDORIA</span>
         </div>
         <div>
             <a href="admin.html" class="btn btn-outline-warning btn-sm me-2" id="btnAdmin" style="display: none;"><i class="fas fa-users-cog"></i> Gerenciar Usuários</a>
@@ -120,37 +120,35 @@
         async function verificarAcesso() {
             emailUsuarioLogado = localStorage.getItem('usuario_logado_email');
             
-            // 1. Se não tiver nada no cache, já expulsa
             if (!emailUsuarioLogado) {
                 window.location.href = 'index.html';
                 return;
             }
 
-            // 2. O Admin nunca é bloqueado e exibe o botão de gerenciar
             if (emailUsuarioLogado === "kira@yagami.gov") {
-                instituicaoUsuarioLogado = 'ADMIN';
+                instituicaoUsuarioLogado = 'POLÍCIA FEDERAL';
                 document.getElementById('btnAdmin').style.display = 'inline-block';
+                document.getElementById('tituloInstituicao').innerText = "PAINEL ADMINISTRATIVO - POLÍCIA FEDERAL (MASTER)";
                 return;
             }
 
-            // 3. VERIFICAÇÃO AO VIVO NO BANCO DE DADOS
-            // ATENÇÃO: Se a sua tabela de usuários tiver outro nome, mude 'usuarios' abaixo
             const { data, error } = await supabaseClient
-                .from('usuarios') 
+                .from('perfis_usuarios') 
                 .select('*')
                 .eq('email', emailUsuarioLogado)
                 .single();
 
-            // Se der erro ou não encontrar, significa que o usuário foi deletado no admin
-            if (error || !data) {
-                alert("Sessão expirada ou acesso revogado. Faça login novamente.");
-                localStorage.removeItem('usuario_logado_email'); // Limpa o cache
-                window.location.href = 'index.html'; // Manda pro login
+            if (error || !data || data.status === 'Bloqueado') {
+                alert("Sessão expirada ou acesso revogado.");
+                localStorage.removeItem('usuario_logado_email');
+                window.location.href = 'index.html';
                 return;
             }
 
-            // Se chegou aqui, o usuário existe! Pegamos a instituição.
             instituicaoUsuarioLogado = data.instituicao || localStorage.getItem(`inst_${emailUsuarioLogado}`) || 'POLÍCIA FEDERAL';
+            
+            // Altera o título da página dinamicamente conforme a polícia logada (Ex: BOPE, PM, Civil...)
+            document.getElementById('tituloInstituicao').innerText = `PAINEL ADMINISTRATIVO - ${instituicaoUsuarioLogado}`;
         }
 
         async function fazerLogout() {
@@ -165,9 +163,8 @@
 
         async function finalizarInquerito(id, numero) {
             const meuEmailAdmin = "kira@yagami.gov"; 
-
-            if (emailUsuarioLogado !== meuEmailAdmin) {
-                alert("Apenas a administradora principal pode finalizar inquéritos.");
+            if (emailUsuarioLogado !== meuEmailAdmin && !instituicaoUsuarioLogado.includes('FEDERAL')) {
+                alert("Apenas administradores podem finalizar inquéritos.");
                 return;
             }
 
@@ -188,7 +185,6 @@
 
         async function apagarInquerito(id, numero) {
             const meuEmailAdmin = "kira@yagami.gov"; 
-
             if (emailUsuarioLogado !== meuEmailAdmin) {
                 alert("Acesso negado. Apenas a administradora principal pode apagar documentos.");
                 return;
@@ -212,10 +208,7 @@
         async function carregarDashboard() {
             await verificarAcesso();
 
-            // Se o usuário foi redirecionado por não ter acesso, interrompe o carregamento
-            if (!emailUsuarioLogado || (!instituicaoUsuarioLogado && emailUsuarioLogado !== "kira@yagami.gov")) {
-                return; 
-            }
+            if (!emailUsuarioLogado) return;
 
             const { data, error } = await supabaseClient
                 .from('inqueritos')
@@ -240,7 +233,9 @@
             const meuEmailAdmin = "kira@yagami.gov";
             const souAdmin = (emailUsuarioLogado === meuEmailAdmin);
             const userInstNormalized = (instituicaoUsuarioLogado || '').trim().toUpperCase();
-            const isPoliciaFederal = souAdmin || userInstNormalized.includes('POLÍCIA FEDERAL');
+            
+            // Se for admin master, vê tudo. Caso contrário, vê apenas os inquéritos da sua corporação exata (ex: BOPE, PM, etc.)
+            const isPoliciaFederal = souAdmin;
 
             if (!data || data.length === 0) {
                 tbodyAndamento.innerHTML = `<tr><td colspan="6" class="text-center text-muted">Nenhum inquérito registrado.</td></tr>`;
@@ -260,7 +255,7 @@
 
                     const inqInstNormalized = forcaInq.trim().toUpperCase();
 
-                    // Se não for Admin/PF, só vê inquérito da própria força
+                    // BLOQUEIO INTELIGENTE: Filtra exatamente pela instituição do usuário logado
                     if (!isPoliciaFederal) {
                         if (inqInstNormalized !== userInstNormalized) {
                             return; 
