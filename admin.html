@@ -116,13 +116,13 @@
                 return;
             }
 
-            // Cadastra o usuário e guarda a instituição nos metadados de autenticação
+            // Salva a instituição escolhida no localStorage para vincular ao e-mail
+            localStorage.setItem(`inst_${email}`, instituicao);
+
             const { data, error } = await supabaseClient.auth.signUp({ 
                 email, 
                 password,
-                options: {
-                    data: { instituicao: instituicao }
-                }
+                options: { data: { instituicao: instituicao } }
             });
 
             if (error && !error.message.includes("rate limit") && !error.message.includes("already registered")) {
@@ -130,14 +130,12 @@
                 return;
             }
 
-            // Insere apenas as colunas padrão existentes na tabela perfis_usuarios
             const { error: errTab } = await supabaseClient.from('perfis_usuarios').insert([
                 { email: email, status: 'Ativo' }
             ]);
 
             if (errTab) {
-                // Se der erro por já existir, apenas avisa que o cadastro foi atualizado/concluído
-                console.log("Perfil já existente ou atualizado.");
+                console.log("Perfil já existente.");
             }
 
             alert("Usuário cadastrado com sucesso!");
@@ -161,7 +159,8 @@
 
             data.forEach(user => {
                 const statusAtual = user.status || 'Ativo';
-                const instituicaoUser = user.instituicao || 'POLÍCIA FEDERAL';
+                // Pega a instituição salva no localStorage ou assume a selecionada, mantendo o valor correto
+                const instituicaoUser = localStorage.getItem(`inst_${user.email}`) || user.instituicao || 'POLÍCIA FEDERAL';
                 const badgeClass = statusAtual === 'Bloqueado' ? 'badge-bloqueado' : 'badge-ativo';
                 
                 const tr = document.createElement('tr');
@@ -204,6 +203,7 @@
 
             if (!confirm(`Tem certeza que deseja apagar permanentemente o usuário ${emailUser}? Ele perderá todo o acesso.`)) return;
 
+            localStorage.removeItem(`inst_${emailUser}`);
             const { error } = await supabaseClient.from('perfis_usuarios').delete().eq('email', emailUser);
             if (error) {
                 alert("Erro ao apagar usuário: " + error.message);
