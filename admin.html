@@ -20,8 +20,8 @@
         .table-pf td { background-color: #111827; color: #e0e0e0; border-color: #1f2937; }
         .badge-ativo { background-color: #059669; color: #fff; }
         .badge-bloqueado { background-color: #dc2626; color: #fff; }
-        .form-control { background-color: #1f2937; border: 1px solid #374151; color: #fff; }
-        .form-control:focus { background-color: #1f2937; color: #fff; border-color: #d4af37; box-shadow: none; }
+        .form-control, .form-select { background-color: #1f2937; border: 1px solid #374151; color: #fff; }
+        .form-control:focus, .form-select:focus { background-color: #1f2937; color: #fff; border-color: #d4af37; box-shadow: none; }
         .btn-gold { background-color: #d4af37; color: #000; font-weight: bold; }
         .btn-gold:hover { background-color: #b5952f; color: #fff; }
     </style>
@@ -44,13 +44,25 @@
                 <span><i class="fas fa-user-plus"></i> Cadastrar Novo Usuário</span>
             </div>
             <div class="row g-3">
-                <div class="col-md-5">
+                <div class="col-md-4">
                     <label class="form-label text-muted">E-mail do Usuário</label>
                     <input type="email" id="novoEmail" class="form-control" placeholder="usuario@pf.gov.br">
                 </div>
-                <div class="col-md-5">
+                <div class="col-md-3">
                     <label class="form-label text-muted">Senha Temporária</label>
                     <input type="password" id="novaSenha" class="form-control" placeholder="Mínimo 6 caracteres">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label text-muted">Instituição / Cargo</label>
+                    <select id="novoInstituicao" class="form-select">
+                        <option value="POLÍCIA FEDERAL">Polícia Federal</option>
+                        <option value="POLÍCIA CIVIL">Polícia Civil</option>
+                        <option value="POLÍCIA MILITAR">Polícia Militar</option>
+                        <option value="POLÍCIA RODOVIÁRIA FEDERAL (PRF)">PRF</option>
+                        <option value="ROTA">ROTA</option>
+                        <option value="BOPE">BOPE</option>
+                        <option value="EXÉRCITO BRASILEIRO">Exército Brasileiro</option>
+                    </select>
                 </div>
                 <div class="col-md-2 d-flex align-items-end">
                     <button class="btn btn-gold w-100" onclick="cadastrarUsuario()"><i class="fas fa-save"></i> Criar</button>
@@ -67,12 +79,13 @@
                     <thead>
                         <tr>
                             <th>E-mail do Usuário</th>
+                            <th>Instituição / Cargo</th>
                             <th>Status de Acesso</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td colspan="3" class="text-center text-muted">Carregando usuários...</td></tr>
+                        <tr><td colspan="4" class="text-center text-muted">Carregando usuários...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -86,16 +99,17 @@
         const supabaseKey = 'sb_publishable_353TT6z3RbRHvIpbQiaK1g_dWt1qAyU';
         const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
-        let emailUsuarioLogado = 'kira@yagami.gov';
+        let emailUsuarioLogado = localStorage.getItem('usuario_logado_email') || '';
 
         async function verificarAcesso() {
-            emailUsuarioLogado = 'kira@yagami.gov';
+            emailUsuarioLogado = localStorage.getItem('usuario_logado_email') || '';
         }
         verificarAcesso();
 
         async function cadastrarUsuario() {
             const email = document.getElementById('novoEmail').value.trim();
             const password = document.getElementById('novaSenha').value.trim();
+            const instituicao = document.getElementById('novoInstituicao').value;
 
             if (!email || !password) {
                 alert("Preencha o e-mail e a senha.");
@@ -109,7 +123,7 @@
                 return;
             }
 
-            const { error: errTab } = await supabaseClient.from('perfis_usuarios').insert([{ email: email, status: 'Ativo' }]);
+            const { error: errTab } = await supabaseClient.from('perfis_usuarios').insert([{ email: email, status: 'Ativo', instituicao: instituicao }]);
 
             if (errTab) {
                 alert("Erro ao salvar perfil na tabela: " + errTab.message);
@@ -128,7 +142,7 @@
             tbody.innerHTML = '';
 
             if (error || !data || data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="3" class="text-center text-muted">Nenhum usuário cadastrado encontrado.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">Nenhum usuário cadastrado encontrado.</td></tr>`;
                 return;
             }
 
@@ -137,18 +151,20 @@
 
             data.forEach(user => {
                 const statusAtual = user.status || 'Ativo';
+                const instituicaoUser = user.instituicao || 'POLÍCIA FEDERAL';
                 const badgeClass = statusAtual === 'Bloqueado' ? 'badge-bloqueado' : 'badge-ativo';
                 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${user.email || 'E-mail não identificado'}</td>
+                    <td><span class="badge bg-secondary">${instituicaoUser}</span></td>
                     <td><span class="badge ${badgeClass}">${statusAtual}</span></td>
                     <td>
                         ${souAdmin ? (
                             (statusAtual === 'Bloqueado' 
                                 ? `<button class="btn btn-sm btn-success me-1" onclick="alterarStatus('${user.email}', 'Ativo')"><i class="fas fa-unlock"></i> Liberar</button>`
                                 : `<button class="btn btn-sm btn-danger me-1" onclick="alterarStatus('${user.email}', 'Bloqueado')"><i class="fas fa-lock"></i> Bloquear</button>`) +
-                            `<button class="btn btn-sm btn-outline-danger" onclick="apagarUsuario('${user.email}')"><i class="fas fa-trash"></i> Apagar</button>`
+                            `<button class="btn btn-sm btn-outline-danger ms-1" onclick="apagarUsuario('${user.email}')"><i class="fas fa-trash"></i> Apagar</button>`
                         ) : `<span class="text-muted small">Acesso Restrito</span>`}
                     </td>
                 `;
@@ -157,6 +173,10 @@
         }
 
         async function alterarStatus(emailUser, novoStatus) {
+            if (emailUsuarioLogado !== "kira@yagami.gov") {
+                alert("Acesso negado.");
+                return;
+            }
             const { error } = await supabaseClient.from('perfis_usuarios').update({ status: novoStatus }).eq('email', emailUser);
             if (error) {
                 alert("Erro ao alterar status: " + error.message);
@@ -167,6 +187,11 @@
         }
 
         async function apagarUsuario(emailUser) {
+            if (emailUsuarioLogado !== "kira@yagami.gov") {
+                alert("Acesso negado. Apenas a administradora principal pode apagar usuários.");
+                return;
+            }
+
             if (!confirm(`Tem certeza que deseja apagar permanentemente o usuário ${emailUser}? Ele perderá todo o acesso.`)) return;
 
             const { error } = await supabaseClient.from('perfis_usuarios').delete().eq('email', emailUser);

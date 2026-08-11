@@ -115,11 +115,24 @@
         const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
         let emailUsuarioLogado = localStorage.getItem('usuario_logado_email') || '';
+        let instituicaoUsuarioLogado = '';
 
         async function verificarAcesso() {
             emailUsuarioLogado = localStorage.getItem('usuario_logado_email') || '';
+            
+            if (emailUsuarioLogado && emailUsuarioLogado !== "kira@yagami.gov") {
+                // Busca a instituição cadastrada para este usuário no banco
+                const { data } = await supabaseClient
+                    .from('perfis_usuarios')
+                    .select('instituicao')
+                    .eq('email', emailUsuarioLogado)
+                    .single();
+                
+                if (data) {
+                    instituicaoUsuarioLogado = data.instituicao;
+                }
+            }
         }
-        verificarAcesso();
 
         async function fazerLogout() {
             localStorage.removeItem('usuario_logado_email');
@@ -178,6 +191,8 @@
         }
 
         async function carregarDashboard() {
+            await verificarAcesso();
+
             const { data, error } = await supabaseClient
                 .from('inqueritos')
                 .select('*')
@@ -209,6 +224,21 @@
                 let temFinalizado = false;
 
                 data.forEach(item => {
+                    // Filtro de permissão: Se não for admin, exibe apenas os inquéritos que correspondem à instituição do usuário (ou Inquéritos Policiais gerais da PF se aplicável)
+                    if (!souAdmin && instituicaoUsuarioLogado) {
+                        let forcaInq = 'POLÍCIA FEDERAL';
+                        if (item.dados_extras) {
+                            try {
+                                const ext = JSON.parse(item.dados_extras);
+                                if (ext.forcaPolicial) forcaInq = ext.forcaPolicial;
+                            } catch(e){}
+                        }
+                        // Se a instituição do inquérito for diferente da instituição do usuário logado, pula este registro
+                        if (forcaInq !== instituicaoUsuarioLogado && item.tipo !== 'Inquérito Policial') {
+                            return; 
+                        }
+                    }
+
                     const botaoApagarHTML = souAdmin ? `<button class="btn btn-sm btn-outline-danger ms-1" title="Apagar Inquérito" onclick="apagarInquerito(${item.id}, '${item.numero}')"><i class="fas fa-trash"></i></button>` : '';
 
                     if (item.status === 'Finalizado') {
@@ -249,10 +279,10 @@
                 });
 
                 if (!temAndamento) {
-                    tbodyAndamento.innerHTML = `<tr><td colspan="6" class="text-center text-muted">Nenhum inquérito em andamento.</td></tr>`;
+                    tbodyAndamento.innerHTML = `<tr><td colspan="6" class="text-center text-muted">Nenhum inquérito em andamento para sua instituição.</td></tr>`;
                 }
                 if (!temFinalizado) {
-                    tbodyFinalizados.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Nenhum inquérito finalizado.</td></tr>`;
+                    tbodyFinalizados.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Nenhum inquérito finalizado para sua instituição.</td></tr>`;
                 }
             }
 
