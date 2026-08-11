@@ -114,23 +114,14 @@
         const supabaseKey = 'sb_publishable_353TT6z3RbRHvIpbQiaK1g_dWt1qAyU';
         const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
-        let emailUsuarioLogado = localStorage.getItem('usuario_logado_email') || '';
+        let emailUsuarioLogado = localStorage.getItem('usuario_logado_email'] || '';
         let instituicaoUsuarioLogado = '';
 
         async function verificarAcesso() {
             emailUsuarioLogado = localStorage.getItem('usuario_logado_email') || '';
             
             if (emailUsuarioLogado && emailUsuarioLogado !== "kira@yagami.gov") {
-                // Busca a instituição cadastrada para este usuário no banco
-                const { data } = await supabaseClient
-                    .from('perfis_usuarios')
-                    .select('instituicao')
-                    .eq('email', emailUsuarioLogado)
-                    .single();
-                
-                if (data) {
-                    instituicaoUsuarioLogado = data.instituicao;
-                }
+                instituicaoUsuarioLogado = localStorage.getItem(`inst_${emailUsuarioLogado}`) || 'POLÍCIA FEDERAL';
             }
         }
 
@@ -215,6 +206,7 @@
 
             const meuEmailAdmin = "kira@yagami.gov";
             const souAdmin = (emailUsuarioLogado === meuEmailAdmin);
+            const isPoliciaFederal = souAdmin || (instituicaoUsuarioLogado === 'POLÍCIA FEDERAL');
 
             if (!data || data.length === 0) {
                 tbodyAndamento.innerHTML = `<tr><td colspan="6" class="text-center text-muted">Nenhum inquérito registrado.</td></tr>`;
@@ -224,18 +216,21 @@
                 let temFinalizado = false;
 
                 data.forEach(item => {
-                    // Filtro de permissão: Se não for admin, exibe apenas os inquéritos que correspondem à instituição do usuário (ou Inquéritos Policiais gerais da PF se aplicável)
-                    if (!souAdmin && instituicaoUsuarioLogado) {
-                        let forcaInq = 'POLÍCIA FEDERAL';
-                        if (item.dados_extras) {
-                            try {
-                                const ext = JSON.parse(item.dados_extras);
-                                if (ext.forcaPolicial) forcaInq = ext.forcaPolicial;
-                            } catch(e){}
-                        }
-                        // Se a instituição do inquérito for diferente da instituição do usuário logado, pula este registro
-                        if (forcaInq !== instituicaoUsuarioLogado && item.tipo !== 'Inquérito Policial') {
-                            return; 
+                    // Descobre a força/instituição do inquérito atual
+                    let forcaInq = 'POLÍCIA FEDERAL';
+                    if (item.tipo === 'Inquérito Interno' && item.dados_extras) {
+                        try {
+                            const ext = JSON.parse(item.dados_extras);
+                            if (ext.forcaPolicial) forcaInq = ext.forcaPolicial;
+                        } catch(e){}
+                    }
+
+                    // REGRA DE VISIBILIDADE:
+                    // 1. Se for da Polícia Federal (ou admin), vê TUDO.
+                    // 2. Se for outra força (ex: Militar, Civil), só vê se o tipo for Inquérito Interno da sua própria instituição. Inquérito Policial padrão fica exclusivo para a PF.
+                    if (!isPoliciaFederal) {
+                        if (item.tipo === 'Inquérito Policial' || forcaInq !== instituicaoUsuarioLogado) {
+                            return; // Ignora e não exibe na tabela deste usuário
                         }
                     }
 
