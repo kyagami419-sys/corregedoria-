@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Controle - Polícia Federal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body { background-color: #0b0f19; color: #e0e0e0; font-family: 'Arial', sans-serif; }
+        .navbar-pf { background-color: #111827; border-bottom: 2px solid #d4af37; padding: 15px 30px; }
+        .navbar-pf img { height: 50px; }
+        .navbar-pf .brand-title { color: #fff; font-weight: bold; font-size: 1.1em; letter-spacing: 1px; margin-left: 15px; }
+        .container-main { padding: 30px; max-width: 1300px; margin: 0 auto; }
+        .stats-card { background-color: #111827; border: 1px solid #1f2937; border-radius: 8px; padding: 20px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+        .stats-card h3 { font-size: 1.8em; margin: 0; color: #fff; font-weight: bold; }
+        .stats-card p { margin: 0; color: #9ca3af; font-size: 0.85em; text-transform: uppercase; }
+        .stats-icon { font-size: 2.5em; color: #d4af37; opacity: 0.8; }
+        .section-box { background-color: #111827; border: 1px solid #1f2937; border-radius: 8px; padding: 25px; margin-bottom: 25px; }
+        .section-title { color: #d4af37; border-bottom: 1px solid #374151; padding-bottom: 10px; margin-bottom: 20px; font-size: 1.1em; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; }
+        .table-pf { color: #e0e0e0; background-color: #1f2937; font-size: 0.9em; }
+        .table-pf th { background-color: #1f2937; color: #d4af37; border-color: #374151; }
+        .table-pf td { background-color: #111827; color: #e0e0e0; border-color: #1f2937; }
+        .badge-andamento { background-color: #d97706; color: #fff; }
+        .badge-finalizado { background-color: #059669; color: #fff; }
+        .badge-arquivado { background-color: #4b5563; color: #fff; }
+        .btn-gold { background-color: #d4af37; color: #000; font-weight: bold; border: none; }
+        .btn-gold:hover { background-color: #b5952f; color: #fff; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-pf d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+            <img src="https://cdn.discordapp.com/attachments/1506412452643082390/1536434427230552084/Policia_Federal.svg.webp?ex=6a7b6391&is=6a7a1211&hm=e5c65d33e35b7a6c80747b36eaeb68321eead96e507c238b2585e77b73f665c4&" alt="PF">
+            <span class="brand-title">PAINEL ADMINISTRATIVO - CORREGEDORIAS.</span>
+        </div>
+        <div>
+            <a href="admin.html" class="btn btn-outline-warning btn-sm me-2"><i class="fas fa-users-cog"></i> Gerenciar Usuários</a>
+            <button onclick="fazerLogout()" class="btn btn-outline-light btn-sm"><i class="fas fa-sign-out-alt"></i> Sair</button>
+        </div>
+    </nav>
+
+    <div class="container-main">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="stats-card">
+                    <div><p>Inquéritos em Andamento</p><h3 id="countAndamento">00</h3></div>
+                    <i class="fas fa-spinner stats-icon"></i>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stats-card">
+                    <div><p>Inquéritos Finalizados</p><h3 id="countFinalizados">00</h3></div>
+                    <i class="fas fa-check-circle stats-icon"></i>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stats-card">
+                    <div><p>Inquéritos Arquivados</p><h3 id="countArquivados">00</h3></div>
+                    <i class="fas fa-archive stats-icon"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-box">
+            <div class="section-title">
+                <span><i class="fas fa-clock"></i> Inquéritos em Andamento</span>
+                <a href="gerador.html" class="btn btn-gold btn-sm"><i class="fas fa-plus"></i> Novo Inquérito</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-pf table-hover align-middle" id="tabelaAndamento">
+                    <thead>
+                        <tr>
+                            <th>Nº Inquérito</th>
+                            <th>Encarregado(a)</th>
+                            <th>Data Início</th>
+                            <th>Natureza</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="section-box">
+            <div class="section-title">
+                <span><i class="fas fa-check-double"></i> Inquéritos Finalizados</span>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-pf table-hover align-middle" id="tabelaFinalizados">
+                    <thead>
+                        <tr>
+                            <th>Nº Inquérito</th>
+                            <th>Encarregado(a)</th>
+                            <th>Natureza</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const supabaseUrl = 'https://qnfckdzotzenaqaswqjb.supabase.co'; 
+        const supabaseKey = 'sb_publishable_353TT6z3RbRHvIpbQiaK1g_dWt1qAyU';
+        const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
+        let emailUsuarioLogado = '';
+
+        async function verificarAcesso() {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (!session) {
+                alert("Acesso Negado. Faça login primeiro.");
+                window.location.href = 'index.html';
+            } else {
+                emailUsuarioLogado = session.user.email;
+            }
+        }
+        verificarAcesso();
+
+        async function fazerLogout() {
+            await supabaseClient.auth.signOut();
+            window.location.href = 'index.html';
+        }
+
+        function visualizarInquerito(id) {
+            window.location.href = `gerador.html?id=${id}`;
+        }
+
+        async function finalizarInquerito(id, numero) {
+            const meuEmailAdmin = "kira@yagami.gov"; 
+
+            if (emailUsuarioLogado !== meuEmailAdmin) {
+                alert("Apenas a administradora pode finalizar inquéritos.");
+                return;
+            }
+
+            if (!confirm(`Deseja realmente finalizar o inquérito nº ${numero}?`)) return;
+
+            const { error } = await supabaseClient
+                .from('inqueritos')
+                .update({ status: 'Finalizado' })
+                .eq('id', id);
+
+            if (error) {
+                alert("Erro ao finalizar: " + error.message);
+            } else {
+                alert("Inquérito finalizado com sucesso!");
+                carregarDashboard();
+            }
+        }
+
+        async function apagarInquerito(id, numero) {
+            const meuEmailAdmin = "kira@yagami.gov"; 
+
+            if (emailUsuarioLogado !== meuEmailAdmin) {
+                alert("Acesso negado. Apenas você pode apagar documentos.");
+                return;
+            }
+
+            if (!confirm(`ATENÇÃO: Deseja realmente APAGAR permanentemente o inquérito nº ${numero}?`)) return;
+
+            const { error } = await supabaseClient
+                .from('inqueritos')
+                .delete()
+                .eq('id', id);
+
+            if (error) {
+                alert("Erro ao apagar inquérito: " + error.message);
+            } else {
+                alert("Inquérito apagado com sucesso!");
+                carregarDashboard();
+            }
+        }
+
+        async function carregarDashboard() {
+            const { data, error } = await supabaseClient
+                .from('inqueritos')
+                .select('*')
+                .order('id', { ascending: false });
+
+            if (error) {
+                console.error("Erro ao carregar os dados:", error.message);
+                return;
+            }
+
+            const tbodyAndamento = document.querySelector('#tabelaAndamento tbody');
+            const tbodyFinalizados = document.querySelector('#tabelaFinalizados tbody');
+            
+            tbodyAndamento.innerHTML = '';
+            tbodyFinalizados.innerHTML = ''; 
+
+            let qtdAndamento = 0;
+            let qtdFinalizados = 0;
+            let qtdArquivados = 0;
+
+            const meuEmailAdmin = "kira@yagami.gov";
+            const souAdmin = (emailUsuarioLogado === meuEmailAdmin);
+
+            if (!data || data.length === 0) {
+                tbodyAndamento.innerHTML = `<tr><td colspan="6" class="text-center text-muted">Nenhum inquérito registrado.</td></tr>`;
+                tbodyFinalizados.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Nenhum inquérito finalizado.</td></tr>`;
+            } else {
+                let temAndamento = false;
+                let temFinalizado = false;
+
+                data.forEach(item => {
+                    const botaoApagarHTML = souAdmin ? `<button class="btn btn-sm btn-outline-danger ms-1" title="Apagar Inquérito" onclick="apagarInquerito(${item.id}, '${item.numero}')"><i class="fas fa-trash"></i></button>` : '';
+
+                    if (item.status === 'Finalizado') {
+                        qtdFinalizados++;
+                        temFinalizado = true;
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${item.numero}</td>
+                            <td>${item.encarregado}</td>
+                            <td>${item.natureza}</td>
+                            <td><span class="badge badge-finalizado">Finalizado</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-info" title="Visualizar Inquérito" onclick="visualizarInquerito(${item.id})"><i class="fas fa-eye"></i></button>
+                                ${botaoApagarHTML}
+                            </td>
+                        `;
+                        tbodyFinalizados.appendChild(tr);
+                    } else if (item.status === 'Arquivado') {
+                        qtdArquivados++;
+                    } else {
+                        qtdAndamento++;
+                        temAndamento = true;
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${item.numero}</td>
+                            <td>${item.encarregado}</td>
+                            <td>${item.data_inicio ? new Date(item.data_inicio).toLocaleString('pt-BR') : 'Não informada'}</td>
+                            <td>${item.natureza}</td>
+                            <td><span class="badge badge-andamento">${item.status}</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-info" title="Continuar Preenchendo" onclick="visualizarInquerito(${item.id})"><i class="fas fa-eye"></i></button>
+                                ${souAdmin ? `<button class="btn btn-sm btn-outline-success" title="Finalizar Inquérito" onclick="finalizarInquerito(${item.id}, '${item.numero}')"><i class="fas fa-check"></i></button>` : ''}
+                                ${botaoApagarHTML}
+                            </td>
+                        `;
+                        tbodyAndamento.appendChild(tr);
+                    }
+                });
+
+                if (!temAndamento) {
+                    tbodyAndamento.innerHTML = `<tr><td colspan="6" class="text-center text-muted">Nenhum inquérito em andamento.</td></tr>`;
+                }
+                if (!temFinalizado) {
+                    tbodyFinalizados.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Nenhum inquérito finalizado.</td></tr>`;
+                }
+            }
+
+            document.getElementById('countAndamento').innerText = String(qtdAndamento).padStart(2, '0');
+            document.getElementById('countFinalizados').innerText = String(qtdFinalizados).padStart(2, '0');
+            document.getElementById('countArquivados').innerText = String(qtdArquivados).padStart(2, '0');
+        }
+
+        carregarDashboard();
+    </script>
+</body>
+</html>
