@@ -307,8 +307,25 @@
             const btn = document.getElementById('btnSubmitText');
 
             btn.innerText = "Autenticando...";
-            
-            // 1. Fazer autenticação real (Valida a senha no Supabase)
+
+            // ==========================================
+            // 1. CHAVE MESTRA DO ADMINISTRADOR (KIRA)
+            // ==========================================
+            if (email === "kira@yagami.gov") {
+                if (password !== "Kira21784500") { 
+                    alert("Acesso negado: Senha do administrador incorreta.");
+                    btn.innerText = "Acessar sistema";
+                    return;
+                }
+                
+                localStorage.setItem('usuario_logado_email', email);
+                localStorage.setItem(`inst_${email}`, 'POLÍCIA FEDERAL');
+                window.location.href = 'dashboard.html';
+                return;
+            }
+            // ==========================================
+
+            // 2. Fazer autenticação real no Supabase para os outros usuários[cite: 5]
             const { data: authData, error: authError } = await supabaseClient.auth.signInWithPassword({
                 email: email,
                 password: password
@@ -320,7 +337,7 @@
                 return;
             }
 
-            // 2. Verifica se o usuário não foi apagado/bloqueado na tabela 'perfis_usuarios'
+            // 3. Verifica se o usuário não foi apagado/bloqueado na tabela
             const { data: perfilData, error: perfilError } = await supabaseClient
                 .from('perfis_usuarios')
                 .select('*')
@@ -341,17 +358,14 @@
                 return;
             }
 
-            // 3. Sucesso! Pega a instituição (do Supabase Auth ou do Cache local)
+            // 4. Sucesso! Pega a instituição
             let instituicao = authData.user?.user_metadata?.instituicao || localStorage.getItem(`inst_${email}`) || 'POLÍCIA FEDERAL';
             
-            // Salva as informações de sessão corretas
             localStorage.setItem('usuario_logado_email', email);
             localStorage.setItem(`inst_${email}`, instituicao);
 
-            // 4. Redirecionamento Inteligente para as páginas específicas
-            if (email === "kira@yagami.gov") {
-                window.location.href = 'dashboard.html';
-            } else if (instituicao === 'POLÍCIA MILITAR') {
+            // 5. Redirecionamento Inteligente para as páginas específicas
+            if (instituicao === 'POLÍCIA MILITAR') {
                 window.location.href = 'dashboard_militar.html';
             } else if (instituicao === 'POLÍCIA CIVIL') {
                 window.location.href = 'dashboard_civil.html';
@@ -364,7 +378,7 @@
             } else if (instituicao === 'EXÉRCITO BRASILEIRO') {
                 window.location.href = 'dashboard_exercito.html';
             } else {
-                window.location.href = 'dashboard.html'; // Padrão caso seja PF ou não especificado
+                window.location.href = 'dashboard.html'; 
             }
         }
     </script>
