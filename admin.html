@@ -116,14 +116,18 @@
                 return;
             }
 
+            // Tenta cadastrar na autenticação, mas ignora se o erro for porque o usuário já existe
             const { data, error } = await supabaseClient.auth.signUp({ email, password });
 
-            if (error && !error.message.includes("rate limit")) {
+            if (error && !error.message.includes("rate limit") && !error.message.includes("already registered")) {
                 alert("Erro ao cadastrar na autenticação: " + error.message);
                 return;
             }
 
-            const { error: errTab } = await supabaseClient.from('perfis_usuarios').insert([{ email: email, status: 'Ativo', instituicao: instituicao }]);
+            // Salva ou atualiza os dados na tabela perfis_usuarios usando upsert para evitar conflito
+            const { error: errTab } = await supabaseClient.from('perfis_usuarios').upsert([
+                { email: email, status: 'Ativo', instituicao: instituicao }
+            ], { onConflict: 'email' });
 
             if (errTab) {
                 alert("Erro ao salvar perfil na tabela: " + errTab.message);
