@@ -116,7 +116,6 @@
                 return;
             }
 
-            // Salva a instituição nas opções de metadados do Auth do Supabase para evitar erros de colunas faltantes na tabela
             const { data, error } = await supabaseClient.auth.signUp({ 
                 email, 
                 password,
@@ -130,14 +129,21 @@
                 return;
             }
 
-            // Salva apenas os dados básicos que já existem na tabela existente
-            const { error: errTab } = await supabaseClient.from('perfis_usuarios').upsert([
-                { email: email, status: 'Ativo' }
-            ], { onConflict: 'email' });
+            // Insere o perfil com a instituição selecionada de forma simples e segura
+            const { error: errTab } = await supabaseClient.from('perfis_usuarios').insert([
+                { email: email, status: 'Ativo', instituicao: instituicao }
+            ]);
 
             if (errTab) {
-                alert("Erro ao salvar perfil na tabela: " + errTab.message);
-                return;
+                // Se já existir na tabela, tenta atualizar
+                const { error: errUpdate } = await supabaseClient.from('perfis_usuarios')
+                    .update({ status: 'Ativo', instituicao: instituicao })
+                    .eq('email', email);
+
+                if (errUpdate) {
+                    alert("Erro ao salvar perfil na tabela: " + errUpdate.message);
+                    return;
+                }
             }
 
             alert("Usuário cadastrado com sucesso!");
@@ -161,7 +167,6 @@
 
             data.forEach(user => {
                 const statusAtual = user.status || 'Ativo';
-                // Define uma instituição padrão ou exibe a associada
                 const instituicaoUser = user.instituicao || 'POLÍCIA FEDERAL';
                 const badgeClass = statusAtual === 'Bloqueado' ? 'badge-bloqueado' : 'badge-ativo';
                 
