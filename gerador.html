@@ -60,10 +60,6 @@
                 <input type="radio" class="btn-check" name="docType" id="typeInquerito" value="inquerito" autocomplete="off" checked onchange="toggleFormType()">
                 <label class="btn btn-outline-gold" for="typeInquerito">Inquérito Policial</label>
 
-                <!-- NOVO BOTÃO: INQUÉRITO INTERNO -->
-                <input type="radio" class="btn-check" name="docType" id="typeInqueritoInterno" value="inquerito_interno" autocomplete="off" onchange="toggleFormType()">
-                <label class="btn btn-outline-gold" for="typeInqueritoInterno">Inquérito Interno</label>
-
                 <input type="radio" class="btn-check" name="docType" id="typePortaria" value="portaria" autocomplete="off" onchange="toggleFormType()">
                 <label class="btn btn-outline-gold" for="typePortaria">Portaria</label>
 
@@ -109,11 +105,12 @@
 
             <div id="blocoInquerito">
                 
-                <!-- SELETOR DE INSTITUIÇÃO (Apenas Inquérito Interno) -->
-                <div class="form-section" id="blocoForcaPolicial" style="display: none;">
-                    <h4 class="section-title">Instituição Investigada (Inquérito Interno)</h4>
+                <!-- SELETOR DE INSTITUIÇÃO (Agora no Inquérito Policial) -->
+                <div class="form-section" id="blocoForcaPolicial">
+                    <h4 class="section-title">Instituição Responsável</h4>
                     <div class="col-md-4">
                         <select id="forcaPolicial" class="form-select">
+                            <option value="POLÍCIA FEDERAL">Polícia Federal</option>
                             <option value="POLÍCIA CIVIL">Polícia Civil</option>
                             <option value="POLÍCIA MILITAR">Polícia Militar</option>
                             <option value="POLÍCIA RODOVIÁRIA FEDERAL (PRF)">PRF</option>
@@ -212,17 +209,14 @@
             const tipoSelecionado = document.querySelector('input[name="docType"]:checked').value;
             const isPortaria = (tipoSelecionado === 'portaria');
             const isIntimacao = (tipoSelecionado === 'intimacao');
-            const isInqueritoInterno = (tipoSelecionado === 'inquerito_interno');
 
             document.getElementById('blocoPortaria').style.display = isPortaria ? 'block' : 'none';
             document.getElementById('blocoIntimacao').style.display = isIntimacao ? 'block' : 'none';
             
-            // O bloco principal de Inquérito serve tanto pro normal quanto pro Interno
             const isAnyInquerito = (!isPortaria && !isIntimacao);
             document.getElementById('blocoInquerito').style.display = isAnyInquerito ? 'block' : 'none';
             
-            // O dropdown de Força Policial SÓ aparece no Inquérito Interno
-            document.getElementById('blocoForcaPolicial').style.display = isInqueritoInterno ? 'block' : 'none';
+            document.getElementById('blocoForcaPolicial').style.display = isAnyInquerito ? 'block' : 'none';
         }
 
         function addDelegadoPortaria(dados = {}) {
@@ -300,9 +294,7 @@
             let nat = document.getElementById('natureza')?.value || 'Não especificada';
             let enc = document.getElementById('encarregado')?.value || 'Não informado';
 
-            if (tipoSelecionado === 'inquerito_interno') {
-                tipoDoc = 'Inquérito Interno';
-            } else if (tipoSelecionado === 'portaria') {
+            if (tipoSelecionado === 'portaria') {
                 tipoDoc = 'Portaria';
                 numDoc = document.getElementById('numPortaria')?.value || 'S/N';
                 nat = document.getElementById('textoPortaria')?.value || 'Portaria emitida';
@@ -408,12 +400,7 @@
                         document.getElementById('numIntimacao').value = data.numero || '';
                         document.getElementById('textoIntimacao').value = data.natureza || '';
                     } else {
-                        // Trata Inquérito Policial ou Inquérito Interno
-                        if (data.tipo === 'Inquérito Interno') {
-                            document.getElementById('typeInqueritoInterno').checked = true;
-                        } else {
-                            document.getElementById('typeInquerito').checked = true;
-                        }
+                        document.getElementById('typeInquerito').checked = true;
                         toggleFormType();
 
                         document.getElementById('numInq').value = data.numero || '';
@@ -484,11 +471,9 @@
         }
 
         function gerarPDF() {
-            // Agora a leitura é garantida e não causa confusão entre as abas
             const tipoSelecionado = document.querySelector('input[name="docType"]:checked').value;
             const isPortaria = (tipoSelecionado === 'portaria');
             const isIntimacao = (tipoSelecionado === 'intimacao');
-            const isInqueritoInterno = (tipoSelecionado === 'inquerito_interno');
             
             const dataHoraAtual = formatDatetime(new Date());
             let arrayAssinaturas = [];
@@ -558,9 +543,7 @@
                 const relato = document.getElementById('relato').value || 'Nenhum relato registrado.';
                 const conclusao = document.getElementById('conclusao').value || 'Sem conclusão informada.';
 
-                nomeArquivo = isInqueritoInterno 
-                    ? `Inquerito_Interno_${numInq.replace(/\//g, '-')}.pdf` 
-                    : `Inquerito_Policial_${numInq.replace(/\//g, '-')}.pdf`;
+                nomeArquivo = `Inquerito_Policial_${numInq.replace(/\//g, '-')}.pdf`;
 
                 const buildSectionHeader = (title) => ({ table: { widths: ['*'], body: [ [{ text: title, bold: true, fillColor: '#e2e2e2', margin: [5, 5, 5, 5] }] ] }, layout: 'noBorders', margin: [0, 10, 0, 5] });
 
@@ -588,12 +571,10 @@
                 });
 
                 const forcaSelecionada = document.getElementById('forcaPolicial').value;
-                const headerInstituicao = isInqueritoInterno ? forcaSelecionada : 'POLÍCIA FEDERAL';
-                const headerTipo = isInqueritoInterno ? 'INQUÉRITO INTERNO' : 'INQUÉRITO POLICIAL';
 
                 docDefinition.content = [
-                    { text: headerInstituicao, alignment: 'center', bold: true, fontSize: 14 },
-                    { text: headerTipo, alignment: 'center', bold: true, fontSize: 14, margin: [0, 5, 0, 5] },
+                    { text: forcaSelecionada, alignment: 'center', bold: true, fontSize: 14 },
+                    { text: 'INQUÉRITO POLICIAL', alignment: 'center', bold: true, fontSize: 14, margin: [0, 5, 0, 5] },
                     { text: `n° ${numInq}`, alignment: 'center', bold: true, fontSize: 12, margin: [0, 0, 0, 15] },
                     { columns: [ [{ text: `Diretora Geral: ${dirGeral}`, fontSize: 10 }, { text: `Encarregado(a): ${encarregado}`, fontSize: 10 }, { text: `Perito Criminal: ${perito}`, fontSize: 10 }], [{ text: `Escrivão: ${escrivao}`, fontSize: 10 }, { text: `Investigador: ${investigador}`, fontSize: 10 }, { text: `Setor: ${setor}`, fontSize: 10 }] ], margin: [0, 0, 0, 10] },
                     buildSectionHeader('DADOS DO REGISTRO'),
