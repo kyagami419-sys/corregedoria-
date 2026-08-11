@@ -172,7 +172,7 @@
             background-color: #f3f4f6;
             border: none;
             color: #111827;
-            padding: 14px 15px 14px 45px; /* Espaço para o ícone */
+            padding: 14px 15px 14px 45px;
             border-radius: 6px;
             font-size: 0.95rem;
             font-weight: 500;
@@ -237,7 +237,6 @@
             margin-top: 3rem;
         }
 
-        /* Responsividade para telas menores */
         @media (max-width: 991px) {
             .split-layout { flex-direction: column; }
             .left-pane { border-right: none; border-bottom: 1px solid #1a202c; padding: 15% 10%; }
@@ -248,7 +247,6 @@
 <body>
 
     <div class="split-layout">
-        <!-- Lado Esquerdo Institucional -->
         <div class="left-pane">
             <div class="logo-box">CG</div>
             <div class="gold-subtitle">CORREGEDORIA GERAL</div>
@@ -257,7 +255,6 @@
             <div class="footer-left">SIGCOR</div>
         </div>
 
-        <!-- Lado Direito Formulário -->
         <div class="right-pane">
             <div class="form-container">
                 <div class="gold-subtitle">ACESSO RESTRITO</div>
@@ -266,14 +263,12 @@
 
                 <form onsubmit="handleAuth(event)">
                     
-                    <!-- E-mail -->
                     <label class="form-label">E-mail institucional</label>
                     <div class="input-wrapper">
                         <i class="far fa-envelope icon-left"></i>
-                        <input type="email" id="emailInput" class="form-control" required placeholder="kira@yagami.gov">
+                        <input type="email" id="emailInput" class="form-control" required placeholder="usuario@gov.br">
                     </div>
 
-                    <!-- Senha -->
                     <label class="form-label">
                         Senha
                         <a href="#" class="forgot-link">Esqueci minha senha</a>
@@ -287,7 +282,6 @@
                     <button type="submit" class="btn btn-gold" id="btnSubmitText">Acessar sistema</button>
                 </form>
 
-                <!-- Aviso de Auditoria -->
                 <div class="warning-box">
                     <div class="warning-dot"></div>
                     <p class="warning-text">Sistema de acesso restrito. Todas as atividades realizadas nesta plataforma poderão ser registradas para fins de auditoria.</p>
@@ -300,7 +294,6 @@
         </div>
     </div>
 
-    <!-- Importar o Supabase e Lógica de Acesso (Mantida Intacta) -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         const supabaseUrl = 'https://qnfckdzotzenaqaswqjb.supabase.co'; 
@@ -310,17 +303,69 @@
         async function handleAuth(event) {
             event.preventDefault();
             const email = document.getElementById('emailInput').value.trim();
-
+            const password = document.getElementById('passwordInput').value;
             const btn = document.getElementById('btnSubmitText');
+
             btn.innerText = "Autenticando...";
             
-            // Salva o e-mail digitado no navegador para que o dashboard reconheça
-            localStorage.setItem('usuario_logado_email', email);
+            // 1. Fazer autenticação real (Valida a senha no Supabase)
+            const { data: authData, error: authError } = await supabaseClient.auth.signInWithPassword({
+                email: email,
+                password: password
+            });
 
-            // Redireciona diretamente para o painel
-            setTimeout(() => {
+            if (authError) {
+                alert("Acesso negado: E-mail ou senha incorretos.");
+                btn.innerText = "Acessar sistema";
+                return;
+            }
+
+            // 2. Verifica se o usuário não foi apagado/bloqueado na tabela 'perfis_usuarios'
+            const { data: perfilData, error: perfilError } = await supabaseClient
+                .from('perfis_usuarios')
+                .select('*')
+                .eq('email', email)
+                .single();
+
+            if (perfilError || !perfilData) {
+                alert("Acesso negado. Seu usuário foi removido do sistema pela administração.");
+                await supabaseClient.auth.signOut();
+                btn.innerText = "Acessar sistema";
+                return;
+            }
+
+            if (perfilData.status === 'Bloqueado') {
+                alert("Acesso negado. Sua conta encontra-se bloqueada.");
+                await supabaseClient.auth.signOut();
+                btn.innerText = "Acessar sistema";
+                return;
+            }
+
+            // 3. Sucesso! Pega a instituição (do Supabase Auth ou do Cache local)
+            let instituicao = authData.user?.user_metadata?.instituicao || localStorage.getItem(`inst_${email}`) || 'POLÍCIA FEDERAL';
+            
+            // Salva as informações de sessão corretas
+            localStorage.setItem('usuario_logado_email', email);
+            localStorage.setItem(`inst_${email}`, instituicao);
+
+            // 4. Redirecionamento Inteligente para as páginas específicas
+            if (email === "kira@yagami.gov") {
                 window.location.href = 'dashboard.html';
-            }, 500); // Pequeno delay apenas para mostrar o "Autenticando..." e dar sensação de carregamento
+            } else if (instituicao === 'POLÍCIA MILITAR') {
+                window.location.href = 'dashboard_militar.html';
+            } else if (instituicao === 'POLÍCIA CIVIL') {
+                window.location.href = 'dashboard_civil.html';
+            } else if (instituicao === 'POLÍCIA RODOVIÁRIA FEDERAL (PRF)') {
+                window.location.href = 'dashboard_prf.html';
+            } else if (instituicao === 'ROTA') {
+                window.location.href = 'dashboard_rota.html';
+            } else if (instituicao === 'BOPE') {
+                window.location.href = 'dashboard_bope.html';
+            } else if (instituicao === 'EXÉRCITO BRASILEIRO') {
+                window.location.href = 'dashboard_exercito.html';
+            } else {
+                window.location.href = 'dashboard.html'; // Padrão caso seja PF ou não especificado
+            }
         }
     </script>
 </body>
