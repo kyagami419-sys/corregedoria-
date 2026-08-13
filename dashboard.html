@@ -86,8 +86,21 @@
         .btn-gold { background-color: #b58d3d; color: #ffffff; font-weight: 600; border: none; padding: 8px 18px; border-radius: 6px; transition: all 0.3s; }
         .btn-gold:hover { background-color: #c49a3c; color: #ffffff; }
         .forca-title { color: #e0e0e0; font-size: 1.1em; margin-top: 20px; margin-bottom: 15px; font-weight: 600; font-family: 'Playfair Display', serif; border-left: 4px solid #b58d3d; padding-left: 10px; }
-        .timer-text { font-family: monospace; font-size: 1.05em; color: #eab308; background: #1f2937; padding: 4px 8px; border-radius: 4px; border: 1px solid #374151; }
-        .timer-parado { color: #047857; border-color: #047857; background: #022c22; }
+        
+        /* Estilos e Cores do Cronômetro */
+        .timer-text { font-family: monospace; font-size: 1.05em; padding: 4px 8px; border-radius: 4px; border: 1px solid; display: inline-block; }
+        .timer-verde { color: #10b981; border-color: #047857; background: #022c22; }
+        .timer-amarelo { color: #f59e0b; border-color: #b45309; background: #451a03; }
+        
+        @keyframes piscarVermelho {
+            0% { opacity: 1; background: #7f1d1d; border-color: #ef4444; color: #fca5a5; }
+            50% { opacity: 0.4; background: #450a0a; border-color: #991b1b; color: #f87171; }
+            100% { opacity: 1; background: #7f1d1d; border-color: #ef4444; color: #fca5a5; }
+        }
+        .timer-vermelho-piscando {
+            animation: piscarVermelho 1s infinite;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -130,9 +143,7 @@
                 <span><i class="fas fa-clock"></i> Documentos em Andamento</span>
                 <a href="gerador.html" class="btn btn-gold btn-sm"><i class="fas fa-plus"></i> Novo Documento</a>
             </div>
-            <div id="containerAndamento">
-                <!-- Tabelas em andamento renderizadas aqui -->
-            </div>
+            <div id="containerAndamento"></div>
         </div>
 
         <div class="section-box">
@@ -279,13 +290,29 @@
             return partes.join(' '); 
         }
 
+        // Atualizador automático do tempo e das cores em andamento
         setInterval(() => {
             const agora = new Date().getTime();
             document.querySelectorAll('.cronometro-ativo').forEach(el => {
                 const dataInicio = el.getAttribute('data-inicio');
                 if (dataInicio && dataInicio !== 'null') {
                     const inicioMs = new Date(dataInicio).getTime();
-                    el.innerText = formatarTempoDecorrido(agora - inicioMs);
+                    const diffMs = agora - inicioMs;
+                    
+                    el.innerText = formatarTempoDecorrido(diffMs);
+
+                    // Regra de Cores baseada em Milissegundos (1 dia = 86400000 ms)
+                    const umDiaMs = 24 * 60 * 60 * 1000;
+                    
+                    el.classList.remove('timer-verde', 'timer-amarelo', 'timer-vermelho-piscando');
+                    
+                    if (diffMs < umDiaMs) {
+                        el.classList.add('timer-verde'); // Menos de 1 dia -> Verde
+                    } else if (diffMs >= umDiaMs && diffMs < (2 * umDiaMs)) {
+                        el.classList.add('timer-amarelo'); // Entre 1 e 2 dias -> Amarelo
+                    } else {
+                        el.classList.add('timer-vermelho-piscando'); // Mais de 2 dias -> Vermelho piscando
+                    }
                 } else {
                     el.innerText = "Calculando...";
                 }
@@ -330,9 +357,10 @@
 
                     let tempoHTML = "";
                     if (isFinalizado) {
+                        // Finalizado volta a ficar verde fixo
                         if (dataCalculo && item.data_fim) {
                             const diff = new Date(item.data_fim).getTime() - new Date(dataCalculo).getTime();
-                            tempoHTML = `<span class="timer-text timer-parado"><i class="fas fa-lock"></i> ${formatarTempoDecorrido(diff)}</span>`;
+                            tempoHTML = `<span class="timer-text timer-verde"><i class="fas fa-lock"></i> ${formatarTempoDecorrido(diff)}</span>`;
                         } else {
                             tempoHTML = `<span class="text-muted">N/D</span>`;
                         }
