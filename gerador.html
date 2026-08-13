@@ -446,7 +446,7 @@
                 });
             });
 
-            const forcaPolicialSelecionada = document.getElementById('forcaPolicial').value;
+            const forcaPolicialSelecionada = document.getElementById('forcaPolicial')?.value || instituicaoUserGlobal;
 
             const extrasObj = { 
                 delegados, envolvidos, evidencias, depoimentos, assinaturas, forcaPolicial: forcaPolicialSelecionada,
@@ -563,7 +563,8 @@
                             const extras = JSON.parse(data.dados_extras);
                             
                             if (extras.forcaPolicial) {
-                                document.getElementById('forcaPolicial').value = extras.forcaPolicial;
+                                const selectForca = document.getElementById('forcaPolicial');
+                                if(selectForca) selectForca.value = extras.forcaPolicial;
                             }
 
                             if(data.tipo === 'Investigação') {
@@ -656,7 +657,7 @@
             let docDefinition = { content: [], defaultStyle: { font: 'Roboto' } };
             let nomeArquivo = 'Documento.pdf';
 
-            const forcaSelecionada = document.getElementById('forcaPolicial').value;
+            const forcaSelecionada = document.getElementById('forcaPolicial')?.value || instituicaoUserGlobal;
             const buildSectionHeader = (title) => ({ table: { widths: ['*'], body: [ [{ text: title, bold: true, fillColor: '#e2e2e2', margin: [5, 5, 5, 5] }] ] }, layout: 'noBorders', margin: [0, 10, 0, 5] });
 
             if (isPortaria) {
