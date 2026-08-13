@@ -35,10 +35,41 @@
         .warning-box { background-color: #0d1117; border: 1px solid #1f2937; border-radius: 6px; padding: 20px; margin-top: 2.5rem; display: flex; align-items: flex-start; gap: 15px; }
         .warning-dot { width: 8px; height: 8px; background-color: #b58d3d; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
         .warning-text { color: #6b7280; font-size: 0.8rem; line-height: 1.5; margin: 0; }
-        .footer-right { text-align: center; color: #4b5563; font-size: 0.7rem; margin-top: 3rem; }
-        .valkyria-credits { margin-top: 8px; font-size: 0.65rem; color: #4b5563; display: flex; align-items: center; justify-content: center; gap: 6px; }
-        .valkyria-credits a { color: #5865F2; font-size: 0.9rem; text-decoration: none; transition: color 0.3s; display: flex; align-items: center; }
-        .valkyria-credits a:hover { color: #7289da; }
+        .footer-right { text-align: center; color: #4b5563; font-size: 0.7rem; margin-top: 2rem; }
+        
+        .valkyria-support-box {
+            margin-top: 15px;
+            padding: 12px;
+            background-color: #0d1117;
+            border: 1px solid #1f2937;
+            border-radius: 6px;
+            text-align: center;
+        }
+        .valkyria-text {
+            font-size: 0.7rem;
+            color: #8b95a5;
+            margin-bottom: 8px;
+        }
+        .valkyria-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background-color: #5865F2;
+            color: #ffffff;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 4px;
+            text-decoration: none;
+            border: 1px solid #7289da;
+            transition: background-color 0.3s;
+        }
+        .valkyria-btn:hover {
+            background-color: #4752C4;
+            color: #ffffff;
+        }
+
         @media (max-width: 991px) {
             .split-layout { flex-direction: column; }
             .left-pane { border-right: none; border-bottom: 1px solid #1a202c; padding: 15% 10%; }
@@ -88,14 +119,15 @@
                     <p class="warning-text">Sistema de acesso restrito. Todas as atividades realizadas nesta plataforma poderão ser registradas para fins de auditoria.</p>
                 </div>
 
+                <div class="valkyria-support-box">
+                    <p class="valkyria-text">Desenvolvido por <strong>Valkyria Optimization</strong><br>Precisa de suporte? Entre em contato pelo Discord:</p>
+                    <a href="https://discord.gg/4ev9nCuA3W" target="_blank" class="valkyria-btn">
+                        <i class="fab fa-discord"></i> Suporte via Discord
+                    </a>
+                </div>
+
                 <div class="footer-right">
                     SIGCOR © 2026 • Corregedoria Geral das Polícias
-                    <div class="valkyria-credits">
-                        Desenvolvido por Valkyria Optimization
-                        <a href="https://discord.gg/4ev9nCuA3W" target="_blank" title="Junte-se ao nosso Discord">
-                            <i class="fab fa-discord"></i>
-                        </a>
-                    </div>
                 </div>
             </div>
         </div>
