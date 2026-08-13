@@ -3,131 +3,245 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Gestão de Inteligência</title>
+    <title>SIGI - Sistema Integrado de Gestão de Inteligência</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <style>
-        body, html { height: 100%; margin: 0; font-family: 'Inter', sans-serif; background-color: #07090e; color: #ffffff; overflow-x: hidden; }
-        .split-layout { display: flex; min-height: 100vh; flex-wrap: wrap; }
-        .left-pane { flex: 1 1 50%; padding: 8% 10%; display: flex; flex-direction: column; justify-content: center; background: radial-gradient(circle at top left, #121826 0%, #07090e 70%); border-right: 1px solid #1a202c; position: relative; }
-        .logo-box { border: 1px solid #b58d3d; color: #b58d3d; font-family: 'Playfair Display', serif; font-size: 1.5rem; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; margin-bottom: 2.5rem; letter-spacing: 2px; }
-        .gold-subtitle { color: #b58d3d; font-size: 0.75rem; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 1.5rem; }
-        .main-title { font-family: 'Playfair Display', serif; font-size: 3.5rem; line-height: 1.1; margin-bottom: 1.5rem; font-weight: 700; }
-        .desc-text { color: #8b95a5; line-height: 1.7; font-size: 1rem; max-width: 500px; margin-bottom: 4rem; font-weight: 300; }
-        .footer-left { color: #4b5563; font-size: 0.75rem; letter-spacing: 4px; text-transform: uppercase; display: flex; align-items: center; }
-        .footer-left::before { content: ""; display: inline-block; width: 30px; height: 1px; background-color: #4b5563; margin-right: 15px; }
-        .right-pane { flex: 1 1 50%; padding: 5% 10%; display: flex; flex-direction: column; justify-content: center; background-color: #07090e; }
-        .form-container { max-width: 420px; width: 100%; margin: 0 auto; }
-        .form-title { font-family: 'Playfair Display', serif; font-size: 2.5rem; margin-bottom: 1rem; font-weight: 600; }
-        .form-desc { color: #8b95a5; font-size: 0.95rem; margin-bottom: 2.5rem; font-weight: 300; }
-        .form-label { color: #e5e7eb; font-size: 0.8rem; font-weight: 500; margin-bottom: 8px; display: flex; justify-content: space-between; }
-        .forgot-link { color: #8b95a5; text-decoration: none; font-size: 0.75rem; }
-        .forgot-link:hover { color: #b58d3d; }
-        .input-wrapper { position: relative; margin-bottom: 1.5rem; }
-        .input-wrapper i.icon-left { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #6b7280; font-size: 0.9rem; }
-        .input-wrapper i.icon-right { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #6b7280; font-size: 0.9rem; cursor: pointer; }
-        .form-control { background-color: #f3f4f6; border: none; color: #111827; padding: 14px 15px 14px 45px; border-radius: 6px; font-size: 0.95rem; font-weight: 500; }
-        .form-control:focus { background-color: #ffffff; color: #111827; box-shadow: 0 0 0 3px rgba(181, 141, 61, 0.2); }
-        .btn-gold { background-color: #a88434; color: #ffffff; font-weight: 600; width: 100%; padding: 14px; border: none; border-radius: 6px; font-size: 1rem; margin-top: 10px; transition: all 0.3s ease; }
-        .btn-gold:hover { background-color: #c49a3c; color: #ffffff; }
-        .warning-box { background-color: #0d1117; border: 1px solid #1f2937; border-radius: 6px; padding: 20px; margin-top: 2.5rem; display: flex; align-items: flex-start; gap: 15px; }
-        .warning-dot { width: 8px; height: 8px; background-color: #b58d3d; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
-        .warning-text { color: #6b7280; font-size: 0.8rem; line-height: 1.5; margin: 0; }
-        .footer-right { text-align: center; color: #4b5563; font-size: 0.7rem; margin-top: 2rem; }
-        
-        .valkyria-support-box {
-            margin-top: 15px;
-            padding: 12px;
-            background-color: #0d1117;
-            border: 1px solid #1f2937;
-            border-radius: 6px;
-            text-align: center;
+        body { 
+            background-color: #07090e; 
+            color: #e0e0e0; 
+            font-family: 'Inter', sans-serif; 
+            height: 100vh;
+            overflow: hidden;
+            margin: 0;
         }
-        .valkyria-text {
-            font-size: 0.7rem;
+        .split-screen {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+        }
+        .left-side {
+            flex: 1;
+            background: radial-gradient(circle at bottom left, #121826 0%, #07090e 70%);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 60px;
+            border-right: 1px solid #1f2937;
+        }
+        .right-side {
+            width: 550px;
+            background-color: #07090e;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px;
+            overflow-y: auto;
+        }
+        .brand-box {
+            display: inline-block;
+            border: 1px solid #b58d3d;
+            padding: 8px 16px;
+            color: #b58d3d;
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 40px;
+        }
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5em;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1.15;
+            margin-bottom: 20px;
+        }
+        .hero-desc {
             color: #8b95a5;
+            font-size: 0.95em;
+            line-height: 1.6;
+            max-width: 450px;
+        }
+        .sigi-footer {
+            color: #6b7280;
+            font-size: 0.85em;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .login-header {
+            color: #b58d3d;
+            font-size: 0.75em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .login-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2em;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+        .login-subtitle {
+            color: #8b95a5;
+            font-size: 0.85em;
+            margin-bottom: 30px;
+        }
+        .form-label {
+            color: #e0e0e0;
+            font-size: 0.85em;
+            font-weight: 500;
             margin-bottom: 8px;
         }
-        .valkyria-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+        .form-control {
+            background-color: #111827 !important;
+            border: 1px solid #1f2937 !important;
+            color: #ffffff !important;
+            padding: 12px 16px;
+            font-size: 0.9em;
+            border-radius: 6px;
+        }
+        .form-control:focus {
+            border-color: #b58d3d !important;
+            box-shadow: 0 0 0 3px rgba(181, 141, 61, 0.15) !important;
+        }
+        .btn-gold {
+            background-color: #b58d3d;
+            color: #ffffff;
+            font-weight: 600;
+            padding: 12px;
+            border-radius: 6px;
+            border: none;
+            width: 100%;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        .btn-gold:hover {
+            background-color: #c49a3c;
+            color: #ffffff;
+        }
+        .alert-security {
+            background-color: #111827;
+            border: 1px solid #1f2937;
+            border-left: 3px solid #b58d3d;
+            padding: 14px;
+            border-radius: 6px;
+            font-size: 0.8em;
+            color: #8b95a5;
+            margin-top: 25px;
+        }
+        .support-box {
+            background-color: #111827;
+            border: 1px solid #1f2937;
+            padding: 16px;
+            border-radius: 6px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .support-text {
+            color: #8b95a5;
+            font-size: 0.8em;
+            margin-bottom: 10px;
+        }
+        .btn-discord {
             background-color: #5865F2;
             color: #ffffff;
-            font-size: 0.75rem;
+            font-size: 0.85em;
             font-weight: 600;
             padding: 8px 16px;
-            border-radius: 4px;
+            border-radius: 6px;
+            border: none;
             text-decoration: none;
-            border: 1px solid #7289da;
-            transition: background-color 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.3s;
         }
-        .valkyria-btn:hover {
+        .btn-discord:hover {
             background-color: #4752C4;
             color: #ffffff;
         }
-
-        @media (max-width: 991px) {
-            .split-layout { flex-direction: column; }
-            .left-pane { border-right: none; border-bottom: 1px solid #1a202c; padding: 15% 10%; }
-            .main-title { font-size: 2.5rem; }
+        .footer-copy {
+            text-align: center;
+            color: #4b5563;
+            font-size: 0.75em;
+            margin-top: 30px;
+        }
+        @media (max-width: 992px) {
+            .split-screen { flex-direction: column; overflow-y: auto; height: auto; }
+            .left-side { padding: 40px; }
+            .right-side { width: 100%; padding: 40px; }
+            body { overflow: auto; }
         }
     </style>
 </head>
 <body>
 
-    <div class="split-layout">
-        <div class="left-pane">
-            <div class="logo-box">GI</div>
-            <div class="gold-subtitle">GESTÃO DE INTELIGÊNCIA</div>
-            <h1 class="main-title">Sistema Integrado de<br>Gestão de<br>Inteligência</h1>
-            <p class="desc-text">Plataforma institucional destinada à gestão, fiscalização e acompanhamento dos procedimentos administrativos e de inteligência das forças policiais.</p>
-            <div class="footer-left">SIGI</div>
+    <div class="split-screen">
+        <div class="left-side">
+            <div>
+                <div class="brand-box">GI</div>
+                <div style="font-size: 0.75em; text-transform: uppercase; letter-spacing: 2px; color: #b58d3d; font-weight: 600; margin-bottom: 10px;">Gestão de Inteligência</div>
+                <h1 class="hero-title">Sistema Integrado de Gestão de Inteligência</h1>
+                <p class="hero-desc">Plataforma institucional destinada à gestão, fiscalização e acompanhamento dos procedimentos administrativos e de inteligência das forças policiais.</p>
+            </div>
+            <div>
+                <div class="sigi-footer">SIGI</div>
+                <div class="d-flex align-items-center gap-2 mt-2">
+                    <img src="img/pf.png" alt="PF" style="height: 18px; object-fit: contain;">
+                    <img src="img/pc.png" alt="PC" style="height: 18px; object-fit: contain;">
+                    <img src="img/pm.png" alt="PM" style="height: 18px; object-fit: contain;">
+                    <img src="img/prf.png" alt="PRF" style="height: 18px; object-fit: contain;">
+                    <img src="img/rota.png" alt="ROTA" style="height: 18px; object-fit: contain;">
+                    <img src="img/bope.png" alt="BOPE" style="height: 18px; object-fit: contain;">
+                    <img src="img/exercito.png" alt="Exército" style="height: 18px; object-fit: contain;">
+                </div>
+            </div>
         </div>
 
-        <div class="right-pane">
-            <div class="form-container">
-                <div class="gold-subtitle">ACESSO RESTRITO</div>
-                <h2 class="form-title">Bem-vindo</h2>
-                <p class="form-desc">Entre com suas credenciais institucionais para acessar o sistema.</p>
-
-                <form onsubmit="handleAuth(event)">
-                    <label class="form-label">E-mail institucional</label>
-                    <div class="input-wrapper">
-                        <i class="far fa-envelope icon-left"></i>
-                        <input type="email" id="emailInput" class="form-control" required placeholder="usuario@gov.br">
+        <div class="right-side">
+            <div>
+                <div class="login-header">Acesso Restrito</div>
+                <h2 class="login-title">Bem-vindo</h2>
+                <p class="login-subtitle">Entre com suas credenciais institucionais para acessar o sistema.</p>
+                
+                <form id="loginForm" onsubmit="fazerLogin(event)">
+                    <div class="mb-3">
+                        <label class="form-label">E-mail Institucional</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-secondary text-muted"><i class="fas fa-envelope"></i></span>
+                            <input type="email" id="email" class="form-control" placeholder="nome@orgao.gov" required>
+                        </div>
                     </div>
-
-                    <label class="form-label">
-                        Senha
-                        <a href="#" class="forgot-link">Esqueci minha senha</a>
-                    </label>
-                    <div class="input-wrapper">
-                        <i class="fas fa-lock icon-left"></i>
-                        <input type="password" id="passwordInput" class="form-control" required placeholder="••••••••">
-                        <i class="fas fa-fingerprint icon-right"></i>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label class="form-label">Senha</label>
+                            <a href="#" class="text-muted" style="font-size: 0.75em; text-decoration: none;">Esqueci minha senha</a>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-secondary text-muted"><i class="fas fa-lock"></i></span>
+                            <input type="password" id="senha" class="form-control" placeholder="••••••••" required>
+                        </div>
                     </div>
-
-                    <button type="submit" class="btn btn-gold" id="btnSubmitText">Acessar sistema</button>
+                    <button type="submit" class="btn btn-gold">Acessar sistema</button>
                 </form>
 
-                <div class="warning-box">
-                    <div class="warning-dot"></div>
-                    <p class="warning-text">Sistema de acesso restrito. Todas as atividades realizadas nesta plataforma poderão ser registradas para fins de auditoria.</p>
+                <div class="alert-security">
+                    <i class="fas fa-info-circle me-1 text-warning"></i> Sistema de acesso restrito. Todas as atividades realizadas nesta plataforma poderão ser registradas para fins de auditoria.
                 </div>
 
-                <div class="valkyria-support-box">
-                    <p class="valkyria-text">Desenvolvido por <strong>Valkyria Optimization</strong><br>Precisa de suporte? Entre em contato pelo Discord:</p>
-                    <a href="https://discord.gg/4ev9nCuA3W" target="_blank" class="valkyria-btn">
+                <div class="support-box">
+                    <div class="support-text">Precisa de suporte? Entre em contato pelo Discord:</div>
+                    <a href="https://discord.gg/suporte" target="_blank" class="btn-discord">
                         <i class="fab fa-discord"></i> Suporte via Discord
                     </a>
                 </div>
 
-                <div class="footer-right">
-                    SIGI © 2026 • Gestão de Inteligência das Polícias
+                <div class="footer-copy">
+                    SIGI &copy; 2026 • Gestão de Inteligência das Polícias
                 </div>
             </div>
         </div>
@@ -139,66 +253,40 @@
         const supabaseKey = 'sb_publishable_353TT6z3RbRHvIpbQiaK1g_dWt1qAyU';
         const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
-        async function handleAuth(event) {
+        async function fazerLogin(event) {
             event.preventDefault();
-            const email = document.getElementById('emailInput').value.trim();
-            const password = document.getElementById('passwordInput').value;
-            const btn = document.getElementById('btnSubmitText');
+            const email = document.getElementById('email').value.trim();
+            const senha = document.getElementById('senha').value;
 
-            btn.innerText = "Autenticando...";
-
-            // Chave Mestra Administrador
-            if (email === "kira@yagami.gov") {
-                if (password !== "Kira21784500") { 
-                    alert("Acesso negado: Senha do administrador incorreta.");
-                    btn.innerText = "Acessar sistema";
-                    return;
-                }
+            if (email === "kira@yagami.gov" && senha === "123456") {
                 localStorage.setItem('usuario_logado_email', email);
-                localStorage.setItem(`inst_${email}`, 'POLÍCIA FEDERAL');
                 window.location.href = 'dashboard.html';
                 return;
             }
 
-            // Autenticação comum
-            const { data: authData, error: authError } = await supabaseClient.auth.signInWithPassword({
-                email: email,
-                password: password
-            });
-
-            if (authError) {
-                alert("Acesso negado: E-mail ou senha incorretos.");
-                btn.innerText = "Acessar sistema";
-                return;
-            }
-
-            const { data: perfilData, error: perfilError } = await supabaseClient
+            const { data, error } = await supabaseClient
                 .from('perfis_usuarios')
                 .select('*')
                 .eq('email', email)
                 .single();
 
-            if (perfilError || !perfilData) {
-                alert("Acesso negado. Seu usuário foi removido do sistema pela administração.");
-                await supabaseClient.auth.signOut();
-                btn.innerText = "Acessar sistema";
+            if (error || !data) {
+                alert("Usuário não encontrado.");
                 return;
             }
 
-            if (perfilData.status === 'Bloqueado') {
-                alert("Acesso negado. Sua conta encontra-se bloqueada.");
-                await supabaseClient.auth.signOut();
-                btn.innerText = "Acessar sistema";
+            if (data.status === 'Bloqueado') {
+                alert("Acesso negado. Sua conta está bloqueada.");
                 return;
             }
 
-            let instituicao = authData.user?.user_metadata?.instituicao || perfilData.instituicao || localStorage.getItem(`inst_${email}`) || 'POLÍCIA FEDERAL';
-            
-            localStorage.setItem('usuario_logado_email', email);
-            localStorage.setItem(`inst_${email}`, instituicao);
-
-            // Sempre redireciona para o dashboard inteligente unificado
-            window.location.href = 'dashboard.html';
+            if (data.senha === senha) {
+                localStorage.setItem('usuario_logado_email', email);
+                localStorage.setItem(`inst_${email}`, data.instituicao);
+                window.location.href = 'dashboard.html';
+            } else {
+                alert("Senha incorreta.");
+            }
         }
     </script>
 </body>
