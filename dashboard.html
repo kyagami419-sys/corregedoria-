@@ -66,6 +66,18 @@
             justify-content: space-between; 
             align-items: center; 
         }
+        .doc-category-title {
+            color: #d4af37;
+            font-size: 1.1em;
+            font-weight: 600;
+            border-bottom: 1px solid #374151;
+            padding-bottom: 8px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
         .table-pf { color: #e0e0e0; background-color: #0d1117; font-size: 0.9em; border-radius: 6px; overflow: hidden; margin-bottom: 0; }
         .table-pf th { background-color: #161b22; color: #b58d3d; border-color: #1f2937; padding: 14px; font-weight: 600; }
         .table-pf td { background-color: #0d1117; color: #e0e0e0; border-color: #1f2937; padding: 14px; }
@@ -73,8 +85,9 @@
         .badge-finalizado { background-color: #047857; color: #fff; padding: 6px 12px; font-weight: 500; border-radius: 4px; }
         .btn-gold { background-color: #b58d3d; color: #ffffff; font-weight: 600; border: none; padding: 8px 18px; border-radius: 6px; transition: all 0.3s; }
         .btn-gold:hover { background-color: #c49a3c; color: #ffffff; }
-        .forca-title { color: #e0e0e0; font-size: 1.1em; margin-top: 30px; margin-bottom: 15px; font-weight: 600; font-family: 'Playfair Display', serif; border-left: 4px solid #b58d3d; padding-left: 10px; }
-        .timer-text { font-family: monospace; font-size: 1.1em; color: #eab308; }
+        .forca-title { color: #e0e0e0; font-size: 1.1em; margin-top: 20px; margin-bottom: 15px; font-weight: 600; font-family: 'Playfair Display', serif; border-left: 4px solid #b58d3d; padding-left: 10px; }
+        .timer-text { font-family: monospace; font-size: 1.05em; color: #eab308; background: #1f2937; padding: 4px 8px; border-radius: 4px; border: 1px solid #374151; }
+        .timer-parado { color: #047857; border-color: #047857; background: #022c22; }
     </style>
 </head>
 <body>
@@ -94,41 +107,47 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="stats-card">
-                    <div><p>Inquéritos em Andamento</p><h3 id="countAndamento">00</h3></div>
+                    <div><p>Documentos em Andamento</p><h3 id="countAndamento">00</h3></div>
                     <i class="fas fa-spinner stats-icon"></i>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="stats-card">
-                    <div><p>Inquéritos Finalizados</p><h3 id="countFinalizados">00</h3></div>
-                    <i class="fas fa-check-circle stats-icon"></i>
+                    <div><p>Documentos Finalizados</p><h3 id="countFinalizados">00</h3></div>
+                    <i class="fas fa-check-double stats-icon"></i>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="stats-card">
-                    <div><p>Inquéritos Arquivados</p><h3 id="countArquivados">00</h3></div>
-                    <i class="fas fa-archive stats-icon"></i>
+                    <div><p>Portarias / Intimações</p><h3 id="countOutros">00</h3></div>
+                    <i class="fas fa-file-signature stats-icon"></i>
                 </div>
             </div>
         </div>
 
         <div class="section-box">
             <div class="section-title">
-                <span><i class="fas fa-clock"></i> Inquéritos em Andamento</span>
-                <a href="gerador.html" class="btn btn-gold btn-sm"><i class="fas fa-plus"></i> Novo Inquérito</a>
+                <span><i class="fas fa-clock"></i> Documentos em Andamento</span>
+                <a href="gerador.html" class="btn btn-gold btn-sm"><i class="fas fa-plus"></i> Novo Documento</a>
             </div>
             <div id="containerAndamento">
-                <!-- Tabelas agrupadas por polícia serão renderizadas aqui -->
+                <!-- Tabelas em andamento renderizadas aqui -->
             </div>
         </div>
 
         <div class="section-box">
             <div class="section-title">
-                <span><i class="fas fa-check-double"></i> Inquéritos Finalizados</span>
+                <span><i class="fas fa-check-double"></i> Documentos Finalizados</span>
             </div>
-            <div id="containerFinalizados">
-                <!-- Tabelas agrupadas por polícia serão renderizadas aqui -->
-            </div>
+            
+            <div class="doc-category-title mt-2"><i class="fas fa-folder-open"></i> Inquéritos Policiais</div>
+            <div id="containerFinalizadosInqueritos"></div>
+            
+            <div class="doc-category-title"><i class="fas fa-file-signature"></i> Portarias</div>
+            <div id="containerFinalizadosPortarias"></div>
+            
+            <div class="doc-category-title"><i class="fas fa-envelope-open-text"></i> Intimações</div>
+            <div id="containerFinalizadosIntimacoes"></div>
         </div>
     </div>
 
@@ -203,13 +222,12 @@
         async function finalizarInquerito(id, numero) {
             const meuEmailAdmin = "kira@yagami.gov"; 
             if (emailUsuarioLogado !== meuEmailAdmin && !instituicaoUsuarioLogado.includes('FEDERAL')) {
-                alert("Apenas administradores podem finalizar inquéritos.");
+                alert("Apenas administradores podem finalizar documentos.");
                 return;
             }
 
-            if (!confirm(`Deseja realmente finalizar o inquérito nº ${numero}? O cronômetro será parado.`)) return;
+            if (!confirm(`Deseja realmente finalizar o documento nº ${numero}? O cronômetro será parado.`)) return;
 
-            // Salva a data atual exata para travar o relógio
             const dataFinalizacao = new Date().toISOString(); 
 
             const { error } = await supabaseClient
@@ -220,7 +238,7 @@
             if (error) {
                 alert("Erro ao finalizar: " + error.message);
             } else {
-                alert("Inquérito finalizado com sucesso!");
+                alert("Documento finalizado com sucesso!");
                 carregarDashboard();
             }
         }
@@ -232,7 +250,7 @@
                 return;
             }
 
-            if (!confirm(`ATENÇÃO: Deseja realmente APAGAR permanentemente o inquérito nº ${numero}?`)) return;
+            if (!confirm(`ATENÇÃO: Deseja realmente APAGAR permanentemente o documento nº ${numero}?`)) return;
 
             const { error } = await supabaseClient
                 .from('inqueritos')
@@ -240,28 +258,27 @@
                 .eq('id', id);
 
             if (error) {
-                alert("Erro ao apagar inquérito: " + error.message);
+                alert("Erro ao apagar documento: " + error.message);
             } else {
-                alert("Inquérito apagado com sucesso!");
+                alert("Documento apagado com sucesso!");
                 carregarDashboard();
             }
         }
 
-        // --- LÓGICA DO CRONÔMETRO ---
         function formatarTempoDecorrido(ms) {
             if (ms < 0) ms = 0;
             const dias = Math.floor(ms / (1000 * 60 * 60 * 24));
             const horas = Math.floor((ms % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutos = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
-            const segundos = Math.floor((ms % (1000 * 60)) / 1000);
 
-            let tempoString = "";
-            if (dias > 0) tempoString += `${dias}d `;
-            tempoString += `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
-            return tempoString;
+            let partes = [];
+            if (dias > 0) partes.push(`${dias}d`);
+            if (horas > 0 || dias > 0) partes.push(`${horas}h`);
+            partes.push(`${minutos}m`);
+            
+            return partes.join(' '); 
         }
 
-        // Atualiza os relógios a cada 1 segundo
         setInterval(() => {
             const agora = new Date().getTime();
             document.querySelectorAll('.cronometro-ativo').forEach(el => {
@@ -270,34 +287,32 @@
                     const inicioMs = new Date(dataInicio).getTime();
                     el.innerText = formatarTempoDecorrido(agora - inicioMs);
                 } else {
-                    el.innerText = "--:--:--";
+                    el.innerText = "Calculando...";
                 }
             });
-        }, 1000);
-        // ----------------------------
+        }, 1000); 
 
         function renderizarTabelasAgrupadas(agrupados, containerId, isFinalizado, souAdmin) {
             const container = document.getElementById(containerId);
             container.innerHTML = '';
 
             if (Object.keys(agrupados).length === 0) {
-                container.innerHTML = `<div class="text-center text-muted p-3">Nenhum inquérito registrado nesta categoria.</div>`;
+                container.innerHTML = `<div class="text-center text-muted p-3 bg-dark border border-secondary rounded">Nenhum documento registrado nesta categoria.</div>`;
                 return;
             }
 
             for (const [forcaPolicial, inqueritos] of Object.entries(agrupados)) {
-                // Criação da tabela para cada polícia
                 let tabelaHTML = `
                     <div class="forca-title"><i class="fas fa-building"></i> ${forcaPolicial}</div>
                     <div class="table-responsive">
                         <table class="table table-pf table-hover align-middle mb-4">
                             <thead>
                                 <tr>
-                                    <th>Nº Inquérito</th>
+                                    <th>Nº Documento</th>
+                                    <th>Tipo</th>
                                     <th>Encarregado(a)</th>
-                                    <th>Data Início</th>
-                                    <th>${isFinalizado ? 'Tempo Total (Parado)' : 'Tempo Aberto (Cronômetro)'}</th>
-                                    <th>Natureza</th>
+                                    <th>Data de Registro</th>
+                                    <th>${isFinalizado ? 'Tempo Total (Parado)' : 'Tempo Aberto'}</th>
                                     <th>Status</th>
                                     <th>Ações</th>
                                 </tr>
@@ -306,35 +321,40 @@
                 `;
 
                 inqueritos.forEach(item => {
-                    const botaoApagarHTML = souAdmin ? `<button class="btn btn-sm btn-outline-danger ms-1" title="Apagar Inquérito" onclick="apagarInquerito(${item.id}, '${item.numero}')"><i class="fas fa-trash"></i></button>` : '';
+                    const botaoApagarHTML = souAdmin ? `<button class="btn btn-sm btn-outline-danger ms-1" title="Apagar" onclick="apagarInquerito(${item.id}, '${item.numero}')"><i class="fas fa-trash"></i></button>` : '';
                     
-                    let tempoHTML = "";
-                    let dataInicioFormatada = item.data_inicio ? new Date(item.data_inicio).toLocaleString('pt-BR') : 'Não informada';
+                    let dataCalculo = item.data_inicio || item.created_at; 
+                    let dataFormatadaExibicao = dataCalculo ? new Date(dataCalculo).toLocaleString('pt-BR').substring(0, 16) : 'Desconhecida';
+                    let tipoDocText = item.tipo || 'Inquérito Policial';
+                    let encarregadoExibicao = item.encarregado || 'N/A';
 
+                    let tempoHTML = "";
                     if (isFinalizado) {
-                        // Tempo Parado (Fim - Início)
-                        if (item.data_inicio && item.data_fim) {
-                            const diff = new Date(item.data_fim).getTime() - new Date(item.data_inicio).getTime();
-                            tempoHTML = `<span class="timer-text" style="color: #047857;">${formatarTempoDecorrido(diff)}</span>`;
+                        if (dataCalculo && item.data_fim) {
+                            const diff = new Date(item.data_fim).getTime() - new Date(dataCalculo).getTime();
+                            tempoHTML = `<span class="timer-text timer-parado"><i class="fas fa-lock"></i> ${formatarTempoDecorrido(diff)}</span>`;
                         } else {
-                            tempoHTML = `<span class="text-muted">Desconhecido</span>`;
+                            tempoHTML = `<span class="text-muted">N/D</span>`;
                         }
                     } else {
-                        // Tempo Rodando
-                        tempoHTML = `<span class="timer-text cronometro-ativo" data-inicio="${item.data_inicio}">Calculando...</span>`;
+                        if (dataCalculo) {
+                            tempoHTML = `<span class="timer-text cronometro-ativo" data-inicio="${dataCalculo}">...</span>`;
+                        } else {
+                            tempoHTML = `<span class="text-muted">Aguardando...</span>`;
+                        }
                     }
 
                     tabelaHTML += `
                         <tr>
-                            <td>${item.numero}</td>
-                            <td>${item.encarregado}</td>
-                            <td>${dataInicioFormatada}</td>
+                            <td><strong>${item.numero || 'S/N'}</strong></td>
+                            <td>${tipoDocText}</td>
+                            <td>${encarregadoExibicao}</td>
+                            <td>${dataFormatadaExibicao}</td>
                             <td>${tempoHTML}</td>
-                            <td>${item.natureza}</td>
                             <td><span class="badge ${isFinalizado ? 'badge-finalizado' : 'badge-andamento'}">${item.status}</span></td>
                             <td>
                                 <button class="btn btn-sm btn-outline-info" title="Visualizar" onclick="visualizarInquerito(${item.id})"><i class="fas fa-eye"></i></button>
-                                ${(!isFinalizado && souAdmin) ? `<button class="btn btn-sm btn-outline-success" title="Finalizar Inquérito" onclick="finalizarInquerito(${item.id}, '${item.numero}')"><i class="fas fa-check"></i></button>` : ''}
+                                ${(!isFinalizado && souAdmin) ? `<button class="btn btn-sm btn-outline-success" title="Finalizar Documento" onclick="finalizarInquerito(${item.id}, '${item.numero}')"><i class="fas fa-check"></i></button>` : ''}
                                 ${botaoApagarHTML}
                             </td>
                         </tr>
@@ -349,8 +369,6 @@
         async function carregarDashboard() {
             await verificarAcesso();
 
-            if (!emailUsuarioLogado) return;
-
             const { data, error } = await supabaseClient
                 .from('inqueritos')
                 .select('*')
@@ -363,20 +381,21 @@
 
             let qtdAndamento = 0;
             let qtdFinalizados = 0;
-            let qtdArquivados = 0;
+            let qtdOutros = 0; 
 
             const meuEmailAdmin = "kira@yagami.gov";
             const souAdmin = (emailUsuarioLogado === meuEmailAdmin);
             const userInstNormalized = (instituicaoUsuarioLogado || '').trim().toUpperCase();
             const isPoliciaFederal = souAdmin;
 
-            // Objetos para separar os inquéritos pelas Forças Policiais
             const inqueritosEmAndamentoAgrupados = {};
-            const inqueritosFinalizadosAgrupados = {};
+            const finalizadosInqueritos = {};
+            const finalizadosPortarias = {};
+            const finalizadosIntimacoes = {};
 
             if (data && data.length > 0) {
                 data.forEach(item => {
-                    let forcaInq = 'POLÍCIA FEDERAL'; // Padrão
+                    let forcaInq = 'POLÍCIA FEDERAL'; 
                     if (item.dados_extras) {
                         try {
                             const ext = JSON.parse(item.dados_extras);
@@ -384,32 +403,49 @@
                         } catch(e){}
                     }
 
-                    // Se não for admin, filtra para ver apenas a própria corporação
                     if (!isPoliciaFederal && forcaInq !== userInstNormalized) {
                         return; 
                     }
 
+                    let tipoDoc = item.tipo || 'Inquérito Policial';
+
                     if (item.status === 'Finalizado') {
                         qtdFinalizados++;
-                        if (!inqueritosFinalizadosAgrupados[forcaInq]) inqueritosFinalizadosAgrupados[forcaInq] = [];
-                        inqueritosFinalizadosAgrupados[forcaInq].push(item);
+                        
+                        if (tipoDoc === 'Portaria') {
+                            if (!finalizadosPortarias[forcaInq]) finalizadosPortarias[forcaInq] = [];
+                            finalizadosPortarias[forcaInq].push(item);
+                            qtdOutros++;
+                        } else if (tipoDoc === 'Intimação') {
+                            if (!finalizadosIntimacoes[forcaInq]) finalizadosIntimacoes[forcaInq] = [];
+                            finalizadosIntimacoes[forcaInq].push(item);
+                            qtdOutros++;
+                        } else {
+                            if (!finalizadosInqueritos[forcaInq]) finalizadosInqueritos[forcaInq] = [];
+                            finalizadosInqueritos[forcaInq].push(item);
+                        }
+
                     } else if (item.status === 'Arquivado') {
-                        qtdArquivados++;
+                        
                     } else {
                         qtdAndamento++;
+                        if (tipoDoc !== 'Inquérito Policial') qtdOutros++;
+                        
                         if (!inqueritosEmAndamentoAgrupados[forcaInq]) inqueritosEmAndamentoAgrupados[forcaInq] = [];
                         inqueritosEmAndamentoAgrupados[forcaInq].push(item);
                     }
                 });
             }
 
-            // Renderizar na tela
             renderizarTabelasAgrupadas(inqueritosEmAndamentoAgrupados, 'containerAndamento', false, souAdmin);
-            renderizarTabelasAgrupadas(inqueritosFinalizadosAgrupados, 'containerFinalizados', true, souAdmin);
+            
+            renderizarTabelasAgrupadas(finalizadosInqueritos, 'containerFinalizadosInqueritos', true, souAdmin);
+            renderizarTabelasAgrupadas(finalizadosPortarias, 'containerFinalizadosPortarias', true, souAdmin);
+            renderizarTabelasAgrupadas(finalizadosIntimacoes, 'containerFinalizadosIntimacoes', true, souAdmin);
 
             document.getElementById('countAndamento').innerText = String(qtdAndamento).padStart(2, '0');
             document.getElementById('countFinalizados').innerText = String(qtdFinalizados).padStart(2, '0');
-            document.getElementById('countArquivados').innerText = String(qtdArquivados).padStart(2, '0');
+            document.getElementById('countOutros').innerText = String(qtdOutros).padStart(2, '0');
         }
 
         carregarDashboard();
