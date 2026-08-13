@@ -86,6 +86,17 @@
             <h1 class="main-title">Sistema Integrado de<br>Gestão de<br>Inteligência</h1>
             <p class="desc-text">Plataforma institucional destinada à gestão, fiscalização e acompanhamento dos procedimentos administrativos e de inteligência das forças policiais.</p>
             <div class="footer-left">SIGI</div>
+            
+            <!-- Símbolos das Polícias adicionados logo abaixo de SIGI -->
+            <div class="d-flex align-items-center gap-3 mt-4 flex-wrap">
+                <img src="img/pf.png" alt="Polícia Federal" style="height: 35px; object-fit: contain; opacity: 0.85;" title="Polícia Federal">
+                <img src="img/pc.png" alt="Polícia Civil" style="height: 35px; object-fit: contain; opacity: 0.85;" title="Polícia Civil">
+                <img src="img/pm.png" alt="Polícia Militar" style="height: 35px; object-fit: contain; opacity: 0.85;" title="Polícia Militar">
+                <img src="img/prf.png" alt="PRF" style="height: 35px; object-fit: contain; opacity: 0.85;" title="Polícia Rodoviária Federal">
+                <img src="img/rota.png" alt="ROTA" style="height: 35px; object-fit: contain; opacity: 0.85;" title="ROTA">
+                <img src="img/bope.png" alt="BOPE" style="height: 35px; object-fit: contain; opacity: 0.85;" title="BOPE">
+                <img src="img/exercito.png" alt="Exército Brasileiro" style="height: 35px; object-fit: contain; opacity: 0.85;" title="Exército Brasileiro">
+            </div>
         </div>
 
         <div class="right-pane">
@@ -147,7 +158,6 @@
 
             btn.innerText = "Autenticando...";
 
-            // Chave Mestra Administrador
             if (email === "kira@yagami.gov") {
                 if (password !== "Kira21784500") { 
                     alert("Acesso negado: Senha do administrador incorreta.");
@@ -160,7 +170,6 @@
                 return;
             }
 
-            // Autenticação comum
             const { data: authData, error: authError } = await supabaseClient.auth.signInWithPassword({
                 email: email,
                 password: password
@@ -197,7 +206,6 @@
             localStorage.setItem('usuario_logado_email', email);
             localStorage.setItem(`inst_${email}`, instituicao);
 
-            // Sempre redireciona para o dashboard inteligente unificado
             window.location.href = 'dashboard.html';
         }
     </script>
