@@ -45,7 +45,7 @@
 
     <div class="header-pf">
         <img src="img/pf.png" id="imgBrasaoForm" alt="Brasão Instituição">
-        <h4 class="mt-2 text-white">SISTEMA INTEGRADO - CORREGEDORIA</h4>
+        <h4 class="mt-2 text-white">SISTEMA INTEGRADO - GESTÃO DE INTELIGÊNCIA</h4>
     </div>
 
     <div class="container mb-5">
@@ -66,7 +66,6 @@
                 <input type="radio" class="btn-check" name="docType" id="typeIntimacao" value="intimacao" autocomplete="off" onchange="toggleFormType()">
                 <label class="btn btn-outline-gold" for="typeIntimacao">Intimação</label>
                 
-                <!-- Botão de Investigação (Ficará oculto via JS se não tiver permissão) -->
                 <input type="radio" class="btn-check" name="docType" id="typeInvestigacao" value="investigacao" autocomplete="off" onchange="toggleFormType()" style="display:none;">
                 <label class="btn btn-outline-gold" for="typeInvestigacao" id="lblInvestigacao" style="display:none;">Investigações</label>
             </div>
@@ -80,6 +79,16 @@
                         <div class="col-md-3"><label class="form-label">Data de Emissão</label><input type="date" id="invData" class="form-control"></div>
                         <div class="col-md-6"><label class="form-label">Objetivo da Pacificação</label><input type="text" id="invObjetivo" class="form-control"></div>
                         <div class="col-md-12"><label class="form-label">Finalidade da Investigação</label><textarea id="invFinalidade" class="form-control" rows="2"></textarea></div>
+                        <div class="col-md-6"><label class="form-label">Responsável pela Investigação</label><input type="text" id="invResponsavel" class="form-control" placeholder="Nome do Responsável"></div>
+                        <div class="col-md-6">
+                            <label class="form-label">Setor Responsável</label>
+                            <select id="invSetor" class="form-select">
+                                <option value="">Selecione...</option>
+                                <option value="DEIC">DEIC</option>
+                                <option value="PFI">PFI</option>
+                                <option value="NOE">NOE</option>
+                            </select>
+                        </div>
                         <div class="col-md-4"><label class="form-label">Nome da Organização</label><input type="text" id="invOrgNome" class="form-control"></div>
                         <div class="col-md-4"><label class="form-label">Localização</label><input type="text" id="invLocalizacao" class="form-control"></div>
                         <div class="col-md-4"><label class="form-label">Crimes</label><input type="text" id="invCrimes" class="form-control"></div>
@@ -89,7 +98,6 @@
                 <div class="form-section">
                     <h4 class="section-title">Liderança Identificada</h4>
                     <div id="liderancaContainer">
-                        <!-- Lideres pré-carregados (00, 01, 02) ou adicionados dinamicamente -->
                     </div>
                     <button type="button" class="btn btn-add mt-2" onclick="addLider()"><i class="fas fa-plus"></i> Adicionar Líder</button>
                 </div>
@@ -378,7 +386,6 @@
             container.appendChild(row);
         }
 
-        // Nova função para Liderança
         function addLider(dados = {}) {
             const container = document.getElementById('liderancaContainer');
             if(!container) return;
@@ -419,18 +426,16 @@
                 tipoDoc = 'Investigação';
                 numDoc = document.getElementById('invNum')?.value || 'S/N';
                 nat = document.getElementById('invCrimes')?.value || 'Investigação Registrada';
-                // Para a investigação vamos usar a Data de emissao como data inicio
                 dtInit = document.getElementById('invData')?.value || null; 
+                enc = document.getElementById('invResponsavel')?.value || 'Não informado'; 
             }
 
-            // Coleta de arrays padrão
             let delegados = []; document.querySelectorAll('#delegadosPortariaContainer .dynamic-row').forEach(row => { delegados.push({ nome: row.querySelector('.i-delNome').value, mat: row.querySelector('.i-delMat').value }); });
             let envolvidos = []; document.querySelectorAll('#envolvidosContainer .dynamic-row').forEach(row => { envolvidos.push({ nome: row.querySelector('.i-nome').value, papel: row.querySelector('.i-papel').value, rg: row.querySelector('.i-passaporte').value, tel: row.querySelector('.i-tel').value }); });
             let evidencias = []; document.querySelectorAll('#evidenciasContainer .dynamic-row').forEach(row => { evidencias.push({ nome: row.querySelector('.i-provaNome').value, link: row.querySelector('.i-provaLink').value }); });
             let depoimentos = []; document.querySelectorAll('#depoimentosContainer .dynamic-row').forEach(row => { depoimentos.push({ nome: row.querySelector('.i-depNome').value, link: row.querySelector('.i-depLink').value }); });
             let assinaturas = []; document.querySelectorAll('#assinaturasContainer .dynamic-row').forEach(row => { assinaturas.push({ nome: row.querySelector('.i-assNome').value, cargo: row.querySelector('.i-assCargo').value }); });
 
-            // Coleta exclusiva da Investigação
             let lideres = [];
             document.querySelectorAll('#liderancaContainer .dynamic-row').forEach(row => {
                 lideres.push({
@@ -443,14 +448,14 @@
 
             const forcaPolicialSelecionada = document.getElementById('forcaPolicial').value;
 
-            // Objeto com todas as variáveis secundárias 
             const extrasObj = { 
                 delegados, envolvidos, evidencias, depoimentos, assinaturas, forcaPolicial: forcaPolicialSelecionada,
                 
-                // Variáveis da investigação
                 invData: document.getElementById('invData')?.value || '',
                 invObjetivo: document.getElementById('invObjetivo')?.value || '',
                 invFinalidade: document.getElementById('invFinalidade')?.value || '',
+                invResponsavel: document.getElementById('invResponsavel')?.value || '',
+                invSetor: document.getElementById('invSetor')?.value || '',
                 invOrgNome: document.getElementById('invOrgNome')?.value || '',
                 invLocalizacao: document.getElementById('invLocalizacao')?.value || '',
                 lideres: lideres,
@@ -561,18 +566,19 @@
                                 document.getElementById('forcaPolicial').value = extras.forcaPolicial;
                             }
 
-                            // Preenchendo campos da Investigação
                             if(data.tipo === 'Investigação') {
                                 document.getElementById('invData').value = extras.invData || '';
                                 document.getElementById('invObjetivo').value = extras.invObjetivo || '';
                                 document.getElementById('invFinalidade').value = extras.invFinalidade || '';
+                                document.getElementById('invResponsavel').value = extras.invResponsavel || data.encarregado || '';
+                                document.getElementById('invSetor').value = extras.invSetor || '';
                                 document.getElementById('invOrgNome').value = extras.invOrgNome || '';
                                 document.getElementById('invLocalizacao').value = extras.invLocalizacao || '';
                                 
                                 document.getElementById('liderancaContainer').innerHTML = '';
                                 if(extras.lideres && extras.lideres.length > 0) {
                                     extras.lideres.forEach(lid => addLider(lid));
-                                } else { addLider(); addLider(); addLider(); } // Inicia com 3 se vazio
+                                } else { addLider(); addLider(); addLider(); } 
 
                                 document.getElementById('invLogBauLider').value = extras.invLogBauLider || '';
                                 document.getElementById('invLogBauGerencia').value = extras.invLogBauGerencia || '';
@@ -616,8 +622,7 @@
                     }
                 }
             } else {
-                // Modo Criação do Zero
-                addLider(); addLider(); addLider(); // Coloca os 3 líderes por padrão (00, 01, 02)
+                addLider(); addLider(); addLider(); 
                 addDelegadoPortaria(); addEnvolvido(); addEvidencia(); addDepoimento(); addAssinatura();
             }
         };
@@ -625,7 +630,6 @@
         function formatDatetime(dt) {
             if(!dt) return "";
             const d = new Date(dt);
-            // Corrige fuso se vier só a data YYYY-MM-DD
             if (dt.length <= 10) {
                 d.setMinutes(d.getMinutes() + d.getTimezoneOffset());
                 return d.toLocaleDateString('pt-BR');
@@ -698,6 +702,8 @@
                 const data = formatDatetime(document.getElementById('invData').value);
                 const obj = document.getElementById('invObjetivo').value || 'N/A';
                 const fin = document.getElementById('invFinalidade').value || 'N/A';
+                const resp = document.getElementById('invResponsavel').value || 'N/A';
+                const setor = document.getElementById('invSetor').value || 'N/A';
                 const org = document.getElementById('invOrgNome').value || 'N/A';
                 const loc = document.getElementById('invLocalizacao').value || 'N/A';
                 const cri = document.getElementById('invCrimes').value || 'N/A';
@@ -723,6 +729,7 @@
                     
                     buildSectionHeader('INICIAL'),
                     { columns: [ [{ text: `Nº Relatório: ${num}`, fontSize: 10 }, { text: `Data: ${data}`, fontSize: 10 }], [{ text: `Objetivo: ${obj}`, fontSize: 10 }, { text: `Crimes: ${cri}`, fontSize: 10 }] ], margin: [0, 0, 0, 5] },
+                    { columns: [ [{ text: `Responsável: ${resp}`, fontSize: 10 }], [{ text: `Setor: ${setor}`, fontSize: 10 }] ], margin: [0, 0, 0, 5] },
                     { text: `Finalidade: ${fin}`, fontSize: 10, margin: [0, 2, 0, 5] },
                     { text: `Organização: ${org} - Localização: ${loc}`, fontSize: 10, margin: [0, 0, 0, 10] },
 
@@ -753,7 +760,6 @@
                 ];
             }
             else {
-                // Inquérito normal
                 const numInq = document.getElementById('numInq').value || 'S/N';
                 const natureza = document.getElementById('natureza').value || 'Não informada';
                 const dirGeral = document.getElementById('dirGeral').value || 'Não informado';
