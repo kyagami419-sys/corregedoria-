@@ -44,8 +44,8 @@
 <body>
 
     <div class="header-pf">
-        <img src="https://cdn.discordapp.com/attachments/1506412452643082390/1536434427230552084/Policia_Federal.svg.webp?ex=6a7b6391&is=6a7a1211&hm=e5c65d33e35b7a6c80747b36eaeb68321eead96e507c238b2585e77b73f665c4&" alt="Brasão PF">
-        <h4 class="mt-2 text-white">SISTEMA INTEGRADO - CORREGEDORIA</h4>
+        <img src="img/pf.png" id="imgBrasaoForm" alt="Brasão Instituição">
+        <h4 class="mt-2 text-white">SISTEMA INTEGRADO DE INTELIGÊNCIA </h4>
     </div>
 
     <div class="container mb-5">
@@ -56,7 +56,7 @@
         <form id="docForm">
             <input type="hidden" id="regId">
 
-            <div class="doc-selector">
+            <div class="doc-selector" id="botoesSeletor">
                 <input type="radio" class="btn-check" name="docType" id="typeInquerito" value="inquerito" autocomplete="off" checked onchange="toggleFormType()">
                 <label class="btn btn-outline-gold" for="typeInquerito">Inquérito Policial</label>
 
@@ -65,8 +65,64 @@
 
                 <input type="radio" class="btn-check" name="docType" id="typeIntimacao" value="intimacao" autocomplete="off" onchange="toggleFormType()">
                 <label class="btn btn-outline-gold" for="typeIntimacao">Intimação</label>
+                
+                <!-- Botão de Investigação (Ficará oculto via JS se não tiver permissão) -->
+                <input type="radio" class="btn-check" name="docType" id="typeInvestigacao" value="investigacao" autocomplete="off" onchange="toggleFormType()" style="display:none;">
+                <label class="btn btn-outline-gold" for="typeInvestigacao" id="lblInvestigacao" style="display:none;">Investigações</label>
             </div>
 
+            <!-- BLOCO DE INVESTIGAÇÃO -->
+            <div id="blocoInvestigacao" style="display: none;">
+                <div class="form-section">
+                    <h4 class="section-title">Inicial</h4>
+                    <div class="row g-2">
+                        <div class="col-md-3"><label class="form-label">Nº do Relatório/Inquérito</label><input type="text" id="invNum" class="form-control" placeholder="Ex: 001/2026"></div>
+                        <div class="col-md-3"><label class="form-label">Data de Emissão</label><input type="date" id="invData" class="form-control"></div>
+                        <div class="col-md-6"><label class="form-label">Objetivo da Pacificação</label><input type="text" id="invObjetivo" class="form-control"></div>
+                        <div class="col-md-12"><label class="form-label">Finalidade da Investigação</label><textarea id="invFinalidade" class="form-control" rows="2"></textarea></div>
+                        <div class="col-md-4"><label class="form-label">Nome da Organização</label><input type="text" id="invOrgNome" class="form-control"></div>
+                        <div class="col-md-4"><label class="form-label">Localização</label><input type="text" id="invLocalizacao" class="form-control"></div>
+                        <div class="col-md-4"><label class="form-label">Crimes</label><input type="text" id="invCrimes" class="form-control"></div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h4 class="section-title">Liderança Identificada</h4>
+                    <div id="liderancaContainer">
+                        <!-- Lideres pré-carregados (00, 01, 02) ou adicionados dinamicamente -->
+                    </div>
+                    <button type="button" class="btn btn-add mt-2" onclick="addLider()"><i class="fas fa-plus"></i> Adicionar Líder</button>
+                </div>
+
+                <div class="form-section">
+                    <h4 class="section-title">Estrutura e Logística</h4>
+                    <div class="row g-2">
+                        <div class="col-md-6"><label class="form-label">Foto do Baú do Líder (Link)</label><input type="text" id="invLogBauLider" class="form-control"></div>
+                        <div class="col-md-6"><label class="form-label">Foto do Baú da Gerência (Link)</label><input type="text" id="invLogBauGerencia" class="form-control"></div>
+                        <div class="col-md-6"><label class="form-label">Baú de Membros (Link)</label><input type="text" id="invLogBauMembros" class="form-control"></div>
+                        <div class="col-md-6"><label class="form-label">Foto Aérea (Link)</label><input type="text" id="invLogAerea" class="form-control"></div>
+                        <div class="col-md-6"><label class="form-label">Foto da P1 (Link)</label><input type="text" id="invLogP1" class="form-control"></div>
+                        <div class="col-md-6"><label class="form-label">Foto da P2 (Link)</label><input type="text" id="invLogP2" class="form-control"></div>
+                        <div class="col-md-4"><label class="form-label">Foto da Rota de Farm (Link)</label><input type="text" id="invLogRotaFarm" class="form-control"></div>
+                        <div class="col-md-4"><label class="form-label">Foto Blip da Rota (Link)</label><input type="text" id="invLogBlip" class="form-control"></div>
+                        <div class="col-md-4"><label class="form-label">Imagem Rastreamento GPS (Link)</label><input type="text" id="invLogGPS" class="form-control" placeholder="Com data/hora"></div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h4 class="section-title">Comércio</h4>
+                    <div class="row g-2">
+                        <div class="col-md-6"><label class="form-label">Produto Vendido (membros falando)</label><input type="text" id="invComProduto" class="form-control"></div>
+                        <div class="col-md-6"><label class="form-label">Vídeo: Membro vendendo produto (Link)</label><input type="text" id="invComVidVenda" class="form-control"></div>
+                        <div class="col-md-6"><label class="form-label">Vídeo: Membro falando dos produtos (Link)</label><input type="text" id="invComVidFalando" class="form-control"></div>
+                        <div class="col-md-6"><label class="form-label">Vídeo: QG por completo (Link)</label><input type="text" id="invComVidQG" class="form-control"></div>
+                        <div class="col-md-6"><label class="form-label">Foto: Indivíduos Armados (Link)</label><input type="text" id="invComFotoArmados" class="form-control"></div>
+                        <div class="col-md-6"><label class="form-label">Foto: Vestimentas Padrão no QG (Link)</label><input type="text" id="invComFotoRoupas" class="form-control"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BLOCOS ANTIGOS (Intimação, Portaria, Inquérito) -->
             <div id="blocoIntimacao" style="display: none;">
                 <div class="form-section">
                     <h4 class="section-title">Dados da Intimação</h4>
@@ -104,8 +160,6 @@
             </div>
 
             <div id="blocoInquerito">
-                
-                <!-- SELETOR DE INSTITUIÇÃO (Agora no Inquérito Policial) -->
                 <div class="form-section" id="blocoForcaPolicial">
                     <h4 class="section-title">Instituição Responsável</h4>
                     <div class="col-md-4">
@@ -179,13 +233,14 @@
                 </div>
             </div>
 
-            <div class="form-section">
+            <!-- Assinaturas servem para todos os tipos -->
+            <div class="form-section" id="blocoAssinaturas">
                 <h4 class="section-title">Assinaturas Eletrônicas</h4>
                 <div id="assinaturasContainer"></div>
                 <button type="button" class="btn btn-add mt-2" onclick="addAssinatura()"><i class="fas fa-plus"></i> Adicionar Assinante</button>
             </div>
 
-            <button type="button" class="btn btn-salvar-banco mt-3" onclick="salvarInqueritoManualmente()"><i class="fas fa-save"></i> SALVAR INQUÉRITO NO SISTEMA</button>
+            <button type="button" class="btn btn-salvar-banco mt-3" onclick="salvarInqueritoManualmente()"><i class="fas fa-save"></i> SALVAR NO SISTEMA</button>
             <button type="button" class="btn btn-gerar mt-2 mb-4" onclick="gerarPDF()"><i class="fas fa-file-pdf"></i> GERAR DOCUMENTO EM PDF</button>
         </form>
     </div>
@@ -197,26 +252,64 @@
         const supabaseUrl = 'https://qnfckdzotzenaqaswqjb.supabase.co';
         const supabaseKey = 'sb_publishable_353TT6z3RbRHvIpbQiaK1g_dWt1qAyU';
         const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
-
-    
-      async function verificarAcessoEStatus() {
-            return;
-        }
-        verificarAcessoEStatus();
         
+        let instituicaoUserGlobal = 'POLÍCIA FEDERAL';
+
+        const brasoesInstituicoes = {
+            'POLÍCIA FEDERAL': 'img/pf.png',
+            'POLÍCIA CIVIL': 'img/pc.png',
+            'POLÍCIA MILITAR': 'img/pm.png',
+            'POLÍCIA RODOVIÁRIA FEDERAL (PRF)': 'img/prf.png',
+            'ROTA': 'img/rota.png',
+            'BOPE': 'img/bope.png',
+            'EXÉRCITO BRASILEIRO': 'img/exercito.png'
+        };
+
+        async function verificarAcessoEStatus() {
+            let emailUsuarioLogado = localStorage.getItem('usuario_logado_email');
+            
+            if (!emailUsuarioLogado) {
+                // FALLBACK LOCAL MODO DE TESTE
+                emailUsuarioLogado = "kira@yagami.gov";
+                instituicaoUserGlobal = 'POLÍCIA FEDERAL';
+            } else {
+                if (emailUsuarioLogado === "kira@yagami.gov") {
+                    instituicaoUserGlobal = 'POLÍCIA FEDERAL';
+                } else {
+                    instituicaoUserGlobal = localStorage.getItem(`inst_${emailUsuarioLogado}`) || 'POLÍCIA FEDERAL';
+                }
+            }
+
+            const instNormalized = instituicaoUserGlobal.trim().toUpperCase();
+            
+            // Atualiza o brasão da página
+            if (brasoesInstituicoes[instNormalized]) {
+                document.getElementById('imgBrasaoForm').src = brasoesInstituicoes[instNormalized];
+            }
+
+            // Regra do Botão de Investigação: Apenas PC, PF, PRF ou Admin (kira)
+            if (instNormalized === 'POLÍCIA CIVIL' || instNormalized === 'POLÍCIA FEDERAL' || instNormalized === 'POLÍCIA RODOVIÁRIA FEDERAL (PRF)' || emailUsuarioLogado === "kira@yagami.gov") {
+                document.getElementById('typeInvestigacao').style.display = 'inline-block';
+                document.getElementById('lblInvestigacao').style.display = 'inline-block';
+            }
+        }
 
         function toggleFormType() {
             const tipoSelecionado = document.querySelector('input[name="docType"]:checked').value;
+            
             const isPortaria = (tipoSelecionado === 'portaria');
             const isIntimacao = (tipoSelecionado === 'intimacao');
+            const isInvestigacao = (tipoSelecionado === 'investigacao');
+            const isInquerito = (tipoSelecionado === 'inquerito');
 
             document.getElementById('blocoPortaria').style.display = isPortaria ? 'block' : 'none';
             document.getElementById('blocoIntimacao').style.display = isIntimacao ? 'block' : 'none';
+            document.getElementById('blocoInvestigacao').style.display = isInvestigacao ? 'block' : 'none';
             
-            const isAnyInquerito = (!isPortaria && !isIntimacao);
-            document.getElementById('blocoInquerito').style.display = isAnyInquerito ? 'block' : 'none';
+            document.getElementById('blocoInquerito').style.display = isInquerito ? 'block' : 'none';
             
-            document.getElementById('blocoForcaPolicial').style.display = isAnyInquerito ? 'block' : 'none';
+            // A seleção de força policial só aparece no Inquérito e na Investigação (caso o admin queira mudar)
+            document.getElementById('blocoForcaPolicial').style.display = (isInquerito || isInvestigacao) ? 'block' : 'none';
         }
 
         function addDelegadoPortaria(dados = {}) {
@@ -285,6 +378,24 @@
             container.appendChild(row);
         }
 
+        // Nova função para Liderança
+        function addLider(dados = {}) {
+            const container = document.getElementById('liderancaContainer');
+            if(!container) return;
+            
+            const numAtual = container.children.length.toString().padStart(2, '0');
+            
+            const row = document.createElement('div');
+            row.className = 'row g-2 dynamic-row align-items-end';
+            row.innerHTML = `
+                <div class="col-md-3"><label class="form-label">Líder ${numAtual} - Nome</label><input type="text" class="form-control i-lidNome" value="${dados.nome || ''}"></div>
+                <div class="col-md-2"><label class="form-label">RG</label><input type="text" class="form-control i-lidRG" value="${dados.rg || ''}"></div>
+                <div class="col-md-2"><label class="form-label">Função</label><input type="text" class="form-control i-lidFunc" value="${dados.funcao || ''}"></div>
+                <div class="col-md-4"><label class="form-label">Link Prova/Foto</label><input type="text" class="form-control i-lidLink" value="${dados.link || ''}"></div>
+                <div class="col-md-1"><button type="button" class="btn btn-danger btn-sm w-100" onclick="this.parentElement.parentElement.remove()"><i class="fas fa-trash"></i></button></div>`;
+            container.appendChild(row);
+        }
+
         async function salvarInqueritoManualmente() {
             const id = document.getElementById('regId').value;
             const tipoSelecionado = document.querySelector('input[name="docType"]:checked').value;
@@ -293,56 +404,71 @@
             let numDoc = document.getElementById('numInq')?.value || 'S/N';
             let nat = document.getElementById('natureza')?.value || 'Não especificada';
             let enc = document.getElementById('encarregado')?.value || 'Não informado';
+            let dtInit = document.getElementById('dataInicio')?.value || null;
 
             if (tipoSelecionado === 'portaria') {
                 tipoDoc = 'Portaria';
                 numDoc = document.getElementById('numPortaria')?.value || 'S/N';
                 nat = document.getElementById('textoPortaria')?.value || 'Portaria emitida';
+                dtInit = document.getElementById('dataPortaria')?.value || null;
             } else if (tipoSelecionado === 'intimacao') {
                 tipoDoc = 'Intimação';
                 numDoc = document.getElementById('numIntimacao')?.value || 'S/N';
                 nat = document.getElementById('textoIntimacao')?.value || 'Intimação emitida';
+            } else if (tipoSelecionado === 'investigacao') {
+                tipoDoc = 'Investigação';
+                numDoc = document.getElementById('invNum')?.value || 'S/N';
+                nat = document.getElementById('invCrimes')?.value || 'Investigação Registrada';
+                // Para a investigação vamos usar a Data de emissao como data inicio
+                dtInit = document.getElementById('invData')?.value || null; 
             }
 
-            let delegados = [];
-            document.querySelectorAll('#delegadosPortariaContainer .dynamic-row').forEach(row => {
-                delegados.push({ nome: row.querySelector('.i-delNome').value, mat: row.querySelector('.i-delMat').value });
-            });
+            // Coleta de arrays padrão
+            let delegados = []; document.querySelectorAll('#delegadosPortariaContainer .dynamic-row').forEach(row => { delegados.push({ nome: row.querySelector('.i-delNome').value, mat: row.querySelector('.i-delMat').value }); });
+            let envolvidos = []; document.querySelectorAll('#envolvidosContainer .dynamic-row').forEach(row => { envolvidos.push({ nome: row.querySelector('.i-nome').value, papel: row.querySelector('.i-papel').value, rg: row.querySelector('.i-passaporte').value, tel: row.querySelector('.i-tel').value }); });
+            let evidencias = []; document.querySelectorAll('#evidenciasContainer .dynamic-row').forEach(row => { evidencias.push({ nome: row.querySelector('.i-provaNome').value, link: row.querySelector('.i-provaLink').value }); });
+            let depoimentos = []; document.querySelectorAll('#depoimentosContainer .dynamic-row').forEach(row => { depoimentos.push({ nome: row.querySelector('.i-depNome').value, link: row.querySelector('.i-depLink').value }); });
+            let assinaturas = []; document.querySelectorAll('#assinaturasContainer .dynamic-row').forEach(row => { assinaturas.push({ nome: row.querySelector('.i-assNome').value, cargo: row.querySelector('.i-assCargo').value }); });
 
-            let envolvidos = [];
-            document.querySelectorAll('#envolvidosContainer .dynamic-row').forEach(row => {
-                envolvidos.push({
-                    nome: row.querySelector('.i-nome').value,
-                    papel: row.querySelector('.i-papel').value,
-                    rg: row.querySelector('.i-passaporte').value,
-                    tel: row.querySelector('.i-tel').value
+            // Coleta exclusiva da Investigação
+            let lideres = [];
+            document.querySelectorAll('#liderancaContainer .dynamic-row').forEach(row => {
+                lideres.push({
+                    nome: row.querySelector('.i-lidNome').value,
+                    rg: row.querySelector('.i-lidRG').value,
+                    funcao: row.querySelector('.i-lidFunc').value,
+                    link: row.querySelector('.i-lidLink').value
                 });
-            });
-
-            let evidencias = [];
-            document.querySelectorAll('#evidenciasContainer .dynamic-row').forEach(row => {
-                evidencias.push({ nome: row.querySelector('.i-provaNome').value, link: row.querySelector('.i-provaLink').value });
-            });
-
-            let depoimentos = [];
-            document.querySelectorAll('#depoimentosContainer .dynamic-row').forEach(row => {
-                depoimentos.push({ nome: row.querySelector('.i-depNome').value, link: row.querySelector('.i-depLink').value });
-            });
-
-            let assinaturas = [];
-            document.querySelectorAll('#assinaturasContainer .dynamic-row').forEach(row => {
-                assinaturas.push({ nome: row.querySelector('.i-assNome').value, cargo: row.querySelector('.i-assCargo').value });
             });
 
             const forcaPolicialSelecionada = document.getElementById('forcaPolicial').value;
 
+            // Objeto com todas as variáveis secundárias 
             const extrasObj = { 
-                delegados, 
-                envolvidos, 
-                evidencias, 
-                depoimentos, 
-                assinaturas,
-                forcaPolicial: forcaPolicialSelecionada
+                delegados, envolvidos, evidencias, depoimentos, assinaturas, forcaPolicial: forcaPolicialSelecionada,
+                
+                // Variáveis da investigação
+                invData: document.getElementById('invData')?.value || '',
+                invObjetivo: document.getElementById('invObjetivo')?.value || '',
+                invFinalidade: document.getElementById('invFinalidade')?.value || '',
+                invOrgNome: document.getElementById('invOrgNome')?.value || '',
+                invLocalizacao: document.getElementById('invLocalizacao')?.value || '',
+                lideres: lideres,
+                invLogBauLider: document.getElementById('invLogBauLider')?.value || '',
+                invLogBauGerencia: document.getElementById('invLogBauGerencia')?.value || '',
+                invLogBauMembros: document.getElementById('invLogBauMembros')?.value || '',
+                invLogAerea: document.getElementById('invLogAerea')?.value || '',
+                invLogP1: document.getElementById('invLogP1')?.value || '',
+                invLogP2: document.getElementById('invLogP2')?.value || '',
+                invLogRotaFarm: document.getElementById('invLogRotaFarm')?.value || '',
+                invLogBlip: document.getElementById('invLogBlip')?.value || '',
+                invLogGPS: document.getElementById('invLogGPS')?.value || '',
+                invComProduto: document.getElementById('invComProduto')?.value || '',
+                invComVidVenda: document.getElementById('invComVidVenda')?.value || '',
+                invComVidFalando: document.getElementById('invComVidFalando')?.value || '',
+                invComVidQG: document.getElementById('invComVidQG')?.value || '',
+                invComFotoArmados: document.getElementById('invComFotoArmados')?.value || '',
+                invComFotoRoupas: document.getElementById('invComFotoRoupas')?.value || ''
             };
 
             const dadosDoc = {
@@ -356,7 +482,7 @@
                 escrivao: document.getElementById('escrivao')?.value || '',
                 investigador: document.getElementById('investigador')?.value || '',
                 setor: document.getElementById('setor')?.value || '',
-                data_inicio: document.getElementById('dataInicio')?.value || null,
+                data_inicio: dtInit,
                 data_fim: document.getElementById('dataFim')?.value || null,
                 municipio: document.getElementById('municipio')?.value || '',
                 bairro: document.getElementById('bairro')?.value || '',
@@ -376,17 +502,20 @@
             if (res.error) {
                 alert("Erro ao salvar: " + res.error.message);
             } else {
-                alert("Inquérito salvo com sucesso!");
+                alert(`${tipoDoc} salvo com sucesso!`);
             }
         }
 
         window.onload = async () => {
+            await verificarAcessoEStatus();
+
             const urlParams = new URLSearchParams(window.location.search);
             const inqId = urlParams.get('id');
 
             if (inqId) {
                 document.getElementById('regId').value = inqId;
                 const { data, error } = await supabaseClient.from('inqueritos').select('*').eq('id', inqId).single();
+                
                 if (data) {
                     if (data.tipo === 'Portaria') {
                         document.getElementById('typePortaria').checked = true;
@@ -399,10 +528,14 @@
                         toggleFormType();
                         document.getElementById('numIntimacao').value = data.numero || '';
                         document.getElementById('textoIntimacao').value = data.natureza || '';
+                    } else if (data.tipo === 'Investigação') {
+                        document.getElementById('typeInvestigacao').checked = true;
+                        toggleFormType();
+                        document.getElementById('invNum').value = data.numero || '';
+                        document.getElementById('invCrimes').value = data.natureza || '';
                     } else {
                         document.getElementById('typeInquerito').checked = true;
                         toggleFormType();
-
                         document.getElementById('numInq').value = data.numero || '';
                         document.getElementById('dirGeral').value = data.dir_geral || '';
                         document.getElementById('encarregado').value = data.encarregado || '';
@@ -428,38 +561,63 @@
                                 document.getElementById('forcaPolicial').value = extras.forcaPolicial;
                             }
 
+                            // Preenchendo campos da Investigação
+                            if(data.tipo === 'Investigação') {
+                                document.getElementById('invData').value = extras.invData || '';
+                                document.getElementById('invObjetivo').value = extras.invObjetivo || '';
+                                document.getElementById('invFinalidade').value = extras.invFinalidade || '';
+                                document.getElementById('invOrgNome').value = extras.invOrgNome || '';
+                                document.getElementById('invLocalizacao').value = extras.invLocalizacao || '';
+                                
+                                document.getElementById('liderancaContainer').innerHTML = '';
+                                if(extras.lideres && extras.lideres.length > 0) {
+                                    extras.lideres.forEach(lid => addLider(lid));
+                                } else { addLider(); addLider(); addLider(); } // Inicia com 3 se vazio
+
+                                document.getElementById('invLogBauLider').value = extras.invLogBauLider || '';
+                                document.getElementById('invLogBauGerencia').value = extras.invLogBauGerencia || '';
+                                document.getElementById('invLogBauMembros').value = extras.invLogBauMembros || '';
+                                document.getElementById('invLogAerea').value = extras.invLogAerea || '';
+                                document.getElementById('invLogP1').value = extras.invLogP1 || '';
+                                document.getElementById('invLogP2').value = extras.invLogP2 || '';
+                                document.getElementById('invLogRotaFarm').value = extras.invLogRotaFarm || '';
+                                document.getElementById('invLogBlip').value = extras.invLogBlip || '';
+                                document.getElementById('invLogGPS').value = extras.invLogGPS || '';
+
+                                document.getElementById('invComProduto').value = extras.invComProduto || '';
+                                document.getElementById('invComVidVenda').value = extras.invComVidVenda || '';
+                                document.getElementById('invComVidFalando').value = extras.invComVidFalando || '';
+                                document.getElementById('invComVidQG').value = extras.invComVidQG || '';
+                                document.getElementById('invComFotoArmados').value = extras.invComFotoArmados || '';
+                                document.getElementById('invComFotoRoupas').value = extras.invComFotoRoupas || '';
+                            }
+
                             document.getElementById('delegadosPortariaContainer').innerHTML = '';
-                            if (extras.delegados && extras.delegados.length > 0) {
-                                extras.delegados.forEach(item => addDelegadoPortaria(item));
-                            } else { addDelegadoPortaria(); }
+                            if (extras.delegados && extras.delegados.length > 0) { extras.delegados.forEach(item => addDelegadoPortaria(item)); } else { addDelegadoPortaria(); }
 
                             document.getElementById('envolvidosContainer').innerHTML = '';
-                            if (extras.envolvidos && extras.envolvidos.length > 0) {
-                                extras.envolvidos.forEach(item => addEnvolvido(item));
-                            } else { addEnvolvido(); }
+                            if (extras.envolvidos && extras.envolvidos.length > 0) { extras.envolvidos.forEach(item => addEnvolvido(item)); } else { addEnvolvido(); }
 
                             document.getElementById('evidenciasContainer').innerHTML = '';
-                            if (extras.evidencias && extras.evidencias.length > 0) {
-                                extras.evidencias.forEach(item => addEvidencia(item));
-                            } else { addEvidencia(); }
+                            if (extras.evidencias && extras.evidencias.length > 0) { extras.evidencias.forEach(item => addEvidencia(item)); } else { addEvidencia(); }
 
                             document.getElementById('depoimentosContainer').innerHTML = '';
-                            if (extras.depoimentos && extras.depoimentos.length > 0) {
-                                extras.depoimentos.forEach(item => addDepoimento(item));
-                            } else { addDepoimento(); }
+                            if (extras.depoimentos && extras.depoimentos.length > 0) { extras.depoimentos.forEach(item => addDepoimento(item)); } else { addDepoimento(); }
 
                             document.getElementById('assinaturasContainer').innerHTML = '';
-                            if (extras.assinaturas && extras.assinaturas.length > 0) {
-                                extras.assinaturas.forEach(item => addAssinatura(item));
-                            } else { addAssinatura(); }
+                            if (extras.assinaturas && extras.assinaturas.length > 0) { extras.assinaturas.forEach(item => addAssinatura(item)); } else { addAssinatura(); }
                         } catch (e) {
+                            addLider(); addLider(); addLider();
                             addDelegadoPortaria(); addEnvolvido(); addEvidencia(); addDepoimento(); addAssinatura();
                         }
                     } else {
+                        addLider(); addLider(); addLider();
                         addDelegadoPortaria(); addEnvolvido(); addEvidencia(); addDepoimento(); addAssinatura();
                     }
                 }
             } else {
+                // Modo Criação do Zero
+                addLider(); addLider(); addLider(); // Coloca os 3 líderes por padrão (00, 01, 02)
                 addDelegadoPortaria(); addEnvolvido(); addEvidencia(); addDepoimento(); addAssinatura();
             }
         };
@@ -467,6 +625,11 @@
         function formatDatetime(dt) {
             if(!dt) return "";
             const d = new Date(dt);
+            // Corrige fuso se vier só a data YYYY-MM-DD
+            if (dt.length <= 10) {
+                d.setMinutes(d.getMinutes() + d.getTimezoneOffset());
+                return d.toLocaleDateString('pt-BR');
+            }
             return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR');
         }
 
@@ -474,6 +637,7 @@
             const tipoSelecionado = document.querySelector('input[name="docType"]:checked').value;
             const isPortaria = (tipoSelecionado === 'portaria');
             const isIntimacao = (tipoSelecionado === 'intimacao');
+            const isInvestigacao = (tipoSelecionado === 'investigacao');
             
             const dataHoraAtual = formatDatetime(new Date());
             let arrayAssinaturas = [];
@@ -488,6 +652,9 @@
             let docDefinition = { content: [], defaultStyle: { font: 'Roboto' } };
             let nomeArquivo = 'Documento.pdf';
 
+            const forcaSelecionada = document.getElementById('forcaPolicial').value;
+            const buildSectionHeader = (title) => ({ table: { widths: ['*'], body: [ [{ text: title, bold: true, fillColor: '#e2e2e2', margin: [5, 5, 5, 5] }] ] }, layout: 'noBorders', margin: [0, 10, 0, 5] });
+
             if (isPortaria) {
                 const num = document.getElementById('numPortaria').value || 'S/N';
                 const data = document.getElementById('dataPortaria').value || '';
@@ -496,7 +663,7 @@
                 nomeArquivo = `Portaria_${num.replace(/\//g, '-')}.pdf`;
                 
                 docDefinition.content = [
-                    { text: 'POLÍCIA FEDERAL', alignment: 'center', bold: true, fontSize: 14 },
+                    { text: instituicaoUserGlobal, alignment: 'center', bold: true, fontSize: 14 },
                     { text: 'PORTARIA', alignment: 'center', bold: true, fontSize: 14, margin: [0, 10, 0, 20] },
                     { text: `Portaria nº ${num}`, fontSize: 12, margin: [0, 0, 0, 10] },
                     { text: `Data de Emissão: ${formatDatetime(data)}`, fontSize: 10, margin: [0, 0, 0, 20] },
@@ -516,17 +683,77 @@
                 nomeArquivo = `Intimacao_${num.replace(/\//g, '-')}.pdf`;
 
                 docDefinition.content = [
-                    { text: 'POLÍCIA FEDERAL', alignment: 'center', bold: true, fontSize: 14 },
+                    { text: instituicaoUserGlobal, alignment: 'center', bold: true, fontSize: 14 },
                     { text: 'INTIMAÇÃO', alignment: 'center', bold: true, fontSize: 14, margin: [0, 10, 0, 20] },
                     { text: `Intimação nº ${num}`, fontSize: 12, bold: true },
-                    { text: `Sr(a). ${nome}, portador(a) do RG ${rg}, fica intimado(a) a comparecer no dia ${dataLim} às ${hora}.`, fontSize: 11, margin: [0, 15, 0, 15] },
+                    { text: `Sr(a). ${nome}, portador(a) do RG ${rg}, fica intimado(a) a comparecer no dia ${formatDatetime(dataLim)} às ${hora}.`, fontSize: 11, margin: [0, 15, 0, 15] },
                     { text: 'MOTIVO:', bold: true, fontSize: 10 },
                     { text: motivo, fontSize: 10, margin: [0, 5, 0, 30] },
                     { text: 'ASSINATURAS', bold: true, fontSize: 10, margin: [0, 10, 0, 5] },
                     ...arrayAssinaturas
                 ];
-            } 
+            }
+            else if (isInvestigacao) {
+                const num = document.getElementById('invNum').value || 'S/N';
+                const data = formatDatetime(document.getElementById('invData').value);
+                const obj = document.getElementById('invObjetivo').value || 'N/A';
+                const fin = document.getElementById('invFinalidade').value || 'N/A';
+                const org = document.getElementById('invOrgNome').value || 'N/A';
+                const loc = document.getElementById('invLocalizacao').value || 'N/A';
+                const cri = document.getElementById('invCrimes').value || 'N/A';
+
+                nomeArquivo = `Investigacao_${num.replace(/\//g, '-')}.pdf`;
+
+                let arrayLideres = [];
+                let index = 0;
+                document.querySelectorAll('#liderancaContainer .dynamic-row').forEach(row => {
+                    const lNome = row.querySelector('.i-lidNome').value;
+                    const lRG = row.querySelector('.i-lidRG').value;
+                    const lFunc = row.querySelector('.i-lidFunc').value;
+                    const lLink = row.querySelector('.i-lidLink').value;
+                    if(lNome) {
+                        arrayLideres.push({ text: `• Líder ${String(index).padStart(2, '0')} - Nome: ${lNome} | RG: ${lRG} | Função: ${lFunc}\n  Prova: ${lLink}`, fontSize: 10, margin: [0, 2, 0, 6] });
+                        index++;
+                    }
+                });
+
+                docDefinition.content = [
+                    { text: forcaSelecionada, alignment: 'center', bold: true, fontSize: 14 },
+                    { text: 'RELATÓRIO DE INVESTIGAÇÃO', alignment: 'center', bold: true, fontSize: 14, margin: [0, 5, 0, 15] },
+                    
+                    buildSectionHeader('INICIAL'),
+                    { columns: [ [{ text: `Nº Relatório: ${num}`, fontSize: 10 }, { text: `Data: ${data}`, fontSize: 10 }], [{ text: `Objetivo: ${obj}`, fontSize: 10 }, { text: `Crimes: ${cri}`, fontSize: 10 }] ], margin: [0, 0, 0, 5] },
+                    { text: `Finalidade: ${fin}`, fontSize: 10, margin: [0, 2, 0, 5] },
+                    { text: `Organização: ${org} - Localização: ${loc}`, fontSize: 10, margin: [0, 0, 0, 10] },
+
+                    buildSectionHeader('LIDERANÇA IDENTIFICADA'),
+                    (arrayLideres.length > 0 ? arrayLideres : { text: 'Nenhum líder registrado.', fontSize: 10 }),
+
+                    buildSectionHeader('ESTRUTURA E LOGÍSTICA'),
+                    { text: `• Baú do Líder: ${document.getElementById('invLogBauLider').value || 'N/A'}`, fontSize: 10, margin: [0, 2] },
+                    { text: `• Baú da Gerência: ${document.getElementById('invLogBauGerencia').value || 'N/A'}`, fontSize: 10, margin: [0, 2] },
+                    { text: `• Baú de Membros: ${document.getElementById('invLogBauMembros').value || 'N/A'}`, fontSize: 10, margin: [0, 2] },
+                    { text: `• Foto Aérea: ${document.getElementById('invLogAerea').value || 'N/A'}`, fontSize: 10, margin: [0, 2] },
+                    { text: `• Foto da P1: ${document.getElementById('invLogP1').value || 'N/A'}`, fontSize: 10, margin: [0, 2] },
+                    { text: `• Foto da P2: ${document.getElementById('invLogP2').value || 'N/A'}`, fontSize: 10, margin: [0, 2] },
+                    { text: `• Foto Rota de Farm: ${document.getElementById('invLogRotaFarm').value || 'N/A'}`, fontSize: 10, margin: [0, 2] },
+                    { text: `• Foto Blip da Rota: ${document.getElementById('invLogBlip').value || 'N/A'}`, fontSize: 10, margin: [0, 2] },
+                    { text: `• Rastreamento GPS: ${document.getElementById('invLogGPS').value || 'N/A'}`, fontSize: 10, margin: [0, 10] },
+
+                    buildSectionHeader('COMÉRCIO'),
+                    { text: `• Produto Vendido (Áudio): ${document.getElementById('invComProduto').value || 'N/A'}`, fontSize: 10, margin: [0, 2] },
+                    { text: `• Vídeo (Membro Vendendo): ${document.getElementById('invComVidVenda').value || 'N/A'}`, fontSize: 10, margin: [0, 2] },
+                    { text: `• Vídeo (Membro Falando): ${document.getElementById('invComVidFalando').value || 'N/A'}`, fontSize: 10, margin: [0, 2] },
+                    { text: `• Vídeo (QG Completo): ${document.getElementById('invComVidQG').value || 'N/A'}`, fontSize: 10, margin: [0, 2] },
+                    { text: `• Foto (Indivíduos Armados): ${document.getElementById('invComFotoArmados').value || 'N/A'}`, fontSize: 10, margin: [0, 2] },
+                    { text: `• Foto (Vestimentas Padrão): ${document.getElementById('invComFotoRoupas').value || 'N/A'}`, fontSize: 10, margin: [0, 15] },
+
+                    buildSectionHeader('ASSINATURAS'), 
+                    (arrayAssinaturas.length > 0 ? arrayAssinaturas : { text: 'Nenhuma assinatura registrada.', fontSize: 9 })
+                ];
+            }
             else {
+                // Inquérito normal
                 const numInq = document.getElementById('numInq').value || 'S/N';
                 const natureza = document.getElementById('natureza').value || 'Não informada';
                 const dirGeral = document.getElementById('dirGeral').value || 'Não informado';
@@ -544,8 +771,6 @@
                 const conclusao = document.getElementById('conclusao').value || 'Sem conclusão informada.';
 
                 nomeArquivo = `Inquerito_Policial_${numInq.replace(/\//g, '-')}.pdf`;
-
-                const buildSectionHeader = (title) => ({ table: { widths: ['*'], body: [ [{ text: title, bold: true, fillColor: '#e2e2e2', margin: [5, 5, 5, 5] }] ] }, layout: 'noBorders', margin: [0, 10, 0, 5] });
 
                 let arrayEnvolvidos = [];
                 document.querySelectorAll('#envolvidosContainer .dynamic-row').forEach(row => {
@@ -569,8 +794,6 @@
                     const link = row.querySelector('.i-depLink').value;
                     if(nome || link) arrayDepoimentos.push({ text: `• Depoente: ${nome} - ${link}`, fontSize: 10, margin: [0, 2, 0, 2] });
                 });
-
-                const forcaSelecionada = document.getElementById('forcaPolicial').value;
 
                 docDefinition.content = [
                     { text: forcaSelecionada, alignment: 'center', bold: true, fontSize: 14 },
