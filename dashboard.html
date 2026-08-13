@@ -66,20 +66,21 @@
             justify-content: space-between; 
             align-items: center; 
         }
-        .table-pf { color: #e0e0e0; background-color: #0d1117; font-size: 0.9em; border-radius: 6px; overflow: hidden; }
+        .table-pf { color: #e0e0e0; background-color: #0d1117; font-size: 0.9em; border-radius: 6px; overflow: hidden; margin-bottom: 0; }
         .table-pf th { background-color: #161b22; color: #b58d3d; border-color: #1f2937; padding: 14px; font-weight: 600; }
         .table-pf td { background-color: #0d1117; color: #e0e0e0; border-color: #1f2937; padding: 14px; }
         .badge-andamento { background-color: #b45309; color: #fff; padding: 6px 12px; font-weight: 500; border-radius: 4px; }
         .badge-finalizado { background-color: #047857; color: #fff; padding: 6px 12px; font-weight: 500; border-radius: 4px; }
         .btn-gold { background-color: #b58d3d; color: #ffffff; font-weight: 600; border: none; padding: 8px 18px; border-radius: 6px; transition: all 0.3s; }
         .btn-gold:hover { background-color: #c49a3c; color: #ffffff; }
+        .forca-title { color: #e0e0e0; font-size: 1.1em; margin-top: 30px; margin-bottom: 15px; font-weight: 600; font-family: 'Playfair Display', serif; border-left: 4px solid #b58d3d; padding-left: 10px; }
+        .timer-text { font-family: monospace; font-size: 1.1em; color: #eab308; }
     </style>
 </head>
 <body>
 
     <nav class="navbar navbar-pf d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center">
-            <!-- O brasão muda automaticamente via JavaScript -->
             <img id="imgBrasao" src="https://cdn.discordapp.com/attachments/1506412452643082390/1536434427230552084/Policia_Federal.svg.webp" alt="Brasão">
             <span class="brand-title" id="tituloInstituicao">PAINEL ADMINISTRATIVO - CORREGEDORIA</span>
         </div>
@@ -116,20 +117,8 @@
                 <span><i class="fas fa-clock"></i> Inquéritos em Andamento</span>
                 <a href="gerador.html" class="btn btn-gold btn-sm"><i class="fas fa-plus"></i> Novo Inquérito</a>
             </div>
-            <div class="table-responsive">
-                <table class="table table-pf table-hover align-middle" id="tabelaAndamento">
-                    <thead>
-                        <tr>
-                            <th>Nº Inquérito</th>
-                            <th>Encarregado(a)</th>
-                            <th>Data Início</th>
-                            <th>Natureza</th>
-                            <th>Status</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+            <div id="containerAndamento">
+                <!-- Tabelas agrupadas por polícia serão renderizadas aqui -->
             </div>
         </div>
 
@@ -137,19 +126,8 @@
             <div class="section-title">
                 <span><i class="fas fa-check-double"></i> Inquéritos Finalizados</span>
             </div>
-            <div class="table-responsive">
-                <table class="table table-pf table-hover align-middle" id="tabelaFinalizados">
-                    <thead>
-                        <tr>
-                            <th>Nº Inquérito</th>
-                            <th>Encarregado(a)</th>
-                            <th>Natureza</th>
-                            <th>Status</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+            <div id="containerFinalizados">
+                <!-- Tabelas agrupadas por polícia serão renderizadas aqui -->
             </div>
         </div>
     </div>
@@ -164,15 +142,14 @@
         let emailUsuarioLogado = '';
         let instituicaoUsuarioLogado = '';
 
-        // Mapeamento exato dos brasões enviados por você
         const brasoesInstituicoes = {
-            'POLÍCIA FEDERAL': 'https://cdn.discordapp.com/attachments/1506412452643082390/1536434427230552084/Policia_Federal.svg.webp?ex=6a7c0c51&is=6a7abad1&hm=194000917129884117a220d1cbc9d30847128563f3549de93ca890ae50fc20bc&animated=true',
-            'POLÍCIA CIVIL': 'https://cdn.discordapp.com/attachments/1506412452643082390/1536778551871672370/Brasao_da_Policia_Civil_do_Estado_do_Rio_de_Janeiro.png?ex=6a7ca40e&is=6a7b528e&hm=719d7c39f6be6285b266d3e4b4cea75382d97340860f3230855ad4d9fe1211fd&animated=true',
-            'POLÍCIA MILITAR': 'https://cdn.discordapp.com/attachments/1506412452643082390/1536779260776419348/Brasao_da_Policia_Militar_do_Estado_do_Rio_de_Janeiro_-_PMERJ.png?ex=6a7ca4b7&is=6a7b5337&hm=a6ba9d2b883fa0073b8baf147c5809762532629b09379b5f512c9946467b4389&animated=true',
-            'POLÍCIA RODOVIÁRIA FEDERAL (PRF)': 'https://cdn.discordapp.com/attachments/1506412452643082390/1536779271903907880/PRF_new.png?ex=6a7ca4ba&is=6a7b533a&hm=f7d7f58b891dafb7f7fb26b64d86699d9f12dafc4b07bd1f24dfc91096a42b61&animated=true',
-            'ROTA': 'https://cdn.discordapp.com/attachments/1506412452643082390/1536779285082407083/Brasao_da_Policia_Civil_do_Estado_do_Rio_de_Janeiro.png?ex=6a7ca4bd&is=6a7b533d&hm=a5a912717cc0b04d722db62316b986794fc1f444621fec45dc3d93b487e0baa2&animated=true',
-            'BOPE': 'https://cdn.discordapp.com/attachments/1506412452643082390/1536779234461360159/Brasao_do_Batalhao_de_Operacoes_Policias_Especiais_-_BOPE_-_PMERJ.png?ex=6a7ca4b1&is=6a7b5331&hm=98c0d5bd6913bbbd0e6a65f801a07b8044bfe01d6b17482c6b234e051c907d0e&animated=true',
-            'EXÉRCITO BRASILEIRO': 'https://cdn.discordapp.com/attachments/1380287643614449747/1536779418020872192/f3065a6434fa46195e6a7e64f18b0dd7.png?ex=6a7ca4dd&is=6a7b535d&hm=7cc958343665389781ea4aff45552360abf3e08caf252759a628e81e07670cfb&animated=true'
+            'POLÍCIA FEDERAL': 'https://cdn.discordapp.com/attachments/1506412452643082390/1536434427230552084/Policia_Federal.svg.webp',
+            'POLÍCIA CIVIL': 'https://cdn.discordapp.com/attachments/1506412452643082390/1536778551871672370/Brasao_da_Policia_Civil_do_Estado_do_Rio_de_Janeiro.png',
+            'POLÍCIA MILITAR': 'https://cdn.discordapp.com/attachments/1506412452643082390/1536779260776419348/Brasao_da_Policia_Militar_do_Estado_do_Rio_de_Janeiro_-_PMERJ.png',
+            'POLÍCIA RODOVIÁRIA FEDERAL (PRF)': 'https://cdn.discordapp.com/attachments/1506412452643082390/1536779271903907880/PRF_new.png',
+            'ROTA': 'https://cdn.discordapp.com/attachments/1506412452643082390/1536779285082407083/Brasao_da_Policia_Civil_do_Estado_do_Rio_de_Janeiro.png',
+            'BOPE': 'https://cdn.discordapp.com/attachments/1506412452643082390/1536779234461360159/Brasao_do_Batalhao_de_Operacoes_Policias_Especiais_-_BOPE_-_PMERJ.png',
+            'EXÉRCITO BRASILEIRO': 'https://cdn.discordapp.com/attachments/1380287643614449747/1536779418020872192/f3065a6434fa46195e6a7e64f18b0dd7.png'
         };
 
         async function verificarAcesso() {
@@ -205,8 +182,6 @@
             }
 
             instituicaoUsuarioLogado = data.instituicao || localStorage.getItem(`inst_${emailUsuarioLogado}`) || 'POLÍCIA FEDERAL';
-            
-            // Atualiza o título e o brasão conforme a corporação do usuário logado
             const instNormalizada = instituicaoUsuarioLogado.trim().toUpperCase();
             document.getElementById('tituloInstituicao').innerText = `PAINEL ADMINISTRATIVO - ${instNormalizada}`;
             
@@ -232,11 +207,14 @@
                 return;
             }
 
-            if (!confirm(`Deseja realmente finalizar o inquérito nº ${numero}?`)) return;
+            if (!confirm(`Deseja realmente finalizar o inquérito nº ${numero}? O cronômetro será parado.`)) return;
+
+            // Salva a data atual exata para travar o relógio
+            const dataFinalizacao = new Date().toISOString(); 
 
             const { error } = await supabaseClient
                 .from('inqueritos')
-                .update({ status: 'Finalizado' })
+                .update({ status: 'Finalizado', data_fim: dataFinalizacao })
                 .eq('id', id);
 
             if (error) {
@@ -269,6 +247,105 @@
             }
         }
 
+        // --- LÓGICA DO CRONÔMETRO ---
+        function formatarTempoDecorrido(ms) {
+            if (ms < 0) ms = 0;
+            const dias = Math.floor(ms / (1000 * 60 * 60 * 24));
+            const horas = Math.floor((ms % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutos = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+            const segundos = Math.floor((ms % (1000 * 60)) / 1000);
+
+            let tempoString = "";
+            if (dias > 0) tempoString += `${dias}d `;
+            tempoString += `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
+            return tempoString;
+        }
+
+        // Atualiza os relógios a cada 1 segundo
+        setInterval(() => {
+            const agora = new Date().getTime();
+            document.querySelectorAll('.cronometro-ativo').forEach(el => {
+                const dataInicio = el.getAttribute('data-inicio');
+                if (dataInicio && dataInicio !== 'null') {
+                    const inicioMs = new Date(dataInicio).getTime();
+                    el.innerText = formatarTempoDecorrido(agora - inicioMs);
+                } else {
+                    el.innerText = "--:--:--";
+                }
+            });
+        }, 1000);
+        // ----------------------------
+
+        function renderizarTabelasAgrupadas(agrupados, containerId, isFinalizado, souAdmin) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            if (Object.keys(agrupados).length === 0) {
+                container.innerHTML = `<div class="text-center text-muted p-3">Nenhum inquérito registrado nesta categoria.</div>`;
+                return;
+            }
+
+            for (const [forcaPolicial, inqueritos] of Object.entries(agrupados)) {
+                // Criação da tabela para cada polícia
+                let tabelaHTML = `
+                    <div class="forca-title"><i class="fas fa-building"></i> ${forcaPolicial}</div>
+                    <div class="table-responsive">
+                        <table class="table table-pf table-hover align-middle mb-4">
+                            <thead>
+                                <tr>
+                                    <th>Nº Inquérito</th>
+                                    <th>Encarregado(a)</th>
+                                    <th>Data Início</th>
+                                    <th>${isFinalizado ? 'Tempo Total (Parado)' : 'Tempo Aberto (Cronômetro)'}</th>
+                                    <th>Natureza</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+
+                inqueritos.forEach(item => {
+                    const botaoApagarHTML = souAdmin ? `<button class="btn btn-sm btn-outline-danger ms-1" title="Apagar Inquérito" onclick="apagarInquerito(${item.id}, '${item.numero}')"><i class="fas fa-trash"></i></button>` : '';
+                    
+                    let tempoHTML = "";
+                    let dataInicioFormatada = item.data_inicio ? new Date(item.data_inicio).toLocaleString('pt-BR') : 'Não informada';
+
+                    if (isFinalizado) {
+                        // Tempo Parado (Fim - Início)
+                        if (item.data_inicio && item.data_fim) {
+                            const diff = new Date(item.data_fim).getTime() - new Date(item.data_inicio).getTime();
+                            tempoHTML = `<span class="timer-text" style="color: #047857;">${formatarTempoDecorrido(diff)}</span>`;
+                        } else {
+                            tempoHTML = `<span class="text-muted">Desconhecido</span>`;
+                        }
+                    } else {
+                        // Tempo Rodando
+                        tempoHTML = `<span class="timer-text cronometro-ativo" data-inicio="${item.data_inicio}">Calculando...</span>`;
+                    }
+
+                    tabelaHTML += `
+                        <tr>
+                            <td>${item.numero}</td>
+                            <td>${item.encarregado}</td>
+                            <td>${dataInicioFormatada}</td>
+                            <td>${tempoHTML}</td>
+                            <td>${item.natureza}</td>
+                            <td><span class="badge ${isFinalizado ? 'badge-finalizado' : 'badge-andamento'}">${item.status}</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-info" title="Visualizar" onclick="visualizarInquerito(${item.id})"><i class="fas fa-eye"></i></button>
+                                ${(!isFinalizado && souAdmin) ? `<button class="btn btn-sm btn-outline-success" title="Finalizar Inquérito" onclick="finalizarInquerito(${item.id}, '${item.numero}')"><i class="fas fa-check"></i></button>` : ''}
+                                ${botaoApagarHTML}
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                tabelaHTML += `</tbody></table></div>`;
+                container.innerHTML += tabelaHTML;
+            }
+        }
+
         async function carregarDashboard() {
             await verificarAcesso();
 
@@ -284,12 +361,6 @@
                 return;
             }
 
-            const tbodyAndamento = document.querySelector('#tabelaAndamento tbody');
-            const tbodyFinalizados = document.querySelector('#tabelaFinalizados tbody');
-            
-            tbodyAndamento.innerHTML = '';
-            tbodyFinalizados.innerHTML = ''; 
-
             let qtdAndamento = 0;
             let qtdFinalizados = 0;
             let qtdArquivados = 0;
@@ -299,76 +370,42 @@
             const userInstNormalized = (instituicaoUsuarioLogado || '').trim().toUpperCase();
             const isPoliciaFederal = souAdmin;
 
-            if (!data || data.length === 0) {
-                tbodyAndamento.innerHTML = `<tr><td colspan="6" class="text-center text-muted">Nenhum inquérito registrado.</td></tr>`;
-                tbodyFinalizados.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Nenhum inquérito finalizado.</td></tr>`;
-            } else {
-                let temAndamento = false;
-                let temFinalizado = false;
+            // Objetos para separar os inquéritos pelas Forças Policiais
+            const inqueritosEmAndamentoAgrupados = {};
+            const inqueritosFinalizadosAgrupados = {};
 
+            if (data && data.length > 0) {
                 data.forEach(item => {
-                    let forcaInq = 'POLÍCIA FEDERAL';
+                    let forcaInq = 'POLÍCIA FEDERAL'; // Padrão
                     if (item.dados_extras) {
                         try {
                             const ext = JSON.parse(item.dados_extras);
-                            if (ext.forcaPolicial) forcaInq = ext.forcaPolicial;
+                            if (ext.forcaPolicial) forcaInq = ext.forcaPolicial.trim().toUpperCase();
                         } catch(e){}
                     }
 
-                    const inqInstNormalized = forcaInq.trim().toUpperCase();
-
-                    if (!isPoliciaFederal) {
-                        if (inqInstNormalized !== userInstNormalized) {
-                            return; 
-                        }
+                    // Se não for admin, filtra para ver apenas a própria corporação
+                    if (!isPoliciaFederal && forcaInq !== userInstNormalized) {
+                        return; 
                     }
-
-                    const botaoApagarHTML = souAdmin ? `<button class="btn btn-sm btn-outline-danger ms-1" title="Apagar Inquérito" onclick="apagarInquerito(${item.id}, '${item.numero}')"><i class="fas fa-trash"></i></button>` : '';
 
                     if (item.status === 'Finalizado') {
                         qtdFinalizados++;
-                        temFinalizado = true;
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `
-                            <td>${item.numero}</td>
-                            <td>${item.encarregado}</td>
-                            <td>${item.natureza}</td>
-                            <td><span class="badge badge-finalizado">Finalizado</span></td>
-                            <td>
-                                <button class="btn btn-sm btn-outline-info" title="Visualizar Inquérito" onclick="visualizarInquerito(${item.id})"><i class="fas fa-eye"></i></button>
-                                ${botaoApagarHTML}
-                            </td>
-                        `;
-                        tbodyFinalizados.appendChild(tr);
+                        if (!inqueritosFinalizadosAgrupados[forcaInq]) inqueritosFinalizadosAgrupados[forcaInq] = [];
+                        inqueritosFinalizadosAgrupados[forcaInq].push(item);
                     } else if (item.status === 'Arquivado') {
                         qtdArquivados++;
                     } else {
                         qtdAndamento++;
-                        temAndamento = true;
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `
-                            <td>${item.numero}</td>
-                            <td>${item.encarregado}</td>
-                            <td>${item.data_inicio ? new Date(item.data_inicio).toLocaleString('pt-BR') : 'Não informada'}</td>
-                            <td>${item.natureza}</td>
-                            <td><span class="badge badge-andamento">${item.status}</span></td>
-                            <td>
-                                <button class="btn btn-sm btn-outline-info" title="Continuar Preenchendo" onclick="visualizarInquerito(${item.id})"><i class="fas fa-eye"></i></button>
-                                ${souAdmin ? `<button class="btn btn-sm btn-outline-success" title="Finalizar Inquérito" onclick="finalizarInquerito(${item.id}, '${item.numero}')"><i class="fas fa-check"></i></button>` : ''}
-                                ${botaoApagarHTML}
-                            </td>
-                        `;
-                        tbodyAndamento.appendChild(tr);
+                        if (!inqueritosEmAndamentoAgrupados[forcaInq]) inqueritosEmAndamentoAgrupados[forcaInq] = [];
+                        inqueritosEmAndamentoAgrupados[forcaInq].push(item);
                     }
                 });
-
-                if (!temAndamento) {
-                    tbodyAndamento.innerHTML = `<tr><td colspan="6" class="text-center text-muted">Nenhum inquérito em andamento para sua instituição.</td></tr>`;
-                }
-                if (!temFinalizado) {
-                    tbodyFinalizados.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Nenhum inquérito finalizado para sua instituição.</td></tr>`;
-                }
             }
+
+            // Renderizar na tela
+            renderizarTabelasAgrupadas(inqueritosEmAndamentoAgrupados, 'containerAndamento', false, souAdmin);
+            renderizarTabelasAgrupadas(inqueritosFinalizadosAgrupados, 'containerFinalizados', true, souAdmin);
 
             document.getElementById('countAndamento').innerText = String(qtdAndamento).padStart(2, '0');
             document.getElementById('countFinalizados').innerText = String(qtdFinalizados).padStart(2, '0');
