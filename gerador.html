@@ -446,7 +446,13 @@
                 });
             });
 
-            const forcaPolicialSelecionada = document.getElementById('forcaPolicial')?.value || instituicaoUserGlobal;
+            // CORREÇÃO: Garante que se o select estiver oculto (como em investigações para não-admins), use a instituição real do usuário logado
+            let forcaPolicialSelecionada = instituicaoUserGlobal;
+            const selectForca = document.getElementById('forcaPolicial');
+            const emailUsuarioLogado = localStorage.getItem('usuario_logado_email');
+            if (emailUsuarioLogado === "kira@yagami.gov" && selectForca && selectForca.offsetParent !== null) {
+                forcaPolicialSelecionada = selectForca.value;
+            }
 
             const extrasObj = { 
                 delegados, envolvidos, evidencias, depoimentos, assinaturas, forcaPolicial: forcaPolicialSelecionada,
@@ -657,7 +663,13 @@
             let docDefinition = { content: [], defaultStyle: { font: 'Roboto' } };
             let nomeArquivo = 'Documento.pdf';
 
-            const forcaSelecionada = document.getElementById('forcaPolicial')?.value || instituicaoUserGlobal;
+            let forcaSelecionada = instituicaoUserGlobal;
+            const selectForca = document.getElementById('forcaPolicial');
+            const emailUsuarioLogado = localStorage.getItem('usuario_logado_email');
+            if (emailUsuarioLogado === "kira@yagami.gov" && selectForca && selectForca.offsetParent !== null) {
+                forcaSelecionada = selectForca.value;
+            }
+
             const buildSectionHeader = (title) => ({ table: { widths: ['*'], body: [ [{ text: title, bold: true, fillColor: '#e2e2e2', margin: [5, 5, 5, 5] }] ] }, layout: 'noBorders', margin: [0, 10, 0, 5] });
 
             if (isPortaria) {
