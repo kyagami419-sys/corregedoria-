@@ -376,19 +376,9 @@
             const numIntimacao = 'INT-' + Math.floor(1000 + Math.random() * 9000) + '/' + dataAtual.getFullYear();
             const motivo = `O(a) Sr(a). foi citado(a) no Inquérito Policial n° ${inqOrigem}. Apresente-se na delegacia no prazo estabelecido para prestar esclarecimentos.`;
 
-            // Pega o delegado cadastrado na portaria ou usa o encarregado do inquérito
+            // Pega o encarregado do inquérito como assinante principal
             let nomeAssinante = document.getElementById('encarregado')?.value || 'Autoridade Policial';
-            let cargoAssinante = 'Delegado(a) de Polícia';
-            
-            const primeiroDelegado = document.querySelector('#delegadosPortariaContainer .dynamic-row');
-            if (primeiroDelegado) {
-                const nomeDel = primeiroDelegado.querySelector('.i-delNome')?.value;
-                const matDel = primeiroDelegado.querySelector('.i-delMat')?.value;
-                if (nomeDel) {
-                    nomeAssinante = nomeDel;
-                    if (matDel) cargoAssinante += ` - Matrícula: ${matDel}`;
-                }
-            }
+            let cargoAssinante = 'Encarregado(a)';
 
             let arrayAssinaturas = [{ 
                 text: `Documento assinado eletronicamente por ${nomeAssinante}, ${cargoAssinante}, em ${dataHoraAtualFormatada}, conforme art. 1º, III, "b" da Lei 11.419/2006.`, 
