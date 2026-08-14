@@ -369,10 +369,18 @@
             // Calcula o prazo de +1 dia
             const dataAmanha = new Date();
             dataAmanha.setDate(dataAmanha.getDate() + 1);
+            
+            // Formata a data de amanhã para o input do tipo "date" (yyyy-mm-dd)
+            const yyyy = dataAmanha.getFullYear();
+            const mm = String(dataAmanha.getMonth() + 1).padStart(2, '0');
+            const dd = String(dataAmanha.getDate()).padStart(2, '0');
+            const dataFormatadaParaInput = `${yyyy}-${mm}-${dd}`;
+            
             const dataLimiteStr = dataAmanha.toLocaleDateString('pt-BR');
             const horaLimite = "14:00"; 
 
             const inqOrigem = document.getElementById('numInq')?.value || 'S/N';
+            // O número da intimação agora é EXATAMENTE o mesmo número do inquérito de origem
             const numIntimacao = inqOrigem;
             const motivo = `O(a) Sr(a). foi citado(a) no Inquérito Policial n° ${inqOrigem}. Apresente-se na delegacia no prazo estabelecido para prestar esclarecimentos.`;
 
@@ -411,7 +419,14 @@
             const nomeArquivo = `Intimacao_${nome.replace(/\s+/g, '_')}.pdf`;
             pdfMake.createPdf(docDefinition).download(nomeArquivo);
 
-            const extrasObj = { forcaPolicial: forcaSelecionada };
+            const extrasObj = { 
+                forcaPolicial: forcaSelecionada,
+                nomeIntimado: nome,
+                rgIntimado: rg,
+                dataIntimacao: dataFormatadaParaInput,
+                horaIntimacao: horaLimite
+            };
+            
             const dadosDoc = {
                 numero: numIntimacao,
                 tipo: 'Intimação',
@@ -538,6 +553,12 @@
             const extrasObj = { 
                 delegados, envolvidos, evidencias, depoimentos, assinaturas, forcaPolicial: forcaPolicialSelecionada,
                 
+                // Salvando os dados da intimação para quando recarregar a página
+                nomeIntimado: document.getElementById('nomeIntimado')?.value || '',
+                rgIntimado: document.getElementById('rgIntimado')?.value || '',
+                dataIntimacao: document.getElementById('dataIntimacao')?.value || '',
+                horaIntimacao: document.getElementById('horaIntimacao')?.value || '',
+
                 invData: document.getElementById('invData')?.value || '',
                 invObjetivo: document.getElementById('invObjetivo')?.value || '',
                 invFinalidade: document.getElementById('invFinalidade')?.value || '',
@@ -620,6 +641,18 @@
                         toggleFormType();
                         document.getElementById('numIntimacao').value = data.numero || '';
                         document.getElementById('textoIntimacao').value = data.natureza || '';
+                        
+                        // Recarregando os dados extras específicos da Intimação
+                        if (data.dados_extras) {
+                            try {
+                                const extras = JSON.parse(data.dados_extras);
+                                document.getElementById('nomeIntimado').value = extras.nomeIntimado || '';
+                                document.getElementById('rgIntimado').value = extras.rgIntimado || '';
+                                document.getElementById('dataIntimacao').value = extras.dataIntimacao || '';
+                                document.getElementById('horaIntimacao').value = extras.horaIntimacao || '';
+                            } catch(e) {}
+                        }
+
                     } else if (data.tipo === 'Investigação') {
                         document.getElementById('typeInvestigacao').checked = true;
                         toggleFormType();
