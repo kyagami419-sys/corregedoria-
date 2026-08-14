@@ -373,7 +373,7 @@
             const horaLimite = "14:00"; 
 
             const inqOrigem = document.getElementById('numInq')?.value || 'S/N';
-            const numIntimacao = 'INT-' + Math.floor(1000 + Math.random() * 9000) + '/' + dataAtual.getFullYear();
+            const numIntimacao = inqOrigem;
             const motivo = `O(a) Sr(a). foi citado(a) no Inquérito Policial n° ${inqOrigem}. Apresente-se na delegacia no prazo estabelecido para prestar esclarecimentos.`;
 
             // Pega o encarregado do inquérito como assinante principal
