@@ -335,7 +335,7 @@
             const row = document.createElement('div');
             row.className = 'row g-2 dynamic-row';
             row.innerHTML = `
-                <div class="col-md-4"><input type="text" class="form-control i-nome" placeholder="Nome" value="${dados.nome || ''}"></div>
+                <div class="col-md-3"><input type="text" class="form-control i-nome" placeholder="Nome" value="${dados.nome || ''}"></div>
                 <div class="col-md-2">
                     <select class="form-select i-papel">
                         <option ${dados.papel === 'Vítima' ? 'selected' : ''}>Vítima</option>
@@ -345,9 +345,88 @@
                     </select>
                 </div>
                 <div class="col-md-2"><input type="text" class="form-control i-passaporte" placeholder="RG" value="${dados.rg || ''}"></div>
-                <div class="col-md-3"><input type="text" class="form-control i-tel" placeholder="Telefone" value="${dados.tel || ''}"></div>
-                <div class="col-md-1"><button type="button" class="btn btn-danger btn-sm w-100" onclick="this.parentElement.parentElement.remove()"><i class="fas fa-trash"></i></button></div>`;
+                <div class="col-md-2"><input type="text" class="form-control i-tel" placeholder="Telefone" value="${dados.tel || ''}"></div>
+                <div class="col-md-3 d-flex gap-1">
+                    <button type="button" class="btn btn-warning btn-sm w-100 fw-bold" onclick="intimarEnvolvido(this)"><i class="fas fa-file-signature"></i> Intimar</button>
+                    <button type="button" class="btn btn-danger btn-sm px-3" onclick="this.parentElement.parentElement.remove()"><i class="fas fa-trash"></i></button>
+                </div>`;
             container.appendChild(row);
+        }
+
+        async function intimarEnvolvido(botao) {
+            const row = botao.parentElement.parentElement;
+            const nome = row.querySelector('.i-nome').value.trim();
+            const rg = row.querySelector('.i-passaporte').value.trim();
+            
+            if (!nome) {
+                alert('Por favor, preencha o nome do envolvido antes de gerar a intimação.');
+                return;
+            }
+
+            const dataAtual = new Date();
+            const dataHoraAtualFormatada = formatDatetime(dataAtual.toISOString());
+            
+            // Calcula o prazo de +1 dia
+            const dataAmanha = new Date();
+            dataAmanha.setDate(dataAmanha.getDate() + 1);
+            const dataLimiteStr = dataAmanha.toLocaleDateString('pt-BR');
+            const horaLimite = "14:00"; // Horário padrão de apresentação 
+
+            const inqOrigem = document.getElementById('numInq')?.value || 'S/N';
+            const numIntimacao = 'INT-' + Math.floor(1000 + Math.random() * 9000) + '/' + dataAtual.getFullYear();
+            const motivo = `O(a) Sr(a). foi citado(a) no Inquérito Policial n° ${inqOrigem}. Apresente-se na delegacia no prazo estabelecido para prestar esclarecimentos.`;
+
+            let arrayAssinaturas = [];
+            document.querySelectorAll('#assinaturasContainer .dynamic-row').forEach(rowAss => {
+                const nomeAss = rowAss.querySelector('.i-assNome').value;
+                const cargoAss = rowAss.querySelector('.i-assCargo').value;
+                if(nomeAss) {
+                    arrayAssinaturas.push({ text: `Documento assinado eletronicamente por ${nomeAss}, ${cargoAss}, em ${dataHoraAtualFormatada}, conforme art. 1º, III, "b" da Lei 11.419/2006.`, fontSize: 9, italics: true, margin: [0, 0, 0, 8] });
+                }
+            });
+
+            let forcaSelecionada = instituicaoUserGlobal;
+            const selectForca = document.getElementById('forcaPolicial');
+            const emailUsuarioLogado = localStorage.getItem('usuario_logado_email');
+            if (emailUsuarioLogado === "kira@yagami.gov" && selectForca && selectForca.offsetParent !== null) {
+                forcaSelecionada = selectForca.value;
+            }
+
+            let docDefinition = {
+                content: [
+                    { text: forcaSelecionada, alignment: 'center', bold: true, fontSize: 14 },
+                    { text: 'INTIMAÇÃO', alignment: 'center', bold: true, fontSize: 14, margin: [0, 10, 0, 20] },
+                    { text: `Intimação nº ${numIntimacao}`, fontSize: 12, bold: true },
+                    { text: `Sr(a). ${nome}, portador(a) do RG ${rg || '***'}, fica intimado(a) a comparecer no dia ${dataLimiteStr} às ${horaLimite}.`, fontSize: 11, margin: [0, 15, 0, 15] },
+                    { text: 'MOTIVO:', bold: true, fontSize: 10 },
+                    { text: motivo, fontSize: 10, margin: [0, 5, 0, 30] },
+                    { text: 'ASSINATURAS', bold: true, fontSize: 10, margin: [0, 10, 0, 5] },
+                    (arrayAssinaturas.length > 0 ? arrayAssinaturas : { text: 'Nenhuma assinatura registrada.', fontSize: 9 })
+                ],
+                defaultStyle: { font: 'Roboto' }
+            };
+
+            const nomeArquivo = `Intimacao_${nome.replace(/\s+/g, '_')}.pdf`;
+            pdfMake.createPdf(docDefinition).download(nomeArquivo);
+
+            const extrasObj = { forcaPolicial: forcaSelecionada };
+            const dadosDoc = {
+                numero: numIntimacao,
+                tipo: 'Intimação',
+                encarregado: document.getElementById('encarregado')?.value || 'Sistema',
+                natureza: motivo,
+                status: 'Finalizado',
+                data_inicio: dataAtual.toISOString(),
+                data_fim: dataAtual.toISOString(),
+                dados_extras: JSON.stringify(extrasObj)
+            };
+
+            const { error } = await supabaseClient.from('inqueritos').insert([dadosDoc]);
+            if (error) {
+                alert("Erro ao salvar intimação automática: " + error.message);
+            } else {
+                alert(`Intimação de ${nome} gerada com sucesso e enviada para o banco (Finalizados)!`);
+            }
         }
 
         function addEvidencia(dados = {}) {
