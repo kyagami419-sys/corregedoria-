@@ -370,20 +370,32 @@
             const dataAmanha = new Date();
             dataAmanha.setDate(dataAmanha.getDate() + 1);
             const dataLimiteStr = dataAmanha.toLocaleDateString('pt-BR');
-            const horaLimite = "14:00"; // Horário padrão de apresentação 
+            const horaLimite = "14:00"; 
 
             const inqOrigem = document.getElementById('numInq')?.value || 'S/N';
             const numIntimacao = 'INT-' + Math.floor(1000 + Math.random() * 9000) + '/' + dataAtual.getFullYear();
             const motivo = `O(a) Sr(a). foi citado(a) no Inquérito Policial n° ${inqOrigem}. Apresente-se na delegacia no prazo estabelecido para prestar esclarecimentos.`;
 
-            let arrayAssinaturas = [];
-            document.querySelectorAll('#assinaturasContainer .dynamic-row').forEach(rowAss => {
-                const nomeAss = rowAss.querySelector('.i-assNome').value;
-                const cargoAss = rowAss.querySelector('.i-assCargo').value;
-                if(nomeAss) {
-                    arrayAssinaturas.push({ text: `Documento assinado eletronicamente por ${nomeAss}, ${cargoAss}, em ${dataHoraAtualFormatada}, conforme art. 1º, III, "b" da Lei 11.419/2006.`, fontSize: 9, italics: true, margin: [0, 0, 0, 8] });
+            // Pega o delegado cadastrado na portaria ou usa o encarregado do inquérito
+            let nomeAssinante = document.getElementById('encarregado')?.value || 'Autoridade Policial';
+            let cargoAssinante = 'Delegado(a) de Polícia';
+            
+            const primeiroDelegado = document.querySelector('#delegadosPortariaContainer .dynamic-row');
+            if (primeiroDelegado) {
+                const nomeDel = primeiroDelegado.querySelector('.i-delNome')?.value;
+                const matDel = primeiroDelegado.querySelector('.i-delMat')?.value;
+                if (nomeDel) {
+                    nomeAssinante = nomeDel;
+                    if (matDel) cargoAssinante += ` - Matrícula: ${matDel}`;
                 }
-            });
+            }
+
+            let arrayAssinaturas = [{ 
+                text: `Documento assinado eletronicamente por ${nomeAssinante}, ${cargoAssinante}, em ${dataHoraAtualFormatada}, conforme art. 1º, III, "b" da Lei 11.419/2006.`, 
+                fontSize: 9, 
+                italics: true, 
+                margin: [0, 0, 0, 8] 
+            }];
 
             let forcaSelecionada = instituicaoUserGlobal;
             const selectForca = document.getElementById('forcaPolicial');
@@ -401,7 +413,7 @@
                     { text: 'MOTIVO:', bold: true, fontSize: 10 },
                     { text: motivo, fontSize: 10, margin: [0, 5, 0, 30] },
                     { text: 'ASSINATURAS', bold: true, fontSize: 10, margin: [0, 10, 0, 5] },
-                    (arrayAssinaturas.length > 0 ? arrayAssinaturas : { text: 'Nenhuma assinatura registrada.', fontSize: 9 })
+                    ...arrayAssinaturas
                 ],
                 defaultStyle: { font: 'Roboto' }
             };
@@ -413,7 +425,7 @@
             const dadosDoc = {
                 numero: numIntimacao,
                 tipo: 'Intimação',
-                encarregado: document.getElementById('encarregado')?.value || 'Sistema',
+                encarregado: nomeAssinante,
                 natureza: motivo,
                 status: 'Finalizado',
                 data_inicio: dataAtual.toISOString(),
