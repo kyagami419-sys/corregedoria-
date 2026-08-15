@@ -57,9 +57,9 @@
         
         /* Ajuste nas caixas de texto */
         .form-label { color: #9ca3af; font-size: 0.85em; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
-        .form-control { background-color: #1f2937 !important; border: 1px solid #374151 !important; color: #ffffff !important; font-size: 0.95em; }
+        .form-control, .form-select { background-color: #1f2937 !important; border: 1px solid #374151 !important; color: #ffffff !important; font-size: 0.95em; }
         .form-control::placeholder { color: #6b7280 !important; }
-        .form-control:focus { background-color: #111827 !important; color: #ffffff !important; border-color: #b58d3d !important; box-shadow: 0 0 0 0.25rem rgba(181, 141, 61, 0.25) !important; }
+        .form-control:focus, .form-select:focus { background-color: #111827 !important; color: #ffffff !important; border-color: #b58d3d !important; box-shadow: 0 0 0 0.25rem rgba(181, 141, 61, 0.25) !important; }
         
         /* Grid de Crimes */
         .crimes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; max-height: 600px; overflow-y: auto; padding-right: 10px; }
@@ -135,6 +135,20 @@
                 <div class="section-box">
                     <div class="section-title"><i class="fas fa-id-card"></i> Dados do Ocorrido</div>
                     <div class="row g-3">
+                        
+                        <div class="col-md-12 mb-2">
+                            <label class="form-label">Instituição Policial Efetuando a Prisão</label>
+                            <select id="calcInstituicao" class="form-select">
+                                <option value="PF">Polícia Federal (PF)</option>
+                                <option value="CIVIL">Polícia Civil</option>
+                                <option value="PM">Polícia Militar (PM)</option>
+                                <option value="PRF">Polícia Rodoviária Federal (PRF)</option>
+                                <option value="PFILHA">PFILHA</option>
+                                <option value="ROTA">ROTA</option>
+                                <option value="BOPE">BOPE</option>
+                            </select>
+                        </div>
+
                         <div class="col-md-8"><label class="form-label">Nome do Acusado</label><input type="text" id="calcAcusadoNome" class="form-control" placeholder="Nome completo do suspeito"></div>
                         <div class="col-md-4"><label class="form-label">Passaporte / ID</label><input type="text" id="calcAcusadoID" class="form-control" placeholder="Ex: 1234"></div>
                         
@@ -151,6 +165,11 @@
 
                         <div class="col-md-8"><label class="form-label">Advogado Constituído</label><input type="text" id="calcAdvNome" class="form-control" placeholder="Nome do Advogado (se houver)"></div>
                         <div class="col-md-4"><label class="form-label">OAB</label><input type="text" id="calcAdvOAB" class="form-control" placeholder="Nº da OAB"></div>
+
+                        <!-- Campos para Upload / Ctrl+V -->
+                        <div class="col-md-6"><label class="form-label text-warning"><i class="fas fa-camera"></i> Foto do Inventário (Arquivo ou Ctrl+V)</label><input type="file" id="calcFotoInventario" class="form-control" accept="image/*"></div>
+                        <div class="col-md-6"><label class="form-label text-warning"><i class="fas fa-camera"></i> Foto do Rosco (Arquivo ou Ctrl+V)</label><input type="file" id="calcFotoRosco" class="form-control" accept="image/*"></div>
+
                         <div class="col-12"><label class="form-label">Relato Breve do Ocorrido</label><textarea id="calcRelato" class="form-control" rows="3" placeholder="Descreva os acontecimentos resumidamente..."></textarea></div>
                     </div>
                 </div>
@@ -319,6 +338,30 @@
         let atenuantesAtivos = [];
         let isWebhookOnCooldown = false;
 
+        // Configuração Sistema Ctrl+V nas Imagens
+        document.addEventListener('paste', function(e) {
+            if (e.clipboardData && e.clipboardData.files && e.clipboardData.files.length > 0) {
+                const file = e.clipboardData.files[0];
+                if (file.type.startsWith('image/')) {
+                    const invInput = document.getElementById('calcFotoInventario');
+                    const rosInput = document.getElementById('calcFotoRosco');
+                    
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(file);
+                    
+                    if (!invInput.files.length) {
+                        invInput.files = dataTransfer.files;
+                        alert("Imagem colada com sucesso no campo: Foto do Inventário");
+                    } else if (!rosInput.files.length) {
+                        rosInput.files = dataTransfer.files;
+                        alert("Imagem colada com sucesso no campo: Foto do Rosco");
+                    } else {
+                        alert("Os dois campos de foto já estão preenchidos!");
+                    }
+                }
+            }
+        });
+
         // Formatar Moeda
         function formatarMoeda(valor) {
             return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -471,10 +514,16 @@
 
         // Copiar Relatório Completo
         function copiarRelatorio() {
+            const selecaoInst = document.getElementById('calcInstituicao');
+            const instNomeDisplay = selecaoInst.options[selecaoInst.selectedIndex].text;
             const acusado = document.getElementById('calcAcusadoNome').value || 'Não informado';
             const passaporte = document.getElementById('calcAcusadoID').value || 'S/N';
             const adv = document.getElementById('calcAdvNome').value || 'Nenhum';
             const oab = document.getElementById('calcAdvOAB').value || 'S/N';
+            
+            const fotoInventarioStr = document.getElementById('calcFotoInventario').files.length > 0 ? 'Imagem Anexada no Sistema' : 'Nenhuma';
+            const fotoRoscoStr = document.getElementById('calcFotoRosco').files.length > 0 ? 'Imagem Anexada no Sistema' : 'Nenhuma';
+            
             const relato = document.getElementById('calcRelato').value || 'Nenhum relato informado.';
 
             if (crimesSelecionados.length === 0) {
@@ -483,9 +532,12 @@
             }
 
             let texto = `=== REGISTRO DE PRISÃO ===\n`;
+            texto += `Instituição: ${instNomeDisplay}\n`;
             texto += `Acusado(a): ${acusado} | Passaporte/ID: ${passaporte}\n`;
             texto += `Oficiais Responsáveis:\n${getListaPoliciaisString(false)}`;
-            texto += `Advogado: ${adv} | OAB: ${oab}\n\n`;
+            texto += `Advogado: ${adv} | OAB: ${oab}\n`;
+            texto += `Foto do Inventário: ${fotoInventarioStr}\n`;
+            texto += `Foto do Rosco: ${fotoRoscoStr}\n\n`;
             
             texto += `CRIMES COMETIDOS:\n`;
             crimesSelecionados.forEach(c => {
@@ -511,12 +563,16 @@
             });
         }
 
-        // Sistema de envio pro Discord + Sistema Anti-Spam
+        // Sistema de envio pro Discord Duplo + Imagens (FormData)
         function enviarRelatorioWebhook() {
             if (isWebhookOnCooldown) {
                 alert("Aguarde 15 segundos antes de enviar novamente para evitar spam.");
                 return;
             }
+
+            const instValue = document.getElementById('calcInstituicao').value;
+            const selecaoInst = document.getElementById('calcInstituicao');
+            const instNomeDisplay = selecaoInst.options[selecaoInst.selectedIndex].text;
 
             const acusado = document.getElementById('calcAcusadoNome').value || 'Não informado';
             const passaporte = document.getElementById('calcAcusadoID').value || 'S/N';
@@ -549,6 +605,7 @@
                     title: "⚖️ REGISTRO DE PRISÃO",
                     color: 11898173, 
                     fields: [
+                        { name: "🚔 Instituição Policial", value: `**${instNomeDisplay}**`, inline: false },
                         { name: "👤 Acusado", value: `${acusado} \n**ID:** ${passaporte}`, inline: true },
                         { name: "👮 Oficiais Responsáveis", value: getListaPoliciaisString(true), inline: true },
                         { name: "💼 Advogado", value: `${adv} \n**OAB:** ${oab}`, inline: false },
@@ -563,7 +620,48 @@
                 }]
             };
 
-            const webhookUrl = "https://discord.com/api/webhooks/1538236408060190831/sY_rGiwko3_vQANr9wTwG6GGd-_8-4euYKhfEgMRWAxU-0UJsCpH2OZcoD7C_TaqfS_D";
+            // Preparando envio com anexos via FormData
+            const formData = new FormData();
+            let fileCount = 0;
+            
+            const invFile = document.getElementById('calcFotoInventario').files[0];
+            const rosFile = document.getElementById('calcFotoRosco').files[0];
+
+            if (invFile) {
+                formData.append(`file${fileCount}`, invFile, 'inventario.png');
+                payload.embeds[0].image = { url: `attachment://inventario.png` };
+                fileCount++;
+            }
+
+            if (rosFile) {
+                formData.append(`file${fileCount}`, rosFile, 'rosco.png');
+                if (invFile) {
+                    // Discord só permite 1 imagem principal por embed, então se tiver as duas, criamos um segundo embed só para a foto
+                    payload.embeds.push({
+                        color: 11898173,
+                        image: { url: `attachment://rosco.png` }
+                    });
+                } else {
+                    payload.embeds[0].image = { url: `attachment://rosco.png` };
+                }
+            }
+
+            formData.append('payload_json', JSON.stringify(payload));
+
+            // Configuração dos Webhooks
+            const webhookGeral = "https://discord.com/api/webhooks/1538236408060190831/sY_rGiwko3_vQANr9wTwG6GGd-_8-4euYKhfEgMRWAxU-0UJsCpH2OZcoD7C_TaqfS_D";
+            const webhooksEspecificos = {
+                "PF": "https://discord.com/api/webhooks/1538259400848965653/2Spj51kVrTwZ63RdrVy_SPk76Yzxf508wlsGIeN2AwkxuccVNWxaoGpmAiiDz3_OBwCI",
+                "CIVIL": "", // Cole o link da CIVIL aqui no futuro
+                "PM": "",    // Cole o link da PM aqui no futuro
+                "PRF": "",   // Cole o link da PRF aqui no futuro
+                "PFILHA": "",// Cole o link da PFILHA aqui no futuro
+                "ROTA": "",  // Cole o link da ROTA aqui no futuro
+                "BOPE": ""   // Cole o link do BOPE aqui no futuro
+            };
+
+            const webhookEspecificoDaPolicia = webhooksEspecificos[instValue];
+
             const btnWebhook = document.getElementById('btnEnviarDiscord');
             const btnOriginalText = '<i class="fab fa-discord"></i> Enviar Relatório';
             
@@ -571,15 +669,20 @@
             btnWebhook.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
             btnWebhook.disabled = true;
 
-            fetch(webhookUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            }).then(response => {
-                if (response.ok) {
-                    alert("Relatório enviado para o Discord com sucesso!");
+            // Envia para a Webhook Geral e para a Específica ao mesmo tempo
+            let requests = [];
+            requests.push(fetch(webhookGeral, { method: 'POST', body: formData }));
+
+            if (webhookEspecificoDaPolicia && webhookEspecificoDaPolicia.trim() !== "") {
+                requests.push(fetch(webhookEspecificoDaPolicia, { method: 'POST', body: formData }));
+            }
+
+            Promise.all(requests).then(responses => {
+                let allOk = responses.every(r => r.ok);
+                if (allOk) {
+                    alert("Relatório enviado para os Canais do Discord com sucesso!");
                 } else {
-                    alert("Erro ao enviar relatório. Tente novamente.");
+                    alert("O relatório foi processado, mas ocorreu um erro ao enviar para um dos canais configurados.");
                 }
                 iniciarCooldown(btnWebhook, btnOriginalText);
             }).catch(err => {
@@ -610,10 +713,13 @@
         function limparCalculadora() {
             if(!confirm("Deseja realmente limpar todos os campos e seleções?")) return;
             
+            document.getElementById('calcInstituicao').value = 'PF';
             document.getElementById('calcAcusadoNome').value = '';
             document.getElementById('calcAcusadoID').value = '';
             document.getElementById('calcAdvNome').value = '';
             document.getElementById('calcAdvOAB').value = '';
+            document.getElementById('calcFotoInventario').value = '';
+            document.getElementById('calcFotoRosco').value = '';
             document.getElementById('calcRelato').value = '';
             document.getElementById('searchCrime').value = '';
 
