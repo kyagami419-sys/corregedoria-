@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Penal - Corregedoria</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        body { 
+            background: radial-gradient(circle at top, #121826 0%, #07090e 70%); 
+            color: #e0e0e0; 
+            font-family: 'Inter', sans-serif; 
+            min-height: 100vh;
+        }
+        .navbar-pf { 
+            background: rgba(17, 24, 39, 0.95); 
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid #b58d3d; 
+            padding: 15px 30px; 
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .navbar-pf .brand-title { 
+            color: #ffffff; 
+            font-family: 'Playfair Display', serif;
+            font-weight: 700; 
+            font-size: 1.25em; 
+            letter-spacing: 1.5px; 
+        }
+        .container-main { padding: 30px 20px; max-width: 1400px; margin: 0 auto; }
+        
+        .section-box { 
+            background: linear-gradient(135deg, #121826 0%, #0d1117 100%); 
+            border: 1px solid #1f2937; 
+            border-radius: 10px; 
+            padding: 25px; 
+            margin-bottom: 25px; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+        .section-title { 
+            color: #b58d3d; 
+            border-bottom: 1px solid #1f2937; 
+            padding-bottom: 12px; 
+            margin-bottom: 20px; 
+            font-size: 1.1em; 
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase; 
+            display: flex; 
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* Ajuste nas caixas de texto */
+        .form-label { color: #9ca3af; font-size: 0.85em; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+        .form-control { background-color: #1f2937 !important; border: 1px solid #374151 !important; color: #ffffff !important; font-size: 0.95em; }
+        .form-control::placeholder { color: #6b7280 !important; }
+        .form-control:focus { background-color: #111827 !important; color: #ffffff !important; border-color: #b58d3d !important; box-shadow: 0 0 0 0.25rem rgba(181, 141, 61, 0.25) !important; }
+        
+        /* Grid de Crimes */
+        .crimes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; max-height: 600px; overflow-y: auto; padding-right: 10px; }
+        .crimes-grid::-webkit-scrollbar { width: 8px; }
+        .crimes-grid::-webkit-scrollbar-track { background: #0d1117; border-radius: 4px; }
+        .crimes-grid::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }
+        
+        .crime-card { 
+            background-color: #1f2937; 
+            border: 1px solid #374151; 
+            border-radius: 8px; 
+            padding: 15px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .crime-card:hover { border-color: #4b5563; background-color: #273345; }
+        .crime-card.selected { border-color: #b58d3d; background-color: rgba(181, 141, 61, 0.1); }
+        .crime-info h5 { margin: 0; font-size: 0.95em; font-weight: 600; color: #f3f4f6; margin-bottom: 5px; }
+        .crime-info p { margin: 0; font-size: 0.8em; color: #9ca3af; }
+        .crime-checkbox { width: 20px; height: 20px; accent-color: #b58d3d; cursor: pointer; }
+
+        /* Atenuantes */
+        .atenuante-card {
+            background-color: #1f2937; border: 1px solid #374151; border-radius: 8px; padding: 12px 15px;
+            display: flex; justify-content: space-between; align-items: center; cursor: pointer;
+        }
+        .atenuante-card:hover { background-color: #273345; }
+        .atenuante-card.selected { border-color: #10b981; background-color: rgba(16, 185, 129, 0.1); }
+        .atenuante-info span { font-size: 0.9em; font-weight: 500; color: #e5e7eb; }
+        .atenuante-info small { color: #10b981; font-weight: 600; margin-left: 8px; font-size: 0.85em;}
+        
+        /* Resumo Calculadora */
+        .summary-box { background: #000; border: 2px solid #b58d3d; border-radius: 10px; padding: 25px; position: sticky; top: 100px; }
+        .summary-item { display: flex; justify-content: space-between; border-bottom: 1px solid #1f2937; padding: 12px 0; font-size: 1.1em; }
+        .summary-item.total { border-bottom: none; font-size: 1.4em; font-weight: 700; color: #b58d3d; padding-top: 20px; margin-top: 10px; border-top: 2px solid #374151; }
+        .summary-item.red { color: #ef4444; }
+        
+        /* Botões */
+        .btn-gold { background-color: #b58d3d; color: #ffffff; font-weight: 600; border: none; padding: 12px; border-radius: 6px; width: 100%; transition: all 0.3s; margin-top: 20px; }
+        .btn-gold:hover { background-color: #c49a3c; color: #ffffff; }
+
+        .btn-discord { background-color: #5865F2; color: #ffffff; font-weight: 600; border: none; padding: 12px; border-radius: 6px; width: 100%; transition: all 0.3s; margin-top: 10px; }
+        .btn-discord:hover { background-color: #4752C4; color: #ffffff; }
+        .btn-discord:disabled { background-color: #3f478a; color: #a1a1a1; cursor: not-allowed; }
+
+        .search-bar { position: relative; margin-bottom: 20px; }
+        .search-bar i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #6b7280; }
+        .search-bar input { padding-left: 45px; border-radius: 30px; }
+        
+        .btn-add-sm { background-color: #2c3e50; color: #fff; font-size: 0.8em; padding: 4px 10px; border: none; border-radius: 4px; transition: 0.2s;}
+        .btn-add-sm:hover { background-color: #34495e; color: #fff; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-pf d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+            <span class="brand-title">CALCULADORA PENAL</span>
+        </div>
+        <div>
+            <a href="index.html" class="btn btn-outline-light btn-sm"><i class="fas fa-arrow-left"></i> Voltar ao Início</a>
+        </div>
+    </nav>
+
+    <div class="container-main">
+        <div class="row">
+            <!-- COLUNA ESQUERDA: Formulário e Crimes -->
+            <div class="col-lg-8">
+                
+                <div class="section-box">
+                    <div class="section-title"><i class="fas fa-id-card"></i> Dados do Ocorrido</div>
+                    <div class="row g-3">
+                        <div class="col-md-8"><label class="form-label">Nome do Acusado</label><input type="text" id="calcAcusadoNome" class="form-control" placeholder="Nome completo do suspeito"></div>
+                        <div class="col-md-4"><label class="form-label">Passaporte / ID</label><input type="text" id="calcAcusadoID" class="form-control" placeholder="Ex: 1234"></div>
+                        
+                        <!-- Múltiplos Policiais -->
+                        <div class="col-12 mt-3 mb-1">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <label class="form-label mb-0">Policiais Responsáveis (Máx 5)</label>
+                                <button type="button" class="btn-add-sm" onclick="addPolicial()"><i class="fas fa-plus"></i> Adicionar Policial</button>
+                            </div>
+                            <div id="policiaisContainer">
+                                <!-- Os campos de policiais serão gerados aqui -->
+                            </div>
+                        </div>
+
+                        <div class="col-md-8"><label class="form-label">Advogado Constituído</label><input type="text" id="calcAdvNome" class="form-control" placeholder="Nome do Advogado (se houver)"></div>
+                        <div class="col-md-4"><label class="form-label">OAB</label><input type="text" id="calcAdvOAB" class="form-control" placeholder="Nº da OAB"></div>
+                        <div class="col-12"><label class="form-label">Relato Breve do Ocorrido</label><textarea id="calcRelato" class="form-control" rows="3" placeholder="Descreva os acontecimentos resumidamente..."></textarea></div>
+                    </div>
+                </div>
+
+                <div class="section-box">
+                    <div class="section-title"><i class="fas fa-balance-scale-left"></i> Atenuantes (Redução de Pena)</div>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="atenuante-card" onclick="toggleAtenuante('advogado', 30, this)">
+                                <div class="atenuante-info"><span>Jurídico Constituído</span><small>-30%</small></div>
+                                <input type="checkbox" id="chk_advogado" class="crime-checkbox" onclick="event.stopPropagation(); toggleAtenuante('advogado', 30, this.parentElement)">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="atenuante-card" onclick="toggleAtenuante('primario', 20, this)">
+                                <div class="atenuante-info"><span>Réu Primário</span><small>-20%</small></div>
+                                <input type="checkbox" id="chk_primario" class="crime-checkbox" onclick="event.stopPropagation(); toggleAtenuante('primario', 20, this.parentElement)">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="atenuante-card" onclick="toggleAtenuante('confesso', 20, this)">
+                                <div class="atenuante-info"><span>Réu Confesso</span><small>-20%</small></div>
+                                <input type="checkbox" id="chk_confesso" class="crime-checkbox" onclick="event.stopPropagation(); toggleAtenuante('confesso', 20, this.parentElement)">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="atenuante-card" onclick="toggleAtenuante('colaboracao', 10, this)">
+                                <div class="atenuante-info"><span>Colaboração</span><small>-10%</small></div>
+                                <input type="checkbox" id="chk_colaboracao" class="crime-checkbox" onclick="event.stopPropagation(); toggleAtenuante('colaboracao', 10, this.parentElement)">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-box">
+                    <div class="section-title"><i class="fas fa-gavel"></i> Seleção de Crimes</div>
+                    
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchCrime" class="form-control" placeholder="Buscar crime por nome..." onkeyup="filtrarCrimes()">
+                    </div>
+
+                    <div class="crimes-grid" id="crimesContainer">
+                        <!-- Crimes gerados via JavaScript -->
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- COLUNA DIREITA: Resumo / Ticket -->
+            <div class="col-lg-4">
+                <div class="summary-box">
+                    <h4 class="text-center mb-4" style="font-family: 'Playfair Display', serif; color: #fff;">PENA FINAL</h4>
+                    
+                    <div class="summary-item">
+                        <span class="text-muted">Meses Brutos</span>
+                        <span id="resMesesBrutos">0</span>
+                    </div>
+                    <div class="summary-item red">
+                        <span>Redução (Atenuantes)</span>
+                        <span id="resReducaoText">0%</span>
+                    </div>
+                    <div class="summary-item total" style="color: #f3f4f6; border-top: 1px solid #374151; padding-top: 15px; margin-top: 0;">
+                        <span>Tempo Final</span>
+                        <span id="resMesesFinais">0 Meses</span>
+                    </div>
+                    
+                    <div class="summary-item total">
+                        <span>Multa</span>
+                        <span id="resMulta">R$ 0</span>
+                    </div>
+
+                    <button class="btn btn-gold" onclick="copiarRelatorio()"><i class="fas fa-copy"></i> Copiar Relatório</button>
+                    
+                    <button class="btn btn-discord" id="btnEnviarDiscord" onclick="enviarRelatorioWebhook()"><i class="fab fa-discord"></i> Enviar Relatório</button>
+
+                    <button class="btn btn-outline-secondary w-100 mt-2" onclick="limparCalculadora()"><i class="fas fa-trash-alt"></i> Limpar Tudo</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const listaCrimes = [
+            { id: 1, nome: "Abuso de Autoridade", meses: 50, multa: 300000 },
+            { id: 2, nome: "Corrupção Passiva e/ou Ativa", meses: 50, multa: 300000 },
+            { id: 3, nome: "Desacato", meses: 30, multa: 300000 },
+            { id: 4, nome: "Impedir Exercício Profissional", meses: 20, multa: 150000 },
+            { id: 5, nome: "Prevaricação", meses: 50, multa: 300000 },
+            { id: 6, nome: "Prisão Disciplinar", meses: 30, multa: 100000 },
+            { id: 7, nome: "Tráfico de Influência", meses: 30, multa: 150000 },
+            { id: 8, nome: "Uso irregular de Função Pública", meses: 30, multa: 300000 },
+            { id: 9, nome: "Tentativa de Homicídio", meses: 30, multa: 200000 },
+            { id: 10, nome: "Homicídio Culposo", meses: 30, multa: 300000 },
+            { id: 11, nome: "Homicídio Doloso", meses: 40, multa: 300000 },
+            { id: 12, nome: "Homicídio Qualificado", meses: 50, multa: 400000 },
+            { id: 13, nome: "Latrocínio", meses: 60, multa: 400000 },
+            { id: 14, nome: "Assédio Moral", meses: 10, multa: 100000 },
+            { id: 15, nome: "Calúnia", meses: 10, multa: 100000 },
+            { id: 16, nome: "Difamação", meses: 10, multa: 100000 },
+            { id: 17, nome: "Injúria", meses: 10, multa: 100000 },
+            { id: 18, nome: "Importunação Sexual", meses: 10, multa: 100000 },
+            { id: 19, nome: "Perjúrio", meses: 10, multa: 100000 },
+            { id: 20, nome: "Abandono de Incapaz", meses: 100, multa: 200000 },
+            { id: 21, nome: "Adultério", meses: 50, multa: 200000 },
+            { id: 22, nome: "Bigamia", meses: 50, multa: 200000 },
+            { id: 23, nome: "Crime Sexual Intrafamiliar", meses: 50, multa: 200000 },
+            { id: 24, nome: "Ameaça", meses: 20, multa: 100000 },
+            { id: 25, nome: "Extorsão", meses: 10, multa: 50000 },
+            { id: 26, nome: "Lesão Corporal", meses: 20, multa: 100000 },
+            { id: 27, nome: "Sequestro", meses: 30, multa: 200000 },
+            { id: 28, nome: "Tortura", meses: 50, multa: 400000 },
+            { id: 29, nome: "Vandalismo", meses: 10, multa: 50000 },
+            { id: 30, nome: "Dano de Propriedade do Governo", meses: 10, multa: 100000 },
+            { id: 31, nome: "Estelionato", meses: 10, multa: 100000 },
+            { id: 32, nome: "Invasão de Propriedade", meses: 10, multa: 100000 },
+            { id: 33, nome: "Furto", meses: 10, multa: 100000 },
+            { id: 34, nome: "Roubo", meses: 20, multa: 150000 },
+            { id: 35, nome: "Posse de Produtos Ilegais", meses: 10, multa: 50000 },
+            { id: 36, nome: "Tráfico de Produtos Ilegais", meses: 30, multa: 100000 },
+            { id: 37, nome: "Posse de Peças de Armas", meses: 0, multa: 0 },
+            { id: 38, nome: "Posse de Cápsula", meses: 0, multa: 0 },
+            { id: 39, nome: "Porte de Arma Leve", meses: 20, multa: 100000 },
+            { id: 40, nome: "Tráfico de Armas Leve", meses: 40, multa: 300000 },
+            { id: 41, nome: "Porte de Arma Pesada", meses: 30, multa: 200000 },
+            { id: 42, nome: "Tráfico de Armas Pesada", meses: 50, multa: 400000 },
+            { id: 43, nome: "Porte de Arma Branca", meses: 0, multa: 100000 },
+            { id: 44, nome: "Porte de Munição (-100)", meses: 20, multa: 100000 },
+            { id: 45, nome: "Tráfico de Munição (+100)", meses: 30, multa: 200000 },
+            { id: 46, nome: "Posse de Componentes Narcóticos", meses: 0, multa: 0 },
+            { id: 47, nome: "Posse de Drogas (-100)", meses: 20, multa: 100000 },
+            { id: 48, nome: "Tráfico de Drogas (+100)", meses: 30, multa: 150000 },
+            { id: 49, nome: "Dinheiro Sujo Leve", meses: 10, multa: 50000 },
+            { id: 50, nome: "Dinheiro Sujo Médio", meses: 20, multa: 150000 },
+            { id: 51, nome: "Dinheiro Sujo Grave", meses: 30, multa: 300000 },
+            { id: 52, nome: "Apologia ao Crime", meses: 10, multa: 100000 },
+            { id: 53, nome: "Falsidade Ideológica", meses: 30, multa: 200000 },
+            { id: 54, nome: "Formação de Quadrilha", meses: 30, multa: 200000 },
+            { id: 55, nome: "Desobediência", meses: 10, multa: 100000 },
+            { id: 56, nome: "Exercício Ilegal de Profissão", meses: 10, multa: 200000 },
+            { id: 57, nome: "Falsa Comunicação de Crime", meses: 10, multa: 50000 },
+            { id: 58, nome: "Obstrução de Justiça", meses: 20, multa: 50000 },
+            { id: 59, nome: "Ocultação de Provas", meses: 10, multa: 100000 },
+            { id: 60, nome: "Omissão de Socorro", meses: 10, multa: 50000 },
+            { id: 61, nome: "Perturbação da Ordem", meses: 10, multa: 100000 },
+            { id: 62, nome: "QRR Ilegal", meses: 10, multa: 50000 },
+            { id: 63, nome: "Tentativa de Fuga", meses: 20, multa: 100000 },
+            { id: 64, nome: "Tentativa de Suborno", meses: 30, multa: 200000 },
+            { id: 65, nome: "Alta Velocidade", meses: 0, multa: 20000 },
+            { id: 66, nome: "Condução Imprudente", meses: 0, multa: 20000 },
+            { id: 67, nome: "Corridas Ilegais", meses: 20, multa: 100000 },
+            { id: 68, nome: "Dirigir na Contramão", meses: 0, multa: 20000 },
+            { id: 69, nome: "Veículo Muito Danificado", meses: 0, multa: 20000 },
+            { id: 70, nome: "Veículo Ilegalmente Estacionado", meses: 0, multa: 20000 },
+            { id: 71, nome: "Uso Excessivo de Insulfilm", meses: 0, multa: 20000 },
+            { id: 72, nome: "Ocultação Facial", meses: 10, multa: 50000 },
+            { id: 73, nome: "Uso de Coldre", meses: 0, multa: 50000 },
+            { id: 74, nome: "Uso de Colete (Roupa)", meses: 0, multa: 50000 },
+            { id: 75, nome: "Porte de Colete Balístico (equipamento)", meses: 10, multa: 100000 },
+            { id: 76, nome: "Tráfico de Colete Balístico (equipamento)", meses: 20, multa: 200000 }
+        ];
+
+        let crimesSelecionados = [];
+        let reducaoTotal = 0;
+        let atenuantesAtivos = [];
+        let isWebhookOnCooldown = false;
+
+        // Formatar Moeda
+        function formatarMoeda(valor) {
+            return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+
+        // --- SISTEMA DE MÚLTIPLOS POLICIAIS ---
+        function addPolicial() {
+            const container = document.getElementById('policiaisContainer');
+            if (container.children.length >= 5) {
+                alert("O limite máximo é de 5 policiais por ocorrência.");
+                return;
+            }
+            
+            const row = document.createElement('div');
+            row.className = 'row g-2 mb-2 dynamic-row-policial';
+            row.innerHTML = `
+                <div class="col-md-8"><input type="text" class="form-control i-polNome" placeholder="Nome do Policial responsável"></div>
+                <div class="col-md-3"><input type="text" class="form-control i-polID" placeholder="ID"></div>
+                <div class="col-md-1"><button type="button" class="btn btn-danger w-100" onclick="removerPolicial(this)" title="Remover Policial"><i class="fas fa-trash"></i></button></div>
+            `;
+            container.appendChild(row);
+        }
+
+        function removerPolicial(btn) {
+            const container = document.getElementById('policiaisContainer');
+            if (container.children.length > 1) {
+                btn.closest('.dynamic-row-policial').remove();
+            } else {
+                alert("É necessário ter pelo menos um policial responsável registrado.");
+            }
+        }
+        // --------------------------------------
+
+        // Renderizar Lista de Crimes
+        function renderizarCrimes() {
+            const container = document.getElementById('crimesContainer');
+            container.innerHTML = '';
+            
+            // Ordenar alfabeticamente
+            const crimesOrdenados = [...listaCrimes].sort((a, b) => a.nome.localeCompare(b.nome));
+
+            crimesOrdenados.forEach(crime => {
+                const isSelected = crimesSelecionados.find(c => c.id === crime.id);
+                
+                const card = document.createElement('div');
+                card.className = `crime-card ${isSelected ? 'selected' : ''}`;
+                card.id = `card_crime_${crime.id}`;
+                card.setAttribute('data-nome', crime.nome.toLowerCase());
+                card.onclick = () => toggleCrime(crime.id);
+                
+                card.innerHTML = `
+                    <div class="crime-info">
+                        <h5>${crime.nome}</h5>
+                        <p>${crime.meses} meses &bull; ${formatarMoeda(crime.multa)}</p>
+                    </div>
+                    <input type="checkbox" class="crime-checkbox" id="chk_crime_${crime.id}" ${isSelected ? 'checked' : ''} onclick="event.stopPropagation(); toggleCrime(${crime.id})">
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filtrarCrimes() {
+            const termo = document.getElementById('searchCrime').value.toLowerCase();
+            const cards = document.querySelectorAll('.crime-card');
+            
+            cards.forEach(card => {
+                const nome = card.getAttribute('data-nome');
+                if (nome.includes(termo)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function toggleCrime(id) {
+            const index = crimesSelecionados.findIndex(c => c.id === id);
+            const crime = listaCrimes.find(c => c.id === id);
+            
+            if (index > -1) {
+                crimesSelecionados.splice(index, 1);
+                document.getElementById(`card_crime_${id}`).classList.remove('selected');
+                document.getElementById(`chk_crime_${id}`).checked = false;
+            } else {
+                crimesSelecionados.push(crime);
+                document.getElementById(`card_crime_${id}`).classList.add('selected');
+                document.getElementById(`chk_crime_${id}`).checked = true;
+            }
+            calcularPena();
+        }
+
+        function toggleAtenuante(idName, percent, element) {
+            const checkbox = document.getElementById(`chk_${idName}`);
+            
+            if(element.tagName !== 'INPUT') {
+                checkbox.checked = !checkbox.checked;
+            }
+
+            if (checkbox.checked) {
+                element.classList.add('selected');
+                if (!atenuantesAtivos.includes(idName)) {
+                    atenuantesAtivos.push(idName);
+                    reducaoTotal += percent;
+                }
+            } else {
+                element.classList.remove('selected');
+                const index = atenuantesAtivos.indexOf(idName);
+                if (index > -1) {
+                    atenuantesAtivos.splice(index, 1);
+                    reducaoTotal -= percent;
+                }
+            }
+            calcularPena();
+        }
+
+        function calcularPena() {
+            let mesesBrutos = 0;
+            let multaTotal = 0;
+
+            crimesSelecionados.forEach(c => {
+                mesesBrutos += c.meses;
+                multaTotal += c.multa;
+            });
+
+            let mesesFinais = mesesBrutos - (mesesBrutos * (reducaoTotal / 100));
+            if (mesesFinais < 0) mesesFinais = 0;
+
+            document.getElementById('resMesesBrutos').innerText = mesesBrutos;
+            document.getElementById('resReducaoText').innerText = `-${reducaoTotal}%`;
+            document.getElementById('resMesesFinais').innerText = `${Math.floor(mesesFinais)} Meses`;
+            document.getElementById('resMulta').innerText = formatarMoeda(multaTotal);
+        }
+
+        // Extrai os policiais preenchidos do formulário
+        function getListaPoliciaisString(formatoWebhook = false) {
+            let lista = "";
+            document.querySelectorAll('.dynamic-row-policial').forEach(row => {
+                const pNome = row.querySelector('.i-polNome').value.trim() || 'Não informado';
+                const pID = row.querySelector('.i-polID').value.trim() || 'S/N';
+                
+                if(pNome !== 'Não informado' || pID !== 'S/N') {
+                    lista += formatoWebhook ? `• ${pNome} (ID: ${pID})\n` : `- ${pNome} (ID: ${pID})\n`;
+                }
+            });
+            if(lista === "") {
+                lista = formatoWebhook ? "Nenhum policial registrado." : "- Nenhum policial registrado.\n";
+            }
+            return lista;
+        }
+
+        // Copiar Relatório Completo
+        function copiarRelatorio() {
+            const acusado = document.getElementById('calcAcusadoNome').value || 'Não informado';
+            const passaporte = document.getElementById('calcAcusadoID').value || 'S/N';
+            const adv = document.getElementById('calcAdvNome').value || 'Nenhum';
+            const oab = document.getElementById('calcAdvOAB').value || 'S/N';
+            const relato = document.getElementById('calcRelato').value || 'Nenhum relato informado.';
+
+            if (crimesSelecionados.length === 0) {
+                alert("Selecione pelo menos um crime para gerar o relatório.");
+                return;
+            }
+
+            let texto = `=== REGISTRO DE PRISÃO ===\n`;
+            texto += `Acusado(a): ${acusado} | Passaporte/ID: ${passaporte}\n`;
+            texto += `Oficiais Responsáveis:\n${getListaPoliciaisString(false)}`;
+            texto += `Advogado: ${adv} | OAB: ${oab}\n\n`;
+            
+            texto += `CRIMES COMETIDOS:\n`;
+            crimesSelecionados.forEach(c => {
+                texto += `- ${c.nome} (${c.meses} meses | ${formatarMoeda(c.multa)})\n`;
+            });
+
+            let atenuantesNomes = [];
+            if (atenuantesAtivos.includes('advogado')) atenuantesNomes.push('Jurídico Constituído (-30%)');
+            if (atenuantesAtivos.includes('primario')) atenuantesNomes.push('Réu Primário (-20%)');
+            if (atenuantesAtivos.includes('confesso')) atenuantesNomes.push('Réu Confesso (-20%)');
+            if (atenuantesAtivos.includes('colaboracao')) atenuantesNomes.push('Colaboração (-10%)');
+
+            texto += `\nATENUANTES: ${atenuantesNomes.length > 0 ? atenuantesNomes.join(', ') : 'Nenhuma'}\n`;
+            texto += `\n>> PENA FINAL: ${document.getElementById('resMesesFinais').innerText} <<\n`;
+            texto += `>> MULTA FINAL: ${document.getElementById('resMulta').innerText} <<\n\n`;
+            texto += `RELATO DO OCORRIDO:\n${relato}\n`;
+            texto += `==========================`;
+
+            navigator.clipboard.writeText(texto).then(() => {
+                alert("Relatório copiado para a área de transferência com sucesso!");
+            }).catch(err => {
+                alert("Erro ao copiar. Tente selecionar manualmente e copiar.");
+            });
+        }
+
+        // Sistema de envio pro Discord + Sistema Anti-Spam
+        function enviarRelatorioWebhook() {
+            if (isWebhookOnCooldown) {
+                alert("Aguarde 15 segundos antes de enviar novamente para evitar spam.");
+                return;
+            }
+
+            const acusado = document.getElementById('calcAcusadoNome').value || 'Não informado';
+            const passaporte = document.getElementById('calcAcusadoID').value || 'S/N';
+            const adv = document.getElementById('calcAdvNome').value || 'Nenhum';
+            const oab = document.getElementById('calcAdvOAB').value || 'S/N';
+            const relato = document.getElementById('calcRelato').value || 'Nenhum relato informado.';
+
+            if (crimesSelecionados.length === 0) {
+                alert("Selecione pelo menos um crime para enviar o relatório.");
+                return;
+            }
+
+            let listaCrimesStr = "";
+            crimesSelecionados.forEach(c => {
+                listaCrimesStr += `• ${c.nome} (${c.meses}m | ${formatarMoeda(c.multa)})\n`;
+            });
+
+            let atenuantesNomes = [];
+            if (atenuantesAtivos.includes('advogado')) atenuantesNomes.push('Jurídico (-30%)');
+            if (atenuantesAtivos.includes('primario')) atenuantesNomes.push('Réu Primário (-20%)');
+            if (atenuantesAtivos.includes('confesso')) atenuantesNomes.push('Confesso (-20%)');
+            if (atenuantesAtivos.includes('colaboracao')) atenuantesNomes.push('Colaboração (-10%)');
+            
+            let atenuantesStr = atenuantesNomes.length > 0 ? atenuantesNomes.join(', ') : 'Nenhuma redução aplicada.';
+            let penaFinal = document.getElementById('resMesesFinais').innerText;
+            let multaFinal = document.getElementById('resMulta').innerText;
+
+            const payload = {
+                embeds: [{
+                    title: "⚖️ REGISTRO DE PRISÃO",
+                    color: 11898173, 
+                    fields: [
+                        { name: "👤 Acusado", value: `${acusado} \n**ID:** ${passaporte}`, inline: true },
+                        { name: "👮 Oficiais Responsáveis", value: getListaPoliciaisString(true), inline: true },
+                        { name: "💼 Advogado", value: `${adv} \n**OAB:** ${oab}`, inline: false },
+                        { name: "📝 Crimes Cometidos", value: listaCrimesStr, inline: false },
+                        { name: "📉 Atenuantes", value: atenuantesStr, inline: false },
+                        { name: "⏱️ Pena Final", value: `**${penaFinal}**`, inline: true },
+                        { name: "💸 Multa Final", value: `**${multaFinal}**`, inline: true },
+                        { name: "📄 Relato do Ocorrido", value: relato, inline: false }
+                    ],
+                    timestamp: new Date().toISOString(),
+                    footer: { text: "Calculadora Penal - Sistema Inteligente" }
+                }]
+            };
+
+            const webhookUrl = "https://discord.com/api/webhooks/1538236408060190831/sY_rGiwko3_vQANr9wTwG6GGd-_8-4euYKhfEgMRWAxU-0UJsCpH2OZcoD7C_TaqfS_D";
+            const btnWebhook = document.getElementById('btnEnviarDiscord');
+            const btnOriginalText = '<i class="fab fa-discord"></i> Enviar Relatório';
+            
+            isWebhookOnCooldown = true;
+            btnWebhook.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+            btnWebhook.disabled = true;
+
+            fetch(webhookUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).then(response => {
+                if (response.ok) {
+                    alert("Relatório enviado para o Discord com sucesso!");
+                } else {
+                    alert("Erro ao enviar relatório. Tente novamente.");
+                }
+                iniciarCooldown(btnWebhook, btnOriginalText);
+            }).catch(err => {
+                alert("Erro de conexão ao enviar para o Discord.");
+                iniciarCooldown(btnWebhook, btnOriginalText);
+            });
+        }
+
+        // Função do timer de cooldown do botão webhook
+        function iniciarCooldown(btn, textoOriginal) {
+            let timeLeft = 15;
+            btn.innerHTML = `<i class="fas fa-clock"></i> Aguarde ${timeLeft}s`;
+            
+            const timer = setInterval(() => {
+                timeLeft--;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    isWebhookOnCooldown = false;
+                    btn.disabled = false;
+                    btn.innerHTML = textoOriginal;
+                } else {
+                    btn.innerHTML = `<i class="fas fa-clock"></i> Aguarde ${timeLeft}s`;
+                }
+            }, 1000);
+        }
+
+        // Limpar tudo
+        function limparCalculadora() {
+            if(!confirm("Deseja realmente limpar todos os campos e seleções?")) return;
+            
+            document.getElementById('calcAcusadoNome').value = '';
+            document.getElementById('calcAcusadoID').value = '';
+            document.getElementById('calcAdvNome').value = '';
+            document.getElementById('calcAdvOAB').value = '';
+            document.getElementById('calcRelato').value = '';
+            document.getElementById('searchCrime').value = '';
+
+            document.getElementById('policiaisContainer').innerHTML = '';
+            addPolicial(); // Recria a primeira linha em branco
+
+            crimesSelecionados = [];
+            reducaoTotal = 0;
+            atenuantesAtivos = [];
+
+            // Desmarcar atenuantes
+            document.querySelectorAll('.atenuante-card').forEach(card => card.classList.remove('selected'));
+            document.querySelectorAll('.atenuante-card input').forEach(chk => chk.checked = false);
+
+            renderizarCrimes();
+            calcularPena();
+        }
+
+        // Iniciar
+        window.onload = () => {
+            renderizarCrimes();
+            addPolicial(); // Inicia com uma linha de policial vazia
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentos Finalizados - Corregedoria</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        body { 
+            background: radial-gradient(circle at top, #121826 0%, #07090e 70%); 
+            color: #e0e0e0; 
+            font-family: 'Inter', sans-serif; 
+            min-height: 100vh;
+        }
+        .navbar-pf { 
+            background: rgba(17, 24, 39, 0.95); 
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid #b58d3d; 
+            padding: 15px 30px; 
+        }
+        .navbar-pf img { height: 55px; object-fit: contain; }
+        .navbar-pf .brand-title { 
+            color: #ffffff; 
+            font-family: 'Playfair Display', serif;
+            font-weight: 700; 
+            font-size: 1.25em; 
+            letter-spacing: 1.5px; 
+            margin-left: 20px; 
+        }
+        .container-main { padding: 40px 20px; max-width: 1300px; margin: 0 auto; }
+        .section-box { 
+            background: linear-gradient(135deg, #121826 0%, #0d1117 100%); 
+            border: 1px solid #1f2937; 
+            border-radius: 10px; 
+            padding: 30px; 
+            margin-bottom: 30px; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+        .section-title { 
+            color: #b58d3d; 
+            border-bottom: 1px solid #1f2937; 
+            padding-bottom: 12px; 
+            margin-bottom: 24px; 
+            font-size: 1em; 
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+        .doc-category-title {
+            color: #d4af37;
+            font-size: 1.1em;
+            font-weight: 600;
+            border-bottom: 1px solid #374151;
+            padding-bottom: 8px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .table-pf { color: #e0e0e0; background-color: #0d1117; font-size: 0.9em; border-radius: 6px; overflow: hidden; margin-bottom: 0; }
+        .table-pf th { background-color: #161b22; color: #b58d3d; border-color: #1f2937; padding: 14px; font-weight: 600; }
+        .table-pf td { background-color: #0d1117; color: #e0e0e0; border-color: #1f2937; padding: 14px; }
+        .badge-finalizado { background-color: #047857; color: #fff; padding: 6px 12px; font-weight: 500; border-radius: 4px; }
+        .forca-title { color: #e0e0e0; font-size: 1.1em; margin-top: 20px; margin-bottom: 15px; font-weight: 600; font-family: 'Playfair Display', serif; border-left: 4px solid #b58d3d; padding-left: 10px; display: flex; align-items: center; }
+        .forca-logo { height: 28px; width: 28px; object-fit: contain; margin-right: 10px; vertical-align: middle; }
+        .timer-text { font-family: monospace; font-size: 1.05em; padding: 4px 8px; border-radius: 4px; border: 1px solid; display: inline-block; }
+        .timer-verde { color: #10b981; border-color: #047857; background: #022c22; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-pf d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+            <img id="imgBrasao" src="img/pf.png" alt="Brasão">
+            <span class="brand-title" id="tituloInstituicao">PAINEL ADMINISTRATIVO - CORREGEDORIA</span>
+        </div>
+        <div>
+            <!-- Botão para voltar ao dashboard principal -->
+            <a href="dashboard.html" class="btn btn-outline-info btn-sm me-2"><i class="fas fa-arrow-left"></i> Voltar ao Painel</a>
+            <button onclick="fazerLogout()" class="btn btn-outline-light btn-sm"><i class="fas fa-sign-out-alt"></i> Sair</button>
+        </div>
+    </nav>
+
+    <div class="container-main">
+        <div class="section-box">
+            <div class="section-title">
+                <span><i class="fas fa-check-double"></i> Documentos Finalizados</span>
+            </div>
+            
+            <div class="doc-category-title mt-2"><i class="fas fa-folder-open"></i> Inquéritos Policiais</div>
+            <div id="containerFinalizadosInqueritos"></div>
+            
+            <div class="doc-category-title"><i class="fas fa-file-signature"></i> Portarias</div>
+            <div id="containerFinalizadosPortarias"></div>
+            
+            <div class="doc-category-title"><i class="fas fa-envelope-open-text"></i> Intimações</div>
+            <div id="containerFinalizadosIntimacoes"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const supabaseUrl = 'https://qnfckdzotzenaqaswqjb.supabase.co'; 
+        const supabaseKey = 'sb_publishable_353TT6z3RbRHvIpbQiaK1g_dWt1qAyU';
+        const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
+        let emailUsuarioLogado = '';
+        let instituicaoUsuarioLogado = '';
+
+        const brasoesInstituicoes = {
+            'POLÍCIA FEDERAL': 'img/pf.png',
+            'POLÍCIA CIVIL': 'img/pc.png',
+            'POLÍCIA MILITAR': 'img/pm.png',
+            'POLÍCIA RODOVIÁRIA FEDERAL (PRF)': 'img/prf.png',
+            'ROTA': 'img/rota.png',
+            'BOPE': 'img/bope.png',
+            'EXÉRCITO BRASILEIRO': 'img/exercito.png'
+        };
+
+        async function verificarAcesso() {
+            emailUsuarioLogado = localStorage.getItem('usuario_logado_email');
+            
+            if (!emailUsuarioLogado) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            if (emailUsuarioLogado === "kira@yagami.gov") {
+                instituicaoUsuarioLogado = 'POLÍCIA FEDERAL';
+                document.getElementById('tituloInstituicao').innerText = "PAINEL ADMINISTRATIVO - POLÍCIA FEDERAL";
+                document.getElementById('imgBrasao').src = brasoesInstituicoes['POLÍCIA FEDERAL'];
+                return;
+            }
+
+            const { data, error } = await supabaseClient
+                .from('perfis_usuarios') 
+                .select('*')
+                .eq('email', emailUsuarioLogado)
+                .single();
+
+            if (error || !data || data.status === 'Bloqueado') {
+                alert("Sessão expirada ou acesso revogado.");
+                localStorage.removeItem('usuario_logado_email');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            instituicaoUsuarioLogado = data.instituicao || localStorage.getItem(`inst_${emailUsuarioLogado}`) || 'POLÍCIA FEDERAL';
+            const instNormalizada = instituicaoUsuarioLogado.trim().toUpperCase();
+            document.getElementById('tituloInstituicao').innerText = `PAINEL ADMINISTRATIVO - ${instNormalizada}`;
+            
+            if (brasoesInstituicoes[instNormalizada]) {
+                document.getElementById('imgBrasao').src = brasoesInstituicoes[instNormalizada];
+            }
+        }
+
+        async function fazerLogout() {
+            localStorage.removeItem('usuario_logado_email');
+            await supabaseClient.auth.signOut();
+            window.location.href = 'index.html';
+        }
+
+        function visualizarInquerito(id) {
+            window.location.href = `gerador.html?id=${id}`;
+        }
+
+        async function apagarInquerito(id, numero) {
+            const meuEmailAdmin = "kira@yagami.gov"; 
+            if (emailUsuarioLogado !== meuEmailAdmin) {
+                alert("Acesso negado. Apenas a administradora principal pode apagar documentos.");
+                return;
+            }
+
+            if (!confirm(`ATENÇÃO: Deseja realmente APAGAR permanentemente o documento nº ${numero}?`)) return;
+
+            const { error } = await supabaseClient
+                .from('inqueritos')
+                .delete()
+                .eq('id', id);
+
+            if (error) {
+                alert("Erro ao apagar documento: " + error.message);
+            } else {
+                alert("Documento apagado com sucesso!");
+                carregarFinalizados();
+            }
+        }
+
+        function formatarTempoDecorrido(ms) {
+            if (ms < 0) ms = 0;
+            const dias = Math.floor(ms / (1000 * 60 * 60 * 24));
+            const horas = Math.floor((ms % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutos = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+
+            let partes = [];
+            if (dias > 0) partes.push(`${dias}d`);
+            if (horas > 0 || dias > 0) partes.push(`${horas}h`);
+            partes.push(`${minutos}m`);
+            
+            return partes.join(' '); 
+        }
+
+        function renderizarTabelasAgrupadas(agrupados, containerId, souAdmin) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            if (Object.keys(agrupados).length === 0) {
+                container.innerHTML = `<div class="text-center text-muted p-3 bg-dark border border-secondary rounded" style="margin-bottom: 20px;">Nenhum documento registrado nesta categoria.</div>`;
+                return;
+            }
+
+            for (const [forcaPolicial, inqueritos] of Object.entries(agrupados)) {
+                let imgIcon = brasoesInstituicoes[forcaPolicial] ? `<img src="${brasoesInstituicoes[forcaPolicial]}" alt="Brasão da ${forcaPolicial}" class="forca-logo">` : `<i class="fas fa-building" style="margin-right: 10px;"></i>`;
+                
+                let tabelaHTML = `
+                    <div class="forca-title">${imgIcon} ${forcaPolicial}</div>
+                    <div class="table-responsive">
+                        <table class="table table-pf table-hover align-middle mb-4">
+                            <thead>
+                                <tr>
+                                    <th>Nº Documento</th>
+                                    <th>Tipo</th>
+                                    <th>Encarregado(a)</th>
+                                    <th>Data de Registro</th>
+                                    <th>Tempo Total (Parado)</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+
+                inqueritos.forEach(item => {
+                    const botaoApagarHTML = souAdmin ? `<button class="btn btn-sm btn-outline-danger ms-1" title="Apagar" onclick="apagarInquerito(${item.id}, '${item.numero}')"><i class="fas fa-trash"></i></button>` : '';
+                    
+                    let dataCalculo = item.data_inicio || item.created_at; 
+                    let dataFormatadaExibicao = dataCalculo ? new Date(dataCalculo).toLocaleString('pt-BR').substring(0, 16) : 'Desconhecida';
+                    let tipoDocText = item.tipo || 'Inquérito Policial';
+                    let encarregadoExibicao = item.encarregado || 'N/A';
+
+                    let tempoHTML = "";
+                    if (dataCalculo && item.data_fim) {
+                        const diff = new Date(item.data_fim).getTime() - new Date(dataCalculo).getTime();
+                        tempoHTML = `<span class="timer-text timer-verde"><i class="fas fa-lock"></i> ${formatarTempoDecorrido(diff)}</span>`;
+                    } else {
+                        tempoHTML = `<span class="text-muted">N/D</span>`;
+                    }
+
+                    tabelaHTML += `
+                        <tr>
+                            <td><strong>${item.numero || 'S/N'}</strong></td>
+                            <td>${tipoDocText}</td>
+                            <td>${encarregadoExibicao}</td>
+                            <td>${dataFormatadaExibicao}</td>
+                            <td>${tempoHTML}</td>
+                            <td><span class="badge badge-finalizado">${item.status}</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-info" title="Visualizar" onclick="visualizarInquerito(${item.id})"><i class="fas fa-eye"></i></button>
+                                ${botaoApagarHTML}
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                tabelaHTML += `</tbody></table></div>`;
+                container.innerHTML += tabelaHTML;
+            }
+        }
+
+        async function carregarFinalizados() {
+            await verificarAcesso();
+
+            const { data, error } = await supabaseClient
+                .from('inqueritos')
+                .select('*')
+                .eq('status', 'Finalizado')
+                .order('id', { ascending: false });
+
+            if (error) {
+                console.error("Erro ao carregar os dados:", error.message);
+                return;
+            }
+
+            const meuEmailAdmin = "kira@yagami.gov";
+            const souAdmin = (emailUsuarioLogado === meuEmailAdmin);
+            const userInstNormalized = (instituicaoUsuarioLogado || '').trim().toUpperCase();
+            const isPoliciaFederal = souAdmin;
+
+            const finalizadosInqueritos = {};
+            const finalizadosPortarias = {};
+            const finalizadosIntimacoes = {};
+
+            if (data && data.length > 0) {
+                data.forEach(item => {
+                    let forcaInq = 'POLÍCIA FEDERAL'; 
+                    if (item.dados_extras) {
+                        try {
+                            const ext = JSON.parse(item.dados_extras);
+                            if (ext.forcaPolicial) forcaInq = ext.forcaPolicial.trim().toUpperCase();
+                        } catch(e){}
+                    }
+
+                    if (!isPoliciaFederal && forcaInq !== userInstNormalized) {
+                        return; 
+                    }
+
+                    let tipoDoc = item.tipo || 'Inquérito Policial';
+
+                    if (tipoDoc === 'Portaria') {
+                        if (!finalizadosPortarias[forcaInq]) finalizadosPortarias[forcaInq] = [];
+                        finalizadosPortarias[forcaInq].push(item);
+                    } else if (tipoDoc === 'Intimação') {
+                        if (!finalizadosIntimacoes[forcaInq]) finalizadosIntimacoes[forcaInq] = [];
+                        finalizadosIntimacoes[forcaInq].push(item);
+                    } else {
+                        if (!finalizadosInqueritos[forcaInq]) finalizadosInqueritos[forcaInq] = [];
+                        finalizadosInqueritos[forcaInq].push(item);
+                    }
+                });
+            }
+
+            renderizarTabelasAgrupadas(finalizadosInqueritos, 'containerFinalizadosInqueritos', souAdmin);
+            renderizarTabelasAgrupadas(finalizadosPortarias, 'containerFinalizadosPortarias', souAdmin);
+            renderizarTabelasAgrupadas(finalizadosIntimacoes, 'containerFinalizadosIntimacoes', souAdmin);
+        }
+
+        carregarFinalizados();
+    </script>
+</body>
+</html>
