@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de Controle - Corregedoria</title>
+    <title>Documentos Finalizados - Corregedoria</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -31,20 +31,6 @@
             margin-left: 20px; 
         }
         .container-main { padding: 40px 20px; max-width: 1300px; margin: 0 auto; }
-        .stats-card { 
-            background: linear-gradient(135deg, #121826 0%, #0d1117 100%); 
-            border: 1px solid #1f2937; 
-            border-radius: 10px; 
-            padding: 24px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
-            margin-bottom: 25px; 
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-        }
-        .stats-card h3 { font-size: 2em; margin: 0; color: #ffffff; font-weight: 700; font-family: 'Playfair Display', serif; }
-        .stats-card p { margin: 0; color: #8b95a5; font-size: 0.8em; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
-        .stats-icon { font-size: 2.2em; color: #b58d3d; opacity: 0.9; }
         .section-box { 
             background: linear-gradient(135deg, #121826 0%, #0d1117 100%); 
             border: 1px solid #1f2937; 
@@ -66,29 +52,26 @@
             justify-content: space-between; 
             align-items: center; 
         }
+        .doc-category-title {
+            color: #d4af37;
+            font-size: 1.1em;
+            font-weight: 600;
+            border-bottom: 1px solid #374151;
+            padding-bottom: 8px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
         .table-pf { color: #e0e0e0; background-color: #0d1117; font-size: 0.9em; border-radius: 6px; overflow: hidden; margin-bottom: 0; }
         .table-pf th { background-color: #161b22; color: #b58d3d; border-color: #1f2937; padding: 14px; font-weight: 600; }
         .table-pf td { background-color: #0d1117; color: #e0e0e0; border-color: #1f2937; padding: 14px; }
-        .badge-andamento { background-color: #b45309; color: #fff; padding: 6px 12px; font-weight: 500; border-radius: 4px; }
-        .btn-gold { background-color: #b58d3d; color: #ffffff; font-weight: 600; border: none; padding: 8px 18px; border-radius: 6px; transition: all 0.3s; }
-        .btn-gold:hover { background-color: #c49a3c; color: #ffffff; }
+        .badge-finalizado { background-color: #047857; color: #fff; padding: 6px 12px; font-weight: 500; border-radius: 4px; }
         .forca-title { color: #e0e0e0; font-size: 1.1em; margin-top: 20px; margin-bottom: 15px; font-weight: 600; font-family: 'Playfair Display', serif; border-left: 4px solid #b58d3d; padding-left: 10px; display: flex; align-items: center; }
         .forca-logo { height: 28px; width: 28px; object-fit: contain; margin-right: 10px; vertical-align: middle; }
-        
-        /* Estilos e Cores do Cronômetro */
         .timer-text { font-family: monospace; font-size: 1.05em; padding: 4px 8px; border-radius: 4px; border: 1px solid; display: inline-block; }
         .timer-verde { color: #10b981; border-color: #047857; background: #022c22; }
-        .timer-amarelo { color: #f59e0b; border-color: #b45309; background: #451a03; }
-        
-        @keyframes piscarVermelho {
-            0% { opacity: 1; background: #7f1d1d; border-color: #ef4444; color: #fca5a5; }
-            50% { opacity: 0.4; background: #450a0a; border-color: #991b1b; color: #f87171; }
-            100% { opacity: 1; background: #7f1d1d; border-color: #ef4444; color: #fca5a5; }
-        }
-        .timer-vermelho-piscando {
-            animation: piscarVermelho 1s infinite;
-            font-weight: bold;
-        }
     </style>
 </head>
 <body>
@@ -99,42 +82,26 @@
             <span class="brand-title" id="tituloInstituicao">PAINEL ADMINISTRATIVO - CORREGEDORIA</span>
         </div>
         <div>
-            <!-- Agora o botão é um link real que leva para a nova página -->
-            <a href="finalizados.html" class="btn btn-outline-success btn-sm me-2"><i class="fas fa-check-double"></i> Finalizados</a>
-            
-            <a href="admin.html" class="btn btn-outline-warning btn-sm me-2" id="btnAdmin" style="display: none;"><i class="fas fa-users-cog"></i> Gerenciar Usuários</a>
+            <!-- Botão para voltar ao dashboard principal -->
+            <a href="dashboard.html" class="btn btn-outline-info btn-sm me-2"><i class="fas fa-arrow-left"></i> Voltar ao Painel</a>
             <button onclick="fazerLogout()" class="btn btn-outline-light btn-sm"><i class="fas fa-sign-out-alt"></i> Sair</button>
         </div>
     </nav>
 
     <div class="container-main">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="stats-card">
-                    <div><p>Documentos em Andamento</p><h3 id="countAndamento">00</h3></div>
-                    <i class="fas fa-spinner stats-icon"></i>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="stats-card">
-                    <div><p>Documentos Finalizados</p><h3 id="countFinalizados">00</h3></div>
-                    <i class="fas fa-check-double stats-icon"></i>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="stats-card">
-                    <div><p>Portarias / Intimações</p><h3 id="countOutros">00</h3></div>
-                    <i class="fas fa-file-signature stats-icon"></i>
-                </div>
-            </div>
-        </div>
-
         <div class="section-box">
             <div class="section-title">
-                <span><i class="fas fa-clock"></i> Documentos em Andamento</span>
-                <a href="gerador.html" class="btn btn-gold btn-sm"><i class="fas fa-plus"></i> Novo Documento</a>
+                <span><i class="fas fa-check-double"></i> Documentos Finalizados</span>
             </div>
-            <div id="containerAndamento"></div>
+            
+            <div class="doc-category-title mt-2"><i class="fas fa-folder-open"></i> Inquéritos Policiais</div>
+            <div id="containerFinalizadosInqueritos"></div>
+            
+            <div class="doc-category-title"><i class="fas fa-file-signature"></i> Portarias</div>
+            <div id="containerFinalizadosPortarias"></div>
+            
+            <div class="doc-category-title"><i class="fas fa-envelope-open-text"></i> Intimações</div>
+            <div id="containerFinalizadosIntimacoes"></div>
         </div>
     </div>
 
@@ -168,7 +135,6 @@
 
             if (emailUsuarioLogado === "kira@yagami.gov") {
                 instituicaoUsuarioLogado = 'POLÍCIA FEDERAL';
-                document.getElementById('btnAdmin').style.display = 'inline-block';
                 document.getElementById('tituloInstituicao').innerText = "PAINEL ADMINISTRATIVO - POLÍCIA FEDERAL";
                 document.getElementById('imgBrasao').src = brasoesInstituicoes['POLÍCIA FEDERAL'];
                 return;
@@ -206,30 +172,6 @@
             window.location.href = `gerador.html?id=${id}`;
         }
 
-        async function finalizarInquerito(id, numero) {
-            const meuEmailAdmin = "kira@yagami.gov"; 
-            if (emailUsuarioLogado !== meuEmailAdmin && !instituicaoUsuarioLogado.includes('FEDERAL')) {
-                alert("Apenas administradores podem finalizar documentos.");
-                return;
-            }
-
-            if (!confirm(`Deseja realmente finalizar o documento nº ${numero}? O cronômetro será parado e ele será movido para a aba de Finalizados.`)) return;
-
-            const dataFinalizacao = new Date().toISOString(); 
-
-            const { error } = await supabaseClient
-                .from('inqueritos')
-                .update({ status: 'Finalizado', data_fim: dataFinalizacao })
-                .eq('id', id);
-
-            if (error) {
-                alert("Erro ao finalizar: " + error.message);
-            } else {
-                alert("Documento finalizado com sucesso!");
-                carregarDashboard();
-            }
-        }
-
         async function apagarInquerito(id, numero) {
             const meuEmailAdmin = "kira@yagami.gov"; 
             if (emailUsuarioLogado !== meuEmailAdmin) {
@@ -248,7 +190,7 @@
                 alert("Erro ao apagar documento: " + error.message);
             } else {
                 alert("Documento apagado com sucesso!");
-                carregarDashboard();
+                carregarFinalizados();
             }
         }
 
@@ -266,38 +208,12 @@
             return partes.join(' '); 
         }
 
-        setInterval(() => {
-            const agora = new Date().getTime();
-            document.querySelectorAll('.cronometro-ativo').forEach(el => {
-                const dataInicio = el.getAttribute('data-inicio');
-                if (dataInicio && dataInicio !== 'null') {
-                    const inicioMs = new Date(dataInicio).getTime();
-                    const diffMs = agora - inicioMs;
-                    
-                    el.innerText = formatarTempoDecorrido(diffMs);
-
-                    const umDiaMs = 24 * 60 * 60 * 1000;
-                    el.classList.remove('timer-verde', 'timer-amarelo', 'timer-vermelho-piscando');
-                    
-                    if (diffMs < umDiaMs) {
-                        el.classList.add('timer-verde'); 
-                    } else if (diffMs >= umDiaMs && diffMs < (2 * umDiaMs)) {
-                        el.classList.add('timer-amarelo'); 
-                    } else {
-                        el.classList.add('timer-vermelho-piscando'); 
-                    }
-                } else {
-                    el.innerText = "Calculando...";
-                }
-            });
-        }, 1000); 
-
         function renderizarTabelasAgrupadas(agrupados, containerId, souAdmin) {
             const container = document.getElementById(containerId);
             container.innerHTML = '';
 
             if (Object.keys(agrupados).length === 0) {
-                container.innerHTML = `<div class="text-center text-muted p-3 bg-dark border border-secondary rounded">Nenhum documento registrado nesta categoria.</div>`;
+                container.innerHTML = `<div class="text-center text-muted p-3 bg-dark border border-secondary rounded" style="margin-bottom: 20px;">Nenhum documento registrado nesta categoria.</div>`;
                 return;
             }
 
@@ -314,7 +230,7 @@
                                     <th>Tipo</th>
                                     <th>Encarregado(a)</th>
                                     <th>Data de Registro</th>
-                                    <th>Tempo Aberto</th>
+                                    <th>Tempo Total (Parado)</th>
                                     <th>Status</th>
                                     <th>Ações</th>
                                 </tr>
@@ -331,10 +247,11 @@
                     let encarregadoExibicao = item.encarregado || 'N/A';
 
                     let tempoHTML = "";
-                    if (dataCalculo) {
-                        tempoHTML = `<span class="timer-text cronometro-ativo" data-inicio="${dataCalculo}">...</span>`;
+                    if (dataCalculo && item.data_fim) {
+                        const diff = new Date(item.data_fim).getTime() - new Date(dataCalculo).getTime();
+                        tempoHTML = `<span class="timer-text timer-verde"><i class="fas fa-lock"></i> ${formatarTempoDecorrido(diff)}</span>`;
                     } else {
-                        tempoHTML = `<span class="text-muted">Aguardando...</span>`;
+                        tempoHTML = `<span class="text-muted">N/D</span>`;
                     }
 
                     tabelaHTML += `
@@ -344,10 +261,9 @@
                             <td>${encarregadoExibicao}</td>
                             <td>${dataFormatadaExibicao}</td>
                             <td>${tempoHTML}</td>
-                            <td><span class="badge badge-andamento">${item.status}</span></td>
+                            <td><span class="badge badge-finalizado">${item.status}</span></td>
                             <td>
                                 <button class="btn btn-sm btn-outline-info" title="Visualizar" onclick="visualizarInquerito(${item.id})"><i class="fas fa-eye"></i></button>
-                                ${souAdmin ? `<button class="btn btn-sm btn-outline-success" title="Finalizar Documento" onclick="finalizarInquerito(${item.id}, '${item.numero}')"><i class="fas fa-check"></i></button>` : ''}
                                 ${botaoApagarHTML}
                             </td>
                         </tr>
@@ -359,12 +275,13 @@
             }
         }
 
-        async function carregarDashboard() {
+        async function carregarFinalizados() {
             await verificarAcesso();
 
             const { data, error } = await supabaseClient
                 .from('inqueritos')
                 .select('*')
+                .eq('status', 'Finalizado')
                 .order('id', { ascending: false });
 
             if (error) {
@@ -372,16 +289,14 @@
                 return;
             }
 
-            let qtdAndamento = 0;
-            let qtdFinalizados = 0;
-            let qtdOutros = 0; 
-
             const meuEmailAdmin = "kira@yagami.gov";
             const souAdmin = (emailUsuarioLogado === meuEmailAdmin);
             const userInstNormalized = (instituicaoUsuarioLogado || '').trim().toUpperCase();
             const isPoliciaFederal = souAdmin;
 
-            const inqueritosEmAndamentoAgrupados = {};
+            const finalizadosInqueritos = {};
+            const finalizadosPortarias = {};
+            const finalizadosIntimacoes = {};
 
             if (data && data.length > 0) {
                 data.forEach(item => {
@@ -399,27 +314,25 @@
 
                     let tipoDoc = item.tipo || 'Inquérito Policial';
 
-                    if (item.status === 'Finalizado') {
-                        qtdFinalizados++;
-                        if (tipoDoc !== 'Inquérito Policial') qtdOutros++;
-                    } else if (item.status !== 'Arquivado') {
-                        qtdAndamento++;
-                        if (tipoDoc !== 'Inquérito Policial') qtdOutros++;
-                        
-                        if (!inqueritosEmAndamentoAgrupados[forcaInq]) inqueritosEmAndamentoAgrupados[forcaInq] = [];
-                        inqueritosEmAndamentoAgrupados[forcaInq].push(item);
+                    if (tipoDoc === 'Portaria') {
+                        if (!finalizadosPortarias[forcaInq]) finalizadosPortarias[forcaInq] = [];
+                        finalizadosPortarias[forcaInq].push(item);
+                    } else if (tipoDoc === 'Intimação') {
+                        if (!finalizadosIntimacoes[forcaInq]) finalizadosIntimacoes[forcaInq] = [];
+                        finalizadosIntimacoes[forcaInq].push(item);
+                    } else {
+                        if (!finalizadosInqueritos[forcaInq]) finalizadosInqueritos[forcaInq] = [];
+                        finalizadosInqueritos[forcaInq].push(item);
                     }
                 });
             }
 
-            renderizarTabelasAgrupadas(inqueritosEmAndamentoAgrupados, 'containerAndamento', souAdmin);
-
-            document.getElementById('countAndamento').innerText = String(qtdAndamento).padStart(2, '0');
-            document.getElementById('countFinalizados').innerText = String(qtdFinalizados).padStart(2, '0');
-            document.getElementById('countOutros').innerText = String(qtdOutros).padStart(2, '0');
+            renderizarTabelasAgrupadas(finalizadosInqueritos, 'containerFinalizadosInqueritos', souAdmin);
+            renderizarTabelasAgrupadas(finalizadosPortarias, 'containerFinalizadosPortarias', souAdmin);
+            renderizarTabelasAgrupadas(finalizadosIntimacoes, 'containerFinalizadosIntimacoes', souAdmin);
         }
 
-        carregarDashboard();
+        carregarFinalizados();
     </script>
 </body>
 </html>
