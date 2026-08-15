@@ -85,7 +85,8 @@
         .badge-finalizado { background-color: #047857; color: #fff; padding: 6px 12px; font-weight: 500; border-radius: 4px; }
         .btn-gold { background-color: #b58d3d; color: #ffffff; font-weight: 600; border: none; padding: 8px 18px; border-radius: 6px; transition: all 0.3s; }
         .btn-gold:hover { background-color: #c49a3c; color: #ffffff; }
-        .forca-title { color: #e0e0e0; font-size: 1.1em; margin-top: 20px; margin-bottom: 15px; font-weight: 600; font-family: 'Playfair Display', serif; border-left: 4px solid #b58d3d; padding-left: 10px; }
+        .forca-title { color: #e0e0e0; font-size: 1.1em; margin-top: 20px; margin-bottom: 15px; font-weight: 600; font-family: 'Playfair Display', serif; border-left: 4px solid #b58d3d; padding-left: 10px; display: flex; align-items: center; }
+        .forca-logo { height: 28px; width: 28px; object-fit: contain; margin-right: 10px; vertical-align: middle; }
         
         /* Estilos e Cores do Cronômetro */
         .timer-text { font-family: monospace; font-size: 1.05em; padding: 4px 8px; border-radius: 4px; border: 1px solid; display: inline-block; }
@@ -332,8 +333,11 @@
             }
 
             for (const [forcaPolicial, inqueritos] of Object.entries(agrupados)) {
+                // Seleciona a imagem da força policial correspondente ou usa um ícone como fallback
+                let imgIcon = brasoesInstituicoes[forcaPolicial] ? `<img src="${brasoesInstituicoes[forcaPolicial]}" alt="Brasão da ${forcaPolicial}" class="forca-logo">` : `<i class="fas fa-building" style="margin-right: 10px;"></i>`;
+                
                 let tabelaHTML = `
-                    <div class="forca-title"><i class="fas fa-building"></i> ${forcaPolicial}</div>
+                    <div class="forca-title">${imgIcon} ${forcaPolicial}</div>
                     <div class="table-responsive">
                         <table class="table table-pf table-hover align-middle mb-4">
                             <thead>
