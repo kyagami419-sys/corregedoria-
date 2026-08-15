@@ -32,6 +32,11 @@
         .form-control:focus { background-color: #ffffff; color: #111827; box-shadow: 0 0 0 3px rgba(181, 141, 61, 0.2); }
         .btn-gold { background-color: #a88434; color: #ffffff; font-weight: 600; width: 100%; padding: 14px; border: none; border-radius: 6px; font-size: 1rem; margin-top: 10px; transition: all 0.3s ease; }
         .btn-gold:hover { background-color: #c49a3c; color: #ffffff; }
+        
+        /* Estilo do novo botão da calculadora */
+        .btn-calc { background-color: transparent; border: 1px solid #374151; color: #8b95a5; font-weight: 600; width: 100%; padding: 12px; border-radius: 6px; font-size: 0.95rem; margin-top: 15px; text-decoration: none; display: flex; justify-content: center; align-items: center; gap: 8px; transition: all 0.3s ease; }
+        .btn-calc:hover { border-color: #b58d3d; color: #b58d3d; }
+
         .warning-box { background-color: #0d1117; border: 1px solid #1f2937; border-radius: 6px; padding: 20px; margin-top: 2.5rem; display: flex; align-items: flex-start; gap: 15px; }
         .warning-dot { width: 8px; height: 8px; background-color: #b58d3d; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
         .warning-text { color: #6b7280; font-size: 0.8rem; line-height: 1.5; margin: 0; }
@@ -124,6 +129,11 @@
 
                     <button type="submit" class="btn btn-gold" id="btnSubmitText">Acessar sistema</button>
                 </form>
+
+                <!-- NOVO BOTÃO: Calculadora Penal -->
+                <a href="calculadora.html" class="btn-calc">
+                    <i class="fas fa-calculator"></i> Calculadora
+                </a>
 
                 <div class="warning-box">
                     <div class="warning-dot"></div>
