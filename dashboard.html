@@ -66,6 +66,18 @@
             justify-content: space-between; 
             align-items: center; 
         }
+        .doc-category-title {
+            color: #d4af37;
+            font-size: 1.1em;
+            font-weight: 600;
+            border-bottom: 1px solid #374151;
+            padding-bottom: 8px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
         .table-pf { color: #e0e0e0; background-color: #0d1117; font-size: 0.9em; border-radius: 6px; overflow: hidden; margin-bottom: 0; }
         .table-pf th { background-color: #161b22; color: #b58d3d; border-color: #1f2937; padding: 14px; font-weight: 600; }
         .table-pf td { background-color: #0d1117; color: #e0e0e0; border-color: #1f2937; padding: 14px; }
@@ -134,7 +146,18 @@
                 <span><i class="fas fa-clock"></i> Documentos em Andamento</span>
                 <a href="gerador.html" class="btn btn-gold btn-sm"><i class="fas fa-plus"></i> Novo Documento</a>
             </div>
-            <div id="containerAndamento"></div>
+            
+            <div class="doc-category-title mt-2"><i class="fas fa-folder-open"></i> Inquéritos Policiais</div>
+            <div id="containerAndamentoInqueritos"></div>
+
+            <div class="doc-category-title"><i class="fas fa-search"></i> Investigações</div>
+            <div id="containerAndamentoInvestigacoes"></div>
+            
+            <div class="doc-category-title"><i class="fas fa-file-signature"></i> Portarias</div>
+            <div id="containerAndamentoPortarias"></div>
+            
+            <div class="doc-category-title"><i class="fas fa-envelope-open-text"></i> Intimações</div>
+            <div id="containerAndamentoIntimacoes"></div>
         </div>
     </div>
 
@@ -297,7 +320,7 @@
             container.innerHTML = '';
 
             if (Object.keys(agrupados).length === 0) {
-                container.innerHTML = `<div class="text-center text-muted p-3 bg-dark border border-secondary rounded">Nenhum documento registrado nesta categoria.</div>`;
+                container.innerHTML = `<div class="text-center text-muted p-3 bg-dark border border-secondary rounded mb-4">Nenhum documento registrado nesta categoria.</div>`;
                 return;
             }
 
@@ -381,7 +404,10 @@
             const userInstNormalized = (instituicaoUsuarioLogado || '').trim().toUpperCase();
             const isPoliciaFederal = souAdmin;
 
-            const inqueritosEmAndamentoAgrupados = {};
+            const andamentoInqueritos = {};
+            const andamentoInvestigacoes = {};
+            const andamentoPortarias = {};
+            const andamentoIntimacoes = {};
 
             if (data && data.length > 0) {
                 data.forEach(item => {
@@ -406,13 +432,28 @@
                         qtdAndamento++;
                         if (tipoDoc !== 'Inquérito Policial') qtdOutros++;
                         
-                        if (!inqueritosEmAndamentoAgrupados[forcaInq]) inqueritosEmAndamentoAgrupados[forcaInq] = [];
-                        inqueritosEmAndamentoAgrupados[forcaInq].push(item);
+                        // Separando por categoria para exibir nas tabelas corretas
+                        if (tipoDoc === 'Portaria') {
+                            if (!andamentoPortarias[forcaInq]) andamentoPortarias[forcaInq] = [];
+                            andamentoPortarias[forcaInq].push(item);
+                        } else if (tipoDoc === 'Intimação') {
+                            if (!andamentoIntimacoes[forcaInq]) andamentoIntimacoes[forcaInq] = [];
+                            andamentoIntimacoes[forcaInq].push(item);
+                        } else if (tipoDoc === 'Investigação') {
+                            if (!andamentoInvestigacoes[forcaInq]) andamentoInvestigacoes[forcaInq] = [];
+                            andamentoInvestigacoes[forcaInq].push(item);
+                        } else {
+                            if (!andamentoInqueritos[forcaInq]) andamentoInqueritos[forcaInq] = [];
+                            andamentoInqueritos[forcaInq].push(item);
+                        }
                     }
                 });
             }
 
-            renderizarTabelasAgrupadas(inqueritosEmAndamentoAgrupados, 'containerAndamento', souAdmin);
+            renderizarTabelasAgrupadas(andamentoInqueritos, 'containerAndamentoInqueritos', souAdmin);
+            renderizarTabelasAgrupadas(andamentoInvestigacoes, 'containerAndamentoInvestigacoes', souAdmin);
+            renderizarTabelasAgrupadas(andamentoPortarias, 'containerAndamentoPortarias', souAdmin);
+            renderizarTabelasAgrupadas(andamentoIntimacoes, 'containerAndamentoIntimacoes', souAdmin);
 
             document.getElementById('countAndamento').innerText = String(qtdAndamento).padStart(2, '0');
             document.getElementById('countFinalizados').innerText = String(qtdFinalizados).padStart(2, '0');
