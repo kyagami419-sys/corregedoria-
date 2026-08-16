@@ -208,6 +208,19 @@
             return partes.join(' '); 
         }
 
+        // Nova função para alternar o status do cumprimento da intimação
+        function toggleCumprimento(btn) {
+            if (btn.innerText.trim() === 'Cumprido Positivo') {
+                btn.classList.remove('btn-success');
+                btn.classList.add('btn-danger');
+                btn.innerText = 'Cumprido Negativo';
+            } else {
+                btn.classList.remove('btn-danger');
+                btn.classList.add('btn-success');
+                btn.innerText = 'Cumprido Positivo';
+            }
+        }
+
         function renderizarTabelasAgrupadas(agrupados, containerId, souAdmin) {
             const container = document.getElementById(containerId);
             container.innerHTML = '';
@@ -246,6 +259,11 @@
                     let tipoDocText = item.tipo || 'Inquérito Policial';
                     let encarregadoExibicao = item.encarregado || 'N/A';
 
+                    let btnCumprimento = '';
+                    if (tipoDocText === 'Intimação') {
+                        btnCumprimento = `<button class="btn btn-sm btn-success ms-2 fw-bold" style="font-size: 0.8em; padding: 4px 8px;" onclick="toggleCumprimento(this)">Cumprido Positivo</button>`;
+                    }
+
                     let tempoHTML = "";
                     if (dataCalculo && item.data_fim) {
                         const diff = new Date(item.data_fim).getTime() - new Date(dataCalculo).getTime();
@@ -261,7 +279,7 @@
                             <td>${encarregadoExibicao}</td>
                             <td>${dataFormatadaExibicao}</td>
                             <td>${tempoHTML}</td>
-                            <td><span class="badge badge-finalizado">${item.status}</span></td>
+                            <td><span class="badge badge-finalizado">${item.status}</span>${btnCumprimento}</td>
                             <td>
                                 <button class="btn btn-sm btn-outline-info" title="Visualizar" onclick="visualizarInquerito(${item.id})"><i class="fas fa-eye"></i></button>
                                 ${botaoApagarHTML}
