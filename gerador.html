@@ -432,9 +432,9 @@
                 tipo: 'Intimação',
                 encarregado: nomeAssinante,
                 natureza: motivo,
-                status: 'Finalizado',
+                status: 'Em Andamento',
                 data_inicio: dataAtual.toISOString(),
-                data_fim: dataAtual.toISOString(),
+                data_fim: null,
                 dados_extras: JSON.stringify(extrasObj)
             };
 
@@ -442,7 +442,7 @@
             if (error) {
                 alert("Erro ao salvar intimação automática: " + error.message);
             } else {
-                alert(`Intimação de ${nome} gerada com sucesso e enviada para o banco (Finalizados)!`);
+                alert(`Intimação de ${nome} gerada com sucesso e enviada para o banco (Em Andamento)!`);
             }
         }
 
