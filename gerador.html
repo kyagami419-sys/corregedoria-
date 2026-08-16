@@ -138,8 +138,7 @@
                         <div class="col-md-3"><label class="form-label">Número da Intimação</label><input type="text" id="numIntimacao" class="form-control" placeholder="Ex: 001/2026"></div>
                         <div class="col-md-6"><label class="form-label">Nome do Intimado</label><input type="text" id="nomeIntimado" class="form-control"></div>
                         <div class="col-md-3"><label class="form-label">RG</label><input type="text" id="rgIntimado" class="form-control"></div>
-                        <div class="col-md-4"><label class="form-label">Data Limite</label><input type="date" id="dataIntimacao" class="form-control"></div>
-                        <div class="col-md-4"><label class="form-label">Horário</label><input type="time" id="horaIntimacao" class="form-control"></div>
+                        <div class="col-md-4"><label class="form-label">Data e Hora Limite</label><input type="datetime-local" id="dataIntimacao" class="form-control"></div>
                     </div>
                 </div>
                 <div class="form-section">
@@ -277,7 +276,6 @@
             let emailUsuarioLogado = localStorage.getItem('usuario_logado_email');
             
             if (!emailUsuarioLogado) {
-                // FALLBACK LOCAL MODO DE TESTE
                 emailUsuarioLogado = "kira@yagami.gov";
                 instituicaoUserGlobal = 'POLÍCIA FEDERAL';
             } else {
@@ -290,12 +288,10 @@
 
             const instNormalized = instituicaoUserGlobal.trim().toUpperCase();
             
-            // Atualiza o brasão da página
             if (brasoesInstituicoes[instNormalized]) {
                 document.getElementById('imgBrasaoForm').src = brasoesInstituicoes[instNormalized];
             }
 
-            // Regra do Botão de Investigação: Apenas PC, PF, PRF ou Admin (kira)
             if (instNormalized === 'POLÍCIA CIVIL' || instNormalized === 'POLÍCIA FEDERAL' || instNormalized === 'POLÍCIA RODOVIÁRIA FEDERAL (PRF)' || emailUsuarioLogado === "kira@yagami.gov") {
                 document.getElementById('typeInvestigacao').style.display = 'inline-block';
                 document.getElementById('lblInvestigacao').style.display = 'inline-block';
@@ -313,10 +309,7 @@
             document.getElementById('blocoPortaria').style.display = isPortaria ? 'block' : 'none';
             document.getElementById('blocoIntimacao').style.display = isIntimacao ? 'block' : 'none';
             document.getElementById('blocoInvestigacao').style.display = isInvestigacao ? 'block' : 'none';
-            
             document.getElementById('blocoInquerito').style.display = isInquerito ? 'block' : 'none';
-            
-            // A seleção de força policial só aparece no Inquérito e na Investigação (caso o admin queira mudar)
             document.getElementById('blocoForcaPolicial').style.display = (isInquerito || isInvestigacao) ? 'block' : 'none';
         }
 
@@ -370,21 +363,19 @@
             const dataAmanha = new Date();
             dataAmanha.setDate(dataAmanha.getDate() + 1);
             
-            // Formata a data de amanhã para o input do tipo "date" (yyyy-mm-dd)
+            // Formata a data de amanhã para o input do tipo "datetime-local" (yyyy-mm-ddThh:mm)
             const yyyy = dataAmanha.getFullYear();
             const mm = String(dataAmanha.getMonth() + 1).padStart(2, '0');
             const dd = String(dataAmanha.getDate()).padStart(2, '0');
-            const dataFormatadaParaInput = `${yyyy}-${mm}-${dd}`;
+            const dataFormatadaParaInput = `${yyyy}-${mm}-${dd}T14:00`;
             
             const dataLimiteStr = dataAmanha.toLocaleDateString('pt-BR');
             const horaLimite = "14:00"; 
 
             const inqOrigem = document.getElementById('numInq')?.value || 'S/N';
-            // O número da intimação agora é EXATAMENTE o mesmo número do inquérito de origem
             const numIntimacao = inqOrigem;
             const motivo = `O(a) Sr(a). foi citado(a) no Inquérito Policial n° ${inqOrigem}. Apresente-se na delegacia no prazo estabelecido para prestar esclarecimentos.`;
 
-            // Pega o encarregado do inquérito como assinante principal
             let nomeAssinante = document.getElementById('encarregado')?.value || 'Autoridade Policial';
             let cargoAssinante = 'Encarregado(a)';
 
@@ -423,8 +414,7 @@
                 forcaPolicial: forcaSelecionada,
                 nomeIntimado: nome,
                 rgIntimado: rg,
-                dataIntimacao: dataFormatadaParaInput,
-                horaIntimacao: horaLimite
+                dataIntimacao: dataFormatadaParaInput // Campo único de data e hora
             };
             
             const dadosDoc = {
@@ -432,9 +422,9 @@
                 tipo: 'Intimação',
                 encarregado: nomeAssinante,
                 natureza: motivo,
-                status: 'Em Andamento',
+                status: 'Em Andamento', // Garante que vai para a aba de andamento
                 data_inicio: dataAtual.toISOString(),
-                data_fim: null,
+                // data_fim ausente propositalmente para não finalizar
                 dados_extras: JSON.stringify(extrasObj)
             };
 
@@ -542,7 +532,6 @@
                 });
             });
 
-            // CORREÇÃO: Garante que se o select estiver oculto (como em investigações para não-admins), use a instituição real do usuário logado
             let forcaPolicialSelecionada = instituicaoUserGlobal;
             const selectForca = document.getElementById('forcaPolicial');
             const emailUsuarioLogado = localStorage.getItem('usuario_logado_email');
@@ -553,11 +542,9 @@
             const extrasObj = { 
                 delegados, envolvidos, evidencias, depoimentos, assinaturas, forcaPolicial: forcaPolicialSelecionada,
                 
-                // Salvando os dados da intimação para quando recarregar a página
                 nomeIntimado: document.getElementById('nomeIntimado')?.value || '',
                 rgIntimado: document.getElementById('rgIntimado')?.value || '',
-                dataIntimacao: document.getElementById('dataIntimacao')?.value || '',
-                horaIntimacao: document.getElementById('horaIntimacao')?.value || '',
+                dataIntimacao: document.getElementById('dataIntimacao')?.value || '', // Campo único
 
                 invData: document.getElementById('invData')?.value || '',
                 invObjetivo: document.getElementById('invObjetivo')?.value || '',
@@ -642,14 +629,12 @@
                         document.getElementById('numIntimacao').value = data.numero || '';
                         document.getElementById('textoIntimacao').value = data.natureza || '';
                         
-                        // Recarregando os dados extras específicos da Intimação
                         if (data.dados_extras) {
                             try {
                                 const extras = JSON.parse(data.dados_extras);
                                 document.getElementById('nomeIntimado').value = extras.nomeIntimado || '';
                                 document.getElementById('rgIntimado').value = extras.rgIntimado || '';
-                                document.getElementById('dataIntimacao').value = extras.dataIntimacao || '';
-                                document.getElementById('horaIntimacao').value = extras.horaIntimacao || '';
+                                document.getElementById('dataIntimacao').value = extras.dataIntimacao || ''; // Campo único
                             } catch(e) {}
                         }
 
@@ -807,17 +792,29 @@
                 const num = document.getElementById('numIntimacao').value || 'S/N';
                 const nome = document.getElementById('nomeIntimado').value || '';
                 const rg = document.getElementById('rgIntimado').value || '';
-                const dataLim = document.getElementById('dataIntimacao').value || '';
-                const hora = document.getElementById('horaIntimacao').value || '';
+                const dataLimVal = document.getElementById('dataIntimacao').value || '';
                 const motivo = document.getElementById('textoIntimacao').value || '';
 
                 nomeArquivo = `Intimacao_${num.replace(/\//g, '-')}.pdf`;
+
+                let dataHoraFormatada = '';
+                if(dataLimVal) {
+                    const dataObj = new Date(dataLimVal);
+                    const dh = String(dataObj.getDate()).padStart(2, '0');
+                    const mh = String(dataObj.getMonth() + 1).padStart(2, '0');
+                    const yh = dataObj.getFullYear();
+                    const h_hh = String(dataObj.getHours()).padStart(2, '0');
+                    const m_mm = String(dataObj.getMinutes()).padStart(2, '0');
+                    dataHoraFormatada = `no dia ${dh}/${mh}/${yh} às ${h_hh}:${m_mm}`;
+                } else {
+                    dataHoraFormatada = `em data e hora a definir`;
+                }
 
                 docDefinition.content = [
                     { text: instituicaoUserGlobal, alignment: 'center', bold: true, fontSize: 14 },
                     { text: 'INTIMAÇÃO', alignment: 'center', bold: true, fontSize: 14, margin: [0, 10, 0, 20] },
                     { text: `Intimação nº ${num}`, fontSize: 12, bold: true },
-                    { text: `Sr(a). ${nome}, portador(a) do RG ${rg}, fica intimado(a) a comparecer no dia ${formatDatetime(dataLim)} às ${hora}.`, fontSize: 11, margin: [0, 15, 0, 15] },
+                    { text: `Sr(a). ${nome}, portador(a) do RG ${rg}, fica intimado(a) a comparecer ${dataHoraFormatada}.`, fontSize: 11, margin: [0, 15, 0, 15] },
                     { text: 'MOTIVO:', bold: true, fontSize: 10 },
                     { text: motivo, fontSize: 10, margin: [0, 5, 0, 30] },
                     { text: 'ASSINATURAS', bold: true, fontSize: 10, margin: [0, 10, 0, 5] },
