@@ -1,0 +1,2625 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regras da Polícia - Sistema de Inteligência</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        body { 
+            background: radial-gradient(circle at top, #121826 0%, #07090e 70%); 
+            color: #e0e0e0; 
+            font-family: 'Inter', sans-serif; 
+            min-height: 100vh;
+            margin: 0;
+        }
+        .navbar-pf { 
+            background: rgba(17, 24, 39, 0.95); 
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid #b58d3d; 
+            padding: 15px 30px; 
+        }
+        .brand-title { 
+            color: #ffffff; 
+            font-family: 'Playfair Display', serif;
+            font-weight: 700; 
+            font-size: 1.25em; 
+            letter-spacing: 1.5px; 
+        }
+        
+        /* Layout Principal com Sidebar */
+        .layout-wrapper { display: flex; min-height: calc(100vh - 70px); }
+        
+        /* Sidebar Lateral */
+        .sidebar {
+            width: 300px;
+            background-color: #0b0f17;
+            border-right: 1px solid #1f2937;
+            padding: 20px 15px;
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+        .sidebar-section-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #6b7280;
+            margin: 20px 0 10px 10px;
+            font-weight: 600;
+        }
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px;
+            color: #9ca3af;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            margin-bottom: 4px;
+            cursor: pointer;
+        }
+        .sidebar-item:hover {
+            background-color: #161b22;
+            color: #ffffff;
+        }
+        .sidebar-item.active {
+            background-color: rgba(181, 141, 61, 0.15);
+            color: #b58d3d;
+            border: 1px solid rgba(181, 141, 61, 0.3);
+            font-weight: 600;
+        }
+        .sidebar-item i { width: 22px; text-align: center; margin-right: 8px; color: #6b7280; }
+        .sidebar-item.active i { color: #b58d3d; }
+        
+        /* Subitens retráteis */
+        .submenu {
+            padding-left: 25px;
+            margin-top: 2px;
+            margin-bottom: 5px;
+            border-left: 1px solid #1f2937;
+            margin-left: 18px;
+            display: none;
+        }
+        .submenu.show { display: block; }
+        .submenu-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 10px;
+            color: #8b95a5;
+            text-decoration: none;
+            font-size: 0.85rem;
+            border-radius: 4px;
+            transition: 0.2s;
+        }
+        .submenu-item:hover { color: #fff; background-color: #161b22; }
+        .submenu-item i { font-size: 0.7rem; margin-right: 10px; color: #6b7280; }
+
+        /* Conteúdo Principal */
+        .content-area {
+            flex-grow: 1;
+            padding: 40px;
+            max-width: 1000px;
+            margin: 0 auto; /* <-- ÚNICA LINHA ADICIONADA: Centraliza o conteúdo */
+        }
+        .section-box { 
+            background: linear-gradient(135deg, #121826 0%, #0d1117 100%); 
+            border: 1px solid #1f2937; 
+            border-radius: 10px; 
+            padding: 40px; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+        .section-title { 
+            color: #ffffff; 
+            border-bottom: none; 
+            padding-bottom: 0; 
+            margin-bottom: 30px; 
+            font-size: 2.2em; 
+            font-weight: 700;
+            text-transform: none; 
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .chapter-label { 
+            color: #56d364; 
+            font-size: 0.8rem; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            letter-spacing: 1.5px; 
+            margin-bottom: 8px; 
+            display: block; 
+        }
+        
+        .rule-text {
+            color: #d1d5db;
+            line-height: 1.8;
+            font-size: 1.05em;
+            text-align: justify;
+        }
+        .highlight-gold { color: #b58d3d; font-weight: 600; }
+
+        /* NOVOS BALÕES (CARDS) DE REFERÊNCIA VISUAL */
+        .top-cards-container { 
+            display: flex; 
+            gap: 15px; 
+            margin-bottom: 30px; 
+            flex-wrap: wrap; 
+        }
+        .info-card, .warning-card { 
+            flex: 1; 
+            background-color: #161b22; 
+            border: 1px solid #30363d; 
+            border-radius: 12px; 
+            padding: 20px; 
+            min-width: 250px; 
+        }
+        .warning-card { 
+            border-color: #8a6a1c; 
+        }
+        .card-title { 
+            font-size: 0.85rem; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            margin-bottom: 12px; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            letter-spacing: 0.5px; 
+        }
+        .card-title.green { color: #56d364; }
+        .card-title.yellow { color: #e3b341; }
+        .card-text { 
+            color: #8b949e; 
+            font-size: 0.95rem; 
+            line-height: 1.6; 
+            margin: 0; 
+        }
+        
+        /* CARD NUMERADO */
+        .rule-card { 
+            background-color: #161b22; 
+            border: 1px solid #30363d; 
+            border-radius: 12px; 
+            padding: 25px; 
+            margin-bottom: 20px; 
+        }
+        .rule-card-header { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            margin-bottom: 20px; 
+        }
+        .number-badge { 
+            background-color: #1f2a20; 
+            color: #56d364; 
+            width: 36px; 
+            height: 36px; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-weight: 700; 
+            font-size: 1.1rem; 
+            flex-shrink: 0; 
+            border: 1px solid #2ea043; 
+        }
+        .rule-card-title { 
+            color: #ffffff; 
+            font-size: 1.25rem; 
+            font-weight: 700; 
+            margin: 0; 
+        }
+        
+        /* LISTAS DOS CARDS */
+        .rule-list-card { 
+            margin: 0; 
+            padding-left: 10px; 
+            list-style-type: none; 
+        }
+        .rule-list-card li { 
+            position: relative; 
+            padding-left: 25px; 
+            margin-bottom: 15px; 
+            color: #d1d5db; 
+            line-height: 1.6; 
+        }
+        .rule-list-card li::before { 
+            content: "•"; 
+            color: #56d364; 
+            font-size: 1.5rem; 
+            position: absolute; 
+            left: 0; 
+            top: -6px; 
+        }
+        
+        .rule-list-card ul { 
+            list-style-type: none; 
+            padding-left: 15px; 
+            margin-top: 10px; 
+            margin-bottom: 10px; 
+        }
+        .rule-list-card ul li { margin-bottom: 8px; }
+        .rule-list-card ul li::before { 
+            content: "○"; 
+            color: #8b949e; 
+            font-size: 1rem; 
+            top: 0; 
+            left: 5px; 
+        }
+        
+        /* Ajuste de tabelas para os novos cards */
+        .rule-card .table-responsive { margin-top: 15px; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-pf d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+            <span class="brand-title">REGRAS DA POLÍCIA</span>
+        </div>
+        <div>
+            <a href="dashboard.html" class="btn btn-outline-light btn-sm"><i class="fas fa-arrow-left"></i> Voltar ao Painel</a>
+        </div>
+    </nav>
+
+    <div class="layout-wrapper">
+        <!-- SIDEBAR DE NAVEGAÇÃO -->
+        <nav class="sidebar">
+            <div class="sidebar-section-title">Início</div>
+            <a href="#" class="sidebar-item" onclick="mudarSecao('introducao', this)">
+                <span><i class="fas fa-book-open"></i> Introdução</span>
+            </a>
+
+            <div class="sidebar-section-title">Capítulo I</div>
+            <a href="#" class="sidebar-item active" onclick="mudarSecao('cidade', this)"><span><i class="fas fa-city"></i> Cidade/Polícia</span></a>
+            <a href="#" class="sidebar-item" onclick="mudarSecao('departamento', this)"><span><i class="fas fa-file-alt"></i> Regras de Departamento</span></a>
+            <a href="#" class="sidebar-item" onclick="mudarSecao('prisoes', this)"><span><i class="fas fa-handcuffs"></i> Prisões</span></a>
+            
+            <div class="sidebar-item" onclick="mudarSecao('proibicoes', this); toggleSubmenu('subProibicoes', this)">
+                <span><i class="fas fa-ban"></i> Proibições</span>
+                <i class="fas fa-chevron-down small-icon"></i>
+            </div>
+            <div class="submenu" id="subProibicoes">
+                <a href="#" class="submenu-item" onclick="mudarSecao('tempo-advertencia', this)"><i class="fas fa-circle"></i> Tempo de Advertência</a>
+            </div>
+
+            <a href="#" class="sidebar-item" onclick="mudarSecao('farm-dominas', this)"><span><i class="fas fa-seedling"></i> Farm/Dominas</span></a>
+
+            <div class="sidebar-section-title">Capítulo II</div>
+            <div class="sidebar-item" onclick="mudarSecao('regras-patrulhamento-geral', this); toggleSubmenu('subPatrulhamento', this)">
+                <span><i class="fas fa-truck-moving"></i> Regras de Patrulhamento</span>
+                <i class="fas fa-chevron-down small-icon"></i>
+            </div>
+            <div class="submenu" id="subPatrulhamento">
+                <a href="#" class="submenu-item" onclick="mudarSecao('regras-gerais', this)"><i class="fas fa-circle"></i> Regras Gerais</a>
+                <a href="#" class="submenu-item" onclick="mudarSecao('abordagem-aerea', this)"><i class="fas fa-circle"></i> Abordagem Aérea</a>
+            </div>
+            <a href="#" class="sidebar-item" onclick="mudarSecao('blitz', this)"><span><i class="fas fa-car-crash"></i> Blitz</span></a>
+
+            <div class="sidebar-section-title">Capítulo III</div>
+            <a href="#" class="sidebar-item" onclick="mudarSecao('investigacoes', this)"><span><i class="fas fa-search"></i> Investigações</span></a>
+            <a href="#" class="sidebar-item" onclick="mudarSecao('ro', this)"><span><i class="fas fa-file-invoice"></i> R.O.</span></a>
+            <a href="#" class="sidebar-item" onclick="mudarSecao('incursoes', this)"><span><i class="fas fa-bullseye"></i> Incursões</span></a>
+            <a href="#" class="sidebar-item" onclick="mudarSecao('pacificacoes', this)"><span><i class="fas fa-handshake"></i> Pacificações</span></a>
+            <a href="#" class="sidebar-item" onclick="mudarSecao('acoes', this)"><span><i class="fas fa-crosshairs"></i> Ações Policiais</span></a>
+
+            <div class="sidebar-section-title">Capítulo IV</div>
+            <a href="#" class="sidebar-item" onclick="mudarSecao('recrutamentos', this)"><span><i class="fas fa-users"></i> Recrutamentos</span></a>
+            <a href="#" class="sidebar-item" onclick="mudarSecao('transferencia', this)"><span><i class="fas fa-exchange-alt"></i> Transferência</span></a>
+            
+            <div class="sidebar-item" onclick="toggleSubmenu('subServicos', this)">
+                <span><i class="fas fa-file-contract"></i> Serviços</span>
+                <i class="fas fa-chevron-down small-icon"></i>
+            </div>
+            <div class="submenu" id="subServicos">
+                <a href="#" class="submenu-item" onclick="mudarSecao('troca-nome', this)"><i class="fas fa-circle"></i> Troca de Nome</a>
+                <a href="#" class="submenu-item" onclick="mudarSecao('porte-arma', this)"><i class="fas fa-circle"></i> Porte de Arma</a>
+                <a href="#" class="submenu-item" onclick="mudarSecao('limpeza-ficha', this)"><i class="fas fa-circle"></i> Limpeza de Ficha</a>
+            </div>
+
+            <a href="#" class="sidebar-item" onclick="mudarSecao('blacklist', this)"><span><i class="fas fa-list"></i> Blacklist</span></a>
+            <a href="#" class="sidebar-item" onclick="mudarSecao('sets', this)"><span><i class="fas fa-key"></i> Sets</span></a>
+            <a href="#" class="sidebar-item" onclick="mudarSecao('discord', this)"><span><i class="fab fa-discord"></i> Discord</span></a>
+        </nav>
+
+        <!-- CONTEÚDO PRINCIPAL DINÂMICO -->
+        <main class="content-area">
+            <div class="section-box" id="conteudoDinamico">
+                <span class="chapter-label">CAPÍTULO I</span>
+                <div class="section-title">
+                    <i class="fas fa-city"></i> Cidade / Polícia
+                </div>
+                <div class="rule-text">
+                    <div class="top-cards-container">
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-info-circle"></i> RESUMO</div>
+                            <p class="card-text">Visão geral da cidade e do Departamento Policial (DP): postura, organização e padrões básicos.</p>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-list-ul"></i> PROCEDIMENTO</div>
+                            <p class="card-text">Ao chegar no DP: guarde o veículo corretamente, mantenha postura profissional e use o rádio com objetividade.</p>
+                        </div>
+                        <div class="warning-card">
+                            <div class="card-title yellow"><i class="fas fa-exclamation-triangle"></i> ATENÇÃO</div>
+                            <p class="card-text">Evite permanecer no DP apenas para farmar salário ou conversar gritando, conduta passível de punição.</p>
+                        </div>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">1</div>
+                            <h3 class="rule-card-title">Ações Permitidas e Normas</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li><strong>Manobra de PIT:</strong> Permitida, mas se resultar em "ratão", o policial responsável poderá ser preso por 1000 meses (RESP) ou 250 meses (prisão STAFF – resp ticket, mod, adm).</li>
+                            <li><strong>Aplicação do Código 5:</strong> Caso existam provas suficientes de que um ilegal ou fugitivo tenha solicitado QRR ilegal, a polícia pode aplicar o código 5 automaticamente.</li>
+                            <li><strong>Ronda Ostensiva em Facção:</strong> Caso haja provas de fuga para uma facção, a polícia pode realizar uma Ronda Ostensiva no local.</li>
+                            <li><strong>Incursão Policial:</strong> Se, durante uma Ronda Ostensiva, o ilegal atirar na polícia, a ronda poderá se transformar em uma incursão.</li>
+                            <li><strong>Resgate de Reféns:</strong> Policiais envolvidos em ações de resgate devem sempre priorizar a vida de todos os reféns.</li>
+                            <li><strong>Sequestro de policial fardado é permitido:</strong> Ao ser sequestrado, o policial assume automaticamente risco máximo, podendo todas guarnições invadirem a facção a qualquer momento para realizar o resgate do mesmo.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">2</div>
+                            <h3 class="rule-card-title">Faltas em Ações Marcadas</h3>
+                        </div>
+                        <p class="card-text mb-3" style="padding-left: 10px;">Caso a guarnição não compareça em 3 ações marcadas ou mais, sem justificativa, haverá punição:</p>
+                        <ul class="rule-list-card">
+                            <li><strong>Responsável:</strong> Advertência 1.</li>
+                            <li><strong>Guarnição:</strong> Multa de 5.000.000.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Função para abrir e fechar os submenus laterais
+        function toggleSubmenu(idSubmenu, elemento) {
+            const submenu = document.getElementById(idSubmenu);
+            submenu.classList.toggle('show');
+            const icon = elemento.querySelector('.small-icon');
+            if(icon) {
+                icon.classList.toggle('fa-chevron-down');
+                icon.classList.toggle('fa-chevron-up');
+            }
+        }
+
+        // Textos dinâmicos para cada botão do menu lateral
+        const textosManuais = {
+            'introducao': {
+                capitulo: 'Início',
+                titulo: 'Introdução ao Manual',
+                icone: 'fa-book-open',
+                texto: `
+                    <div class="rule-card">
+                        <p class="card-text mb-3">Bem-vindo ao <span class="highlight-gold">Manual de Regras</span>.</p>
+                        <p class="card-text mb-3">Nós temos orgulho em construir uma comunidade diversa, acolhedora e inclusiva, onde cada indivíduo é respeitado e valorizado por sua singularidade. Reforçamos nosso compromisso com os valores que tornam este espaço seguro e harmonioso para todos. Aqui, cada pessoa deve sentir-se protegida, respeitada e amparada, independentemente de sua origem, orientação sexual, identidade de gênero, raça, etnia, religião ou condição física. A diversidade é a nossa maior força e enriquece todos os aspectos da nossa sociedade.</p>
+                        <p class="card-text mb-3">Não toleramos qualquer forma de preconceito, incluindo, mas não se limitando a, transfobia, homofobia, racismo, capacitismo ou qualquer discurso que oprima, discrimine ou propague o ódio dentro e fora do servidor. Atitudes dessa natureza são inaceitáveis e acarretarão banimento irreversível. Nosso compromisso é garantir um ambiente pautado pelo respeito, empatia e igualdade.</p>
+                        <p class="card-text">Temos a responsabilidade de promover uma sociedade justa e acolhedora, onde todos possam ser quem são sem medo de discriminação. Nossa cidade preza pela igualdade de direitos e pela liberdade de expressão, mas jamais permitiremos que esses valores sejam distorcidos para justificar qualquer discurso de intolerância. Repudiamos veementemente qualquer comportamento que vá contra esses princípios.</p>
+                    </div>
+                `
+            },
+            'cidade': { 
+                capitulo: 'CAPÍTULO I',
+                titulo: 'Cidade / Polícia', 
+                icone: 'fa-city', 
+                texto: `
+                    <div class="top-cards-container">
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-info-circle"></i> RESUMO</div>
+                            <p class="card-text">Visão geral da cidade e do Departamento Policial (DP): postura, organização e padrões básicos.</p>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-list-ul"></i> PROCEDIMENTO</div>
+                            <p class="card-text">Ao chegar no DP: guarde o veículo corretamente, mantenha postura profissional e use o rádio com objetividade.</p>
+                        </div>
+                        <div class="warning-card">
+                            <div class="card-title yellow"><i class="fas fa-exclamation-triangle"></i> ATENÇÃO</div>
+                            <p class="card-text">Evite permanecer no DP apenas para farmar salário ou conversar gritando, conduta passível de punição.</p>
+                        </div>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">1</div>
+                            <h3 class="rule-card-title">Ações Permitidas e Normas</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li><strong>Manobra de PIT:</strong> Permitida, mas se resultar em "ratão", o policial responsável poderá ser preso por 1000 meses (RESP) ou 250 meses (prisão STAFF – resp ticket, mod, adm).</li>
+                            <li><strong>Aplicação do Código 5:</strong> Caso existam provas suficientes de que um ilegal ou fugitivo tenha solicitado QRR ilegal, a polícia pode aplicar o código 5 automaticamente.</li>
+                            <li><strong>Ronda Ostensiva em Facção:</strong> Caso haja provas de fuga para uma facção, a polícia pode realizar uma Ronda Ostensiva no local.</li>
+                            <li><strong>Incursão Policial:</strong> Se, durante uma Ronda Ostensiva, o ilegal atirar na polícia, a ronda poderá se transformar em uma incursão.</li>
+                            <li><strong>Resgate de Reféns:</strong> Policiais envolvidos em ações de resgate devem sempre priorizar a vida de todos os reféns.</li>
+                            <li><strong>Sequestro de policial fardado é permitido:</strong> Ao ser sequestrado, o policial assume automaticamente risco máximo, podendo todas guarnições invadirem a facção a qualquer momento para realizar o resgate do mesmo.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">2</div>
+                            <h3 class="rule-card-title">Faltas em Ações Marcadas</h3>
+                        </div>
+                        <p class="card-text mb-3" style="padding-left: 10px;">Caso a guarnição não compareça em 3 ações marcadas ou mais, sem justificativa, haverá punição:</p>
+                        <ul class="rule-list-card">
+                            <li><strong>Responsável:</strong> Advertência 1.</li>
+                            <li><strong>Guarnição:</strong> Multa de 5.000.000.</li>
+                        </ul>
+                    </div>
+                ` 
+            },
+            'departamento': { 
+                capitulo: 'CAPÍTULO I',
+                titulo: 'Regras de Departamento', 
+                icone: 'fa-file-alt', 
+                texto: `
+                    <div class="top-cards-container">
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-info-circle"></i> RESUMO</div>
+                            <p class="card-text">Regras internas de conduta, disciplina, comunicação e rotina dentro das guarnições.</p>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-list-ul"></i> PROCEDIMENTO</div>
+                            <p class="card-text">Respeite hierarquia, cumpra determinações do Comando e mantenha registro/organização sempre que aplicável.</p>
+                        </div>
+                        <div class="warning-card">
+                            <div class="card-title yellow"><i class="fas fa-exclamation-triangle"></i> ATENÇÃO</div>
+                            <p class="card-text">Desrespeito, abuso de canal, insubordinação ou postura inadequada impactam diretamente advertências e blacklist.</p>
+                        </div>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">1</div>
+                            <h3 class="rule-card-title">Conduta no Departamento Policial</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>É estritamente proibido permanecer dentro do Departamento Policial apenas para farmar salário ou conversar no modo gritando sem necessidade.</li>
+                            <li>Ao chegar no DP, todos os policiais devem guardar seus veículos corretamente, evitando deixá-los espalhados ou obstruindo a área.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">2</div>
+                            <h3 class="rule-card-title">Comportamento e Disciplina</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Discussões, desrespeito e qualquer assunto que fuja do RP imersivo são proibidos.</li>
+                            <li>Brincadeiras como socos, uso de taser, "rolas" ou disparos sem motivos válidos, bem como derrubar colegas, não são permitidas.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">3</div>
+                            <h3 class="rule-card-title">Acesso do Jurídico ao DP</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Membros da OAB - Jurídico possuem livre acesso ao Departamento Policial, desde que estejam caracterizados e se identifiquem quando solicitados.</li>
+                            <li>Todos os membros do Jurídico devem manter conduta respeitosa dentro do DP.</li>
+                            <li>Caso um membro do Jurídico desrespeite ou desacate um policial, o Presidente da OAB deverá ser acionado e o advogado poderá e deverá ser preso por desacato.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">4</div>
+                            <h3 class="rule-card-title">Conduta, Postura e Deveres do Policial</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Todo policial deve manter conduta, respeito e profissionalismo, honrando a farda, a guarnição e todos os cidadãos.</li>
+                            <li>É dever do policial proteger a vida de civis e colegas de corporação.</li>
+                            <li>Todo policial deve auxiliar seus companheiros de farda sempre que necessário.</li>
+                            <li>É proibido agredir qualquer pessoa sem justificativa legal, especialmente civis.</li>
+                            <li>É proibido emprestar viaturas para qualquer pessoa que não seja policial fardado.</li>
+                            <li>É obrigatório manter disciplina na rádio e no PD (chat interno), sendo proibido flood, gritos ou poluição de comunicação.</li>
+                            <li>O policial deve manter postura exemplar principalmente na presença de Comando, autoridades ou Ministros.</li>
+                            <li>Desrespeito, ofensas ou desacato ao Comando poderá resultar em prisão disciplinar.</li>
+                            <li>O policial deve cumprir todas as determinações do Comando, exceto aquelas que sejam ilegais ou que coloquem em risco a vida de terceiros.</li>
+                            <li>A Corregedoria pode se comprovado ato ilegal ou abuso de poder, processar o policial e encaminhá-lo para julgamento administrativo, podendo resultar em advertência, blacklist e/ou exoneração.</li>
+                            <li>A Corregedoria Geral pode agir contra qualquer policial independentemente do batalhão ou cargo a que pertença.</li>
+                            <li>A Corregedoria Geral é autônoma e deve ser imparcial, agindo sempre com base em provas e evidências, garantindo um processo justo para todos os envolvidos.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card" style="border-color: #3b82f6;">
+                        <div class="card-title" style="color: #60a5fa;"><i class="fas fa-info-circle"></i> OBSERVAÇÃO</div>
+                        <p class="card-text">Cada DP pode ter regras próprias, porém, estas diretrizes são gerais e devem ser seguidas por todas as delegacias.</p>
+                    </div>
+                ` 
+            },
+            'prisoes': { 
+                capitulo: 'CAPÍTULO I',
+                titulo: 'Prisões', 
+                icone: 'fa-handcuffs', 
+                texto: `
+                    <div class="top-cards-container">
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-info-circle"></i> RESUMO</div>
+                            <p class="card-text">Procedimentos de abordagem, prisão, condução e registro do início ao fim.</p>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-list-ul"></i> PROCEDIMENTO</div>
+                            <p class="card-text">Abordar → verbalizar → algemar → revistar → conduzir → registrar (R.O/MDT) → encaminhar.</p>
+                        </div>
+                        <div class="warning-card">
+                            <div class="card-title yellow"><i class="fas fa-exclamation-triangle"></i> ATENÇÃO</div>
+                            <p class="card-text">Não force RP, respeite gênero em revista/abordagem e mantenha provas/coerência nas ações.</p>
+                        </div>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">1</div>
+                            <h3 class="rule-card-title">Leitura da Lei de Miranda</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>É obrigatório que o policial leia a Lei de Miranda ao dar voz de prisão.</li>
+                            <li>Caso a leitura não seja realizada, a prisão será automaticamente anulada.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">2</div>
+                            <h3 class="rule-card-title">Chamado do Advogado</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>O policial deve chamar um advogado pelo menos duas vezes e aguardar 10 minutos para a chegada do mesmo.</li>
+                            <li>Caso essa regra não seja cumprida, o policial poderá ser processado pelo jurídico.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">3</div>
+                            <h3 class="rule-card-title">Local da Detenção</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>É proibido deter ou prender qualquer cidadão/criminoso fora da área de prisão da delegacia.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">4</div>
+                            <h3 class="rule-card-title">Recebimento de Fiança</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>A fiança só pode ser recebida na presença de um advogado.</li>
+                            <li>Caso contrário, o policial será processado por Prevaricação.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">5</div>
+                            <h3 class="rule-card-title">Agressão a Detidos</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Qualquer tipo de agressão a uma pessoa algemada é estritamente proibido, caso aconteça o policial deverá ser preso e advertido ou exonerado.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">6</div>
+                            <h3 class="rule-card-title">Conduta Durante a Detenção</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>É proibido que o policial provoque, discuta ou troque ofensas com um preso que esteja sendo detido.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">7</div>
+                            <h3 class="rule-card-title">Obrigatoriedade de Registro</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Todas as prisões realizadas devem ser devidamente registradas nos respectivos Discords de cada guarnição.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card" style="border-color: #3b82f6;">
+                        <div class="card-title" style="color: #60a5fa;"><i class="fas fa-info-circle"></i> OBSERVAÇÃO</div>
+                        <p class="card-text">A Lei de Miranda é um conjunto de direitos que devem ser informados ao indivíduo no momento da prisão, garantindo que ele esteja ciente de seus direitos legais.</p>
+                    </div>
+                ` 
+            },
+            'proibicoes': {
+                capitulo: 'CAPÍTULO I',
+                titulo: 'Proibições',
+                icone: 'fa-ban',
+                texto: `
+                    <div class="top-cards-container">
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-info-circle"></i> RESUMO</div>
+                            <p class="card-text">Lista objetiva do que é proibido durante serviço e fora dele quando representando a corporação.</p>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-list-ul"></i> PROCEDIMENTO</div>
+                            <p class="card-text">Antes de agir: valide motivo, legalidade, proporcionalidade e impactos. (evite exageros).</p>
+                        </div>
+                        <div class="warning-card">
+                            <div class="card-title yellow"><i class="fas fa-exclamation-triangle"></i> ATENÇÃO</div>
+                            <p class="card-text">Infrações aqui costumam gerar punições diretas (advertência, pontoBL ou blacklist).</p>
+                        </div>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">1</div>
+                            <h3 class="rule-card-title">Uso de Fardamento e Veículos</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>É estritamente proibido utilizar fardamentos da polícia que não correspondam à sua guarnição.</li>
+                            <li>Fardamentos devem possuir algo que identifique a guarnição do policial (ex: distintivo, nome da guarnição, etc.).</li>
+                            <li>É proibido utilizar fardamento que não corresponda à sua respectiva patente, cargo ou divisão, exceto nos seguintes casos:
+                                <ul>
+                                    <li><strong>Departamentos Militares:</strong> Comando Geral, Subcomando Geral, Coronel, Tenente-Coronel e membros da Corregedoria podem utilizar outros tipos de fardamento.</li>
+                                    <li><strong>Polícia Federal:</strong> Diretor Geral, Diretor, Delegados e membros da Corregedoria podem utilizar outros tipos de fardamento.</li>
+                                    <li><strong>Polícia Civil:</strong> Delegado Geral, Delegados e membros da Corregedoria podem utilizar outros tipos de fardamento.</li>
+                                </ul>
+                            </li>
+                            <li>É proibido usar máscaras e capacetes dentro da DP</li>
+                            <li>É proibido usar cortes de cabelo fora do padrão. (ex: moicano, reflexo, etc.)</li>
+                            <li>É proibido ter tatuagens no rosto.</li>
+                            <li>É proibido usar qualquer tipo de óculos, exceto os de grau, dentro do DP.</li>
+                            <li>É proibido sair de ponto batido sem farda, somente Comando Geral e Subcomando possuem essa permissão.</li>
+                            <li>É proibido participar de ações utilizando veículos não policiais (sejam pessoais ou de terceiros).</li>
+                            <li>Caso o policial perca sua QSV, deve-se dirigir imediatamente à sua DP.</li>
+                            <li>É proibido utilizar insulfilm em veículos policiais, somente o Alto Escalão está permitido!</li>
+                            <li>Alto Escalão são para guarnições militares:
+                                <ul>
+                                    <li>Comando Geral, Comando, Subcomando Geral, Cel, Ten.Cel (e Corregedoria).</li>
+                                </ul>
+                            </li>
+                            <li>Alto Escalão são para guarnições administrativas:
+                                <ul>
+                                    <li>Diretor Geral, Diretor, Delegado Geral, Delegado (e Corregedoria).</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">2</div>
+                            <h3 class="rule-card-title">Conduta Policial</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Todos os policiais estão proibidos de realizar RP de miliciano ou de qualquer atividade ilegal.</li>
+                            <li>Revistas devem respeitar o gênero:
+                                <ul>
+                                    <li>Policiais não podem revistar indivíduos do sexo oposto.</li>
+                                    <li>Caso não haja um(a) policial do mesmo sexo, deve-se utilizar o método da "caixinha".</li>
+                                    <li>Se o suspeito se recusar, poderá ser conduzido por ocultação de provas.</li>
+                                </ul>
+                            </li>
+                            <li>É proibido levar criminosos para o hospital para reanimação e posterior prisão.</li>
+                            <li>Está liberado o bombeiro/médico reviver no local e ser encaminhado o RP para prisão, caso retorne de "e" a ação se dá por encerrada.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">3</div>
+                            <h3 class="rule-card-title">Proibições Relacionadas a Ações Policiais</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>É proibido marcar BLIPs de farm do ilegal ou dominas.</li>
+                            <li>Essa prática será considerada quebra de regra de ações e resultará em punição.</li>
+                            <li>Não é permitido forjar falsas denúncias ou provas para justifyicar revistas, abordagens, prisões ou execuções. Caso ocorra o policial deverá ser processado e julgado.</li>
+                            <li><strong>É estritamente proibido que um policial pegue para si ou desvie qualquer um dos seguintes itens:</strong>
+                                <ul>
+                                    <li>Itens pertencentes à polícia.</li>
+                                    <li>Loot de players.</li>
+                                    <li>Itens armazenados no baú da polícia.</li>
+                                    <li>Tal prática será punida conforme as regras.</li>
+                                </ul>
+                            </li>
+                            <li>Nenhum policial pode abordar, revistar, prender ou matar alguém sem um motivo válido.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">4</div>
+                            <h3 class="rule-card-title">Regras sobre Código 3 e Perseguições</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Código 3 (disparos na lataria ou pneus) só pode ser aplicado após 3 minutos de fuga, exceto em casos de powergaming.</li>
+                            <li>Se um indivíduo do ilegal dropar antes de 1 minuto de fuga, será considerado quebra de regra de ação + RDM.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">5</div>
+                            <h3 class="rule-card-title">Conduta e Imersão no RP</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>É proibido qualquer tipo de discussão, falta de respeito ou assuntos que fujam do RP.</li>
+                            <li>Independentemente do tema, todas as interações devem ser imersivas.</li>
+                            <li><strong>Brincadeiras inadequadas são proibidas, incluindo:</strong>
+                                <ul>
+                                    <li>Socos, uso indevido do taser, empurrões, disparos sem motivo válido ou qualquer outra ação que perturbe o RP.</li>
+                                </ul>
+                            </li>
+                            <li><strong>Só é permitido algemar quando o indivíduo estiver caído no chão ou totalmente parado e rendido.</strong>
+                                <ul>
+                                    <li>Para algemar, o suspeito deve estar imobilizado: ex.: taser (algemar enquanto estiver caído) ou derrubado durante a contenção.</li>
+                                    <li>É proibido algemar em movimento, durante corrida/fuga a pé, trocação de tiro ou qualquer situação de perseguição.</li>
+                                    <li>Se o suspeito estiver atirando/ameaçando com arma, a prioridade é neutralizar/cessar a ameaça; nunca algemar enquanto ele estiver atirando (isso é quebra de imersão).</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">6</div>
+                            <h3 class="rule-card-title">Convites e Transferências Irregulares</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>É estritamente proibido que membros de qualquer departamento policial realizem recrutamento, convite ou oferta de cargo para oficiais de outros departamentos, com intuito de transferi-los para sua unidade.</li>
+                            <li><strong>Essa prática inclui, mas não se limita a:</strong>
+                                <ul>
+                                    <li>Oferecer cargos, promoções ou vantagens em outro batalhão a policiais já vinculados a um departamento diferente.</li>
+                                    <li>Realizar abordagens diretas ou indiretas visando persuadir policiais de outras unidades a mudarem de departamento.</li>
+                                    <li>Utilizar qualquer meio de comunicação para promover ou sugerir transferências em troca de benefícios.</li>
+                                </ul>
+                            </li>
+                            <li><strong>Penalidade:</strong> Qualquer policial que violar essa regra estará sujeito à exoneração imediata e receberá blacklist das forças policiais, independente do batalhão ao qual pertence.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">7</div>
+                            <h3 class="rule-card-title">Proibições Graves</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>É extremamente proibido que um policial mate outro policial, independentemente do motivo ou patente. A conduta resultará em punição severa conforme análise administrativa.</li>
+                            <li>O policial nunca deve emprestar viaturas para qualquer pessoa que não seja policial fardado.</li>
+                            <li>Caso um cidadão esteja depredando ou batendo na viatura de forma contínua, fica liberada a aplicação de <strong>Código 5</strong>, conforme diretrizes da corporação.</li>
+                        </ul>
+                    </div>
+                `
+            },
+            'tempo-advertencia': { 
+                capitulo: 'CAPÍTULO I',
+                titulo: 'Tempo de Advertência na Organização', 
+                icone: 'fa-ban', 
+                texto: `
+                    <div class="top-cards-container">
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-info-circle"></i> RESUMO</div>
+                            <p class="card-text">Sistema progressivo de advertências aplicado às organizações que descumprirem regras institucionais ou normas administrativas.</p>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-list-ul"></i> APLICAÇÃO</div>
+                            <p class="card-text">As punições acumulam conforme reincidência, podendo resultar em suspensão temporária ou wipe total da guarnição.</p>
+                        </div>
+                        <div class="warning-card">
+                            <div class="card-title yellow"><i class="fas fa-exclamation-triangle"></i> ATENÇÃO</div>
+                            <p class="card-text">Novas infrações durante o período ativo reiniciam ou aumentam o tempo de punição automaticamente.</p>
+                        </div>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">1</div>
+                            <h3 class="rule-card-title">Primeira Advertência (Adv ORG 1)</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Aplicada na <strong>primeira infração registrada</strong> da organização.</li>
+                            <li>Duração de <strong>6 dias</strong>.</li>
+                            <li>Funciona como <strong>alerta formal</strong>, servindo para correção de conduta.</li>
+                            <li>Novas infrações durante o período elevam automaticamente para o próximo nível.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">2</div>
+                            <h3 class="rule-card-title">Segunda Advertência (Adv ORG 2)</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Aplicada em caso de <strong>reincidência</strong>.</li>
+                            <li>Duração de <strong>12 dias</strong>.</li>
+                            <li>Considerada <strong>punição grave</strong>, com acompanhamento da administração.</li>
+                            <li>Persistindo irregularidades, será aplicada a penalidade máxima.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">3</div>
+                            <h3 class="rule-card-title">Terceira Advertência (Adv ORG 3)</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Aplicada em caso de <strong>nova reincidência ou descumprimento grave das regras</strong>.</li>
+                            <li>Resulta em <strong>WIPE TOTAL DA GUARNIÇÃO/ORGANIZAÇÃO</strong>.</li>
+                            <li>Perda de progressos, cargos, benefícios e histórico ativo.</li>
+                            <li>A organização deverá reiniciar do zero e trocar o comandante, conforme normas do servidor.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">4</div>
+                            <h3 class="rule-card-title">Regras Gerais</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>As advertências são <strong>cumulativas e progressivas</strong>.</li>
+                            <li>Os prazos contam em <strong>dias corridos</strong>.</li>
+                            <li>O Ministério poderá <strong>agravar a penalidade</strong> em casos de abuso, má-fé ou impacto severo.</li>
+                        </ul>
+                    </div>
+                ` 
+            },
+            'farm-dominas': { 
+                capitulo: 'CAPÍTULO I',
+                titulo: 'Farm / Dominas', 
+                icone: 'fa-seedling', 
+                texto: `
+                    <div class="top-cards-container">
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-info-circle"></i> RESUMO</div>
+                            <p class="card-text">Regras de atuação em farms e dominas: abordagem, controle de área e condução de ocorrência.</p>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-list-ul"></i> PROCEDIMENTO</div>
+                            <p class="card-text">Priorize segurança, verbalização e registro; mantenha o fluxo de prisão/coleta de provas.</p>
+                        </div>
+                        <div class="warning-card">
+                            <div class="card-title yellow"><i class="fas fa-exclamation-triangle"></i> ATENÇÃO</div>
+                            <p class="card-text">Evite abuso de poder, exigências fora do RP e condutas que caracterizem perseguição/forçar situação.</p>
+                        </div>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">1</div>
+                            <h3 class="rule-card-title">Limite Mínimo para Apreensão</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>É proibida a apreensão de farm quando houver menos de <strong>350</strong> de matéria-prima.</li>
+                            <li>Farm é considerado a matéria-prima para fabricar itens ilícitos.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">2</div>
+                            <h3 class="rule-card-title">Aplicação de Multa</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>De <strong>350 a 600</strong>, o farm será apreendido e será aplicada multa de <strong>350.000</strong>.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">3</div>
+                            <h3 class="rule-card-title">Prisão do Indivíduo</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Acima de <strong>600</strong>, o meliante será preso.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card" style="border-color: #3b82f6;">
+                        <div class="card-title" style="color: #60a5fa;"><i class="fas fa-info-circle"></i> OBSERVAÇÃO</div>
+                        <p class="card-text">Qualquer farm com nota fiscal comprovada deve ser liberado.</p>
+                    </div>
+                ` 
+            },
+            'regras-patrulhamento-geral': {
+                capitulo: 'CAPÍTULO II',
+                titulo: 'Regras de Patrulhamento',
+                icone: 'fa-truck-moving',
+                texto: `
+                    <div class="top-cards-container">
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-info-circle"></i> VISÃO GERAL</div>
+                            <p class="card-text">Este capítulo reúne as diretrizes de atuação em patrulhamento: abordagem, perseguição, níveis de risco e conduta operacional.</p>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-list-ul"></i> COMO USAR</div>
+                            <p class="card-text">Abra <strong>Regras Gerais</strong> para as normas completas do patrulhamento. Use <strong>Abordagem Aérea</strong> para protocolos com aeronaves.</p>
+                        </div>
+                        <div class="warning-card">
+                            <div class="card-title yellow"><i class="fas fa-exclamation-triangle"></i> ATENÇÃO</div>
+                            <p class="card-text">Em qualquer ação: priorize segurança, verbalização, proporcionalidade e registro quando necessário.</p>
+                        </div>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header" style="margin-bottom: 10px;">
+                            <h3 class="rule-card-title" style="color: #56d364;"><i class="fas fa-link"></i> Atalhos de Navegação</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li><strong>Regras Gerais</strong> → tipos de abordagem, perseguição, código 3/5, níveis de risco, áreas específicas.</li>
+                            <li><strong>Abordagem Aérea</strong> → entrada em frequência, avisos progressivos, último aviso e autorização de abate.</li>
+                        </ul>
+                    </div>
+                `
+            },
+            'regras-gerais': { 
+                capitulo: 'CAPÍTULO II',
+                titulo: 'Regras Gerais', 
+                icone: 'fa-truck-moving', 
+                texto: `
+                    <div class="top-cards-container">
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-info-circle"></i> RESUMO</div>
+                            <p class="card-text">Padrões de ronda, prioridades de atendimento e postura operacional no patrulhamento.</p>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-list-ul"></i> PROCEDIMENTO</div>
+                            <p class="card-text">Ronda com atenção ao rádio → resposta a chamados → abordagem segura → registro quando necessário.</p>
+                        </div>
+                        <div class="warning-card">
+                            <div class="card-title yellow"><i class="fas fa-exclamation-triangle"></i> ATENÇÃO</div>
+                            <p class="card-text">Patrulha não é “caça ao ilegal”: aja por motivação plausível e com proporcionalidade.</p>
+                        </div>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">1</div>
+                            <h3 class="rule-card-title">Diretriz Geral de Abordagem</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>O motivo da abordagem deve ser informado no início da abordagem ou quando a situação estiver controlada.</li>
+                            <li>Em abordagens de nível 2 ou 3, caso o policial solicite <strong>3 vezes</strong> para o cidadão descer do veículo e o mesmo não obedeça <strong>ou tente fuga</strong>, a polícia fica liberada a abrir <strong>Código 3</strong> (tiro no pneu ou lataria), conforme as regras de perseguição.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">2</div>
+                            <h3 class="rule-card-title">Tipos de Abordagem</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li><strong>Abordagem de Rotina</strong>
+                                <ul>
+                                    <li>Consiste em abordar um cidadão de forma educada quando não há qualquer suspeita.</li>
+                                    <li>Solicite apenas o RG. A revista só deve ocorrer caso o cidadão apresente reação fora do normal.</li>
+                                    <li>Se houver irregularidade, conduza à DP. Se não houver, prossiga com o patrulhamento.</li>
+                                </ul>
+                            </li>
+                            <li><strong>Abordagem de Suspeita/Risco</strong>
+                                <ul>
+                                    <li>Consiste em abordar um cidadão que apresente atitudes suspeitas (ex.: correr ao ver a viatura, mudar totalmente o caminho após avistar a polícia).</li>
+                                    <li>Mantenha postura educada. O P1 faz a segurança mirando no suspeito.</li>
+                                    <li>Somente algeme caso encontre item ilegal ou risco real.</li>
+                                    <li>Se houver irregularidade, conduza à DP. Se não houver, prossiga com o patrulhamento.</li>
+                                </ul>
+                            </li>
+                            <li><strong>Abordagem de Denúncia</strong>
+                                <ul>
+                                    <li>Consiste em abordagem firme quando já existem informações sobre o cidadão denunciado.</li>
+                                    <li>Para segurança, algeme antes de averiguações e mantenha controle total da situação.</li>
+                                    <li>Proceda de forma rápida para evitar incursões de outros meliantes.</li>
+                                    <li>O não cumprimento destas regras poderá gerar punição ou prisão conforme a gravidade.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">3</div>
+                            <h3 class="rule-card-title">Revista em Porta-Malas</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Só é permitida a revista em porta-malas mediante a presença do <strong>Comando Geral e Sub Comando Geral</strong> da guarnição.</li>
+                            <li>Fica passível de punição caso outro policial realize revista em porta-malas sem a presença do Comando.</li>
+                            <li>A revista em porta-malas é permitida <strong>somente em abordagem de suspeita</strong>.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">4</div>
+                            <h3 class="rule-card-title">Comportamento em Perseguição</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Deve ser mantido alinhamento das viaturas, jamais realizando ultrapassagem da viatura que está à frente.</li>
+                            <li>Evite ao máximo colisão entre viaturas, pois pode gerar acidente grave.</li>
+                            <li>Caso ocorra acidente grave, pare imediatamente a perseguição e preste o devido socorro.</li>
+                            <li>Caso aconteça atropelamento, pare imediatamente a perseguição e preste o devido socorro.</li>
+                            <li>VTR que capotar durante perseguição deverá dar <strong>QTA</strong> e não poderá dar continuidade (somente a VTR que capotou dá QTA).</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">5</div>
+                            <h3 class="rule-card-title">Níveis de Risco Durante uma Perseguição</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li><strong>1 - Baixo risco:</strong> acompanhamento, sem risco à corporação e civis.</li>
+                            <li><strong>2 - Médio risco:</strong> houve ameaça às viaturas e manobras arriscadas do suspeito.</li>
+                            <li><strong>3 - Alto risco:</strong> alto dano a patrimonio público/privado ou atropelamento de civis.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">6</div>
+                            <h3 class="rule-card-title">Regras de Perseguição</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>A perseguição é <strong>100% limpa</strong> e <strong>sem PIT</strong>.</li>
+                            <li>Caso o indivíduo abra fogo contra a polícia, é permitido que o mesmo seja neutralizado.</li>
+                            <li>Se o fugitivo bater o veículo e/ou capotar, deve descer rendido.</li>
+                            <li>Bandidos só podem atirar contra a polícia após <strong>1 minuto</strong> de fuga.</li>
+                            <li>A polícia só deve abrir fogo caso haja risco real à vida (ex.: disparos contra a corporação e/ou atropelar cidadão).</li>
+                            <li>Disparo de arma de fogo no pneu só é liberado caso haja disparos contra a corporação e/ou atropelamento de civis <strong>e</strong> após <strong>5 minutos</strong> de fuga.</li>
+                            <li>Após <strong>5 minutos</strong> de fuga, a polícia tem permissão de abrir <strong>Código 3</strong> (tiro no pneu).</li>
+                            <li>Caso o bandido passe <strong>3 vezes</strong> por região movimentada (ex.: praça), a polícia tem permissão de abrir <strong>Código 3</strong> (tiro no pneu).</li>
+                            <li>É extremamente proibido dar fuga para favelas e/ou sedes de organizações (passível de advertência da fac/org).</li>
+                            <li>O não cumprimento destas regras poderá gerar punição ou prisão conforme a gravidade.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">7</div>
+                            <h3 class="rule-card-title">Power-Gaming em Fugas</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>É permitido <strong>power gaming leve</strong>, consistindo em pequenas utilizações da física do game (ex.: rampar com pouca diferença, subir montanhas com veículos baixos/esportivos, subir/descer escadas).</li>
+                            <li>Para ser aceitável, a fuga deve ser limpa: sem ratões, flaming, troca de tiros, ou ação forçada. Não abuse da liberação.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">8</div>
+                            <h3 class="rule-card-title">Regras de Patrulha</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>É proibido patrulhar sozinho, independente da patente (<strong>somente SPEED pode patrulhar sozinho, sem abordar</strong>).</li>
+                            <li>A leitura da Lei de Miranda deve ser realizada ao colocar o cidadão dentro do veículo ou antes, quando for algemado. Se esquecida ou lida apenas dentro da cela (a não ser que seja flagrante dentro da cela), é cabível revogação da prisão e advertência aos policiais.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">9</div>
+                            <h3 class="rule-card-title">Registradora e Caixa Eletrônico</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Em casos de registradora/caixa eletrônico, deve sempre ser priorizada a <strong>fuga limpa</strong>, sem ratão, inclusive em casos de power leve.</li>
+                            <li>Em caso de power pesado, deve ser subido à prefeitura.</li>
+                            <li>Para assaltar caixa eletrônico é permitido possuir arma de fogo, porém só pode aplicar contra a polícia após <strong>1 minuto</strong> de fuga (se aplicar antes, pode subir prefeitura por <strong>RDM</strong>).</li>
+                            <li>A polícia pode chegar e aplicar taser no momento em que o ladrão está roubando o caixa eletrônico e prender em flagrante. Caso o meliante cancele a animação, deve-se manter a fuga limpa.</li>
+                            <li>É proibido colocar o veículo dentro da loja que está sendo assaltada (caso ocorra, subir prefeitura como quebra de regra de ação).</li>
+                            <li>Se você encontrar algo ilegal na posse do abordado ou perceber risco real à vida de alguém, algeme e explique o motivo.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">10</div>
+                            <h3 class="rule-card-title">Áreas Restritas para Patrulhamento</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>É proibido o patrulhamento policial e a apreensão de farm na região de <strong>Sandy Shores</strong>, salvo exceções (ex.: abordagem em outro local e fuga para a área, exigindo contra-prova audiovisual).</li>
+                            <li>O policial que for pego patrulhando pelo perímetro será advertido e, dependendo da gravidade, preso/exonerado.</li>
+                            <li>É proibido realizar abordagens em <strong>BLIPs do ilegal</strong> (passível de advertência e, dependendo da gravidade, preso/exonerado).</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">11</div>
+                            <h3 class="rule-card-title">Jurisdição e Responsabilidade</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>O patrulhamento no Sul só pode ser realizado pelos seguintes departamentos:
+                                <ul>
+                                    <li>Polícia Civil, Polícia Federal, Polícia Militar e BOPE.</li>
+                                </ul>
+                            </li>
+                            <li>O patrulhamento no Norte só pode ser realizado pelos seguintes departamentos:
+                                <ul>
+                                    <li>Polícia Civil, Polícia Federal e Exército Brasileiro.</li>
+                                </ul>
+                            </li>
+                            <li>O patrulhamento na Ilha de Angra só pode ser realizado pelos seguintes departamentos:
+                                <ul>
+                                    <li>Polícia Federal e Exército Brasileiro.</li>
+                                </ul>
+                            </li>
+                            <li>O não cumprimento destas regras pode resultar em punição ou prisão conforme a gravidade da infração.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card" style="border-color: #3b82f6;">
+                        <div class="card-title" style="color: #60a5fa;"><i class="fas fa-info-circle"></i> OBSERVAÇÃO</div>
+                        <p class="card-text">O patrulhamento em Angra só pode ser realizado das 8h às 14h e das 20h às 02h, e mesmo assim é proibido marcar Blip's de FARM.</p>
+                    </div>
+                `
+            },
+            'abordagem-aerea': { 
+                capitulo: 'CAPÍTULO II',
+                titulo: 'Abordagem Aérea', 
+                icone: 'fa-helicopter', 
+                texto: `
+                    <div class="top-cards-container">
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-info-circle"></i> RESUMO</div>
+                            <p class="card-text">Procedimento padronizado para interceptação, comunicação e pouso obrigatório de aeronaves suspeitas.</p>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-list-ul"></i> PROCEDIMENTO</div>
+                            <p class="card-text">Contato por rádio → instrução de pouso → avisos progressivos → cooperação ou neutralização.</p>
+                        </div>
+                        <div class="warning-card">
+                            <div class="card-title yellow"><i class="fas fa-exclamation-triangle"></i> ATENÇÃO</div>
+                            <p class="card-text">Somente escale para abate após cumprir todos os avisos e tempos mínimos estabelecidos.</p>
+                        </div>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">1</div>
+                            <h3 class="rule-card-title">Início da Abordagem</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>A abordagem aérea deverá iniciar com a <strong>ordem legal</strong> para que os suspeitos entrem na frequência de rádio solicitada.</li>
+                            <li>As instruções de <strong>pouso/abordagem</strong> serão passadas pela rádio.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">2</div>
+                            <h3 class="rule-card-title">Ordem de Entrada na Frequência</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>O helicóptero policial deverá sobrevoar próximo à aeronave suspeita.</li>
+                            <li>O <strong>A1</strong> envia a mensagem no <code>/me</code> para solicitar a entrada na frequência de rádio:</li>
+                            <li><em>“Atenção, esta é uma abordagem aérea. Entre na frequência de rádio 'X' para que sejam passadas as instruções.”</em></li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">3</div>
+                            <h3 class="rule-card-title">Colaboração do Suspeito</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Se o indivíduo entrar na frequência e colaborar, é feita a abordagem em <strong>Código 1</strong>.</li>
+                            <li>Se o indivíduo não entrar na frequência, ou entrar e <strong>not acatar ordens, der fuga</strong> ou similares, inicia-se o <strong>protocolo de avisos</strong> para pouso imediato com possível abate.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">4</div>
+                            <h3 class="rule-card-title">Protocolo de Avisos</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li><strong>Primeiro Aviso:</strong>
+                                <ul>
+                                    <li><em>“/911 Atenção Helicóptero (coloração) próximo ao helicóptero policial!! Pouse imediatamente e saia com as mãos na cabeça ou será abatido!! Primeiro Aviso!!!”</em></li>
+                                </ul>
+                            </li>
+                            <li><strong>Segundo Aviso:</strong>
+                                <ul>
+                                    <li>Passados <strong>2 minutos</strong> sem sucesso após o primeiro aviso, envie:</li>
+                                    <li><em>“/911 Atenção Helicóptero (coloração) próximo ao helicóptero policial!! Pouse imediatamente e saia com as mãos na cabeça ou será abatido!!”</em></li>
+                                </ul>
+                            </li>
+                            <li><strong>Último Aviso:</strong>
+                                <ul>
+                                    <li>Após <strong>2 minutos</strong> do segundo aviso, deve-se enviar anúncio final:</li>
+                                    <li><em>“/anuncio Atenção Helicóptero (coloração) próximo ao helicóptero policial!! Pouse imediatamente e saia com as mãos na cabeça ou será abatido!! Pouse imediatamente e saia com as mãos na cabeça ou será abatido!! ÚLTIMO AVISO!!!”</em></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">5</div>
+                            <h3 class="rule-card-title">Abate Autorizado</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Após <strong>1 minuto</strong> sem sucesso do <strong>último aviso</strong>, os policiais deverão <strong>abater os fugitivos</strong>.</li>
+                        </ul>
+                    </div>
+                ` 
+            },
+            'blitz': { 
+                capitulo: 'CAPÍTULO II',
+                titulo: 'Blitz', 
+                icone: 'fa-car-crash', 
+                texto: `
+                    <div class="top-cards-container">
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-info-circle"></i> RESUMO</div>
+                            <p class="card-text">Como montar e executar blitz com eficiência e segurança.</p>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-list-ul"></i> PROCEDIMENTO</div>
+                            <p class="card-text">Escolha ponto → sinalize → organize cones/viaturas → abordagem em fila → revista/consulta/decisão.</p>
+                        </div>
+                        <div class="warning-card">
+                            <div class="card-title yellow"><i class="fas fa-exclamation-triangle"></i> ATENÇÃO</div>
+                            <p class="card-text">Evite travar via, abusar de revista sem critério e mantenha respeito ao cidadão durante toda a ação.</p>
+                        </div>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">1</div>
+                            <h3 class="rule-card-title">Anúncio da Blitz</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Todas as blitz devem ser devidamente anunciadas no 911 antes de serem iniciadas.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">2</div>
+                            <h3 class="rule-card-title">Efetivo Necessário</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>A blitz deverá contar com, no mínimo, 10 policiais e, no máximo, 15 policiais.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">3</div>
+                            <h3 class="rule-card-title">Procedimentos Durante a Blitz</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>A abordagem deve se limitar à verificação dos documentos do veículo e do cidadão.</li>
+                            <li>A revista apenas do porta-malas do veículo.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">4</div>
+                            <h3 class="rule-card-title">Revista Pessoal</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>O cidadão somente poderá ser revistado caso apresente uma das seguintes condições:
+                                <ul>
+                                    <li>Esteja fazendo uso de coldre.</li>
+                                    <li>Utilize máscara.</li>
+                                    <li>Conduza veículo com vidros escurecidos (insulfilm).</li>
+                                    <li>Esteja em veículo visivelmente danificado.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">5</div>
+                            <h3 class="rule-card-title">Supervisão Obrigatória</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>A blitz deverá ser realizada sob a supervisão de, pelo menos, 1 Comando ou Sub Comando.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">6</div>
+                            <h3 class="rule-card-title">Código 3 e Código 5</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Não deve ser aplicado código 3 caso fure o bloqueio, a prioridade deve ser sempre a fuga limpa.</li>
+                            <li>Caso o cidadão atropele um policial em alta velocidade, o Código 3 será liberado automaticamente.</li>
+                            <li>Caso o cidadão chame por QRR ou ameace policiais com arma em mão é liberado o código 5.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">7</div>
+                            <h3 class="rule-card-title">Fuga ao Avistar a Blitz</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Se um cidadão tentar fugir ao avistar a blitz, a polícia estará autorizada a seguir com a perseguição.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">8</div>
+                            <h3 class="rule-card-title">Participação de Recrutas e Soldados</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Recrutas e soldados somente poderão prestar apoio em blitz se estiverem em QSV.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">9</div>
+                            <h3 class="rule-card-title">Justificativa da Abordagem</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>A justificativa da abordagem deve communicate ao cidadão de forma clara e objetiva, quando a situação estiver controlada.</li>
+                            <li>Em casos de risco, a prioridade é a segurança e o controle da cena.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">10</div>
+                            <h3 class="rule-card-title">Curso de Abordagem</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Para participar da realização de blitz, é obrigatório que o policial tenha concluído o Curso de Abordagem.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">11</div>
+                            <h3 class="rule-card-title">Equipamentos Permitidos</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Durante a blitz, será permitido o uso de: 6 cones, 6 barreiras.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">12</div>
+                            <h3 class="rule-card-title">Blitz em Conjunto</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Caso a blitz seja realizada em conjunto com outras guarnições, cada guarnição poderá participar com, no máximo, 5 policiais.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">13</div>
+                            <h3 class="rule-card-title">Veículos Permitidos</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Durante a blitz, será permitido o uso máximo de:
+                                <ul>
+                                    <li>4 QSV's.</li>
+                                    <li>2 motos.</li>
+                                    <li>1 helicóptero.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                ` 
+            },
+            'investigacoes': { 
+                capitulo: 'CAPÍTULO III',
+                titulo: 'Investigações', 
+                icone: 'fa-search', 
+                texto: `
+                    <div class="top-cards-container">
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-info-circle"></i> RESUMO</div>
+                            <p class="card-text">Diretrizes para investigação: coleta de provas, diligências, campanas e relatórios.</p>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-list-ul"></i> PROCEDIMENTO</div>
+                            <p class="card-text">Defina alvo/hipótese → colete evidências → registre tudo → peça apoio quando necessário.</p>
+                        </div>
+                        <div class="warning-card">
+                            <div class="card-title yellow"><i class="fas fa-exclamation-triangle"></i> ATENÇÃO</div>
+                            <p class="card-text">Sem prova, sem acusação: não marque R.O sem base e não exponha terceiros sem fundamento.</p>
+                        </div>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">1</div>
+                            <h3 class="rule-card-title">Proibição de Camperar Farm</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>É expressamente proibido camperar farm, salvo se houver motivos legais devidamente justificados.</li>
+                            <li>Qualquer ação nesse sentido deve estar formalmente anexada a um inquérito policial e supervisionada pelo Delegado Geral.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">2</div>
+                            <h3 class="rule-card-title">Apresentação de Provas</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Todas the provas coletadas durante uma investigação devem ser apresentadas aos responsáveis pela polícia para garantir a continuidade dos trâmites legais.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">3</div>
+                            <h3 class="rule-card-title">Regras para Interrogatórios</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Interrogatórios podem ser conduzidos exclusivamente por policiais com o objetivo de coletar informações relevantes.</li>
+                            <li>Durante os interrogatórios, é estritamente proibido:
+                                <ul>
+                                    <li>Matar o interrogado.</li>
+                                    <li>Realizar "queima de arquivos" após a obtenção de informações.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">4</div>
+                            <h3 class="rule-card-title">Aceitação de Provas</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Apenas provas coletadas dentro do Roleplay (RP) serão aceitas e consideradas válidas para os trâmites policiais.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">5</div>
+                            <h3 class="rule-card-title">Sigilo da Identidade Policial</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>A identidade dos policiais da Polícia Judiciária é estritamente sigilosa e deve ser preservada em todas as circunstâncias.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">6</div>
+                            <h3 class="rule-card-title">Proibição de Corrupção e Vazamento de Informações</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Qualquer tipo de corrupção dentro da polícia é terminantemente proibida.</li>
+                            <li>O vazamento de informações privadas ou sigilosas da polícia também é considerado infração grave.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">7</div>
+                            <h3 class="rule-card-title">Permissão para Investigar Apologia ao Crime</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>A polícia tem autorização para investigar indivíduos que pratiquem apologia ao crime, tais como:
+                                <ul>
+                                    <li>Publicação de fotos com armas.</li>
+                                    <li>Divulgação de imagens de pessoas mortas.</li>
+                                    <li>Qualquer postagem que incentive ou faça referência a práticas criminosas.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">8</div>
+                            <h3 class="rule-card-title">Permissão para Investigar Anúncios de Produtos Ilícitos</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>A polícia pode investigar pessoas que anunciem produtos ilegais em plataformas, incluindo:
+                                <ul>
+                                    <li>Instagram.</li>
+                                    <li>OLX.</li>
+                                    <li>Twitter.</li>
+                                    <li>Tinder.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">9</div>
+                            <h3 class="rule-card-title">Investigação em Safe-zone</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Caso um suspeito leve o RP para uma área considerada safezone, a investigação ou apreensão poderá ser continuada e concluída normalmente.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">10</div>
+                            <h3 class="rule-card-title">Investigações Conjuntas</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Diferentes Departamentos de Polícia podem colaborar e realizar investigações conjuntas sempre que necessário.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">11</div>
+                            <h3 class="rule-card-title">Mandados</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Caso haja um mandado de prisão, ou um cidadão cometa um crime em flagrante, está autorizado invadir qualquer lugar, inclusive safe-zone (exceto facções, tais organizações precisarão antes da autorização do Resp Ilegal).</li>
+                        </ul>
+                    </div>
+                ` 
+            },
+            'ro': { 
+                capitulo: 'CAPÍTULO III',
+                titulo: 'R.O. (Registro de Ocorrência)', 
+                icone: 'fa-file-invoice', 
+                texto: `
+                    <div class="top-cards-container">
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-info-circle"></i> RESUMO</div>
+                            <p class="card-text">Regras do R.O.: padrão de registro, responsabilidade e exigência de provas.</p>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-list-ul"></i> PROCEDIMENTO</div>
+                            <p class="card-text">Registre com clareza (quem/onde/quando/como) + anexos/provas + assinatura do responsável.</p>
+                        </div>
+                        <div class="warning-card">
+                            <div class="card-title yellow"><i class="fas fa-exclamation-triangle"></i> ATENÇÃO</div>
+                            <p class="card-text">R.O sem provas é infração grave; sempre valide dados antes de finalizar.</p>
+                        </div>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">1</div>
+                            <h3 class="rule-card-title">Autorização e Início</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>O R.O poderá ser iniciado <strong>imediatamente</strong>, desde que haja motivo plausível e <strong>provas claras</strong>.</li>
+                            <li>É obrigatório que <strong>um Comando seja responsável pela ação</strong>.</li>
+                            <li>O Comando deverá analisar o clipe do membro que iniciou o R.O e validar a legitimidade.</li>
+                            <li>O R.O só poderá ser realizado em até <strong>1 hora</strong> após o ocorrido, desde que ainda existam as devidas provas.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">2</div>
+                            <h3 class="rule-card-title">Envio de Provas</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>O envio das provas deve ser realizado no canal correto em até <strong>2 HORAS</strong> após o término da ação.</li>
+                            <li>Provas inválidas, insuficientes ou indevidas resultarão em punições administrativas.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">3</div>
+                            <h3 class="rule-card-title">Punições por Irregularidade</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Responsável → <strong>1000 meses de prisão</strong>.</li>
+                            <li>Organização → <strong>ADV Org 1</strong>.</li>
+                            <li>R.O/Incursão → <strong>Blacklist de 5 dias</strong>.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">4</div>
+                            <h3 class="rule-card-title">Regras Operacionais</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Cada guarnição poderá realizar no máximo 5 R.O por semana.</li>
+                            <li>Só poderá ser feito 1 R.O por localidade (favela/ORG) a cada 24 horas.</li>
+                            <li>É proibido retornar à ação após morrer.</li>
+                            <li>O objetivo do R.O é verificar atividade ilegal, não eliminar indiscriminadamente.</li>
+                            <li>É necessário anunciar o R.O no <strong>911</strong> e no <strong>avisopm</strong> com <strong>5 minutos</strong> de antecedência.</li>
+                            <li>O reforço pode ser de até <strong>10 policiais</strong> de outra guarnição, caso o R.O se torne incursão.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">5</div>
+                            <h3 class="rule-card-title">Preparação e Efetivo</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>A guarnição deve retornar à <strong>DP</strong> para alinhar a equipe antes de iniciar o R.O.</li>
+                            <li>O R.O só poderá ser iniciado com, no mínimo, <strong>10 policiais da mesma guarnição</strong>.</li>
+                        </ul>
+                    </div>
+                ` 
+            },
+            'incursoes': { 
+                capitulo: 'CAPÍTULO III',
+                titulo: 'Incursões', 
+                icone: 'fa-bullseye', 
+                texto: `
+                    <div class="top-cards-container">
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-info-circle"></i> RESUMO</div>
+                            <p class="card-text">Incursões e operações: planejamento, entrada, progressão e finalização com comando e disciplina.</p>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-list-ul"></i> PROCEDIMENTO</div>
+                            <p class="card-text">Briefing → divisão de funções → entrada coordenada → comunicação curta → extração/registro.</p>
+                        </div>
+                        <div class="warning-card">
+                            <div class="card-title yellow"><i class="fas fa-exclamation-triangle"></i> ATENÇÃO</div>
+                            <p class="card-text">Sem "herói solo": atuação isolada e sem coordenação aumenta risco.</p>
+                        </div>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">1</div>
+                            <h3 class="rule-card-title">Autorização</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Incursões seguem a <strong>mesma regra do R.O</strong>, podendo ser iniciadas imediatamente com motivo plausível e provas claras.</li>
+                            <li>É obrigatório um Comando responsável pela validação.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">2</div>
+                            <h3 class="rule-card-title">Envio de Provas</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>As provas devem ser enviadas em até <strong>2 HORAS</strong> após o término da incursão.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">3</div>
+                            <h3 class="rule-card-title">Penalidades</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Responsável → 1000 meses de prisão.</li>
+                            <li>ADV Org 1.</li>
+                            <li>Blacklist de 5 dias da ação.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">4</div>
+                            <h3 class="rule-card-title">Condutas</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>É proibido retornar após morrer.</li>
+                            <li>A polícia deverá avançar (rush) durante a operação.</li>
+                            <li>Portões não podem permanecer trancados.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">5</div>
+                            <h3 class="rule-card-title">Veículos e Apoio Aéreo</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li><strong>Incursão em QG (Sede/ORG):</strong>
+                                <ul>
+                                    <li>É proibido usar blindados.</li>
+                                    <li>É permitido até <strong>1 helicóptero</strong>.</li>
+                                </ul>
+                            </li>
+                            <li><strong>Incursão em Favela:</strong>
+                                <ul>
+                                    <li>É permitido usar <strong>1 (um) blindado</strong> por incursão.</li>
+                                    <li>É permitido até <strong>1 helicóptero</strong>.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                ` 
+            },
+            'pacificacoes': { 
+                capitulo: 'CAPÍTULO III',
+                titulo: 'Pacificações', 
+                icone: 'fa-handshake', 
+                texto: `
+                    <div class="top-cards-container">
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-info-circle"></i> RESUMO</div>
+                            <p class="card-text">Pacificação: negociação, controle de conflito e estabilização de áreas de risco.</p>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-list-ul"></i> PROCEDIMENTO</div>
+                            <p class="card-text">Contato inicial → negociação → alinhamento de termos → execução → relatório/registro.</p>
+                        </div>
+                        <div class="warning-card">
+                            <div class="card-title yellow"><i class="fas fa-exclamation-triangle"></i> ATENÇÃO</div>
+                            <p class="card-text">Evite escalada desnecessária: priorize comunicação e proporcionalidade antes do uso de força.</p>
+                        </div>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">1</div>
+                            <h3 class="rule-card-title">Mandado de Pacificação</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>A pacificação exige um trabalho investigativo prévio realizado pela polícia.</li>
+                            <li>O mandado de pacificação deve ser aprovado pelo Comando, Desembargador e Ministros da defesa e Rota legal.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">2</div>
+                            <h3 class="rule-card-title">Provas Necessárias para Aprovação</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Para que o mandado seja autorizado, devem ser apresentadas provas obrigatórias e complementares, incluindo:
+                                <ul>
+                                    <li>Fotos da localização da banca/ORG, fotos da base e da FAC/ORG.</li>
+                                    <li>Gravação dos investigadores afirmando que realizam assalto, sequestro ou ações.</li>
+                                    <li>Gravação dos investigadores que realizam farm e nota da FARM dos investigados (não obrigatória).</li>
+                                    <li>Nome dos líderes, se possível, o passaporte e fotos de todos.</li>
+                                    <li>Tiros dados dentro da localidade.</li>
+                                    <li>Mapeamento 360º da área comum a ser pacificada.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">3</div>
+                            <h3 class="rule-card-title">Aviso da Pacificação</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>O aviso de pacificação deve ser feito com no mínimo 48 horas de antecedência.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">4</div>
+                            <h3 class="rule-card-title">Contingente da Pacificação</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Máximo: 30 defensores (bandidos) e 40 policiais.</li>
+                            <li>Mínimo: 15 defensores (bandidos) e 25 policiais.</li>
+                            <li>A quantidade de participantes pode ser ajustada pela equipe da staff, conforme o QG/Favela envolvido.</li>
+                            <li>Caso o contingente mínimo não seja atingido pelo grupo ilegal, a polícia será declarada vencedora por W.O.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">5</div>
+                            <h3 class="rule-card-title">Informação do Contingente</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Os bandidos devem informar 6 horas antes ao Responsável ilegal o número de participantes.</li>
+                            <li>O Responsável ilegal deve comunicar à polícia até 2 horas antes da pacificação.</li>
+                            <li>Se não houver comunicação, a polícia poderá ir com o contingente máximo permitido.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">6</div>
+                            <h3 class="rule-card-title">Tolerância de Atraso</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>O tempo máximo de atraso permitido para ambos os lados é de 20 minutos.</li>
+                            <li>Caso ultrapasse esse tempo, o lado infrator perderá por W.O.</li>
+                            <li>Após a saída do comboio policial da DP, não será mais considerada atraso.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">7</div>
+                            <h3 class="rule-card-title">Restrições e Proibições</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li><strong>Proibido:</strong>
+                                <ul>
+                                    <li>Retirar itens ou dinheiro dos baús, painel da facção (painel/craft) após o aviso de pacificação.</li>
+                                    <li>Utilizar binds de animação ou comandos /me em caixa alta e cores destacadas.</li>
+                                    <li>Bandido fazer o login dentro da área vermelha da FAC/ORG durante a pacificação.</li>
+                                    <li>Deixar portas e portões trancadas.</li>
+                                    <li>Qualquer pessoa que cometer qualquer uma dessas infrações, tomará KILL.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">8</div>
+                            <h3 class="rule-card-title">Uso de Helicóptero</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Permitido 1 helicóptero para a FAC/ORG (os jogadores dentro contam como defensores).</li>
+                            <li>O helicóptero pode sobrevoar até 1 quarteirão do local.</li>
+                            <li>É proibido pousar fora da área vermelha demarcada.</li>
+                            <li>Permitido helicóptero para a polícia (os policiais dentro contam como pacificadores).</li>
+                            <li>É proibido reparar ou substituir helicópteros após o FF.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">9</div>
+                            <h3 class="rule-card-title">Regras de Combate</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Após 30 minutos de ação, o maior contingente deverá realizar o rush.</li>
+                            <li>O rush será revisado entre bandidos e polícia a cada 5 minutos.</li>
+                            <li>Se o maior contingente não realizar rush dentro de 10 minutos, a vitória será concedida ao adversário.</li>
+                            <li>Proibido retornar à pacificação após morrer.</li>
+                            <li>Quem tentar "reviver" a pacificação será punido pela staff.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">10</div>
+                            <h3 class="rule-card-title">Pausas e Bugs</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>A pacificação pode ser pausada apenas se houver consenso entre os Responsáveis Polícia e Ilegal.</li>
+                            <li>Exemplos de situações para pausa: ataque de hackers, bugs graves, entre outros.</li>
+                            <li>Se um jogador trocar de posição durante a pausa, a vitória será concedida ao lado oposto.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">11</div>
+                            <h3 class="rule-card-title">Crash Durante a Pacificação</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Jogadores que sofrem crash não poderão retornar à ação.</li>
+                            <li>Devem subir para a call de suporte e aguardar a remoção pelos responsáveis.</li>
+                            <li>O crash pode resultar em advertência.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">12</div>
+                            <h3 class="rule-card-title">Reclamações e Abuso de Bug</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>O prazo para reportar problemas ou abuso de bug é de até 2 horas após o término da pacificação.</li>
+                            <li>Se for comprovado uso de bug pelos vencedores, a final poderá ser anulada e a vitória concedida ao adversário.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">13</div>
+                            <h3 class="rule-card-title">Recompensas e Penalidades</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li><strong>Se a polícia vencer:</strong>
+                                <ul>
+                                    <li>Todos os itens e dinheiro armazenados nos baús da facção e no painel da facção serão apreendidos.</li>
+                                    <li>Cada policial receberá R$1.200.000 em dinheiro limpo.</li>
+                                    <li>Liberado o farm (dentro das regras do farm).</li>
+                                    <li>O controle da facção por 24 horas, sendo proibida a venda e a utilização de armas.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                ` 
+            },
+            'acoes': {
+                capitulo: 'CAPÍTULO III',
+                titulo: 'Ações Policiais',
+                icone: 'fa-crosshairs',
+                texto: `
+                    <div class="top-cards-container">
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-info-circle"></i> RESUMO</div>
+                            <p class="card-text">Tabela de premiações e regras específicas para cada tipo de ação (assaltos e roubos).</p>
+                        </div>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">1</div>
+                            <h3 class="rule-card-title">Tabela da Polícia - Recompensas (Limpo)</h3>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-dark table-borderless align-middle" style="background: transparent;">
+                                <thead>
+                                    <tr style="border-bottom: 1px solid #1f2937; color: #9ca3af; font-size: 0.85rem; text-transform: uppercase;">
+                                        <th>Ação</th>
+                                        <th>Recompensa (Limpo)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="border-bottom: 1px solid #1f2937;"><td>Açougue</td><td>R$ 1.800.000</td></tr>
+                                    <tr style="border-bottom: 1px solid #1f2937;"><td>Banco Paleto</td><td>R$ 4.800.000</td></tr>
+                                    <tr style="border-bottom: 1px solid #1f2937;"><td>Banco Central</td><td>R$ 4.000.000</td></tr>
+                                    <tr style="border-bottom: 1px solid #1f2937;"><td>Galinheiro</td><td>R$ 3.000.000</td></tr>
+                                    <tr style="border-bottom: 1px solid #1f2937;"><td>Nióbio</td><td>R$ 3.000.000</td></tr>
+                                    <tr style="border-bottom: 1px solid #1f2937;"><td>Bilheteria</td><td>R$ 1.600.000</td></tr>
+                                    <tr><td>Joalheria</td><td>(Consultar)</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">2</div>
+                            <h3 class="rule-card-title">Açougue</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li><strong>Armamento:</strong> Pistola, Smg e Fuzis.</li>
+                            <li><strong>Efetivo:</strong> Mínimo 10 / Máximo 15 (Bandidos) | Mínimo 13 / Máximo 18 (Polícia).</li>
+                            <li>Obrigatória a negociação inicial entre policiais e criminosos.</li>
+                            <li>Obrigatório o rush policial sempre.</li>
+                            <li>Proibido criminosos do lado de fora do estabelecimento.</li>
+                            <li>Proibido a utilização de reféns nesse tipo de assalto.</li>
+                            <li>Proibido entrar com o veículo dentro do estabelecimento.</li>
+                            <li>Após o término da negociação, tanto os criminosos quanto os policiais deverão aguardar a liberação do FF.</li>
+                            <li>Todos os assaltantes devem conter pelo menos 1 arma de fogo.</li>
+                            <li>Os policiais têm até 40 minutos a partir do fim da negociação para entrar no estabelecimento.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">3</div>
+                            <h3 class="rule-card-title">Banco Paleto</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li><strong>Armamento:</strong> Pistola, Smg e Fuzis.</li>
+                            <li><strong>Efetivo:</strong> Mínimo 8 / Máximo 14 (Bandidos) | Mínimo 11 / Máximo 17 (Polícia).</li>
+                            <li>É permitido até 2 criminosos do lado de fora do banco (negociável).</li>
+                            <li>Apenas teti-chão. (nem com negociação).</li>
+                            <li>Antes de iniciar o FF, a polícia deve estar obrigatoriamente na frente do hotel.</li>
+                            <li>Proibido entrar com o veículo dentro do estabelecimento.</li>
+                            <li>Os policiais têm até 40 minutos a partir do fim da negociação para entrar no estabelecimento.</li>
+                            <li>Após o término da negociação, tanto os criminosos quanto os policiais deverão aguardar o FF antes de iniciar o tiroteio.</li>
+                            <li>Todos os assaltantes devem conter pelo menos 1 arma de fogo.</li>
+                            <li>Tolerância de 15 minutos em atrasos, caso não comparecer "GG" para o time que estiver completo.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">4</div>
+                            <h3 class="rule-card-title">Banco Central</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li><strong>Armamento:</strong> Pistola, Smg e Fuzis.</li>
+                            <li><strong>Efetivo:</strong> Mínimo 10 / Máximo 15 (Bandidos) | Mínimo 13 / Máximo 18 (Polícia).</li>
+                            <li>Apenas 2 de cada parte negociando.</li>
+                            <li>Permitido negociar.</li>
+                            <li>Aguardar o FF para liberar fogo.</li>
+                            <li>É necessário ter agendado a ação com antecedência no Discord de Ações da Lotus.</li>
+                            <li>Negociação extremamente necessária das duas partes.</li>
+                            <li>Tolerância de 15 minutos em atrasos, caso não comparecer "WO" para o time que estiver completo.</li>
+                            <li>Os policiais têm até 40 minutos a partir do fim da negociação para entrar no estabelecimento.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">5</div>
+                            <h3 class="rule-card-title">Galinheiro</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li><strong>Armamento:</strong> Negociável.</li>
+                            <li><strong>Efetivo:</strong> Mínimo 8 / Máximo 15 (Bandidos) | Mínimo 11 / Máximo 18 (Polícia).</li>
+                            <li>Obrigatória a negociação inicial entre policiais e criminosos.</li>
+                            <li>P2 negociável.</li>
+                            <li>Proibido criminosos do lado de fora do estabelecimento.</li>
+                            <li>Proibido a utilização de reféns nesse tipo de assalto.</li>
+                            <li>Proibido entrar com o veículo dentro do estabelecimento.</li>
+                            <li>Após o término da negociação, tanto os criminosos quanto os policiais deverão aguardar a liberação do FF para iniciar o tiroteio.</li>
+                            <li>Todos os assaltantes devem conter pelo menos 1 arma de fogo (Pistolas).</li>
+                            <li>Os policiais têm até 40 minutos a partir do fim da negociação para entrar no estabelecimento.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">6</div>
+                            <h3 class="rule-card-title">Joalheria</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li><strong>Armamento:</strong> Smg e Fuzil.</li>
+                            <li><strong>Efetivo:</strong> Mínimo 6 / Máximo 10 (Bandidos) | Mínimo 9 / Máximo 13 (Polícia).</li>
+                            <li>É necessário ter agendado a ação com antecedência na sala de registros no Discord de Ações.</li>
+                            <li>Proibido a utilização de reféns nesse tipo de assalto.</li>
+                            <li>Negociação necessária.</li>
+                            <li>Rush obrigatoriamente da polícia, polícia tem direito a um helicóptero.</li>
+                            <li>Tolerância de 15 minutos em atrasos, caso não comparecer "GG" para o time que estiver completo.</li>
+                            <li>Armamento: Pistolas e Fuzis.</li>
+                            <li>Área limite de 2 quarteirões.</li>
+                            <li>Negociável jogadores do ilegal do lado de fora (Máx 2).</li>
+                            <li>Os policiais têm até 40 minutos a partir do fim da negociação para entrar no estabelecimento.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">7</div>
+                            <h3 class="rule-card-title">Nióbio</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li><strong>Armamento:</strong> Smg e Fuzil.</li>
+                            <li><strong>Efetivo:</strong> Mínimo 10 / Máximo 15 (Bandidos) | Mínimo 13 / Máximo 18 (Polícia).</li>
+                            <li>É necessário ter agendado a ação com antecedência na sala de registros no Discord de Ações.</li>
+                            <li>Permitida a utilização de reféns.</li>
+                            <li>P2 negociável.</li>
+                            <li>O perímetro do nióbio termina no primeiro bebedouro.</li>
+                            <li>Todos os integrantes devem possuir arma de fogo.</li>
+                            <li>Os policiais têm até 40 minutos a partir do fim da negociação para entrar no estabelecimento.</li>
+                            <li>Rush negociável e pular caixa negociável.</li>
+                            <li>Tolerância de 15 minutos em atrasos, caso não comparecer "GG" para o time que estiver completo.</li>
+                        </ul>
+                    </div>
+                `
+            },
+            'recrutamentos': { 
+                capitulo: 'CAPÍTULO IV',
+                titulo: 'Recrutamentos', 
+                icone: 'fa-users', 
+                texto: `
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">1</div>
+                            <h3 class="rule-card-title">Processo de Recrutamento</h3>
+                        </div>
+                        <p class="card-text mb-3" style="padding-left: 10px;">Integre uma das guarnições de elite do Brasil.</p>
+                        <div class="warning-box-rule">
+                            <strong>Status: Aberto</strong> • 5 Guarnições • Seg–Sex
+                        </div>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">2</div>
+                            <h3 class="rule-card-title">Escala de Recrutamento Semanal</h3>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-dark table-borderless align-middle" style="background: transparent;">
+                                <thead>
+                                    <tr style="border-bottom: 1px solid #1f2937; color: #9ca3af; font-size: 0.85rem; text-transform: uppercase;">
+                                        <th>Força</th>
+                                        <th>Dias de Recrutamento</th>
+                                        <th>1º Horário</th>
+                                        <th>2º Horário</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="border-bottom: 1px solid #1f2937;">
+                                        <td><strong>PCESP</strong><br><small style="color: #9ca3af;">Polícia Civil do Estado de São Paulo</small></td>
+                                        <td>Seg • Qua</td>
+                                        <td>15:00</td>
+                                        <td>20:00</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #1f2937;">
+                                        <td><strong>BOPE</strong><br><small style="color: #9ca3af;">Batalhão de Operações Policiais Especiais</small></td>
+                                        <td>Seg • Qui</td>
+                                        <td>15:00</td>
+                                        <td>20:00</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #1f2937;">
+                                        <td><strong>PMERJ</strong><br><small style="color: #9ca3af;">Polícia Militar do Estado de Rio de Janeiro</small></td>
+                                        <td>Ter • Qui</td>
+                                        <td>15:00</td>
+                                        <td>20:00</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #1f2937;">
+                                        <td><strong>EB</strong><br><small style="color: #9ca3af;">Exército Brasileiro</small></td>
+                                        <td>Ter • Sex</td>
+                                        <td>15:00</td>
+                                        <td>20:00</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>PF</strong><br><small style="color: #9ca3af;">Polícia Federal</small></td>
+                                        <td>Qua • Sex</td>
+                                        <td>15:00</td>
+                                        <td>20:00</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">3</div>
+                            <h3 class="rule-card-title">Regras Obrigatórias</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Cada força deve realizar <strong>2 recrutamentos por semana</strong>.</li>
+                            <li>Horários disponíveis: às <strong>15h</strong> e às <strong>20h</strong>.</li>
+                            <li>Cada recrutamento deve ter duração mínima de <strong>1 hora</strong>.</li>
+                            <li><strong>É obrigatória a presença de um responsável (Ministro)</strong> ou o recrutamento deve ser gravado (clipado). O recrutamento <strong>não pode</strong> ser feito por um oficial recém-contratado ou de cargo baixo.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">4</div>
+                            <h3 class="rule-card-title">Etapas do Processo</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li><strong>Entrevista:</strong> Avaliação comportamental e postura RP.</li>
+                            <li><strong>Teste Prático:</strong> Abordagem, rádio, disciplina e trabalho em equipe.</li>
+                            <li><strong>Aprovação:</strong> Entrega de uniforme e integração à guarnição.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">5</div>
+                            <h3 class="rule-card-title">Roupa de Conscritos</h3>
+                        </div>
+                        <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px;">
+                            <div style="flex: 1; background: #0d1117; border: 1px solid #1f2937; border-radius: 8px; padding: 15px; min-width: 250px;">
+                                <strong>Fardamento Feminino</strong>
+                                <p style="font-family: monospace; font-size: 0.85rem; color: #9ca3af; margin-top: 8px; margin-bottom: 0; word-break: break-all;">jaqueta 161 0; calca 218 0; blusa 15 0; sapatos 25 0; oculos -1 -1; acessorio 17 0; chapeu -1 -1; colete 0 0; mascara 0 0; maos 4 0;</p>
+                            </div>
+                            <div style="flex: 1; background: #0d1117; border: 1px solid #1f2937; border-radius: 8px; padding: 15px; min-width: 250px;">
+                                <strong>Fardamento Masculino</strong>
+                                <p style="font-family: monospace; font-size: 0.85rem; color: #9ca3af; margin-top: 8px; margin-bottom: 0; word-break: break-all;">jaqueta 273 0; calca 207 0; blusa 15 0; sapatos 25 0; oculos -1 -1; acessorio 34 0; chapeu -1 -1; colete 0 0; mascara 0 0; maos 198 0;</p>
+                            </div>
+                        </div>
+                        <div class="warning-box-rule">
+                            <strong><i class="fas fa-exclamation-triangle"></i> Atenção:</strong> Todos os conscritos devem estar sem qualquer tipo de maquiagem, tatuagem ou cabelo pintado (somente cores naturais). Os <strong>homens</strong> devem estar com o cabelo raspado e as <strong>mulheres</strong> de cabelo preso.
+                        </div>
+                    </div>
+                `
+            },
+            'transferencia': { 
+                capitulo: 'CAPÍTULO IV',
+                titulo: 'Transferência', 
+                icone: 'fa-exchange-alt', 
+                texto: `
+                    <div class="top-cards-container">
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-info-circle"></i> RESUMO</div>
+                            <p class="card-text">Regras para solicitar e efetivar transferência entre guarnições (prazos, rebaixos e aprovações).</p>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-list-ul"></i> PROCEDIMENTO</div>
+                            <p class="card-text">Verifique prazo &rarr; solicite ao comando &rarr; aguarde aprovação dupla &rarr; registre no Discord oficial.</p>
+                        </div>
+                        <div class="warning-card">
+                            <div class="card-title yellow"><i class="fas fa-exclamation-triangle"></i> ATENÇÃO</div>
+                            <p class="card-text">Atuação no ilegal afeta retorno/transferência; reincidência pode levar à blacklist.</p>
+                        </div>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">1</div>
+                            <h3 class="rule-card-title">Prazos para Solicitação</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>O oficial somente poderá solicitar transferência para outra guarnição após 15 dias de seu recrutamento.</li>
+                            <li>Caso o oficial seja transferido, ele só poderá solicitar nova transferência após 15 dias da última movimentação.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">2</div>
+                            <h3 class="rule-card-title">Transferência após Atuação no Ilegal</h3>
+                        </div>
+                        <p class="card-text mb-3" style="padding-left: 10px;">Se o policial sair da corporação para atuar no ilegal, ele deverá seguir as seguintes regras para retorno:</p>
+                        <ul class="rule-list-card">
+                            <li><strong>Prazo de retorno:</strong> 3 dias para retornar à sua guarnição.</li>
+                            <li><strong>Reintegração de patente:</strong> 24 horas para ser reintegrado a uma patente equivalente a 3ºAGT ou 3ºSGT.</li>
+                            <li><strong>Nova solicitação de transferência:</strong> Apenas após 15 dias de sua volta.</li>
+                            <li><strong>Saída definitiva:</strong> Caso o policial saia da corporação pela terceira vez, ele não poderá retornar e será automaticamente incluído na Blacklist (BL) por 30 dias.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">3</div>
+                            <h3 class="rule-card-title">Rebaixamento Obrigatório</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Ao ser transferido, o oficial será obrigatoriamente rebaixado o equivalente a uma patente.</li>
+                            <li>A permanência em forças especiais após a transferência ficará a critério do Comando.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">4</div>
+                            <h3 class="rule-card-title">Aprovação e Registro</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Toda solicitação de transferência deve ser aprovada por pelo menos um membro do Comando (ou equivalente) de cada uma das guarnições envolvidas.</li>
+                            <li>Todas as transferências devem ser registradas obrigatoriamente no canal designado no Discord da Polícia Geral BRASIL RP.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">5</div>
+                            <h3 class="rule-card-title">Advertências e Restrições</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Caso o policial possua uma advertência ativa, ele deverá aguardar seu término para poder solicitar transferência.</li>
+                            <li>Advertências não poderão ser revogadas apenas para possibilitar a transferência.</li>
+                        </ul>
+                    </div>
+                ` 
+            },
+            'troca-nome': { 
+                capitulo: 'CAPÍTULO IV',
+                titulo: 'Troca de Nome', 
+                icone: 'fa-file-contract', 
+                texto: `
+                    <div class="top-cards-container">
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-info-circle"></i> RESUMO</div>
+                            <p class="card-text">Troca de nome em <strong>2 etapas</strong> (Advogado &rarr; Polícia Federal). O valor fixo é de <strong>R$ 8.000.000</strong>.</p>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-list-ul"></i> REGRAS</div>
+                            <p class="card-text">Há regras de prazo e limitação do que pode ser alterado.</p>
+                        </div>
+                        <div class="warning-card">
+                            <div class="card-title yellow"><i class="fas fa-exclamation-triangle"></i> ATENÇÃO</div>
+                            <p class="card-text">Pedidos fora do padrão podem ser recusados.</p>
+                        </div>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">1</div>
+                            <h3 class="rule-card-title">Regras da Troca de Nome</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>A troca de nome só pode ser realizada de <strong>15 em 15 dias</strong>.</li>
+                            <li>Só é permitido trocar o <strong>sobrenome</strong>.</li>
+                            <li>O <strong>primeiro nome</strong> só será trocado se for nome "zaralho".</li>
+                            <li><strong>Custo da Troca de Nome:</strong> R$ 8.000.000.</li>
+                        </ul>
+                    </div>
+                ` 
+            },
+            'porte-arma': { 
+                capitulo: 'CAPÍTULO IV',
+                titulo: 'Porte de Arma', 
+                icone: 'fa-file-contract', 
+                texto: `
+                    <div class="top-cards-container">
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-info-circle"></i> RESUMO</div>
+                            <p class="card-text">Regras e valores para a emissão do Porte de Arma.</p>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-list-ul"></i> BENEFÍCIO</div>
+                            <p class="card-text">O porte aprovado inclui kit com arma e munições.</p>
+                        </div>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">1</div>
+                            <h3 class="rule-card-title">Custos e Benefícios</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li><strong>Valor do Porte de Arma:</strong> R$ 1.000.000.</li>
+                            <li><strong>Prova Teórica (por tentativa):</strong> R$ 500.000.</li>
+                            <li><strong>Kit Incluso:</strong> Ao ser aprovado, o cidadão recebe <strong>1 Pistola e 50 munições</strong>.</li>
+                        </ul>
+                    </div>
+                ` 
+            },
+            'limpeza-ficha': { 
+                capitulo: 'CAPÍTULO IV',
+                titulo: 'Limpeza de Ficha', 
+                icone: 'fa-file-contract', 
+                texto: `
+                    <div class="top-cards-container">
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-info-circle"></i> RESUMO</div>
+                            <p class="card-text">Procedimento e custos para limpar o histórico criminal do cidadão.</p>
+                        </div>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">1</div>
+                            <h3 class="rule-card-title">Valores para Limpeza</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li><strong>Taxa Base:</strong> R$ 1.000.000.</li>
+                            <li><strong>Acréscimo por Pena:</strong> R$ 1.000 por cada mês de crime constante na ficha criminal.</li>
+                            <li><strong>Custo Total:</strong> R$ 1.000.000 + (Meses de Crime x R$ 1.000).</li>
+                        </ul>
+                    </div>
+                ` 
+            },
+            'blacklist': { 
+                capitulo: 'CAPÍTULO IV',
+                titulo: 'Blacklist', 
+                icone: 'fa-list', 
+                texto: `
+                    <div class="top-cards-container">
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-info-circle"></i> RESUMO</div>
+                            <p class="card-text">Blacklist (BL): punições, durações, reincidência e consequências para retorno à corporação.</p>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-list-ul"></i> PROCEDIMENTO</div>
+                            <p class="card-text">Aplique conforme regra &rarr; registre responsável/motivo &rarr; comunique corretamente &rarr; controle de reincidência.</p>
+                        </div>
+                        <div class="warning-card">
+                            <div class="card-title yellow"><i class="fas fa-exclamation-triangle"></i> ATENÇÃO</div>
+                            <p class="card-text">3 BL podem virar permanente; erros de registro ou abuso de BL geram punição ao responsável.</p>
+                        </div>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">1</div>
+                            <h3 class="rule-card-title">Inclusão na Blacklist</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>A Blacklist da polícia é um registro de membros que foram permanentemente excluídos da corporação por descumprimento grave das regras.</li>
+                            <li>A inclusão de um jogador na Blacklist só poderá ser solicitada exclusivamente pelo Alto Escalão.</li>
+                            <li>A entrada na Blacklist é uma penalidade severa e definitiva, aplicada apenas em casos devidamente justificados.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">2</div>
+                            <h3 class="rule-card-title">Remoção da Blacklist</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Jogadores adicionados à Blacklist somente poderão ser removidos mediante aquisição da remoção abrindo ticket no email da Policia Geral (remoção da BlacklistPolicia só pode ser adquirido via ticket, não há outra forma).</li>
+                            <li>Após a compra, o jogador deverá entrar em contato com um Ministro para retirada do cargo "BlacklistPolicia".</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">3</div>
+                            <h3 class="rule-card-title">Retorno à Polícia após Remoção</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Caso o jogador deseje retornar à corporação, deverá obrigatoriamente recomeçar sua carreira do zero.</li>
+                            <li>O retorno seguirá as seguintes regras:
+                                <ul>
+                                    <li>O jogador será setado na patente mais baixa.</li>
+                                    <li>Deverá seguir o fluxo normal de promoções.</li>
+                                    <li>É estritamente proibido setar ex-integrantes da Blacklist diretamente em cargos acima do inicial.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">4</div>
+                            <h3 class="rule-card-title">Considerações Finais</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>A Blacklist é aplicada apenas quando há justificativa comprovada.</li>
+                            <li>O registro será mantido no canal ☠ &bull; blacklist para controle e transparência.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">5</div>
+                            <h3 class="rule-card-title">Definições Técnicas (BL e PontoBL)</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Blacklist (BL) impede o policial de entrar em qualquer corporação durante o período aplicado.</li>
+                            <li>PontoBL é uma penalidade interna que bloqueia o policial de bater ponto.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">6</div>
+                            <h3 class="rule-card-title">BL Direta (Infrações e Punições)</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>RDM em massa a colegas de farda &rarr; Exoneração + 1000 meses de prisão + 30 dias de BL.</li>
+                            <li>RDM + abuso de poder &rarr; Exoneração + 1000 meses de prisão + 15 dias de BL.</li>
+                            <li>Dark RP (leve) &rarr; Exoneração + ban de 3 dias + 15 dias de BL.</li>
+                            <li>RP de queima de arquivo (forma errada) &rarr; 1500 meses de prisão + 7 dias de BL.</li>
+                            <li>Ponto batido sem fardamento e zaralhando &rarr; Exoneração + 1500 meses de prisão + 15 dias de BL.</li>
+                            <li>Ponto batido sem fardamento &rarr; Advertência + 500 meses de PontoBL.</li>
+                            <li>Marcar R.O sem provas &rarr; 3 dias de PontoBL do responsável + 7 dias de BL de R.O.</li>
+                            <li>Mau uso do MDT &rarr; Exoneração + 15 dias de BL.</li>
+                            <li>Remover / exonerar pelo MDT &rarr; 7 dias de BL.</li>
+                            <li>Caixa 2 &rarr; Exoneração + ban até devolver + 7 dias de BL.</li>
+                            <li>Abuso de poder &rarr; 500 meses de prisão + Advertência.</li>
+                            <li>RP medíocre &rarr; 300 meses de prisão + Advertência.</li>
+                            <li>Forçar RP com ilegal &rarr; 100 meses de prisão.</li>
+                            <li>Chamar RESP no PD sem motivo &rarr; 120 meses de PontoBL + Advertência.</li>
+                            <li>Flodar o PD &rarr; 120 meses de PontoBL + Advertência.</li>
+                            <li>Contratar policial em BL &rarr; Advertência nível 1 no responsável + multa de 5.000.000.</li>
+                            <li>Corrupção &rarr; Exoneração + BL Permanente (+ multa de 10.000.000 se for cargo alto).</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">7</div>
+                            <h3 class="rule-card-title">Regras Gerais</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>A Blacklist impede o retorno à polícia durante o período aplicado.</li>
+                            <li>Reincidência dobra o tempo de BL.</li>
+                            <li>3 Blacklists resultam em Blacklist permanente.</li>
+                        </ul>
+                    </div>
+                ` 
+            },
+            'sets': { 
+                capitulo: 'CAPÍTULO IV',
+                titulo: 'Sets', 
+                icone: 'fa-key', 
+                texto: `
+                    <div class="top-cards-container">
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-info-circle"></i> RESUMO</div>
+                            <p class="card-text">Regras de setagem: limites, restrições e obrigatoriedade do processo de recrutamento.</p>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-list-ul"></i> PROCEDIMENTO</div>
+                            <p class="card-text">Sempre setar respeitando hierarquia e etapas; sem atalhos para patentes altas.</p>
+                        </div>
+                        <div class="warning-card">
+                            <div class="card-title yellow"><i class="fas fa-exclamation-triangle"></i> ATENÇÃO</div>
+                            <p class="card-text">Setar ilegal em patente alta ou para evento é proibido &mdash; punição direta para responsáveis.</p>
+                        </div>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">1</div>
+                            <h3 class="rule-card-title">Restrições de Setagem</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>É expressamente proibido setar membros do ilegal diretamente em patentes altas dentro da corporação policial.</li>
+                            <li>Não é permitido setar membros do ilegal para participar de eventos da polícia, independentemente da circunstância.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">2</div>
+                            <h3 class="rule-card-title">Respeito à Hierarquia e ao Processo de Recrutamento</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Nenhuma pessoa, seja do ilegal ou do legal, pode ser setada diretamente em patentes altas.</li>
+                            <li>Todo jogador que ingressar na corporação deve obrigatoriamente seguir a hierarquia e o processo de recrutamento, sem exceções.</li>
+                        </ul>
+                    </div>
+                ` 
+            },
+            'discord': { 
+                capitulo: 'CAPÍTULO IV',
+                titulo: 'Discord', 
+                icone: 'fab fa-discord', 
+                texto: `
+                    <div class="top-cards-container">
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-info-circle"></i> RESUMO</div>
+                            <p class="card-text">Convivência no Discord: respeito, conduta, comunicação e postura em canais oficiais.</p>
+                        </div>
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-list-ul"></i> PROCEDIMENTO</div>
+                            <p class="card-text">Comunique com clareza, evite brigas, use canais corretamente e siga orientação da moderação.</p>
+                        </div>
+                        <div class="warning-card">
+                            <div class="card-title yellow"><i class="fas fa-exclamation-triangle"></i> ATENÇÃO</div>
+                            <p class="card-text">Toxicidade, ofensas e ataques pessoais não serão tolerados &mdash; moderação pode punir rapidamente.</p>
+                        </div>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">1</div>
+                            <h3 class="rule-card-title">Respeito e Conduta</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>O respeito deve estar acima de tudo. Ofensas, xingamentos ou qualquer tipo de ataque pessoal são proibidos.</li>
+                            <li>Todos têm o direito de se expressar, mas sem faltar com o respeito.</li>
+                            <li>Discussões tóxicas não serão toleradas. Debates saudáveis são bem-vindos, mas brigas e desentendimentos serão moderados.</li>
+                            <li>Se não conhecer a pessoa, evite brincadeiras de mau gosto ou tentativas forçadas de interação.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">2</div>
+                            <h3 class="rule-card-title">Comunicação Adequada</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Críticas destrutivas não serão aceitas. Reclamações sobre a polícia ou outras áreas devem ser feitas pelos canais apropriados.</li>
+                            <li>O chat não é o local para difamação ou disseminação de negatividade.</li>
+                            <li>Evite flood e spam. Mensagens repetitivas ou desnecessárias atrapalham a comunicação e devem ser evitadas.</li>
+                            <li>Seja responsável com suas palavras. Caso tenha alguma denúncia ou problema sério, utilize os canais formais ou entre em contato diretamente com os responsáveis.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">3</div>
+                            <h3 class="rule-card-title">Respeito às Diretrizes e Responsáveis</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>Caso um responsável solicite a mudança de assunto ou o encerramento de uma conversa, a orientação deve ser seguida sem resistência.</li>
+                            <li>Não chame responsáveis diretamente pelo chat geral. Utilize a aba apropriada para isso.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">4</div>
+                            <h3 class="rule-card-title">Penalidades</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>O descumprimento dessas regras pode resultar em punições, como restrições no Discord ou prisão dentro da cidade.</li>
+                        </ul>
+                    </div>
+                ` 
+            }
+        };
+
+        function mudarSecao(chave, elemento) {
+            // Remove active de todos
+            document.querySelectorAll('.sidebar-item, .submenu-item').forEach(el => el.classList.remove('active'));
+            elemento.classList.add('active');
+
+            const dados = textosManuais[chave] || { capitulo: 'INFORMAÇÃO', titulo: 'Manual', icone: 'fa-book', texto: 'Em construção.' };
+            
+            const container = document.getElementById('conteudoDinamico');
+            container.innerHTML = `
+                <span class="chapter-label">${dados.capitulo}</span>
+                <div class="section-title">
+                    <i class="fas ${dados.icone}"></i> ${dados.titulo}
+                </div>
+                <div class="rule-text">
+                    ${dados.texto}
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
