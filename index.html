@@ -33,9 +33,9 @@
         .btn-gold { background-color: #a88434; color: #ffffff; font-weight: 600; width: 100%; padding: 14px; border: none; border-radius: 6px; font-size: 1rem; margin-top: 10px; transition: all 0.3s ease; }
         .btn-gold:hover { background-color: #c49a3c; color: #ffffff; }
         
-        /* Estilo do novo botão da calculadora */
-        .btn-calc { background-color: transparent; border: 1px solid #374151; color: #8b95a5; font-weight: 600; width: 100%; padding: 12px; border-radius: 6px; font-size: 0.95rem; margin-top: 15px; text-decoration: none; display: flex; justify-content: center; align-items: center; gap: 8px; transition: all 0.3s ease; }
-        .btn-calc:hover { border-color: #b58d3d; color: #b58d3d; }
+        /* Estilo dos botões adicionais (Calculadora e Regras) */
+        .btn-calc { background-color: #a88434; border: none; color: #ffffff; font-weight: 600; width: 100%; padding: 14px; border-radius: 6px; font-size: 1rem; margin-top: 10px; text-decoration: none; display: flex; justify-content: center; align-items: center; gap: 8px; transition: all 0.3s ease; }
+        .btn-calc:hover { background-color: #c49a3c; color: #ffffff; }
 
         .warning-box { background-color: #0d1117; border: 1px solid #1f2937; border-radius: 6px; padding: 20px; margin-top: 2.5rem; display: flex; align-items: flex-start; gap: 15px; }
         .warning-dot { width: 8px; height: 8px; background-color: #b58d3d; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
@@ -130,9 +130,12 @@
                     <button type="submit" class="btn btn-gold" id="btnSubmitText">Acessar sistema</button>
                 </form>
 
-                <!-- NOVO BOTÃO: Calculadora Penal -->
+                <!-- Botões Adicionais -->
                 <a href="calculadora.html" class="btn-calc">
                     <i class="fas fa-calculator"></i> Calculadora
+                </a>
+                <a href="regras-policia.html" class="btn-calc">
+                    <i class="fas fa-book"></i> Regras Polícia
                 </a>
 
                 <div class="warning-box">
