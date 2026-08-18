@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Mensagens - Corregedoria</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        body { background: radial-gradient(circle at top, #121826 0%, #07090e 70%); color: #e0e0e0; font-family: 'Inter', sans-serif; min-height: 100vh; }
+        .navbar-pf { background: rgba(17, 24, 39, 0.95); backdrop-filter: blur(10px); border-bottom: 2px solid #b58d3d; padding: 15px 30px; }
+        .navbar-pf .brand-title { color: #ffffff; font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1.25em; letter-spacing: 1.5px; margin-left: 20px; }
+        .container-main { padding: 40px 20px; max-width: 900px; margin: 0 auto; }
+        .section-box { background: linear-gradient(135deg, #121826 0%, #0d1117 100%); border: 1px solid #1f2937; border-radius: 10px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+        .section-title { color: #b58d3d; border-bottom: 1px solid #1f2937; padding-bottom: 12px; margin-bottom: 24px; font-size: 1.1em; font-weight: 600; text-transform: uppercase; display: flex; align-items: center; gap: 10px; }
+        .form-label { color: #9ca3af; font-size: 0.85em; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+        .form-control, .form-select { background-color: #1f2937; border: 1px solid #374151; color: #ffffff; }
+        .form-control:focus, .form-select:focus { background-color: #111827; color: #ffffff; border-color: #b58d3d; box-shadow: 0 0 0 0.25rem rgba(181, 141, 61, 0.25); }
+        .btn-gold { background-color: #b58d3d; color: #ffffff; font-weight: 600; border: none; padding: 10px 20px; border-radius: 6px; transition: all 0.3s; }
+        .btn-gold:hover { background-color: #c49a3c; color: #ffffff; }
+        .table-pf { color: #e0e0e0; background-color: #0d1117; font-size: 0.9em; border-radius: 6px; overflow: hidden; }
+        .table-pf th { background-color: #161b22; color: #b58d3d; border-color: #1f2937; }
+        .table-pf td { background-color: #0d1117; color: #e0e0e0; border-color: #1f2937; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-pf d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+            <span class="brand-title">CENTRAL DE MENSAGENS</span>
+        </div>
+        <div>
+            <a href="dashboard.html" class="btn btn-outline-info btn-sm"><i class="fas fa-arrow-left"></i> Voltar ao Painel</a>
+        </div>
+    </nav>
+
+    <div class="container-main">
+        <div class="section-box">
+            <div class="section-title"><i class="fas fa-paper-plane"></i> Enviar Nova Mensagem</div>
+            <div class="row g-3">
+                <div class="col-md-12">
+                    <label class="form-label">Selecionar Usuário (E-mail)</label>
+                    <select id="selectUsuario" class="form-select">
+                        <option value="">Carregando usuários...</option>
+                    </select>
+                </div>
+                <div class="col-md-12">
+                    <label class="form-label">Mensagem</label>
+                    <textarea id="textoMensagem" class="form-control" rows="4" placeholder="Digite a mensagem que aparecerá na tela do usuário..."></textarea>
+                </div>
+                <div class="col-md-12 text-end mt-4">
+                    <button class="btn btn-gold" onclick="enviarMensagem()"><i class="fas fa-check"></i> Enviar Mensagem</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-box">
+            <div class="section-title"><i class="fas fa-history"></i> Histórico de Mensagens Enviadas</div>
+            <div class="table-responsive">
+                <table class="table table-pf table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Destinatário</th>
+                            <th>Mensagem</th>
+                            <th>Data de Envio</th>
+                            <th>Status</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaMensagens">
+                        <tr><td colspan="5" class="text-center text-muted">Carregando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const supabaseUrl = 'https://qnfckdzotzenaqaswqjb.supabase.co'; 
+        const supabaseKey = 'sb_publishable_353TT6z3RbRHvIpbQiaK1g_dWt1qAyU';
+        const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
+        const emailAdmin = "kira@yagami.gov";
+        let emailUsuarioLogado = localStorage.getItem('usuario_logado_email') || '';
+
+        // Bloqueia acesso se não for a administradora
+        if (emailUsuarioLogado !== emailAdmin) {
+            alert("Acesso restrito à Administração.");
+            window.location.href = 'dashboard.html';
+        }
+
+        async function carregarUsuarios() {
+            const { data, error } = await supabaseClient.from('perfis_usuarios').select('email').eq('status', 'Ativo');
+            const select = document.getElementById('selectUsuario');
+            
+            if (error || !data || data.length === 0) {
+                select.innerHTML = '<option value="">Nenhum usuário encontrado</option>';
+                return;
+            }
+
+            select.innerHTML = '<option value="">-- Selecione o e-mail cadastrado --</option>';
+            data.forEach(user => {
+                // Não precisa listar a própria admin
+                if(user.email !== emailAdmin) {
+                    select.innerHTML += `<option value="${user.email}">${user.email}</option>`;
+                }
+            });
+        }
+
+        async function enviarMensagem() {
+            const emailDestino = document.getElementById('selectUsuario').value;
+            const mensagem = document.getElementById('textoMensagem').value.trim();
+
+            if (!emailDestino || !mensagem) {
+                alert("Selecione um usuário e digite uma mensagem.");
+                return;
+            }
+
+            const { error } = await supabaseClient.from('mensagens_sistema').insert([
+                { email_destino: emailDestino, mensagem: mensagem, lida: false }
+            ]);
+
+            if (error) {
+                alert("Erro ao enviar mensagem: " + error.message);
+            } else {
+                alert("Mensagem enviada com sucesso!");
+                document.getElementById('textoMensagem').value = '';
+                document.getElementById('selectUsuario').value = '';
+                carregarHistorico();
+            }
+        }
+
+        async function carregarHistorico() {
+            const { data, error } = await supabaseClient.from('mensagens_sistema').select('*').order('created_at', { ascending: false });
+            const tbody = document.getElementById('tabelaMensagens');
+            tbody.innerHTML = '';
+
+            if (error || !data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Nenhuma mensagem enviada.</td></tr>';
+                return;
+            }
+
+            data.forEach(msg => {
+                const dataFormatada = new Date(msg.created_at).toLocaleString('pt-BR');
+                const status = msg.lida ? '<span class="badge bg-success">Lida</span>' : '<span class="badge bg-warning text-dark">Pendente</span>';
+                
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${msg.email_destino}</td>
+                        <td><small>${msg.mensagem.substring(0, 40)}${msg.mensagem.length > 40 ? '...' : ''}</small></td>
+                        <td>${dataFormatada}</td>
+                        <td>${status}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-danger" onclick="apagarMensagem('${msg.id}')"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        async function apagarMensagem(id) {
+            if(!confirm("Deseja apagar esta mensagem do sistema?")) return;
+            await supabaseClient.from('mensagens_sistema').delete().eq('id', id);
+            carregarHistorico();
+        }
+
+        carregarUsuarios();
+        carregarHistorico();
+    </script>
+</body>
+</html>
