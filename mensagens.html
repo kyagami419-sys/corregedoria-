@@ -121,7 +121,12 @@
             }
 
             const { error } = await supabaseClient.from('mensagens_sistema').insert([
-                { email_destino: emailDestino, mensagem: mensagem, lida: false }
+                { 
+                    email_destino: emailDestino, 
+                    mensagem: mensagem, 
+                    lida: false,
+                    created_at: new Date().toISOString() // Corrigido para injetar a data atual exata
+                }
             ]);
 
             if (error) {
