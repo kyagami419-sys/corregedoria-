@@ -116,9 +116,6 @@
             
             <!-- NOVO BOTÃO DE MENSAGENS -->
             <a href="mensagens.html" class="btn btn-outline-info btn-sm me-2" id="btnMensagensAdmin" style="display: none;"><i class="fas fa-paper-plane"></i> Enviar Mensagens</a>
-
-            <!-- NOVO BOTÃO DE REGRAS ADICIONADO AQUI -->
-            <a href="editar-regras.html" class="btn btn-outline-primary btn-sm me-2" id="btnRegrasAdmin" style="display: none;"><i class="fas fa-edit"></i> Editar Regras</a>
             
             <button onclick="fazerLogout()" class="btn btn-outline-light btn-sm"><i class="fas fa-sign-out-alt"></i> Sair</button>
         </div>
@@ -216,7 +213,6 @@
                 instituicaoUsuarioLogado = 'POLÍCIA FEDERAL';
                 document.getElementById('btnAdmin').style.display = 'inline-block';
                 document.getElementById('btnMensagensAdmin').style.display = 'inline-block'; // Novo botão ativado
-                document.getElementById('btnRegrasAdmin').style.display = 'inline-block'; // Novo botão de regras ativado
                 document.getElementById('tituloInstituicao').innerText = "PAINEL ADMINISTRATIVO - POLÍCIA FEDERAL";
                 document.getElementById('imgBrasao').src = brasoesInstituicoes['POLÍCIA FEDERAL'];
                 return;
