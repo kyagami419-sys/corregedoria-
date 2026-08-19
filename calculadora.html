@@ -457,7 +457,8 @@
         function toggleAtenuante(idName, percent, element) {
             const checkbox = document.getElementById(`chk_${idName}`);
             
-            if(element.tagName !== 'INPUT') {
+            // Corrige o bug de conflito ao clicar diretamente na checkbox 
+            if (event && event.target && event.target.tagName !== 'INPUT') {
                 checkbox.checked = !checkbox.checked;
             }
 
@@ -576,10 +577,24 @@
             const instNomeDisplay = selecaoInst.options[selecaoInst.selectedIndex].text;
 
             const acusado = document.getElementById('calcAcusadoNome').value || 'Não informado';
-            const passaporte = document.getElementById('calcAcusadoID').value || 'S/N';
+            const passaporte = document.getElementById('calcAcusadoID').value.trim() || 'S/N';
             const adv = document.getElementById('calcAdvNome').value || 'Nenhum';
             const oab = document.getElementById('calcAdvOAB').value || 'S/N';
             const relato = document.getElementById('calcRelato').value || 'Nenhum relato informado.';
+
+            // NOVO: Verificação de Cooldown de 2 Horas para o ID
+            if (passaporte !== 'S/N' && passaporte !== '') {
+                const idCooldowns = JSON.parse(localStorage.getItem('cooldowns_acusados') || '{}');
+                const expiration = idCooldowns[passaporte];
+                
+                if (expiration && Date.now() < expiration) {
+                    const diff = expiration - Date.now();
+                    const horas = Math.floor(diff / (1000 * 60 * 60));
+                    const minutos = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    alert(`O Acusado com ID ${passaporte} já foi registrado recentemente. Aguarde ${horas}h e ${minutos}m para prendê-lo/registrá-lo novamente.`);
+                    return;
+                }
+            }
 
             if (crimesSelecionados.length === 0) {
                 alert("Selecione pelo menos um crime para enviar o relatório.");
@@ -683,6 +698,14 @@
                 let allOk = responses.every(r => r.ok);
                 if (allOk) {
                     alert("Relatório enviado para os Canais do Discord com sucesso!");
+                    
+                    // NOVO: Registra o cooldown de 2 horas para o ID após o envio bem-sucedido
+                    if (passaporte !== 'S/N' && passaporte !== '') {
+                        const idCooldowns = JSON.parse(localStorage.getItem('cooldowns_acusados') || '{}');
+                        idCooldowns[passaporte] = Date.now() + (2 * 60 * 60 * 1000); // + 2 horas em milissegundos
+                        localStorage.setItem('cooldowns_acusados', JSON.stringify(idCooldowns));
+                    }
+
                 } else {
                     alert("O relatório foi processado, mas ocorreu um erro ao enviar para um dos canais configurados.");
                 }
