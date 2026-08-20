@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legislação - Gestão de Inteligência</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        body, html { height: 100%; margin: 0; font-family: 'Inter', sans-serif; background-color: #07090e; color: #e5e7eb; overflow-x: hidden; }
+        .navbar-pf { background-color: #0d1117; border-bottom: 2px solid #a88434; padding: 15px 30px; }
+        .navbar-pf .brand-title { color: #fff; font-weight: 600; font-size: 1.2rem; letter-spacing: 1px; margin-left: 10px; font-family: 'Playfair Display', serif; }
+        
+        .btn-gold { background-color: #a88434; color: #ffffff; font-weight: 600; padding: 8px 20px; border: none; border-radius: 6px; font-size: 0.95rem; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s ease; }
+        .btn-gold:hover { background-color: #c49a3c; color: #ffffff; }
+
+        .container-main { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+        
+        .nav-tabs { border-bottom: 1px solid #1f2937; margin-bottom: 30px; }
+        .nav-tabs .nav-link { color: #8b95a5; border: none; padding: 15px 25px; font-weight: 500; font-size: 1.1rem; border-radius: 0; }
+        .nav-tabs .nav-link:hover { color: #d4af37; border-color: transparent; }
+        .nav-tabs .nav-link.active { background-color: transparent; color: #b58d3d; border-bottom: 3px solid #b58d3d; font-weight: 600; }
+        
+        .leg-box { background-color: #0d1117; border: 1px solid #1f2937; border-radius: 8px; padding: 40px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); }
+        .leg-title { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: #b58d3d; text-align: center; margin-bottom: 40px; font-weight: 700; }
+        .leg-section-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: #d4af37; margin-top: 40px; margin-bottom: 20px; border-bottom: 1px solid #1f2937; padding-bottom: 10px; text-transform: uppercase; }
+        .leg-subsection-title { font-size: 1.1rem; color: #a88434; margin-top: 30px; margin-bottom: 15px; font-weight: 600; text-transform: uppercase; text-align: center; }
+        
+        .artigo { margin-bottom: 15px; line-height: 1.6; text-align: justify; font-size: 0.95rem; }
+        .artigo strong { color: #fff; font-weight: 600; }
+        .paragrafo { margin-left: 30px; margin-bottom: 10px; line-height: 1.6; text-align: justify; font-size: 0.95rem; }
+        .inciso { margin-left: 30px; margin-bottom: 8px; line-height: 1.6; text-align: justify; font-size: 0.95rem; }
+        
+        .table-fiancas { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.9rem; }
+        .table-fiancas th, .table-fiancas td { border: 1px solid #374151; padding: 12px; text-align: left; }
+        .table-fiancas th { background-color: #1f2937; color: #b58d3d; font-weight: 600; }
+        .table-fiancas td { background-color: #111827; }
+
+        .search-bar-custom { background-color: #1f2937; color: #fff; border: 1px solid #374151; }
+        .search-bar-custom:focus { background-color: #1f2937; color: #fff; border-color: #a88434; box-shadow: none; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-pf d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+            <i class="fas fa-balance-scale" style="color: #a88434; font-size: 1.5rem;"></i>
+            <span class="brand-title">LEGISLAÇÃO INSTITUCIONAL</span>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+            <div class="input-group">
+                <input type="text" id="searchInput" class="form-control search-bar-custom" placeholder="Pesquisar palavra ou artigo..." onkeyup="if(event.key === 'Enter') pesquisarPalavra()">
+                <button class="btn btn-gold" type="button" onclick="pesquisarPalavra()"><i class="fas fa-search"></i></button>
+                <button class="btn btn-outline-secondary" type="button" onclick="limparPesquisa()"><i class="fas fa-times"></i></button>
+            </div>
+            <a href="index.html" class="btn btn-gold text-nowrap"><i class="fas fa-home"></i> Voltar ao Início</a>
+        </div>
+    </nav>
+
+    <div class="container-main">
+        <ul class="nav nav-tabs justify-content-center" id="legTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="constituicao-tab" data-bs-toggle="tab" data-bs-target="#constituicao" type="button" role="tab"><i class="fas fa-book"></i> Constituição Estadual</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="penal-tab" data-bs-toggle="tab" data-bs-target="#penal" type="button" role="tab"><i class="fas fa-gavel"></i> Código Penal</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="locg-tab" data-bs-toggle="tab" data-bs-target="#locg" type="button" role="tab"><i class="fas fa-shield-alt"></i> Lei Orgânica CGPB</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="loemp-tab" data-bs-toggle="tab" data-bs-target="#loemp" type="button" role="tab"><i class="fas fa-landmark"></i> Lei Orgânica MP</button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="legTabsContent">
+            
+            <!-- CONSTITUIÇÃO ESTADUAL -->
+            <div class="tab-pane fade show active" id="constituicao" role="tabpanel">
+                <div class="leg-box">
+                    <h1 class="leg-title">CONSTITUIÇÃO ESTADUAL DO BRASIL</h1>
+                    
+                    <h2 class="leg-section-title">PREÂMBULO</h2>
+                    <p class="artigo">Nós, representantes do povo do Estado do Brasil, no exercício do poder constituinte originário e reunidos em Assembleia para instituir um Estado Democrático, destinado a assegurar o exercício dos direitos sociais e individuais, a liberdade, a segurança, o bem-estar, o desenvolvimento, a igualdade e a justiça como valores supremos de uma sociedade fraterna, pluralista e sem preconceitos, fundada na harmonia social e comprometida, na ordem interna e internacional, com a solução pacífica das controvérsias, promulgamos, sob a proteção de Deus, a seguinte CONSTITUIÇÃO ESTADUAL DO BRASIL.</p>
+
+                    <h2 class="leg-section-title">TÍTULO I: DOS PRINCÍPIOS FUNDAMENTAIS</h2>
+                    <p class="artigo"><strong>Art. 1º</strong> - O Estado do Brasil é uma unidade soberana, democrática e de direito, fundamentada na cidadania, na dignidade da pessoa humana e nos valores sociais do trabalho.</p>
+                    <p class="artigo"><strong>Art. 1º-A</strong> - O Estado do Brasil constitui entidade político-jurídica soberana, una e indivisível, regendo-se por esta Constituição como norma fundamental suprema, não se aplicando, para fins deste ordenamento, qualquer modelo federativo externo ou constitucional diverso.</p>
+                    <p class="paragrafo"><strong>Parágrafo Único</strong> - As instituições e forças públicas mencionadas nesta Constituição, ainda que possuam denominação historicamente consagrada, integram a estrutura do Estado do Brasil e subordinam-se exclusivamente a esta Constituição, inexistindo vínculo com qualquer ente ou ordenamento externo.</p>
+                    <p class="artigo"><strong>Art. 2º</strong> - São Poderes do Estado, independentes e harmônicos entre si, o Legislativo, o Executivo e o Judiciário.</p>
+                    <p class="artigo"><strong>Art. 3º</strong> - A soberania popular será exercida pelo sufrágio universal e pelo voto direto e secreto, com valor igual para todos.</p>
+
+                    <h2 class="leg-section-title">TÍTULO II: DOS DIREITOS E GARANTIAS FUNDAMENTAIS</h2>
+                    <p class="artigo"><strong>Art. 4º</strong> - Todos são iguais perante a lei, sem distinção de qualquer natureza, garantindo-se o direito à vida, à liberdade, à segurança e à propriedade.</p>
+                    <p class="inciso">I - Ninguém será submetido a tortura nem a tratamento desumano ou degradante;</p>
+                    <p class="inciso">II - É livre a manifestação do pensamento, sendo vedado o anonimato;</p>
+                    <p class="inciso">III - É livre o exercício de qualquer trabalho, ofício ou profissão, atendidas as qualificações profissionais que a lei estabelecer;</p>
+                    <p class="inciso">IV - A lei penal não retroagirá, salvo para beneficiar o réu.</p>
+                    <p class="artigo"><strong>Art. 5º</strong> - Aos acusados, em processo judicial ou administrativo, são assegurados o contraditório e a ampla defesa, com os meios e recursos a ela inerentes.</p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - Ninguém será considerado culpado até o trânsito em julgado de sentença penal condenatória.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - O Estado prestará assistência jurídica integral e gratuita aos que comprovarem insuficiência de recursos.</p>
+                    <p class="paragrafo"><strong>§ 3º</strong> - Qualquer restrição a direitos individuais durante investigações ou operações de segurança deverá respeitar o devido processo legal e ser devidamente fundamentada.</p>
+                    <p class="paragrafo"><strong>§ 4º</strong> - Ninguém será privado da liberdade, de bens ou de direitos sem o devido processo legal, assegurados os princípios da legalidade, proporcionalidade e razoabilidade.</p>
+                    <p class="paragrafo"><strong>§ 5º</strong> - Nenhuma autoridade poderá suspender, restringir ou suprimir direitos e garantias fundamentais fora das hipóteses expressamente previstas nesta Constituição, sendo nulos de pleno direito os atos praticados em desacordo com este dispositivo.</p>
+                    <p class="paragrafo"><strong>§ 6º</strong> - Não haverá crime nem pena sem lei anterior que os defina.</p>
+                    <p class="artigo"><strong>Art. 5º-A</strong> - É vedada a organização, manutenção ou atuação de milícias, organizações paramilitares, grupos armados ou quaisquer forças paralelas à estrutura oficial do Estado.</p>
+                    <p class="paragrafo"><strong>Parágrafo Único</strong> - A prática prevista neste artigo constitui crime grave contra a ordem constitucional, sujeitando seus integrantes, financiadores e apoiadores às penas previstas em lei.</p>
+                    <p class="artigo"><strong>Art. 5º-B</strong> - É assegurado a todo cidadão o direito de não cumprir ordens manifestamente ilegais ou inconstitucionais, cabendo a quem as descumprir demonstrar, posteriormente, de forma fundamentada, a ilegalidade ou inconstitucionalidade da ordem, respondendo em caso de abuso desse direito.</p>
+
+                    <h2 class="leg-section-title">TÍTULO III: DO PODER EXECUTIVO E DA ADMINISTRAÇÃO</h2>
+                    <p class="artigo"><strong>Art. 6º</strong> - Chefe do Executivo do Estado, denominado Prefeito ou Governador, conforme a organização política vigente.</p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - Enquanto não houver Governador regularmente eleito e empossado, o Prefeito da Capital exercerá integralmente as competências do Chefe do Executivo Estadual.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - Todos os atos praticados pelo Prefeito, na condição de Chefe do Executivo, produzem efeitos constitucionais plenos e não poderão ser questionados por distinção de nomenclatura do cargo.</p>
+                    <p class="paragrafo"><strong>§ 3º</strong> - A transição de poder ocorrerá de forma imediata e automática, independentemente de novo ato normativo, preservados os atos administrativos válidos praticados pela autoridade anteriormente investida.</p>
+                    <p class="paragrafo"><strong>§ 4º</strong> - Na ausência de lei específica, o Chefe do Executivo poderá suprir lacunas administrativas mediante Decreto, com eficácia temporária, desde que não fira direitos fundamentais e seja submetido à posterior apreciação do Poder Legislativo quando este estiver regularmente constituído.</p>
+                    <p class="artigo"><strong>Art. 7º</strong> - Compete privativamente ao Chefe do Executivo:</p>
+                    <p class="inciso">I - Nomear e exonerar os Ministros de Estado;</p>
+                    <p class="inciso">II - Exercer, com o auxílio dos Ministros, a direção superior da administração estadual;</p>
+                    <p class="inciso">III - Sancionar, promulgar e fazer publicar as leis, bem como expedir decretos e regulamentos para sua fiel execução;</p>
+                    <p class="inciso">IV - Decretar o Estado de Defesa, o Estado de Sítio e a Garantia da Lei e da Ordem (GLO).</p>
+                    <p class="inciso">V - Vetar total ou parcialmente projetos de lei aprovados pelo Poder Legislativo, quando os considerar inconstitucionais, ilegais ou contrários ao interesse público.</p>
+                    <p class="inciso">VI - O veto deverá ser motivado por escrito e comunicado oficialmente ao Poder Legislativo no prazo máximo de 24 horas após o recebimento do projeto de lei.</p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - O veto do Chefe do Executivo poderá ser rejeitado pelo voto de dois terços dos membros do Poder Legislativo, em sessão convocada para este fim.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - Os Ministros de Estado deverão possuir idoneidade moral e capacidade técnica compatível com o cargo, sendo responsáveis juridicamente pelos atos que praticarem.</p>
+                    <p class="artigo"><strong>Art. 8º</strong> - O Ministro da Defesa será escolhido pelo Chefe do Executivo, possuindo autoridade direta sobre as Forças Armadas.</p>
+                    <p class="artigo"><strong>Art. 9º</strong> - São crimes de responsabilidade os atos do Chefe do Executivo que atentem contra esta Constituição e, especialmente, aqueles que:</p>
+                    <p class="inciso">I - Usurpem competências de outro Poder;</p>
+                    <p class="inciso">II - Atentem contra o livre exercício do Poder Legislativo ou do Poder Judiciário;</p>
+                    <p class="inciso">III - Empreguem as Forças Armadas ou os órgãos de segurança fora das hipóteses constitucionais;</p>
+                    <p class="inciso">IV - Decretem ou mantenham Estado de Defesa, Estado de Sítio ou GLO em desacordo com os limites constitucionais;</p>
+                    <p class="inciso">V - Descumpram decisões judiciais;</p>
+                    <p class="inciso">VI - Atentem contra os direitos e garantias fundamentais.</p>
+                    <p class="inciso">VII - Ausentar-se do exercício do cargo por período prolongado e injustificado, sem comunicação ou autorização constitucional, comprometendo o funcionamento regular do Estado.</p>
+                    <p class="inciso">VIII - Demonstrar incapacidade grave, permanente ou reiterada para o exercício das atribuições constitucionais do cargo, devidamente comprovada em processo regular, com laudo técnico ou decisão judicial.</p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - Os crimes de responsabilidade do Chefe do Executivo somente poderão ser processados após autorização prévia do Poder Legislativo, por maioria qualificada de dois terços de seus membros, competindo ao Poder Judiciário o julgamento final, na forma da lei.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - Considera-se ausência prolongada, para os fins do inciso VII, o afastamento do Chefe do Executivo por período superior a 20 dias consecutivos, sem autorização do Poder Legislativo ou justificativa constitucional formal.</p>
+                    <p class="artigo"><strong>Art. 9º-A</strong> - Compete ao Supremo Tribunal Estadual processar e julgar o Chefe do Executivo do Estado nos crimes comuns praticados durante o exercício do mandato.</p>
+                    <p class="paragrafo"><strong>Parágrafo Único</strong> - A instauração do processo não impede a adoção de medidas cautelares previstas em lei, inclusive afastamento temporário do cargo, quando indispensáveis à preservação da ordem pública, da instrução processual ou da autoridade das instituições.</p>
+                    <p class="artigo"><strong>Art. 9º-B</strong> - O processo por crime de responsabilidade observará rito definido em lei especial, assegurados:</p>
+                    <p class="inciso">I - Direito de defesa;</p>
+                    <p class="inciso">II - Publicidade dos atos;</p>
+                    <p class="inciso">III - Julgamento colegiado;</p>
+                    <p class="inciso">IV - Decisão fundamentada.</p>
+
+                    <h2 class="leg-section-title">TÍTULO IV: DAS FORÇAS ARMADAS E SEGURANÇA PÚBLICA</h2>
+                    <p class="artigo"><strong>Art. 10º</strong> - As Forças Armadas, constituídas pela Marinha, pelo Exército e pela Aeronáutica, são instituições nacionais permanentes.</p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - As Forças Armadas são subordinadas ao Ministro da Defesa e ao Governador do Estado, na forma desta Constituição.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - Cabe às Forças Armadas a defesa do Estado, a garantia dos poderes constituídos e, por iniciativa de qualquer destes, da lei e da ordem.</p>
+                    <p class="paragrafo"><strong>§ 3º</strong> - É vedada às Forças Armadas qualquer forma de deliberação política, manifestação coletiva ou atuação autônoma fora da cadeia de comando constitucional.</p>
+                    <p class="artigo"><strong>Art. 10-A</strong> - A cadeia de comando das forças estatais observará a seguinte organização:</p>
+                    <p class="inciso">I - As Forças Armadas subordinam-se diretamente ao Governador do Estado, por intermédio do Ministro da Defesa;</p>
+                    <p class="inciso">II - As forças de segurança pública subordinam-se diretamente ao Prefeito do Estado, por intermédio dos órgãos competentes;</p>
+                    <p class="inciso">III - É vedada a interferência ordinária entre as cadeias de comando previstas nos incisos I e II, ressalvadas as hipóteses expressamente previstas nesta Constituição.</p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - Na hipótese de inexistência, vacância, impedimento ou não constituição do cargo de Governador, as Forças Armadas e as forças de segurança pública ficarão temporariamente subordinadas ao Prefeito do Estado, que exercerá integralmente a Chefia do Executivo, nos termos do art. 6º § 1º.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - Durante a decretação de Estado de Defesa, Estado de Sítio ou Garantia da Lei e da Ordem, poderá haver coordenação excepcional entre as Forças Armadas e as forças de segurança pública, respeitada a autoridade do Chefe do Executivo e os limites constitucionais.</p>
+                    <p class="artigo"><strong>Art. 11º</strong> - A hierarquia e a disciplina são a base das Forças Armadas, observados os seguintes princípios:</p>
+                    <p class="inciso">I - O descumprimento de ordens superiores legais sujeita o militar às penas de motim ou insubordinação;</p>
+                    <p class="inciso">II - O oficial militar só perderá o posto e a patente se for julgado indigno do oficialato por tribunal militar ou civil superior.</p>
+                    <p class="artigo"><strong>Art. 12º</strong> - Da Garantia da Lei e da Ordem (GLO): O emprego das Forças Armadas em missões de GLO ocorre por ordem expressa do Chefe do Executivo.</p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - A GLO confere temporariamente aos militares das Forças Armadas o poder de polícia ostensiva para realizar prisões em flagrante, vistorias, bloqueios de vias e investigações limitadas ao escopo da missão.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - A atuação na GLO cessa imediatamente após o restabelecimento da ordem ou por revogação do decreto do Executivo.</p>
+                    <p class="paragrafo"><strong>§ 3º</strong> - O decreto de GLO deverá indicar expressamente: I - O motivo da decretação; II - A área territorial abrangida; III - O prazo de duração.</p>
+                    <p class="paragrafo"><strong>§ 4º</strong> - A GLO não poderá suspender direitos e garantias fundamentais previstos nesta Constituição, salvo nos limites estritamente necessários ao restabelecimento da ordem.</p>
+                    <p class="paragrafo"><strong>§ 5º</strong> - Durante GLO, os militares ficam sujeitos à jurisdição militar pelos atos praticados em serviço, salvo nos casos de crimes dolosos contra a vida ou contra direitos fundamentais de civis, cuja competência será da justiça comum.</p>
+                    <p class="artigo"><strong>Art. 12-A</strong> - Mesmo durante Estado de Defesa, Estado de Sítio ou operações de GLO, são inderrogáveis:</p>
+                    <p class="inciso">I - a dignidade da pessoa humana;</p>
+                    <p class="inciso">II - a vedação à tortura e a tratamentos desumanos;</p>
+                    <p class="inciso">III - o due process legal;</p>
+                    <p class="inciso">IV - o controle judicial dos atos estatais.</p>
+                    <p class="artigo"><strong>Art. 13º</strong> - A segurança pública, dever do Estado, é exercida pelas seguintes instituições:</p>
+                    <p class="inciso">I - Polícia Federal;</p>
+                    <p class="inciso">II - Polícia Rodoviária Federal;</p>
+                    <p class="inciso">III - Polícia Civil;</p>
+                    <p class="inciso">IV - Polícia Militar e Corpo de Bombeiro Militar; e demais unidades previstas em lei.</p>
+                    <p class="paragrafo"><strong>Parágrafo Único</strong> - Durante operações conjuntas ou sob regime de GLO, as forças de segurança pública estaduais e federais atuarão de forma integrada, respeitada a cadeia de comando definida por esta Constituição e pelo Chefe do Executivo.</p>
+                    <p class="artigo"><strong>Art. 13-A</strong> - É vedada a participação institucional, direta ou indireta, de órgãos de segurança pública ou das Forças Armadas em disputas político-partidárias, campanhas eleitorais ou atos de natureza política, sob pena de crime contra a ordem constitucional.</p>
+                    <p class="artigo"><strong>Art. 13-B</strong> - É vedada a investidura, designação, nomeação, delegação ou exercício, a qualquer título, de função ou atribuição própria de autoridade policial por pessoa não regularmente aprovada em concurso público e legalmente investida no cargo, nos termos da lei.</p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - Considera-se investidura irregular toda forma de acesso, ainda que temporária ou excepcional, que permita a pessoa estranha aos quadros legais exercer poder de polícia, presidir investigações, determinar diligências, ordenar prisões, ou praticar atos típicos de autoridade policial.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - Os atos praticados em violação ao disposto neste artigo são nulos de pleno direito, não produzindo efeitos jurídicos válidos.</p>
+                    <p class="paragrafo"><strong>§ 3º</strong> - A autoridade que promover, autorizar, permitir ou se omitir diante da investidura irregular responderá administrativa, civil e penalmente, na forma da lei.</p>
+                    <p class="paragrafo"><strong>§ 4º</strong> - O Ministério Público possui legitimidade para intervir de ofício, requerer a suspensão imediata do exercício irregular da função, promover a responsabilização dos envolvidos e provocar o controle judicial da legalidade do ato.</p>
+                    <p class="paragrafo"><strong>§ 5º</strong> - O disposto neste artigo aplica-se a todas as instituições de segurança pública previstas no art. 13, inclusive à ROTA, BOPE e Exército Brasileiro.</p>
+                    <p class="artigo"><strong>Art. 13-C</strong> - Fica instituída a Corregedoria Geral das Polícias do Estado do Brasil, órgão permanente, autônomo e de natureza administrativa disciplinar, responsável pelo controle, fiscalização e julgamento administrativo das condutas funcionais dos membros das instituições de segurança pública.</p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - A Corregedoria Geral das Polícias possuirá competência originária e exclusiva para processar e julgar, em sede administrativa disciplinar, os ocupantes de cargos superiores das forças policiais, nos termos desta Constituição e da lei.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - A Corregedoria Geral das Polícias não exerce função penal, limitando-se à apuração e responsabilização administrativa, sem prejuízo da atuação do Poder Judiciário e do Ministério Público quando cabível.</p>
+                    <p class="paragrafo"><strong>§ 3º</strong> - A Corregedoria Geral das Polícias será composta por um Conselho de Corregedores, formado por representantes das corregedorias internas de cada guarnição, observada a paridade institucional e o sistema de votação definido em lei.</p>
+                    <p class="paragrafo"><strong>§ 4º</strong> - Cada guarnição de segurança pública terá direito a um único voto, exercido pelo respectivo Corregedor Titular, admitida a substituição exclusiva pelo Corregedor Adjunto apenas na hipótese de ausência, impedimento ou vacância do titular.</p>
+                    <p class="paragrafo"><strong>§ 5º</strong> - A Corregedoria Geral das Polícias será presidida por um Corregedor-Geral, cargo de provimento obrigatório dentre os membros da Polícia Federal, a quem caberá a condução dos trabalhos e a prolação da sentença administrativa.</p>
+                    <p class="paragrafo"><strong>§ 6º</strong> - O Corregedor-Geral exercerá voto de qualidade, com peso equivalente a dois votos, exclusivamente nas deliberações do Conselho de Corregedores.</p>
+                    <p class="paragrafo"><strong>§ 7º</strong> - A lei disciplinará: I - a organização interna da Corregedoria Geral; II - o procedimento administrativo disciplinar; III - as hipóteses de absolvição, condenação e ajuste de sentença; IV - o sistema de deliberação e votação; V - as formas e limites de recurso, vedada a reiteração abusiva de instâncias.</p>
+                    <p class="paragrafo"><strong>§ 8º</strong> - É vedada a interferência política, hierárquica ou administrativa externa nas decisões da Corregedoria Geral das Polícias, assegurados o contraditório, a ampla defesa e a fundamentação obrigatória das decisões.</p>
+                    <p class="paragrafo"><strong>§ 9º</strong> - Os membros do Exército Brasileiro permanecem sujeitos exclusivamente à Justiça Militar e às respectivas corregedorias internas, não se submetendo à competência da Corregedoria Geral das Polícias.</p>
+                    <p class="artigo"><strong>Art. 13-D</strong> - A Corregedoria Geral das Polícias constitui instituição essencial à preservação da legalidade, da hierarquia e da credibilidade das forças de segurança, não podendo ser extinta, esvaziada ou ter suas competências reduzidas por lei ordinária ou ato administrativo.</p>
+                    <p class="paragrafo"><strong>Parágrafo único</strong> - Qualquer tentativa de supressão, obstrução ou interferência indevida no funcionamento da Corregedoria Geral das Polícias configura violação grave à ordem constitucional.</p>
+
+                    <h2 class="leg-section-title">TÍTULO V: DO PODER LEGISLATIVO E JUDICIÁRIO</h2>
+                    <p class="artigo"><strong>Art. 14º</strong> - O Poder Legislativo é exercido pela Assembleia Legislativa, composto pelos representantes eleitos pelo povo.</p>
+                    <p class="artigo"><strong>Art. 15º</strong> - O Poder Legislativo estadual é composto por Deputados Estaduais, podendo os Vereadores exercer competências legislativas locais, nos limites definidos por lei complementar estadual.</p>
+                    <p class="artigo"><strong>Art. 16º</strong> - O Poder Judiciário tem como função precípua a guarda da Constituição e a aplicação da lei nos casos concretos.</p>
+                    <p class="paragrafo"><strong>Parágrafo Único</strong> - O cumprimento imediato das decisões judiciais não afasta a possibilidade de revisão por instância superior ou controle de legalidade por meio dos instrumentos constitucionais cabíveis.</p>
+                    <p class="artigo"><strong>Art. 16-A</strong> - O Ministério Público é instituição permanente, essencial à função jurisdicional do Estado, incumbindo-lhe a defesa da ordem jurídica, do regime democrático e dos interesses sociais e individuais indisponíveis.</p>
+                    <p class="artigo"><strong>Art. 17º</strong> - Os juízes gozam das seguintes garantias: I - Vitaliciedade; II - Inamovibilidade, salvo por motivo de interesse público.</p>
+                    <p class="paragrafo"><strong>Parágrafo Único</strong> - Os juízes responderão administrativa e penalmente por abuso de autoridade ou violação grave desta Constituição, nos termos da lei.</p>
+                    <p class="artigo"><strong>Art. 18º</strong> - O Supremo Tribunal Estadual é o órgão máximo do Poder Judiciário do Estado, competindo-lhe a guarda da Constituição, o controle de constitucionalidade e o julgamento das autoridades nos casos previstos nesta Constituição.</p>
+                    <p class="artigo"><strong>Art. 18-A</strong> - O Procurador-Geral da República do Estado do Brasil responde, nos crimes comuns e de responsabilidade praticados no exercício do cargo, perante o Supremo Tribunal Estadual, observados o devido processo legal, o contraditório e a ampla defesa.</p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - A instauração de investigação ou processo dependerá de decisão fundamentada do Supremo Tribunal Estadual, vedada a atuação de ofício de órgãos policiais ou administrativos.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - O Procurador-Geral da República somente poderá ser ouvido, intimado ou submetido a medidas cautelares por determinação expressa do Supremo Tribunal Estadual.</p>
+                    <p class="paragrafo"><strong>§ 3º</strong> - Os crimes estranhos às funções institucionais do cargo observarão a competência definida em lei, vedada interpretação extensiva ou analógica em prejuízo do acusado.</p>
+                    <p class="artigo"><strong>Art. 19º</strong> - Compete ao Legislativo legislar sobre todas as matérias de competência do Estado, especialmente sobre tributos e orçamento.</p>
+                    <p class="artigo"><strong>Art. 19-A</strong> - Os membros do Poder Legislativo respondem civil, penal e administrativamente por atos praticados no exercício do mandato que atentem contra esta Constituição, mediante processo instaurado pelo Poder Judiciário ou por provocação do Ministério Público.</p>
+                    <p class="paragrafo"><strong>Parágrafo Único</strong> - É vedado ao Poder Legislativo aprovar leis que contrariem expressamente os direitos e garantias fundamentais ou a separação dos Poderes, sob pena de controle de constitucionalidade.</p>
+                    <p class="artigo"><strong>Art. 19-B</strong> - Na hipótese de inexistência, dissolução ou impossibilidade temporária de funcionamento do Poder Legislativo, suas competências ficarão suspensas, vedada a produção legislativa ordinária.</p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - Durante o período previsto no caput, o Chefe do Executivo poderá editar Decretos de Necessidade Administrativa, de caráter excepcional e temporário, exclusivamente para assegurar a continuidade dos serviços públicos essenciais, a preservação da ordem pública e o funcionamento mínimo da administração do Estado.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - Os Decretos de Necessidade Administrativa terão vigência máxima de 30 dias, prorrogável uma única vez por igual período, sendo automaticamente revogados se não forem expressamente ratificados pelo Poder Legislativo no prazo de 15 dias após sua reinstalação.</p>
+                    <p class="paragrafo"><strong>§ 3º</strong> - É vedada a edição de decretos que: I - Criem ou aumentem tributos; II - Restringam direitos e garantias fundamentais; III - Alterem regras eleitorais; IV - Prorroguem mandatos eletivos; V - Criem cargos, aumentem salários ou modifiquem a estrutura permanente da administração pública.</p>
+                    <p class="paragrafo"><strong>§ 4º</strong> - Os Decretos de Necessidade Administrativa estarão sujeitos ao controle imediato de constitucionalidade pelo Poder Judiciário, de ofício ou mediante provocação do Ministério Público.</p>
+                    <p class="paragrafo"><strong>§ 5º</strong> - Considera-se também caracterizada a impossibilidade de funcionamento do Poder Legislativo quando não houver número mínimo de parlamentares em exercício suficiente para deliberação válida, nos termos definidos em lei complementar, hipótese em que aplicar-se-á o regime previsto neste artigo, sob fiscalização permanente do Poder Judiciário.</p>
+
+                    <h2 class="leg-section-title">TÍTULO VI: DA JUSTIÇA ELEITORAL</h2>
+                    <p class="artigo"><strong>Art. 20º</strong> - A Justiça Eleitoral é o órgão responsável pela organização, fiscalização e realização de todos os pleitos eleitorais no Estado.</p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - São órgãos da Justiça Eleitoral: I - O Tribunal Regional Eleitoral (TRE); II - Os Juízes Eleitorais e as Juntas Eleitorais.</p>
+                    <p class="artigo"><strong>Art. 21º</strong> - Compete privativamente à Justiça Eleitoral: I - Realizar o alistamento dos eleitores e a contagem oficial de votos; II - Julgar crimes eleitorais e cassar mandatos em caso de fraude, corrupção ou abuso de poder econômico/político; III - Fixar as datas e os horários das votações para os cargos do Executivo e Legislativo.</p>
+                    <p class="artigo"><strong>Art. 22º</strong> - O Tribunal Regional Eleitoral (TRE) será composto por membros do Judiciário e cidadãos de notável saber jurídico nomeados pelo Chefe do Executivo, mediante aprovação do Legislativo.</p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - Durante o período eleitoral, o Presidente do TRE tem autoridade para solicitar o apoio das Forças Armadas para garantir a segurança das urnas e a liberdade de voto, sob o regime de GLO Eleitoral.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - É vedado o emprego da GLO Eleitoral com finalidade político-partidária ou para beneficiar ou prejudicar candidatos, partidos ou coligações, sob pena de crime de responsabilidade.</p>
+
+                    <h2 class="leg-section-title">TÍTULO VII: DOS PARTIDOS POLÍTICOS E ELEGIBILIDADE</h2>
+                    <p class="artigo"><strong>Art. 23º</strong> - É livre a criação, fusão e extinção de partidos políticos, desde que resguardem a soberania nacional e o regime democrático.</p>
+                    <p class="paragrafo"><strong>Parágrafo Único</strong> - É vedada a criação de partidos que defendam a ruptura da ordem constitucional, o uso da violência política ou a supressão de direitos fundamentais.</p>
+                    <p class="artigo"><strong>Art. 24º</strong> - São condições de elegibilidade para qualquer cargo no Estado:</p>
+                    <p class="inciso">I - A nacionalidade brasileira (ou cidadania do Estado);</p>
+                    <p class="inciso">II - O pleno exercício dos direitos políticos;</p>
+                    <p class="inciso">III - O alistamento eleitoral;</p>
+                    <p class="inciso">IV - A idade mínima de 18 anos para o Legislativo e 21 anos para o Executivo.</p>
+
+                    <h2 class="leg-section-title">TÍTULO VIII: DO CONTROLE DE CONSTITUCIONALIDADE E DEFESA DO ESTADO</h2>
+                    <p class="artigo"><strong>Art. 25º</strong> - Qualquer ato, decreto ou lei que viole os princípios desta Constituição poderá ser declarado inconstitucional pelo Supremo Tribunal Estadual (STE).</p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - Podem provocar o controle de constitucionalidade: I - O Chefe do Executivo; II - O Presidente do Poder Legislativo; III - Qualquer juiz no exercício da função; IV - O Ministério Público.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - As decisões do Supremo Tribunal Estadual em controle de constitucionalidade possuem efeito vinculante e eficácia geral, obrigando todos os Poderes e autoridades do Estado.</p>
+                    <p class="artigo"><strong>Art. 26º</strong> - Em caso de vacância do cargo de Chefe do Executivo, assumirá sucessivamente: I - O Vice-Chefe do Executivo, eleito conjuntamente ou designado conforme a organização política vigente no período. II - O Presidente do Poder Legislativo; III - O Presidente do Supremo Tribunal Estadual.</p>
+                    <p class="paragrafo"><strong>Parágrafo Único</strong> - Na impossibilidade simultânea dos sucessores previstos neste artigo, o Supremo Tribunal Estadual assumirá provisoriamente a Chefia do Executivo, exclusivamente para convocar novas eleições, no prazo e forma definidos em lei.</p>
+                    <p class="artigo"><strong>Art. 27º</strong> - O descumprimento das ordens da Justiça Eleitoral ou a tentativa de fraude no sistema de votação constitui crime de lesa-estado, sujeitando o infrator à perda de direitos políticos nos termos da decisão judicial e à prisão.</p>
+                    <p class="paragrafo"><strong>Parágrafo Único</strong> - Os crimes previstos neste artigo serão processados e julgados pelo Supremo Tribunal Estadual, sem prejuízo da atuação do Ministério Público.</p>
+                    <p class="artigo"><strong>Art. 27-A</strong> - Constitui crime contra a ordem constitucional a tentativa de tomada, manutenção ou usurpação do poder político por meios não previstos nesta Constituição, inclusive mediante violência, ameaça, coação institucional ou uso indevido das Forças Armadas ou de órgãos de segurança.</p>
+                    <p class="paragrafo"><strong>Parágrafo Único</strong> - Os crimes previstos neste artigo são imprescritíveis e não passíveis de anistia.</p>
+                    <p class="artigo"><strong>Art. 27-B</strong> - A concessão de anistia somente poderá ocorrer por lei específica, aprovada por maioria qualificada de dois terços do Poder Legislativo.</p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - É vedada a concessão de anistia para: I - Crimes contra a ordem constitucional; II - Tentativa de golpe de Estado; III - Atuação em milícias, organizações paramilitares ou forças paralelas; IV - Crimes eleitorais que atentem contra a soberania popular.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - A lei de anistia estará sujeita ao controle de constitucionalidade pelo Supremo Tribunal Estadual.</p>
+                    <p class="artigo"><strong>Art. 27-C</strong> - Nos termos desta Constituição Estadual, a morte permanente do agente acusado, investigado ou condenado implica a extinção absoluta da responsabilidade penal, observando-se:</p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - Comprovado o óbito do agente, extinguem-se automaticamente todos os crimes a ele imputados, independentemente de sua natureza ou gravidade, inclusive os crimes contra o Estado;</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - Fica expressamente proibida a instauração, reabertura ou continuidade de inquérito policial, procedimento investigatório ou ação penal com base nos mesmos fatos, provas, indícios ou elementos anteriormente atribuídos ao falecido;</p>
+                    <p class="paragrafo"><strong>§ 3º</strong> - As provas produzidas em procedimentos extintos em razão da morte permanente do agente não poderão ser reutilizadas para fins de persecução penal relacionada aos mesmos crimes;</p>
+                    <p class="paragrafo"><strong>§ 4º</strong> - A extinção da responsabilidade penal impede qualquer forma de responsabilização posterior fundada nos crimes já apurados, ainda que sob nova tipificação ou enquadramento jurídico;</p>
+                    <p class="paragrafo"><strong>§ 5º</strong> - A responsabilidade penal é pessoal e intransmissível, não podendo ser transferida, presumida ou estendida a terceiros com base exclusiva nos fatos atribuídos ao falecido.</p>
+                    <p class="paragrafo"><strong>Parágrafo único</strong> - Somente fatos novos, autônomos e independentes, sem vínculo direto ou indireto com os crimes anteriormente atribuídos ao falecido, poderão ser objeto de nova apuração.</p>
+                    <p class="artigo"><strong>Art. 28º</strong> - O Ministro da Defesa deve garantir que as Forças Armadas permaneçam neutras durante o processo eleitoral, sendo vedada qualquer manifestação política de oficiais da ativa.</p>
+
+                    <h2 class="leg-section-title">TÍTULO IX: DA ADMINISTRAÇÃO E DEFESA DO ESTADO</h2>
+                    <p class="artigo"><strong>Art. 29º</strong> - A administração pública obedecerá aos princípios de legalidade, impessoalidade, moralidade, publicidade e eficiência.</p>
+                    <p class="artigo"><strong>Art. 30º</strong> - O Ministro da Defesa é o elo administrativo e hierárquico entre o Chefe do Executivo e os Comandantes de Força.</p>
+                    <p class="artigo"><strong>Art. 31º</strong> - Nenhuma ordem superior que viole direitos humanos fundamentais, esta Constituição ou o ordenamento jurídico deverá ser cumprida.</p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - A recusa ao cumprimento de ordem ilícita constitui dever funcional, não podendo ensejar punição, retaliação ou prejuízo funcional ao agente que agir de boa-fé.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - A legalidade da conduta do agente e da ordem recusada será apurada posteriormente pelos órgãos competentes, assegurados o contraditório e a ampla defesa.</p>
+                    <p class="paragrafo"><strong>§ 3º</strong> - O cumprimento de ordem manifestamente ilícita não exime de responsabilidade aquele que a executou.</p>
+                    <p class="artigo"><strong>Art. 32º</strong> - Esta Constituição poderá ser reformada mediante Emenda Constitucional, aprovada pelo dois terços do Poder Legislativo em dois turnos de votação.</p>
+                    <p class="artigo"><strong>Art. 32-A</strong> - Esta Constituição é a norma suprema do Estado do Brasil, prevalecendo sobre quaisquer leis, decretos, atos administrativos ou decisões que lhe sejam contrárias.</p>
+                    <p class="artigo"><strong>Art. 32-B</strong> - Em caso de lacuna, conflito ou ambiguidade na interpretação desta Constituição, deverá prevalecer a interpretação que melhor assegure a continuidade do Estado, a estabilidade das instituições, a separação e harmonia entre os Poderes e a efetividade das normas constitucionais.</p>
+                    <p class="artigo"><strong>Art. 32-C</strong> - Não será objeto de emenda constitucional a proposta tendente a abolir: I - A forma democrática de governo; II - A separação dos Poderes; III - Os direitos e garantias fundamentais; IV - O sufrágio universal, direto e secreto.</p>
+                    <p class="artigo"><strong>Art. 32-D</strong> - Nenhuma interpretação desta Constituição poderá ser utilizada para legitimar ruptura institucional, concentração abusiva de poder ou supressão indevida do funcionamento regular dos Poderes do Estado.</p>
+                    <p class="artigo"><strong>Art. 33º</strong> - Enquanto não forem editadas as leis complementares, ordinárias ou regulamentares previstas nesta Constituição, aplicar-se-ão, no que couber e de forma compatível com seus princípios, as normas infraconstitucionais vigentes ou aquelas editadas pelo Chefe do Executivo sob controle do Poder Judiciário.</p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - A ausência de lei específica não poderá ser invocada para impedir o exercício de direitos, o funcionamento dos Poderes ou a prestação de serviços públicos essenciais.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - O Supremo Tribunal Estadual poderá suprir, de forma excepcional e temporária, lacunas normativas estritamente necessárias à preservação da ordem constitucional, até a edição da norma competente.</p>
+                    <p class="artigo"><strong>Art. 34º</strong> - As normas desta Constituição possuem aplicação imediata, vinculando todos os Poderes, autoridades públicas, agentes estatais e instituições do Estado.</p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - Nenhuma autoridade poderá alegar desconhecimento desta Constituição para justificar ato ilegal ou inconstitucional.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - Os atos praticados em desacordo com esta Constituição são nulos de pleno direito, sem prejuízo da responsabilização civil, penal e administrativa dos seus autores.</p>
+                    <p class="paragrafo"><strong>§ 3º</strong> - A boa-fé do agente público poderá ser considerada apenas para fins de dosimetria da sanção, não afastando a nulidade do ato.</p>
+                    <p class="artigo"><strong>Art. 35º</strong> - A interpretação e a aplicação desta Constituição deverão sempre observar os princípios da estabilidade institucional, da continuidade do Estado, da boa-fé objetiva e da vedação ao abuso de direito.</p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - É vedada a utilização desta Constituição para obtenção de vantagens indevidas, blindagem de condutas ilícitas ou manipulação artificial de cenários institucionais.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - Constatado o uso abusivo, fraudulento ou manifestamente antijurídico das normas constitucionais, o Supremo Tribunal Estadual poderá restringir seus efeitos no caso concreto, mediante decisão colegiada e devidamente fundamentada.</p>
+                    <p class="paragrafo"><strong>§ 3º</strong> - Este artigo aplica-se a todos os Poderes e agentes públicos, inclusive magistrados, membros do Ministério Público, autoridades policiais, militares e demais servidores do Estado.</p>
+                    <p class="artigo"><strong>Art. 36º</strong> - Ficam convalidados os atos administrativos, as nomeações e as decisões judiciais praticados anteriormente à promulgação desta Constituição, presumindo-se sua validade, salvo quando comprovada afronta direta aos direitos e garantias fundamentais nela estabelecidos.</p>
+                </div>
+            </div>
+
+            <!-- CÓDIGO PENAL -->
+            <div class="tab-pane fade" id="penal" role="tabpanel">
+                <div class="leg-box">
+                    <h1 class="leg-title">CÓDIGO PENAL DO BRASIL</h1>
+                    
+                    <h2 class="leg-section-title">PARTE GERAL</h2>
+                    <h3 class="leg-subsection-title">TÍTULO I - DA APLICAÇÃO DA LEI PENAL</h3>
+                    <p class="artigo"><strong>Art. 1º - (Legalidade)</strong> Não há crime sem lei anterior que o defina, nem pena sem prévia cominação legal, observados os princípios constitucionais.</p>
+                    <p class="artigo"><strong>Art. 2º - (Anterioridade e Irretroatividade)</strong> A lei penal não retroagirá, salvo para beneficiar o réu.</p>
+                    <p class="artigo"><strong>Art. 3º - (Territorialidade)</strong> Aplica-se a lei penal do Estado do Brasil aos crimes cometidos em seu território, sem prejuízo das hipóteses previstas nesta lei.</p>
+                    <p class="artigo"><strong>Art. 4º - (Tempo do crime)</strong> Considera-se praticado o crime no momento da ação ou omissão, ainda que outro seja o momento do resultado.</p>
+                    
+                    <h3 class="leg-subsection-title">TÍTULO II - DO CRIME</h3>
+                    <p class="artigo"><strong>Art. 5º - (Crime)</strong> Considera-se crime a conduta típica, ilícita e culpável.</p>
+                    <p class="artigo"><strong>Art. 6º - (Dolo)</strong> Diz-se o crime doloso quando o agente quis o resultado ou assumiu o risco de produzi-lo.</p>
+                    <p class="artigo"><strong>Art. 7º - (Culpa)</strong> Diz-se o crime culposo quando o agente deu causa ao resultado por imprudência, negligência ou imperícia, nos casos expressamente previstos em lei.</p>
+                    <p class="artigo"><strong>Art. 8º - (Tentativa)</strong> Diz-se o crime tentado quando, iniciada a execução, não se consuma por circunstâncias alheias à vontade do agente.</p>
+                    <p class="paragrafo"><strong>Parágrafo Único</strong> - Salvo disposição em contrário, pune-se a tentativa com a pena do crime consumado, diminuída de um a dois terços.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO III - DA ILICITUDE</h3>
+                    <p class="artigo"><strong>Art. 9º - (Exclusão de ilicitude)</strong> Não há crime quando o agente pratica o fato: I - em estado de necessidade; II - em legítima defesa; III - em estrito cumprimento do dever legal; IV - no exercício regular de direito.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO IV - DA CULPABILIDADE</h3>
+                    <p class="artigo"><strong>Art. 10º - (Imputabilidade)</strong> É penalmente imputável quem, ao tempo da ação ou omissão, era capaz de entender o caráter ilícito do fato e de determinar-se de acordo com esse entendimento.</p>
+                    <p class="artigo"><strong>Art. 11º - (Erro de proibição)</strong> O desconhecimento da lei é inescusável. O erro sobre a ilicitude do fato, se inevitável, isenta de pena; se evitável, poderá diminuí-la.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO V - DO CONCURSO DE PESSOAS</h3>
+                    <p class="artigo"><strong>Art. 12º - (Autoria e participação)</strong> Quem, de qualquer modo, concorre para o crime incide nas penas a este cominadas, na medida de sua culpabilidade.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO VI - DAS PENAS</h3>
+                    <p class="artigo"><strong>Art. 13º - (Espécies de pena)</strong> As penas são: I - privativas de liberdade; II - restritivas de direitos; III - multa.</p>
+                    <p class="artigo"><strong>Art. 14º - (Proporcionalidade)</strong> A pena será aplicada conforme a gravidade do crime, a culpabilidade do agente, os antecedentes, a conduta social e as circunstâncias do fato.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO VII - DA DOSIMETRIA</h3>
+                    <p class="artigo"><strong>Art. 15º - (Fixação da pena)</strong> O juiz fixará a pena-base atendendo às circunstâncias judiciais, considerando agravantes, atenuantes, causas de aumento e de diminuição.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO VIII - DA PRESCRIÇÃO</h3>
+                    <p class="artigo"><strong>Art. 16º - (Prescrição)</strong> A punibilidade extingue-se pela prescrição, salvo nos crimes imprescritíveis previstos na Constituição.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO IX - DA EXTINÇÃO DA PUNIBILIDADE</h3>
+                    <p class="artigo"><strong>Art. 17º - (Extinção da punibilidade)</strong> Extingue-se a punibilidade:</p>
+                    <p class="inciso">I - pela morte do agente;</p>
+                    <p class="inciso">II - pela anistia, graça ou indulto, nos termos da Constituição;</p>
+                    <p class="inciso">III - pela prescrição, decadência ou perempção;</p>
+                    <p class="inciso">IV - pela renúncia do direito de queixa ou pelo perdão aceito, nos crimes de ação privada;</p>
+                    <p class="inciso">V - nos demais casos previstos em lei.</p>
+                    <p class="paragrafo"><strong>Parágrafo Único</strong> - Não se aplicam as causas de extinção da punibilidade aos crimes declarados imprescritíveis ou insuscetíveis de anistia pela Constituição.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO X - DA AÇÃO PENAL</h3>
+                    <p class="artigo"><strong>Art. 18º - (Ação penal pública)</strong> A ação penal é pública e será promovida pelo Ministério Público, salvo quando a lei expressamente a declarar de iniciativa privada.</p>
+                    <p class="artigo"><strong>Art. 19º - (Ação penal privada)</strong> Nos crimes de ação penal privada, cabe ao ofendido ou a seu representante legal o exercício do direito de queixa, nos termos da lei.</p>
+                    <p class="artigo"><strong>Art. 20º - (Ação penal nos crimes contra o Estado)</strong> Nos crimes contra a ordem constitucional, contra o regime democrático ou de lesa-estado, a ação penal será pública incondicionada, sendo vedada a renúncia, o perdão ou qualquer forma de transação penal.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO XI - DA RESPONSABILIDADE PENAL</h3>
+                    <p class="artigo"><strong>Art. 21º - (Responsabilidade penal)</strong> A responsabilidade penal é pessoal e não se transmite, salvo quanto aos efeitos civis da condenação.</p>
+                    <p class="artigo"><strong>Art. 22º - (Responsabilidade do agente público)</strong> O agente público responde penalmente pelos crimes praticados no exercício da função ou a pretexto de exercê-la, sem prejuízo das responsabilidades civil e administrativa.</p>
+                    <p class="artigo"><strong>Art. 23º - (Ordem ilegal)</strong> O cumprimento de ordem manifestamente ilegal ou inconstitucional não exclui a responsabilidade penal do agente que a executa.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO XII - DISPOSIÇÕES GERAIS</h3>
+                    <p class="artigo"><strong>Art. 24º - (Interpretação da lei penal)</strong> A lei penal será interpretada restritivamente, vedada a analogia para prejudicar o réu.</p>
+                    <p class="artigo"><strong>Art. 25º - (Princípios constitucionais)</strong> Na aplicação deste Código, o juiz observará obrigatoriamente os princípios constitucionais da dignidade da pessoa humana, do devido processo legal e da legalidade estrita.</p>
+                    <p class="artigo"><strong>Art. 26º - (Vedação ao uso abusivo do direito penal)</strong> É vedada a utilização do direito penal para fins de perseguição política, ideológica ou pessoal, sob pena de nulidade do ato e responsabilização dos agentes envolvidos.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO XIII - DA MULTA, DA FIANÇA E DA INDENIZAÇÃO JUDICIAL</h3>
+                    <p class="artigo"><strong>Art. 26-A - Da multa penal</strong> A multa penal poderá ser aplicada de forma autônoma ou cumulativa às demais penas previstas neste Código, conforme a gravidade do crime e as circunstâncias do caso concreto.</p>
+                    <p class="artigo"><strong>Art. 26-B - Da fixação da multa</strong> A fixação do valor da multa compete exclusivamente ao juiz, que a determinará de forma fundamentada, observando:</p>
+                    <p class="inciso">I - a gravidade do crime; II - a pena cominada; III - a existência de vantagem econômica; IV - a capacidade econômica do agente; V - os princípios constitucionais da proporcionalidade e razoabilidade.</p>
+                    <p class="artigo"><strong>Art. 26-C - Multa nos crimes com proveito econômico</strong> Nos crimes que resultem em vantagem econômica, a multa poderá ser fixada em valor igual ou superior ao benefício obtido, sem prejuízo das demais sanções cabíveis.</p>
+                    <p class="artigo"><strong>Art. 26-D - Autonomia da multa</strong> A multa penal não se confunde com fiança ou indenização judicial, podendo ser aplicada cumulativamente com ambas.</p>
+                    <p class="artigo"><strong>Art. 26-E - Cabimento da fiança</strong> A fiança somente será admitida nos crimes que não forem expressamente declarados inafiançáveis por este Código ou pela Constituição.</p>
+                    <p class="artigo"><strong>Art. 26-F - Critérios para fixação da fiança</strong> A fiança será fixada com base na pena máxima abstrata do crime, observadas as circunstâncias do fato, a conduta do agente e o risco à ordem pública.</p>
+                    <p class="artigo"><strong>Art. 26-G - Tabela geral de fiança</strong> Quando cabível, a fiança observará os seguintes valores, conforme a pena máxima prevista para o crime:</p>
+                    
+                    <table class="table-fiancas">
+                        <thead>
+                            <tr>
+                                <th>Tempo de Pena</th>
+                                <th>Valor da Fiança (R$)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Até 15 meses</td><td>R$ 100.000</td></tr>
+                            <tr><td>De 16 a 30 meses</td><td>R$ 200.000</td></tr>
+                            <tr><td>De 31 a 45 meses</td><td>R$ 300.000</td></tr>
+                            <tr><td>De 46 a 60 meses</td><td>R$ 450.000</td></tr>
+                            <tr><td>De 61 a 75 meses</td><td>R$ 600.000</td></tr>
+                            <tr><td>De 76 a 90 meses</td><td>R$ 800.000</td></tr>
+                            <tr><td>Acima de 90 meses</td><td>R$ 1.200.000</td></tr>
+                        </tbody>
+                    </table>
+
+                    <p class="artigo"><strong>Art. 26-H - Fiança cumulativa por penas</strong> Nos casos de concurso de crimes, a fiança será cumulativa, somando-se os valores correspondentes a cada crime imputado.</p>
+                    <p class="paragrafo"><strong>Parágrafo único</strong> - Caso haja qualquer crime inafiançáveis, o réu perde o direito a fiança.</p>
+                    <p class="artigo"><strong>Art. 26-I - Vedação da fiança</strong> É vedada a concessão de fiança:</p>
+                    <p class="inciso">I - nos crimes expressamente declarados inafiançáveis por este Código; II - nos crimes contra a vida; III - nos crimes contra a ordem constitucional e o Estado Democrático; IV - nos crimes cometidos com violência extrema ou grave ameaça.</p>
+                    <p class="artigo"><strong>Art. 26-J - Indenização judicial</strong> A indenização pelos danos materiais, morais, coletivos ou institucionais decorrentes do crime será fixada exclusivamente pelo juiz, não havendo valores previamente definidos neste Código.</p>
+                    <p class="artigo"><strong>Art. 26-K - Autonomia da indenização</strong> A indenização judicial é independente da fiança e da multa, podendo ser aplicada cumulativamente com ambas.</p>
+                    <p class="artigo"><strong>Art. 26-L - Fundamentação obrigatória</strong> A decisão que fixar indenização deverá ser fundamentada, considerando a extensão do dano, a gravidade da conduta e os princípios constitucionais aplicáveis.</p>
+                    <p class="artigo"><strong>Art. 26-M - Aplicação subsidiária</strong> Na ausência de previsão específica sobre fiança, multa ou indenização no tipo penal, aplicam-se as disposições deste título.</p>
+
+                    <h2 class="leg-section-title">PARTE CRIMINAL</h2>
+                    
+                    <h3 class="leg-subsection-title">TÍTULO I - DOS CRIMES CONTRA A VIDA</h3>
+                    <p class="artigo"><strong>Art. 27º - Homicídio simples</strong> Matar alguém, sem circunstâncias qualificadoras.<br><em>Pena - 55 a 70 meses</em></p>
+                    <p class="artigo"><strong>Art. 28º - Homicídio qualificado</strong> O homicídio é qualificado quando cometido: I - por motivo torpe ou fútil; II - mediante emboscada, traição ou outro recurso que dificulte ou torne impossível a defesa da vítima; III - com emprego de meio cruel; IV - para assegurar a execução, a ocultação ou a impunidade de outro crime; V - contra agente público no exercício da função ou em razão dela.<br><em>Pena - de 65 a 90 meses</em></p>
+                    <p class="artigo"><strong>Art. 29º - Feminicídio</strong> Matar mulher por razões da condição do sexo feminino, caracterizadas por violência doméstica, menosprezo ou discriminação.<br><em>Pena - 60 a 90 meses</em><br><strong>Parágrafo único</strong> - O feminicídio constitui forma qualificada de homicídio, aplicando-se este tipo de forma autônoma, vedada a cumulação de penas.</p>
+                    <p class="artigo"><strong>Art. 30º - Homicídio culposo</strong> Matar alguém sem intenção, por imprudência, negligência ou imperícia.<br><em>Pena - de 25 a 45 meses</em></p>
+                    <p class="artigo"><strong>Art. 31º - Induzimento, instigação ou auxílio ao suicídio</strong> Induzir, instigar ou auxiliar alguém a suicidar-se ou a praticar automutilação grave.<br><em>Pena - de 20 a 40 meses</em></p>
+                    <p class="artigo"><strong>Art. 32º - Tentativa de homicídio</strong> Atentar contra a vida de outrem, com dolo de matar, sem consumação por circunstâncias alheias à vontade do agente.<br><em>Pena - de 30 a 45 meses</em></p>
+                    <p class="artigo"><strong>Art. 33º - Agravantes específicas dos crimes contra a vida</strong> As penas dos crimes previstos neste título serão aumentadas de 1/3 até metade quando: I - o crime for praticado contra criança, adolescente, idoso ou pessoa com deficiência; II - houver emprego de arma de fogo ou explosivo; III - o agente agir com extrema crueldade ou desprezo pela vida humana; IV - o crime for praticado por mais de uma pessoa; V - houver ocultação ou destruição do corpo da vítima.</p>
+                    <p class="artigo"><strong>Art. 34º - Inafiançabilidade</strong> Os crimes previstos neste título são inafiançáveis, vedada a concessão de fiança em qualquer fase da persecução penal.</p>
+                    <p class="artigo"><strong>Art. 35º - Ação penal</strong> Os crimes contra a vida são de ação penal pública incondicionada.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO II - DOS CRIMES CONTRA A INTEGRIDADE FÍSICA</h3>
+                    <p class="artigo"><strong>Art. 36º - Lesão corporal simples</strong> Ofender a integridade física ou a saúde de outrem.<br><em>Pena - de 15 a 25 meses</em></p>
+                    <p class="artigo"><strong>Art. 37º - Lesão corporal grave</strong> A lesão corporal é grave quando resulta: I - perigo de vida; II - incapacidade para as ocupações habituais por período prolongado; III - debilidade permanente de membro, sentido ou função; IV - deformidade permanente.<br><em>Pena - de 30 a 45 meses</em></p>
+                    <p class="artigo"><strong>Art. 38º - Lesão corporal seguida de morte</strong> Quando da lesão corporal resultar morte, ainda que não intencional.<br><em>Pena - de 40 a 55 meses</em></p>
+                    <p class="artigo"><strong>Art. 39º - Lesão corporal culposa</strong> Ofender a integridade física ou a saúde de outrem, sem intenção, por imprudência, negligência ou imperícia.<br><em>Pena - de 18 a 25 meses</em></p>
+                    <p class="artigo"><strong>Art. 40º - Lesão corporal contra agente público</strong> Se a lesão corporal for praticada contra agente público no exercício da função ou em razão dela.<br><em>Pena - aumento de 1/3</em></p>
+                    <p class="artigo"><strong>Art. 41º - Agravantes específicas</strong> As penas previstas neste título serão aumentadas de 1/3 até metade quando: I - a vítima for criança, adolescente, idoso ou pessoa com deficiência; II - houver uso de arma branca ou instrumento potencialmente letal; III - o crime for praticado por mais de uma pessoa; IV - houver violência doméstica ou familiar.</p>
+                    <p class="artigo"><strong>Art. 42º - Inafiançabilidade</strong> Será inafiançável a lesão corporal: I - seguida de morte; II - que resulte deformidade permanente; III - praticada contra agente público em serviço.</p>
+                    <p class="artigo"><strong>Art. 43º - Ação penal</strong> Os crimes previstos neste título são de ação penal pública, sendo incondicionada nas hipóteses graves.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO III - DOS CRIMES CONTRA A LIBERDADE PESSOAL</h3>
+                    <p class="artigo"><strong>Art. 44º - Ameaça</strong> Ameaçar alguém, por palavra, escrito, gesto ou qualquer outro meio, de causar-lhe mal injusto e grave.<br><em>Pena - de 15 a 20 meses</em></p>
+                    <p class="artigo"><strong>Art. 45º - Constrangimento ilegal</strong> Constranger alguém, mediante violência ou grave ameaça, ou após lhe reduzir, por qualquer meio, a capacidade de resistência, a não fazer o que a lei permite, ou a fazer o que ela não manda.<br><em>Pena - de 10 a 18 meses</em></p>
+                    <p class="artigo"><strong>Art. 46º - Sequestro e cárcere privado</strong> Privar alguém de sua liberdade, mediante sequestro ou cárcere privado.<br><em>Pena - de 30 a 40 meses</em></p>
+                    <p class="artigo"><strong>Art. 47º - Sequestro qualificado</strong> O crime é qualificado quando: I - durar mais de 1 hora; II - a vítima for criança, adolescente, idoso ou pessoa com deficiência; III - houver finalidade de obtenção de vantagem econômica; IV - houver sofrimento físico ou psicológico intenso.<br><em>Pena - de 35 a 45 meses</em></p>
+                    <p class="artigo"><strong>Art. 48º - Redução à condição análoga à de escravo</strong> Reduzir alguém à condição análoga à de escravo, submetendo-o a trabalhos forçados, jornada exaustiva, condições degradantes ou restringindo sua locomoção.<br><em>Pena - de 60 a 70 meses</em></p>
+                    <p class="artigo"><strong>Art. 49º - Tráfico de pessoa</strong> Aliciar, recrutar, transportar, transferir, comprar, alojar ou acolher pessoa, mediante ameaça, violência, fraude ou abuso, para fins de exploração.<br><em>Pena - de 65 a 75 meses</em></p>
+                    <p class="artigo"><strong>Art. 50º - Agravantes específicas</strong> As penas dos crimes previstos neste título serão aumentadas de 1/3 até metade quando: I - o crime for praticado por agente público ou com abuso de autoridade; II - houver violência física ou psicológica grave; III - o crime for cometido contra mais de uma vítima; IV - houver restrição prolongada da liberdade.</p>
+                    <p class="artigo"><strong>Art. 51º - Inafiançabilidade</strong> São inafiançáveis os crimes de: I - sequestro qualificado; II - redução à condição análoga à de escravo; III - tráfico de pessoa.</p>
+                    <p class="artigo"><strong>Art. 52º - Ação penal</strong> Os crimes previstos neste título são de ação penal pública incondicionada.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO IV - DOS CRIMES CONTRA A DIGNIDADE SEXUAL</h3>
+                    <p class="artigo"><strong>Art. 53º - Estupro</strong> Constranger alguém, mediante violência ou grave ameaça, a ter conjunção carnal ou a praticar outro ato libidinoso.<br><em>Pena - de 45 a 55 meses</em></p>
+                    <p class="artigo"><strong>Art. 54º - Estupro qualificado</strong> O crime é qualificado quando: I - resultar lesão corporal grave; II - a vítima for criança, adolescente, idoso ou pessoa com deficiência; III - houver emprego de arma; IV - o crime for praticado por mais de uma pessoa.<br><em>Pena - de 60 a 75 meses</em></p>
+                    <p class="artigo"><strong>Art. 55º - Estupro de vulnerável</strong> Ter conjunção carnal ou praticar ato libidinoso com pessoa vulnerável, independentemente de consentimento.<br><em>Pena - de 50 a 70 meses</em><br><strong>Parágrafo único</strong> - Considera-se vulnerável quem, por idade, condition mental, estado de inconsciência ou incapacidade temporária, não puder oferecer resistência válida.</p>
+                    <p class="artigo"><strong>Art. 56º - Assédio sexual</strong> Constranger alguém com o intuito de obter vantagem ou favorecimento sexual, prevalecendo-se de relação hierárquica, autoridade ou influência.<br><em>Pena - de 20 a 25 meses</em></p>
+                    <p class="artigo"><strong>Art. 57º - Importunação sexual</strong> Praticar ato libidinoso contra alguém, sem sua anuência, para satisfação própria ou de terceiro, sem emprego de violência grave.<br><em>Pena - de 15 a 20 meses</em></p>
+                    <p class="artigo"><strong>Art. 58º - Violação sexual mediante fraude</strong> Induzir alguém à prática de ato sexual mediante engano, fraude ou qualquer meio que invalide o consentimento.<br><em>Pena - de 20 a 30 meses</em></p>
+                    <p class="artigo"><strong>Art. 59º - Divulgação não consentida de conteúdo íntimo</strong> Divulgar, compartilhar ou publicar imagem, vídeo ou material íntimo de nudez ou ato sexual, sem consentimento da vítima.<br><em>Pena - de 25 a 35 meses</em></p>
+                    <p class="artigo"><strong>Art. 60º - Exploração sexual</strong> Explorar sexualmente outra pessoa, mediante lucro, vantagem econômica, coação indireta ou abuso de vulnerabilidade.<br><em>Pena - de 30 a 45 meses</em></p>
+                    <p class="artigo"><strong>Art. 61º - Agravantes específicas</strong> As penas dos crimes previstos neste título serão aumentadas de 1/3 até metade quando: I - o crime resultar dano psicológico grave comprovado; II - houver abuso de autoridade ou relação de confiança; III - o crime for praticado por mais de uma pessoa; IV - a vítima estiver sob dependência econômica ou emocional do agente.</p>
+                    <p class="artigo"><strong>Art. 62º - Inafiançabilidade</strong> São inafiançáveis os crimes de: I - estupro; II - estupro de vulnerável; III - exploração sexual.</p>
+                    <p class="artigo"><strong>Art. 63º - Ação penal</strong> Os crimes previstos neste título são de ação penal pública incondicionada.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO V - DOS CRIMES CONTRA O PATRIMÔNIO</h3>
+                    <p class="artigo"><strong>Art. 64º - Furto simples</strong> Subtrair, para si ou para outrem, coisa alheia móvel, sem violência ou grave ameaça.<br><em>Pena - de 10 a 15 meses</em></p>
+                    <p class="artigo"><strong>Art. 65º - Furto qualificado</strong> O furto é qualificado quando cometido: I - mediante rompimento de obstáculo ou arrombamento; II - com abuso de confiança; III - com emprego de chave falsa ou meio fraudulento; IV - com concurso de duas ou mais pessoas.<br><em>Pena - de 15 a 20 meses</em></p>
+                    <p class="artigo"><strong>Art. 66º - Roubo</strong> Subtrair coisa alheia móvel, mediante violência ou grave ameaça à pessoa.<br><em>Pena - de 25 a 35 meses</em></p>
+                    <p class="artigo"><strong>Art. 67º - Roubo qualificado</strong> O roubo é qualificado quando: I - houver emprego de arma de fogo ou arma branca; II - resultar lesão corporal grave; III - o crime for praticado por mais de uma pessoa; IV - houver restrição da liberdade da vítima.<br><em>Pena - de 40 a 50 meses</em></p>
+                    <p class="artigo"><strong>Art. 68º - Extorsão</strong> Constranger alguém, mediante violência ou grave ameaça, a fazer, tolerar que se faça ou deixar de fazer algo, com o fim de obter vantagem econômica indevida.<br><em>Pena - de 35 a 45 meses</em></p>
+                    <p class="artigo"><strong>Art. 69º - Extorsão mediante sequestro</strong> Privar alguém de sua liberdade com o fim de obter vantagem econômica, direta ou indireta.<br><em>Pena - de 55 a 65 meses</em></p>
+                    <p class="artigo"><strong>Art. 70º - Estelionato</strong> Obter, para si ou para outrem, vantagem ilícita, em prejuízo alheio, induzindo ou mantendo alguém em erro, mediante artifício, ardil ou qualquer meio fraudulento.<br><em>Pena - de 10 a 20 meses</em></p>
+                    <p class="artigo"><strong>Art. 71º - Dano</strong> Destruir, inutilizar ou deteriorar coisa alheia.<br><em>Pena - de 5 a 10 meses</em></p>
+                    <p class="artigo"><strong>Art. 72º - Dano qualificado</strong> O dano é qualificado quando: I - praticado com violência ou grave ameaça; II - contra patrimônio público ou serviço essencial; III - por motivo egoístico ou com prejuízo relevante à vítima.<br><em>Pena - de 10 a 25 meses</em></p>
+                    <p class="artigo"><strong>Art. 73º - Receptação</strong> Adquirir, receber, transportar, ocultar ou vender coisa que sabe ser produto de crime.<br><em>Pena - de 15 a 30 meses</em></p>
+                    <p class="artigo"><strong>Art. 74º - Agravantes específicas</strong> As penas dos crimes previstos neste título serão aumentadas de 1/3 até metade quando: I - o crime for praticado contra idoso, pessoa com deficiência ou em situação de vulnerabilidade; II - houver abuso de função pública ou relação de confiança; III - o prejuízo econômico for elevado; IV - houver concurso de pessoas.</p>
+                    <p class="artigo"><strong>Art. 75º - Inafiançabilidade</strong> São inafiançáveis os crimes de: I - roubo qualificado; II - extorsão mediante sequestro; III - crimes patrimoniais praticados com violência grave.</p>
+                    <p class="artigo"><strong>Art. 76º - Ação penal</strong> Os crimes previstos neste título são de ação penal pública incondicionada, salvo disposição legal expressa em contrário.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO VI - DOS CRIMES CONTRA A ADMINISTRAÇÃO PÚBLICA</h3>
+                    <p class="artigo"><strong>Art. 77º - Peculato</strong> Apropriar-se o agente público de dinheiro, valor ou bem móvel, público ou particular, de que tem a posse em razão do cargo, ou desviá-lo em proveito próprio ou alheio.<br><em>Pena - de 40 a 55 meses</em></p>
+                    <p class="artigo"><strong>Art. 78º - Concussão</strong> Exigir, para si ou para outrem, direta ou indiretamente, vantagem indevida, em razão da função pública.<br><em>Pena - de 50 a 60 meses</em></p>
+                    <p class="artigo"><strong>Art. 79º - Corrupção passiva</strong> Solicitar ou receber, para si ou para outrem, vantagem indevida, ou aceitar promessa de tal vantagem, em razão da função pública.<br><em>Pena - de 55 a 70 meses</em></p>
+                    <p class="artigo"><strong>Art. 80º - Corrupção ativa</strong> Oferecer ou prometer vantagem indevida a agente público, para determiná-lo a praticar, omitir ou retardar ato de ofício.<br><em>Pena - de 50 a 60 meses</em></p>
+                    <p class="artigo"><strong>Art. 81º - Prevaricação</strong> Retardar ou deixar de praticar, indevidamente, ato de ofício, ou praticá-lo contra disposição expressa de lei, para satisfazer interesse ou sentimento pessoal.<br><em>Pena - de 20 a 35 meses</em></p>
+                    <p class="artigo"><strong>Art. 82º - Abuso de autoridade</strong> Praticar ato com excesso de poder ou desvio de finalidade, atentando contra direitos e garantias fundamentais assegurados pela Constituição.<br><em>Pena - de 20 a 35 meses</em><br><strong>Parágrafo único</strong> - A pena será aumentada de até metade se o abuso resultar em privação indevida da liberdade ou grave violação à dignidade da pessoa humana.</p>
+                    <p class="artigo"><strong>Art. 82-A - Exposição indevida de finado</strong> Expor, divulgar, compartilhar ou permitir a divulgação, por qualquer meio, inclusive digital ou rede social, de imagem, vídeo ou registro de pessoa morta, em contexto de violência, ação policial ou atuação estatal, sem finalidade legal, judicial ou de interesse público legítimo.<br><em>Pena - de 15 a 30 meses</em></p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - Incorre na mesma pena quem produz, autoriza, estimula ou se omite quanto à divulgação, quando tinha o dever legal de impedir.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - A pena será aumentada de 1/3 até metade se: I - o agente for agente público ou militar; II - a divulgação ocorrer em rede social aberta; III - houver exaltação, escárnio ou glorificação da morte; IV - a conduta gerar comoção social ou violação à dignidade humana.</p>
+                    <p class="paragrafo"><strong>§ 3º</strong> - Não configura crime a divulgação: I - para fins estritamente jornalísticos, com preservação da identidade; II - por ordem judicial; III - para investigação ou instrução processual, sob sigilo.</p>
+                    <p class="paragrafo"><strong>§ 4º</strong> - O crime é de ação penal pública incondicionada, sem prejuízo da responsabilização civil e administrativa.</p>
+                    <p class="artigo"><strong>Art. 83º - Omissão funcional grave</strong> Deixar o agente público, dolosamente, de agir para impedir crime, ilegalidade ou violação constitucional de que tenha conhecimento e competência para atuar.<br><em>Pena - de 30 a 40 meses</em></p>
+                    <p class="artigo"><strong>Art. 84º - Agravantes específicas</strong> As penas dos crimes previstos neste título serão aumentadas de 1/3 até metade quando: I - houver prejuízo relevante ao erário; II - o crime comprometer serviço público essencial; III - o agente ocupar cargo de direção, chefia ou assessoramento; IV - houver reiteração criminosa no exercício da função.</p>
+                    <p class="artigo"><strong>Art. 85º - Inafiançabilidade</strong> São inafiançáveis os crimes de: I - peculato doloso; II - concussão; III - corrupção passiva/ativa quando envolver valores elevados ou dano institucional grave.</p>
+                    <p class="artigo"><strong>Art. 86º - Ação penal</strong> Os crimes previstos neste título são de ação penal pública incondicionada.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO VII - DOS CRIMES CONTRA A ORDEM CONSTITUCIONAL E O ESTADO DEMOCRÁTICO</h3>
+                    <p class="artigo"><strong>Art. 87º - Tentativa de golpe de Estado</strong> Tentar abolir, usurpar ou subverter a ordem constitucional vigente, mediante violência, grave ameaça, coação institucional ou uso indevido da força armada ou de órgãos de segurança.<br><em>Pena - de 80 a 110 meses</em><br><strong>Parágrafo único</strong> - O crime consuma-se ainda que a tentativa não produza resultado efetivo.</p>
+                    <p class="artigo"><strong>Art. 88º - Usurpação de poder constitucional</strong> Exercer ou manter-se no exercício de função, cargo ou poder estatal sem respaldo constitucional ou legal.<br><em>Pena - de 80 a 100 meses</em></p>
+                    <p class="artigo"><strong>Art. 88-A - Investidura irregular policial</strong> Investir, designar, nomear, permitir ou tolerar que pessoa não legalmente aprovada em concurso público e regularmente investida exerça, a qualquer título, função, atribuição ou poder próprio de autoridade policial.<br><em>Pena - de 40 a 60 meses</em></p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - Incorre na mesma pena quem, sem respaldo constitucional ou legal, exerce ou se apresenta como autoridade policial, ainda que de forma temporária ou excepcional.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - A pena será aumentada de 1/3 até metade se: I - o agente ocupar cargo de direção, chefia ou comando; II - houver favorecimento pessoal, político ou institucional; III - da conduta resultar violação a direitos fundamentais.</p>
+                    <p class="paragrafo"><strong>§ 3º</strong> - O crime é fiançável e de ação penal pública incondicionada, observados os critérios gerais deste Código.</p>
+                    <p class="paragrafo"><strong>§ 4º</strong> - Os atos praticados em decorrência da investidura irregular não produzem efeitos jurídicos válidos, sem prejuízo da responsabilização civil e administrativa.</p>
+                    <p class="artigo"><strong>Art. 89º - Atentado contra a soberania popular</strong> Impedir, fraudar, restringir ou manipular, por meios ilícitos, o livre exercício do voto, a apuração eleitoral ou a alternância legítima de poder.<br><em>Pena - de 80 a 90 meses</em></p>
+                    <p class="artigo"><strong>Art. 90º - Atuação armada político-partidária</strong> Organizar, financiar, integrar ou apoiar grupo armado ou estrutura paramilitar com finalidade político-partidária ou eleitoral.<br><em>Pena - de 70 a 85 meses</em></p>
+                    <p class="artigo"><strong>Art. 91º - Uso indevido das Forças Armadas ou da segurança pública</strong> Empregar as Forças Armadas ou órgãos de segurança pública fora das hipóteses expressamente previstas na Constituição, com finalidade política, pessoal ou institucional ilícita.<br><em>Pena - de 60 a 90 meses</em></p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - Considera-se uso indevido, para os fins deste artigo, a mobilização, comando, direcionamento ou emprego operacional das forças referidas no caput: I - para favorecimento ou perseguição político-partidária; II - para intimidação institucional de outro Poder; III - para obtenção de vantagem pessoal, proteção indevida ou blindagem de conduta ilícita; IV - em desacordo com os limites, objetivos ou prazos fixados em decreto constitucional válido.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - Incorre na mesma pena quem: I - ordenar o uso indevido; II - executar a ordem manifestamente ilegal; III - concorrer, de qualquer forma, para a prática do crime.</p>
+                    <p class="paragrafo"><strong>§ 3º</strong> - A pena será aumentada de 1/3 até metade se: I - houver emprego de força armada ou armamento pesado; II - resultar violação a direitos e garantias fundamentais; III - o agente ocupar cargo de direção, comando ou chefia; IV - houver grave instabilidade institucional ou comoção social.</p>
+                    <p class="paragrafo"><strong>§ 4º</strong> - O cumprimento de ordem manifestamente ilegal não exclui a responsabilidade penal do agente, observado o disposto na Constituição.</p>
+                    <p class="artigo"><strong>Art. 92º - Organização de milícia ou força paralela</strong> Organizar, manter, financiar ou integrar milícia, organização paramilitar, grupo armado ou força paralela à estrutura oficial do Estado.<br><em>Pena - de 80 a 90 meses</em></p>
+                    <p class="artigo"><strong>Art. 93º - Sabotagem institucional</strong> Praticar ato destinado a paralisar, desestabilizar ou comprometer gravemente o funcionamento regular de qualquer Poder do Estado.<br><em>Pena - de 70 a 80 meses</em></p>
+                    <p class="artigo"><strong>Art. 94º - Agravantes específicas</strong> As penas dos crimes previstos neste título serão aumentadas de 1/3 até metade quando: I - houver emprego de violência armada; II - o agente ocupar cargo público, função de comando ou liderança institucional; III - houver participação de forças estatais ou uso de recursos públicos; IV - resultar grave instabilidade institucional ou comoção social relevante.</p>
+                    <p class="artigo"><strong>Art. 95º - Imprescritibilidade e vedação de anistia</strong> Os crimes previstos neste título são imprescritíveis, inafiançáveis e insuscetíveis de anistia, graça ou indulto, nos termos da Constituição, exceto o Art. 88-A.</p>
+                    <p class="artigo"><strong>Art. 96º - Ação penal</strong> Os crimes previstos neste título são de ação penal pública incondicionada, competindo ao Ministério Público sua promoção.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO VIII - DOS CRIMES CONTRA A ADMINISTRAÇÃO DA JUSTIÇA</h3>
+                    <p class="artigo"><strong>Art. 97º - Denunciação caluniosa</strong> Dar causa à instauração de investigação, processo judicial ou procedimento administrativo contra alguém, imputando-lhe crime ou infração que sabe não ter ocorrido.<br><em>Pena - de 20 a 45 meses</em></p>
+                    <p class="artigo"><strong>Art. 98º - Comunicação falsa de crime</strong> Provocar a ação da autoridade, comunicando ocorrência de crime ou infração inexistente ou atribuindo-a a pessoa determinada.<br><em>Pena - de 15 a 30 meses</em></p>
+                    <p class="artigo"><strong>Art. 99º - Falso testemunho ou falsa perícia</strong> Fazer afirmação falsa, negar ou calar a verdade como testemunha, perito, tradutor ou intérprete em processo judicial, administrativo ou investigação oficial.<br><em>Pena - de 20 a 40 meses</em><br><strong>Parágrafo único</strong> - A pena será aumentada de até metade se o fato ocorrer em processo penal ou constitucional.</p>
+                    <p class="artigo"><strong>Art. 100º - Coação no curso do processo</strong> Usar violência ou grave ameaça contra autoridade, parte, testemunha, perito ou qualquer pessoa que atue no processo, com o fim de favorecer interesse próprio ou alheio.<br><em>Pena - de 30 a 45 meses</em></p>
+                    <p class="artigo"><strong>Art. 101º - Obstrução da Justiça</strong> Dificultar, impedir ou frustrar investigação, instrução processual ou cumprimento de decisão judicial, por meio ilícito.<br><em>Pena - de 20 a 50 meses</em></p>
+                    <p class="artigo"><strong>Art. 102º - Desobediência a ordem judicial</strong> Descumprir ordem judicial válida e regularmente expedida, sem justa causa.<br><em>Pena - de 10 a 25 meses</em><br><strong>Parágrafo único</strong> - Não configura crime a recusa fundada no direito constitucional de não produzir prova contra si.</p>
+                    <p class="artigo"><strong>Art. 103º - Fraude processual</strong> Inovar artificiosamente o estado de coisa, pessoa ou lugar, com o fim de induzir a erro o juiz, o Ministério Público ou a autoridade policial.<br><em>Pena - de 20 a 35 meses</em></p>
+                    <p class="artigo"><strong>Art. 104º - Exercício arbitrário das próprias razões</strong> Fazer justiça pelas próprias mãos, para satisfazer pretensão, ainda que legítima, salvo quando a lei o permite.<br><em>Pena - de 15 a 25 meses</em></p>
+                    <p class="artigo"><strong>Art. 105º - Violação de sigilo processual</strong> Divulgar, sem autorização legal, informação sigilosa de processo judicial, investigação ou procedimento constitucional.<br><em>Pena - de 15 a 30 meses</em></p>
+                    <p class="artigo"><strong>Art. 106º - Agravantes específicas</strong> As penas dos crimes previstos neste título serão aumentadas de 1/3 até metade quando: I - houver abuso de função pública ou prerrogativa institucional; II - o crime visar impedir controle de constitucionalidade ou atuação do Ministério Público; III - houver prejuízo grave à ampla defesa ou ao contraditório; IV - o processo envolver direitos fundamentais.</p>
+                    <p class="artigo"><strong>Art. 107º - Inafiançabilidade</strong> São inafiançáveis os crimes de: I - coação no curso do processo; II - obstrução da Justiça; III - falso testemunho em processo penal ou constitucional.</p>
+                    <p class="artigo"><strong>Art. 108º - Ação penal</strong> Os crimes previstos neste título são de ação penal pública, sendo incondicionada quando houver lesão a direito fundamental ou à ordem constitucional.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO IX - DOS CRIMES CONTRA A FÉ PÚBLICA</h3>
+                    <p class="artigo"><strong>Art. 109º - Falsificação de documento</strong> Falsificar, no todo ou em parte, documento público e/ou particular ou alterar documento verdadeiro.<br><em>Pena - de 20 a 40 meses</em></p>
+                    <p class="artigo"><strong>Art. 110º - Uso de documento falso</strong> Fazer uso de qualquer dos documentos falsificados ou alterados previstos neste título.<br><em>Pena - a mesma do crime de falsificação correspondente</em></p>
+                    <p class="artigo"><strong>Art. 111º - Falsidade ideológica</strong> Inserir ou fazer inserir declaração falsa ou diversa da que devia ser escrita, em documento público ou particular, com o fim de prejudicar direito, criar obrigação ou alterar a verdade sobre fato juridicamente relevante.<br><em>Pena - de 15 a 30 meses</em></p>
+                    <p class="artigo"><strong>Art. 112º - Falsa identidade</strong> Atribuir-se ou atribuir a terceiro falsa identidade, para obter vantagem ou causar dano a outrem ou à Administração Pública.<br><em>Pena - de 10 a 25 meses</em></p>
+                    <p class="artigo"><strong>Art. 113º - Agravantes específicas</strong> As penas dos crimes previstos neste título serão aumentadas de 1/3 até metade quando: I - o crime for praticado por agente público; II - houver prejuízo à Administração Pública ou à ordem constitucional; III - o documento for utilizado para obtenção de benefício estatal ou para fraudar procedimento judicial ou administrativo; IV - houver risco à segurança coletiva ou institucional.</p>
+                    <p class="artigo"><strong>Art. 114º - Inafiançabilidade</strong> São inafiançáveis os crimes de: I - falsificação de documento; II - falsidade ideológica praticada contra a Administração Pública ou em processo judicial ou constitucional.</p>
+                    <p class="artigo"><strong>Art. 115º - Ação penal</strong> Os crimes previstos neste título são de ação penal pública, sendo incondicionada quando houver lesão à fé pública, à Administração ou à ordem constitucional.</p>
+                    <p class="artigo"><strong>Art. 116º - Sonegação e fraude fiscal</strong> Suprimir, reduzir ou fraudar tributo, contribuição ou obrigação financeira devida ao Estado, mediante omissão de informações, prestação de declarações falsas ou qualquer meio fraudulento.<br><em>Pena - de 30 a 40 meses</em></p>
+                    <p class="artigo"><strong>Art. 117º - Lavagem de dinheiro</strong> Ocultar, dissimular, movimentar ou integrar à economia formal bens, valores ou direitos provenientes de crime.<br><em>Pena - de 35 a 55 meses</em></p>
+                    <p class="artigo"><strong>Art. 118º - Organização criminosa econômica</strong> Associar-se a duas ou mais pessoas, de forma estruturada e estável, com o objetivo de cometer crimes econômicos, financeiros ou patrimoniais de forma reiterada.<br><em>Pena - de 45 a 60 meses</em></p>
+                    <p class="artigo"><strong>Art. 119º - Crime financeiro institucional</strong> Praticar fraude, desvio ou manipulação envolvendo bancos, cooperativas, instituições financeiras, sistemas de pagamento ou ativos virtuais, com prejuízo ao sistema econômico.<br><em>Pena - de 40 a 50 meses</em></p>
+                    <p class="artigo"><strong>Art. 120º - Agravantes específicas</strong> As penas dos crimes previstos neste título serão aumentadas de 1/3 até metade quando: I - houver prejuízo elevado ao erário ou à economia popular; II - o crime for praticado por agente público ou com abuso de função; III - houver emprego de empresas fictícias, laranjas ou estruturas simuladas; IV - o crime afetar serviços públicos essenciais ou políticas sociais.</p>
+                    <p class="artigo"><strong>Art. 121º - Inafiançabilidade</strong> São inafiançáveis os crimes de: I - lavagem de dinheiro; II - organização criminosa econômica; III - crimes econômicos com grave dano institucional ou coletivo.</p>
+                    <p class="artigo"><strong>Art. 122º - Ação penal</strong> Os crimes previstos neste título são de ação penal pública incondicionada.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO X - DOS CRIMES DE TRÁFICO E COMÉRCIO ILÍCITO</h3>
+                    <p class="artigo"><strong>Art. 123º - Tráfico de drogas</strong> Produzir, fabricar, preparar, adquirir, vender, transportar, guardar, distribuir ou fornecer substância entorpecente ou que cause dependência, sem autorização legal.<br><em>Pena - de 40 a 60 meses</em></p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - Presume-se a finalidade de tráfico quando a quantidade apreendida for superior a 100 unidades, ou quando feita a comercialização, salvo prova em contrário.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - A posse de quantidade igual ou inferior a 5 unidades não configura crime, devendo a substância ser apreendida pela autoridade competente.</p>
+                    <p class="artigo"><strong>Art. 123-A - Posse irregular de substância entorpecente</strong> Possuir, guardar ou portar substância entorpecente ou que cause dependência, em quantidade superior a 5 e inferior a 100 unidades, sem autorização legal, quando não caracterizado o tráfico.<br><em>Pena - de 8 a 16 meses</em></p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - O crime previsto neste artigo é considerado de menor potencial ofensivo.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - A substância será obrigatoriamente apreendida.</p>
+                    <p class="artigo"><strong>Art. 124º - Tráfico de armas</strong> Fabricar, montar, adquirir, vender, transportar, fornecer, guardar ou ocultar arma de fogo, munição ou acessório de uso restrito ou proibido, sem autorização legal.<br><em>Pena - de 50 a 60 meses</em></p>
+                    <p class="artigo"><strong>Art. 124-A - Porte ou posse irregular de arma de fogo de uso permitido</strong> Possuir, deter, portar ou transportar arma de fogo de uso permitido, munição ou acessório, sem autorização legal ou em desacordo com determinação normativa, quando não caracterizado o tráfico ou comércio ilícito.<br><em>Pena - de 15 a 24 meses</em></p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - A arma, munição ou acessório será apreendido.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - Não se aplica este artigo quando configurado: I - tráfico de armas; II - associação criminosa; III - uso para prática de outro crime.</p>
+                    <p class="paragrafo"><strong>§ 3º</strong> - O crime é fiançável, observada a tabela do Art. 26-G, com fiança cumulativa se houver mais de um item apreendido.</p>
+                    <p class="artigo"><strong>Art. 125º - Tráfico de munições e explosivos</strong> Comercializar, transportar, armazenar ou fornecer munições, explosivos ou artefatos de alto poder destrutivo sem autorização legal.<br><em>Pena - de 50 a 65 meses</em></p>
+                    <p class="artigo"><strong>Art. 125-A - Posse ou porte irregular de munição, explosivo ou artefato controlado</strong> Possuir, portar, transportar ou guardar pequena quantidade de munição, explosivo ou artefato de uso controlado, sem autorização legal, quando não configurado tráfico, comércio ou risco coletivo relevante.<br><em>Pena - de 20 a 30 meses</em></p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - Considera-se pequena quantidade aquela que: I - não indique finalidade comercial; II - não represente risco elevado à coletividade; III - esteja desvinculada de organização criminosa.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - O material será apreendido.</p>
+                    <p class="paragrafo"><strong>§ 3º</strong> - O crime é fiançável, aplicando-se a tabela do Art. 26-G.</p>
+                    <p class="artigo"><strong>Art. 126º - Tráfico de colete balístico</strong> Comercializar, transportar, armazenar ou fornecer colete balístico sem autorização legal.<br><em>Pena - de 15 a 45 meses</em></p>
+                    <p class="artigo"><strong>Art. 127º - Tráfico de matéria-prima ilícita</strong> Produzir, adquirir, transportar, armazenar, vender ou fornecer matéria-prima destinada à fabricação de items ilegais, como armas, drogas, explosivos, munições ou equipamentos proibidos.<br><em>Pena - de 20 a 50 meses</em><br><strong>Parágrafo único</strong> - Considera-se configurado o crime quando a quantidade da matéria-prima for superior a 350 unidades, ou quando demonstrada a finalidade ilícita.</p>
+                    <p class="artigo"><strong>Art. 128º - Tráfico de influência</strong> Solicitar, exigir, cobrar ou obter, para si ou para outrem, vantagem ou promessa de vantagem, a pretexto de influir em ato praticado por funcionário público no exercício da função.<br><em>Pena - de 10 a 30 meses</em></p>
+                    <p class="artigo"><strong>Art. 129º - Associação para o tráfico</strong> Associar-se a duas ou mais pessoas, de forma estável ou organizada, para a prática dos crimes previstos neste título.<br><em>Pena - de 30 a 60 meses</em></p>
+                    <p class="artigo"><strong>Art. 130º - Agravantes específicas</strong> As penas dos crimes previstos neste título serão aumentadas de 1/3 até metade quando: I - houver emprego de arma de fogo; II - houver violência ou grave ameaça; III - o crime financiar organização criminosa ou milícia; IV - houver uso de menores ou pessoas vulneráveis; V - houver risco à saúde pública ou à segurança coletiva.</p>
+                    <p class="artigo"><strong>Art. 131º - Inafiançabilidade</strong> São inafiançáveis os crimes de: I - tráfico de drogas; II - tráfico de armas, munições, explosivos e/ou colete balístico; III - associação para o tráfico; IV - tráfico de matéria-prima ilícita em quantidade elevada.</p>
+                    <p class="artigo"><strong>Art. 132º - Ação penal</strong> Os crimes previstos neste título são de ação penal pública incondicionada.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO XI - DOS CRIMES CONTRA A ORDEM PÚBLICA, A ADMINISTRAÇÃO IMEDIATA E A HONRA</h3>
+                    <p class="artigo"><strong>Art. 133º - Desobediência e resistência à autoridade</strong> Desobedecer ordem legal de autoridade competente, resistir à abordagem, fiscalização, prisão ou ato legal.<br><em>Pena - de 10 a 15 meses</em><br><strong>Parágrafo único</strong> - A resistência com violência ou grave ameaça autoriza aumento de 1/3.</p>
+                    <p class="artigo"><strong>Art. 134º - Desacato e ofensa funcional</strong> Desacatar, menosprezar, ofender ou desrespeitar agente público no exercício da função ou em razão dela.<br><em>Pena - de 10 a 20 meses</em></p>
+                    <p class="artigo"><strong>Art. 135º - Tentativa de suborno</strong> Oferecer, prometer ou tentar conceder vantagem indevida a agente público, ainda que não aceita.<br><em>Pena - de 15 a 25 meses</em></p>
+                    <p class="artigo"><strong>Art. 136º - Tentativa de fuga</strong> Empreender fuga de abordagem, detenção, prisão, custódia ou escolta legal, consumada ou tentada.<br><em>Pena - de 5 a 20 meses</em><br><strong>Parágrafo único</strong> - Se houver risco à vida, dano a terceiros ou uso de veículo, aumenta-se em 1/3.</p>
+                    <p class="artigo"><strong>Art. 137º - Perturbação da ordem pública</strong> Perturbar a ordem, o sossego ou a segurança coletiva, mediante algazarra, tumulto, provocação, incitação ou conduta incompatível com a ordem pública.<br><em>Pena - de 5 a 15 meses</em></p>
+                    <p class="artigo"><strong>Art. 138º - Apologia ao crime</strong> Fazer apologia pública de crime, organização criminosa, milícia, tráfico, violência institucional ou prática ilícita.<br><em>Pena - de 10 a 25 meses</em></p>
+                    <p class="artigo"><strong>Art. 139º - Omissão de socorro</strong> Deixar de prestar socorro, quando possível fazê-lo sem risco pessoal, à pessoa em situação de perigo iminente ou vulnerabilidade evidente.<br><em>Pena - de 10 a 15 meses</em></p>
+                    <p class="artigo"><strong>Art. 140º - Uso indevido de equipamento restrito</strong> Utilizar, portar ou ostentar equipamento de uso controlado ou restrito, como coldre, distintivo, identificação funcional ou insígnia, sem autorização legal ou porte correspondente.<br><em>Pena - de 3 a 10 meses</em></p>
+                    <p class="artigo"><strong>Art. 141º - Crimes contra a honra</strong> Ofender a honra de alguém, por qualquer meio, configurando: I - Calúnia (imputar crime falso); II - Difamação (atribuir fato ofensivo à reputação); III - Injúria (ofensa à dignidade ou decoro).<br><em>Pena - de 10 a 20 meses</em><br><strong>Parágrafo único</strong> - Se cometido contra agente público no exercício da função, aumenta-se em 1/3.</p>
+                    <p class="artigo"><strong>Art. 142º - Agravantes específicas</strong> As penas deste título serão aumentadas de 1/3 até metade quando: I - houver reiteração de conduta; II - o crime ocorrer em local público ou evento coletivo; III - houver transmissão ao vivo ou divulgação digital; IV - houver incitação de terceiros.</p>
+                    <p class="artigo"><strong>Art. 143º - Inafiançabilidade</strong> São inafiançáveis: I - apologia ao crime vinculada a organização criminosa; II - resistência com violência; III - tentativa de suborno.</p>
+                    <p class="artigo"><strong>Art. 144º - Ação penal</strong> Os crimes previstos neste título são de ação penal pública, sendo condicionada à representação apenas nos crimes contra a honra, salvo quando praticados contra agente público.</p>
+                </div>
+            </div>
+
+            <!-- LEI ORGÂNICA CGPB -->
+            <div class="tab-pane fade" id="locg" role="tabpanel">
+                <div class="leg-box">
+                    <h1 class="leg-title">LEI ORGÂNICA DA CORREGEDORIA GERAL</h1>
+
+                    <h2 class="leg-section-title">PARTE GERAL</h2>
+
+                    <h3 class="leg-subsection-title">TÍTULO I - DA NATUREZA, FINALIDADE E PRINCÍPIOS</h3>
+                    <p class="artigo"><strong>Art. 1º - Natureza jurídica</strong> A Corregedoria Geral das Polícias, doravante denominada CRG-G, é instituição permanente, autônoma, independente e essencial ao controle da atividade policial, integrante da estrutura do Estado do Brasil.</p>
+                    <p class="artigo"><strong>Art. 2º - Finalidade</strong> A CRG-G tem por finalidade:</p>
+                    <p class="inciso">I - fiscalizar, supervisionar e controlar a atuação funcional das instituições policiais;</p>
+                    <p class="inciso">II - apurar infrações administrativas e disciplinares praticadas por agentes de segurança pública;</p>
+                    <p class="inciso">III - assegurar a legalidade, a hierarquia, a disciplina e a moralidade institucional;</p>
+                    <p class="inciso">IV - proteger os direitos fundamentais do cidadão e do próprio agente público;</p>
+                    <p class="inciso">V - preservar a credibilidade e a legitimidade das forças policiais.</p>
+                    <p class="artigo"><strong>Art. 3º - Princípios institucionais</strong> A atuação da CRG-G será regida pelos princípios da:</p>
+                    <p class="inciso">I - legalidade estrita;</p>
+                    <p class="inciso">II - imparcialidade e neutralidade institucional;</p>
+                    <p class="inciso">III - devido processo legal;</p>
+                    <p class="inciso">IV - contraditório e ampla defesa;</p>
+                    <p class="inciso">V - proporcionalidade e razoabilidade;</p>
+                    <p class="inciso">VI - motivação dos atos;</p>
+                    <p class="inciso">VII - transparência, quando compatível com o sigilo legal.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO II - DA VINCULAÇÃO CONSTITUCIONAL E DA AUTONOMIA</h3>
+                    <p class="artigo"><strong>Art. 4º - Fundamentação constitucional</strong> A CRG-G atua em estrita observância:</p>
+                    <p class="inciso">I - à Constituição Estadual do Brasil;</p>
+                    <p class="inciso">II - às leis penais, processuais penais e administrativas vigentes;</p>
+                    <p class="inciso">III - às decisões do Poder Judiciário;</p>
+                    <p class="inciso">IV - a esta Lei Orgânica.</p>
+                    <p class="artigo"><strong>Art. 5º - Autonomia funcional</strong> A CRG-G possui autonomia funcional, administrativa e decisória no exercício de suas atribuições, sendo vedada qualquer interferência externa indevida.</p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - Nenhuma autoridade policial, administrativa ou política poderá interferir, direcionar ou limitar a atuação da CRG-G.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - A autonomia prevista neste artigo não afasta o controle judicial de legalidade.</p>
+                    <p class="artigo"><strong>Art. 5-A - Atribuição em emergência</strong> A CRG-G poderá adotar medidas urgentes para preservação da legalidade, devendo informar imediatamente a corregedoria interna e o Conselho de Corregedores do Brasil.</p>
+                    <p class="artigo"><strong>Art. 6º - Independência das esferas</strong> A atuação da CRG-G na esfera administrativa não substitui nem condiciona:</p>
+                    <p class="inciso">I - a atuação do Poder Judiciário;</p>
+                    <p class="inciso">II - a persecução penal pelo Ministério Público;</p>
+                    <p class="inciso">III - a responsabilidade civil decorrente dos fatos apurados.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO III - DO FUNCIONAMENTO GERAL DA CORREGEDORIA GERAL</h3>
+                    <p class="artigo"><strong>Art. 7º - Atuação ordinária</strong> A CRG-G funcionará de forma permanente, podendo atuar:</p>
+                    <p class="inciso">I - mediante provocação;</p>
+                    <p class="inciso">II - de ofício;</p>
+                    <p class="inciso">III - por avocação de procedimentos das corregedorias internas, quando houver omissão, irregularidade ou comprometimento da imparcialidade.</p>
+                    <p class="artigo"><strong>Art. 7º-A - Fiscalização ordinária e extraordinária</strong> As fiscalizações, inspeções, auditorias e correições conduzidas pela Corregedoria Geral das Polícias poderão ocorrer a qualquer tempo, de forma ordinária ou extraordinária, independentemente de provocação ou aviso prévio.</p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - A ausência de aviso prévio constitui prerrogativa funcional da atividade correcional, destinada à preservação da efetividade da fiscalização e à prevenção de ocultação, manipulação ou destruição de informações.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - A fiscalização poderá ser determinada diretamente pelo Corregedor Geral, no âmbito de suas atribuições legais.</p>
+                    <p class="paragrafo"><strong>§ 3º</strong> - A realização de fiscalização sem aviso prévio não afasta o dever de observância do contraditório, da ampla defesa e das demais garantias previstas nesta Lei Orgânica.</p>
+                    <p class="artigo"><strong>Art. 8º - Procedimentos administrativos</strong> Os procedimentos conduzidos pela CRG-G terão natureza administrativa disciplinar, assegurados:</p>
+                    <p class="inciso">I - instauração formal;</p>
+                    <p class="inciso">II - delimitação clara dos fatos;</p>
+                    <p class="inciso">III - produção de provas;</p>
+                    <p class="inciso">IV - defesa técnica;</p>
+                    <p class="inciso">V - decisão fundamentada.</p>
+                    <p class="artigo"><strong>Art. 9º - Audiências</strong> As audiências poderão ser:</p>
+                    <p class="inciso">I - administrativas disciplinares;</p>
+                    <p class="inciso">II - administrativas com repercussão penal;</p>
+                    <p class="inciso">III - mistas, quando houver simultaneidade de infração administrativa e crime penal.</p>
+                    <p class="artigo"><strong>Art. 9º-A - Presença das partes e representação por advogado</strong> A ausência do denunciante ou de qualquer das partes regularmente intimadas não impede a realização da audiência administrativa, desde que:</p>
+                    <p class="inciso">I - esteja regularmente representado por advogado constituído;</p>
+                    <p class="inciso">II - o ato não exija, por sua natureza, manifestação pessoal ou depoimento indispensável da parte;</p>
+                    <p class="inciso">III - não haja determinação expressa e fundamentada da autoridade competente exigindo a presença pessoal.</p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - Consideram-se atos personalíssimos, para os fins deste artigo, aqueles que dependam diretamente da manifestação fática da parte, tais como: I - depoimento pessoal; II - reconhecimento de pessoas ou coisas; III - esclarecimentos indispensáveis à formação da convicção administrativa.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - A presença do advogado supre a ausência da parte para todos os atos de natureza técnica, instrutória ou jurídica, inclusive: I - acompanhamento da oitiva de testemunhas; II - formulação de requerimentos; III - apresentação de manifestações orais ou escritas.</p>
+                    <p class="paragrafo"><strong>§ 3º</strong> - A ausência injustificada da parte, quando exigida sua presença pessoal, poderá ensejar: I - redesignação da audiência; II - prosseguimento do feito, quando cabível; III - valoração administrativa da conduta, na forma do regimento interno, vedada qualquer sanção automática.</p>
+                    <p class="paragrafo"><strong>§ 4º</strong> - Em nenhuma hipótese a ausência da parte poderá gerar prejuízo ao contraditório, à ampla defesa ou à legalidade do procedimento.</p>
+                    <p class="artigo"><strong>Art. 10º - Audiências graves com repercussão penal</strong> Nos casos graves que envolvam indícios de crime penal, será obrigatória a presença de um juiz, observando-se que:</p>
+                    <p class="inciso">I - a CRG-G realizará o julgamento administrativo disciplinar;</p>
+                    <p class="inciso">II - o juiz atuará simultaneamente no julgamento criminal, no limite de sua competência;</p>
+                    <p class="inciso">III - as decisões administrativa e criminal serão autônomas, porém fundamentadas nos mesmos atos instrutórios, quando cabível.</p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - O juiz atuará como autoridade jurisdicional independente, não integrando a estrutura da CRG-G.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - A ausência do juiz impede o julgamento criminal imediato, mas não invalida a instrução administrativa, salvo violação a direitos fundamentais.</p>
+                    <p class="paragrafo"><strong>§ 3º</strong> - As garantias constitucionais do acusado deverão ser rigorosamente observadas.</p>
+                    <p class="paragrafo"><strong>§ 4º</strong> - A presença do juiz limita-se aos atos de natureza penal, não exercendo qualquer função administrativa, instrutória ou decisória no âmbito da CRG-G.</p>
+                    <p class="artigo"><strong>Art. 11º - Limites de atuação</strong> É vedado à CRG-G:</p>
+                    <p class="inciso">I - decretar prisão;</p>
+                    <p class="inciso">II - aplicar pena criminal;</p>
+                    <p class="inciso">III - restringir direitos fundamentais sem ordem judicial;</p>
+                    <p class="inciso">IV - praticar atos exclusivos de persecução penal.</p>
+                    <p class="artigo"><strong>Art. 11-A - Vedação à interferência externa</strong> Qualquer tentativa de autoridade externa de interferir em processo da CRG-G será considerada infração administrativa grave, sujeita a apuração disciplinar.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO IV - DA COMPETÊNCIA DA CORREGEDORIA GERAL</h3>
+                    <p class="artigo"><strong>Art. 12º - Competência geral</strong> Compete à Corregedoria Geral das Polícias:</p>
+                    <p class="inciso">I - supervisionar e fiscalizar as corregedorias internas de todas as instituições policiais;</p>
+                    <p class="inciso">II - avocar procedimentos disciplinares em curso, quando necessário à garantia da legalidade e da imparcialidade;</p>
+                    <p class="inciso">III - instaurar procedimentos administrativos disciplinares de ofício;</p>
+                    <p class="inciso">IV - julgar, em instância originária, infrações funcionais graves praticadas por agentes de alta patente;</p>
+                    <p class="inciso">V - uniformizar entendimentos correcionais em âmbito nacional.</p>
+                    <p class="artigo"><strong>Art. 12-A - Limitação federativa de competência</strong> É vedado à Polícia Civil, fiscalizar, supervisionar ou exercer qualquer forma de controle funcional, administrativo ou disciplinar sobre:</p>
+                    <p class="inciso">I - a Polícia Federal;</p>
+                    <p class="inciso">II - a Polícia Rodoviária Federal;</p>
+                    <p class="inciso">III - as Forças Armadas, em especial o Exército Brasileiro.</p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - A fiscalização, o controle disciplinar e a atividade correcional sobre os órgãos e instituições previstos neste artigo competem exclusivamente às respectivas corregedorias federais, nos termos da Constituição e da legislação federal aplicável.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - Qualquer tentativa de ingerência por órgão estadual sobre instituições federais será considerada ato administrativo nulo de pleno direito, sem prejuízo da responsabilização funcional da autoridade que o praticar.</p>
+                    <p class="artigo"><strong>Art. 12-B - Competência fiscalizatória da Polícia Federal no âmbito da CRG-G</strong> A Polícia Federal, quando formalmente designada pela Corregedoria Geral das Polícias, exercerá função de fiscalização, auditoria e apuração administrativa disciplinar, em caráter externo, sobre:</p>
+                    <p class="inciso">I - Polícias Militares estaduais;</p>
+                    <p class="inciso">II - unidades especializadas, inclusive BOPE e ROTA;</p>
+                    <p class="inciso">III - Polícia Rodoviária Federal;</p>
+                    <p class="inciso">IV - demais forças de segurança submetidas à CRG-G.</p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - A atuação da Polícia Federal dar-se-á sempre sob coordenação da CRG-G.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - No que se refere à Polícia Rodoviária Federal e ao Exército Brasileiro, a atuação da Polícia Federal dependerá de atuação conjunta e manifestação formal do Procurador-Geral da República.</p>
+                    <p class="paragrafo"><strong>§ 3º</strong> - A atuação da Polícia Federal não implica subordinação hierárquica das instituições fiscalizadas.</p>
+                    <p class="paragrafo"><strong>§ 4º</strong> - A fiscalização, inspeção ou auditoria envolvendo a Polícia Rodoviária Federal ou o Exército Brasileiro somente poderá ocorrer: I - mediante atuação da Polícia Federal; II - com acompanhamento obrigatório e manifestação formal do Procurador-Geral da República; III - sob coordenação direta da Corregedoria Geral das Polícias.</p>
+                    <p class="paragrafo"><strong>§ 5º</strong> - É vedada a realização de fiscalização isolada ou autônoma por corregedorias estaduais ou por corregedores da Polícia Civil sobre as instituições referidas no parágrafo 4.</p>
+                    <p class="paragrafo"><strong>§ 6º</strong> - A atuação prevista neste artigo não implica poder disciplinar, hierárquico ou punitivo sobre integrantes do Exército Brasileiro, limitando-se à apuração administrativa externa e à remessa dos autos à autoridade militar competente.</p>
+                    <p class="artigo"><strong>Art. 12-C - Competência fiscalizatória da Polícia Civil</strong> A Polícia Civil, quando designada pela CRG-G, poderá exercer fiscalização, supervisão e apuração administrativa disciplinar sobre:</p>
+                    <p class="inciso">I - Polícias Militares estaduais;</p>
+                    <p class="inciso">II - unidades táticas e especializadas, inclusive BOPE e ROTA.</p>
+                    <p class="paragrafo"><strong>Parágrafo único</strong> - É vedada à Polícia Civil qualquer atuação fiscalizatória ou correcional sobre instituições federais ou militares federais.</p>
+                    <p class="artigo"><strong>Art. 12-D - Exceção excepcional de competência por envolvimento de alto escalão da Polícia Federal</strong> Quando o procedimento administrativo disciplinar envolver integrante do alto escalão da Polícia Federal, assim considerados os ocupantes de cargos de direção, comando, supervisão-geral ou função equivalente definida no art. 13 desta Lei Orgânica, a fase de julgamento e prolação da sentença administrativa será conduzida, excepcionalmente, por Corregedores da Polícia Civil formalmente designados pela Corregedoria Geral das Polícias.</p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - A exceção prevista no caput aplica-se exclusivamente às fases de julgamento e sentença administrativa, permanecendo a instrução, apuração e fiscalização sob coordenação da CRG-G, observado o devido processo legal.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - A designação de Corregedores da Polícia Civil para os fins deste artigo terá caráter temporário, específico e fundamentado, vedada qualquer ampliação de competência além do caso concreto.</p>
+                    <p class="paragrafo"><strong>§ 3º</strong> - A atuação excepcional prevista neste artigo não configura controle funcional, hierárquico ou disciplinar permanente da Polícia Civil sobre a Polícia Federal, nem afasta o disposto no art. 12-A, permanecendo este plenamente vigente.</p>
+                    <p class="paragrafo"><strong>§ 4º</strong> - A medida tem por finalidade exclusiva a preservação da imparcialidade institucional, da moralidade administrativa e da credibilidade do processo correcional.</p>
+                    <p class="paragrafo"><strong>§ 5º</strong> - A decisão administrativa proferida nos termos deste artigo será submetida, quando cabível, ao Conselho de Corregedores do Brasil, nos limites desta Lei Orgânica.</p>
+                    <p class="artigo"><strong>Art. 13º - Competência sobre cargos superiores</strong> A CRG-G possui competência originária para apuração e julgamento administrativo de agentes ocupantes dos seguintes cargos:</p>
+                    <p class="inciso">I - Comandante de Divisão e Subcomandante de Divisão, de qualquer guarnição policial;</p>
+                    <p class="inciso">II - Supervisor-Geral ou função superior da Polícia Federal, Polícia Civil e Polícia Rodoviária Federal;</p>
+                    <p class="inciso">III - Oficiais com patente de 1º Tenente ou superior nas Polícias Militares, BOPE e ROTA.</p>
+                    <p class="paragrafo"><strong>Parágrafo único</strong> - Os membros do Exército Brasileiro não se submetem à jurisdição administrativa disciplinar da CRG-G, permanecendo sujeitos exclusivamente à Justiça Militar do Estado, devendo quaisquer fatos ou procedimentos que os envolvam ser imediatamente remetidos à autoridade competente.</p>
+                    <p class="artigo"><strong>Art. 14º - Competência residual</strong> Sempre que houver:</p>
+                    <p class="inciso">I - omissão da corregedoria interna;</p>
+                    <p class="inciso">II - suspeição ou impedimento dos corregedores locais;</p>
+                    <p class="inciso">III - risco à credibilidade institucional;</p>
+                    <p class="inciso">IV - repercussão estadual ou nacional;</p>
+                    <p class="paragrafo">a CRG-G poderá assumir integralmente o procedimento.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO V - DOS LIMITES DE ATUAÇÃO E DAS GARANTIAS</h3>
+                    <p class="artigo"><strong>Art. 15º - Limites funcionais</strong> A atuação da CRG-G limita-se à esfera administrativa disciplinar, sendo-lhe vedado:</p>
+                    <p class="inciso">I - substituir o Poder Judiciário;</p>
+                    <p class="inciso">II - exercer funções de polícia judiciária;</p>
+                    <p class="inciso">III - determinar medidas restritivas de direitos sem ordem judicial.</p>
+                    <p class="artigo"><strong>Art. 16º - Garantias do acusado</strong> Ao agente investigado ou processado perante a CRG-G são assegurados:</p>
+                    <p class="inciso">I - contraditório e ampla defesa;</p>
+                    <p class="inciso">II - direito à defesa técnica;</p>
+                    <p class="inciso">III - acesso integral aos autos, ressalvado sigilo legal;</p>
+                    <p class="inciso">IV - produção de provas e indicação de testemunhas;</p>
+                    <p class="inciso">V - decisão motivada.</p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - A ausência de defesa técnica somente será admitida mediante renúncia expressa.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - É vedada qualquer forma de punição sumária.</p>
+                    <p class="artigo"><strong>Art. 17º - Vedação à prova ilícita</strong> São inadmissíveis, no âmbito da CRG-G:</p>
+                    <p class="inciso">I - provas obtidas por meios ilícitos;</p>
+                    <p class="inciso">II - provas produzidas mediante coação, ameaça ou violação de direitos fundamentais;</p>
+                    <p class="inciso">III - provas declaradas nulas pelo Poder Judiciário.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO VI - DA RELAÇÃO COM O PODER JUDICIÁRIO E O MINISTÉRIO PÚBLICO</h3>
+                    <p class="artigo"><strong>Art. 18º - Comunicação institucional</strong> Sempre que, no curso de procedimento administrativo, surgirem indícios de crime penal, a CRG-G deverá:</p>
+                    <p class="inciso">I - comunicar imediatamente o Ministério Público;</p>
+                    <p class="inciso">II - requerer a atuação do Poder Judiciário, quando necessária.</p>
+                    <p class="artigo"><strong>Art. 18-A - Do Diretor da CGPB</strong> O Diretor da Corregedoria Geral das Polícias do Brasil é a autoridade superior de direção, supervisão e controle institucional da Corregedoria, competindo-lhe assegurar a legalidade, eficiência, integridade e regular funcionamento da atividade correcional em âmbito nacional.</p>
+                    <p class="artigo"><strong>Art. 18-B - Competências</strong> Compete ao Diretor da CGPB:</p>
+                    <p class="inciso">I - exercer a direção superior da Corregedoria Geral das Polícias, fixando diretrizes institucionais obrigatórias para a atuação correcional;</p>
+                    <p class="inciso">II - supervisionar, fiscalizar e avaliar a atuação do Corregedor-Geral e das unidades correcionais, podendo determinar auditorias, inspeções e correições gerais;</p>
+                    <p class="inciso">III - requisitar informações, dados, relatórios e estatísticas da Corregedoria Geral das Polícias, inclusive sobre julgamentos concluídos, vedada a interferência em processos em andamento;</p>
+                    <p class="inciso">IV - acompanhar julgamentos administrativos, podendo emitir manifestação técnica opinativa, de caráter não vinculante e sem direito a voto;</p>
+                    <p class="inciso">V - garantir o cumprimento dos prazos legais, do devido processo legal e das normas institucionais;</p>
+                    <p class="inciso">VI - representar a Corregedoria Geral das Polícias perante os Poderes do Estado, órgãos de controle e o Ministério Público;</p>
+                    <p class="inciso">VII - comunicar ao Ministério Público irregularidades graves, omissões reiteradas ou desvios sistêmicos identificados no exercício da supervisão;</p>
+                    <p class="inciso">VIII - expedir atos normativos institucionais e administrativos de caráter geral, vinculantes no âmbito da Corregedoria;</p>
+                    <p class="inciso">IX - estabelecer diretrizes e cronogramas de fiscalização de caráter geral, exclusivamente para fins de coordenação, padronização e planejamento institucional, a serem executadas pelas respectivas corregedorias da Polícia Civil e da Polícia Federal.</p>
+                    <p class="artigo"><strong>Art. 18-C - Limite funcional</strong> O Diretor da CGPB não exerce atribuições correcionais diretas, sendo-lhe vedado instaurar, avocar, suspender ou determinar o resultado de processos administrativos disciplinares.</p>
+                    <p class="artigo"><strong>Art. 19º - Necessidade de ordem judicial</strong> Dependem de ordem judicial expressa:</p>
+                    <p class="inciso">I - mandado de prisão;</p>
+                    <p class="inciso">II - busca e apreensão;</p>
+                    <p class="inciso">III - quebra de sigilo telefônico, telemático ou bancário;</p>
+                    <p class="inciso">IV - qualquer medida restritiva de direitos fundamentais.</p>
+                    <p class="paragrafo"><strong>Parágrafo único</strong> - Nos casos previstos neste artigo, será obrigatória a presença ou manifestação formal de juiz competente.</p>
+                    <p class="artigo"><strong>Art. 20º - Cooperação institucional</strong> A CRG-G atuará de forma cooperativa com:</p>
+                    <p class="inciso">I - o Poder Judiciário;</p>
+                    <p class="inciso">II - o Ministério Público;</p>
+                    <p class="inciso">III - as corregedorias internas;</p>
+                    <p class="inciso">IV - os órgãos de controle externo;</p>
+                    <p class="inciso">V - o Exército Brasileiro, nos limites constitucionais e legais.</p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - A cooperação não implica subordinação.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - Cada instituição preservará suas competências constitucionais próprias.</p>
+                    <p class="paragrafo"><strong>§ 3º</strong> - A cooperação com o Exército Brasileiro não implica subordinação, poder correcional ou ingerência administrativa disciplinar sobre seus membros.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO VII - DA ESTRUTURA ORGANIZACIONAL DA CRG-G</h3>
+                    <p class="artigo"><strong>Art. 21º - Estrutura básica</strong> A Corregedoria Geral das Polícias é composta pelos seguintes órgãos:</p>
+                    <p class="inciso">I - Corregedor Geral das Polícias;</p>
+                    <p class="inciso">II - Corregedoria Geral Adjunta;</p>
+                    <p class="inciso">III - Corregedores das Guarnições;</p>
+                    <p class="inciso">IV - Conselho de Corregedores do Brasil;</p>
+                    <p class="inciso">V - unidades técnicas e administrativas de apoio, na forma do regimento interno.</p>
+                    <p class="artigo"><strong>Art. 22º - Organização interna</strong> A organização interna da CRG-G observará critérios de:</p>
+                    <p class="inciso">I - hierarquia funcional;</p>
+                    <p class="inciso">II - especialização técnica;</p>
+                    <p class="inciso">III - separação entre funções de investigação, instrução e julgamento;</p>
+                    <p class="inciso">IV - eficiência administrativa.</p>
+                    <p class="artigo"><strong>Art. 23º - Regimento interno</strong> O funcionamento detalhado dos órgãos da CRG-G será disciplinado por regimento interno próprio, aprovado pelo Corregedor Geral, observado o disposto nesta Lei Orgânica.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO VIII - DO CORREGEDOR GERAL TITULAR</h3>
+                    <p class="artigo"><strong>Art. 24º - Cargo de Corregedor Geral</strong> O cargo de Corregedor Geral das Polícias será exercido obrigatoriamente por membro da Polícia Federal, em atividade ou designado nos termos da legislação aplicável.</p>
+                    <p class="artigo"><strong>Art. 25º - Competências do Corregedor Geral</strong> Compete ao Corregedor Geral:</p>
+                    <p class="inciso">I - presidir a Corregedoria Geral das Polícias;</p>
+                    <p class="inciso">II - conduzir audiências administrativas disciplinares;</p>
+                    <p class="inciso">III - proferir sentenças administrativas nos processos de competência da CRG-G;</p>
+                    <p class="inciso">IV - presidir o Conselho de Corregedores do Brasil;</p>
+                    <p class="inciso">V - exercer voto duplo nos julgamentos colegiados, quando previsto nesta Lei;</p>
+                    <p class="inciso">VI - expedir atos administrativos no âmbito de sua competência.</p>
+                    <p class="artigo"><strong>Art. 26º - Poder decisório</strong> As decisões do Corregedor Geral deverão ser sempre fundamentadas, respeitando os princípios da legalidade, proporcionalidade e motivação dos atos administrativos.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO IX - DO CORREGEDOR GERAL ADJUNTO</h3>
+                    <p class="artigo"><strong>Art. 27º - Corregedoria Geral Adjunta</strong> A CRG-G contará com Corregedor Geral Adjunto, que auxiliará diretamente o Corregedor Geral no exercício de suas funções.</p>
+                    <p class="artigo"><strong>Art. 28º - Atribuições do Corregedor Geral Adjunto</strong> Compete ao Corregedor Geral Adjunto:</p>
+                    <p class="inciso">I - substituir o Corregedor Geral em suas ausências, impedimentos ou vacância;</p>
+                    <p class="inciso">II - participar da condução de procedimentos administrativos;</p>
+                    <p class="inciso">III - exercer as atribuições que lhe forem delegadas pelo Corregedor Geral.</p>
+                    <p class="artigo"><strong>Art. 29º - Atos do Corregedor Geral Adjunto</strong> Quando no exercício da substituição, o Corregedor Geral Adjunto exercerá todas as competências do titular, inclusive a expedição de atos administrativos permitidos por esta Lei.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO X - DOS CORREGEDORES DAS GUARNIÇÕES</h3>
+                    <p class="artigo"><strong>Art. 30º - Corregedorias das Guarnições</strong> Cada guarnição policial submetida à CRG-G contará com estrutura correcional própria, composta por:</p>
+                    <p class="inciso">I - Corregedor Titular;</p>
+                    <p class="inciso">II - Corregedor Adjunto.</p>
+                    <p class="artigo"><strong>Art. 31º - Corregedor Titular da Guarnição</strong> Compete ao Corregedor Titular:</p>
+                    <p class="inciso">I - atuar na apuração e instrução de procedimentos administrativos no âmbito de sua guarnição;</p>
+                    <p class="inciso">II - representar a guarnição perante a CRG-G;</p>
+                    <p class="inciso">III - emitir parecer técnico nos processos submetidos à sua análise;</p>
+                    <p class="inciso">IV - exercer direito a voto nos julgamentos colegiados, na forma desta Lei.</p>
+                    <p class="artigo"><strong>Art. 31-A - Poder fiscalizatório dos Corregedores da Polícia Civil</strong> Os Corregedores da Polícia Civil, quando integrando a estrutura da CRG-G ou formalmente designados pelo Corregedor Geral das Polícias, poderão realizar fiscalizações, inspeções, auditorias e atos correcionais, inclusive sem aviso prévio, sobre:</p>
+                    <p class="inciso">I - Polícias Militares estaduais;</p>
+                    <p class="inciso">II - unidades táticas e especializadas, inclusive BOPE e ROTA.</p>
+                    <p class="paragrafo"><strong>Parágrafo único</strong> - A atuação prevista neste artigo observará os limites estabelecidos no art. 12-A desta Lei Orgânica, sendo vedada qualquer fiscalização sobre instituições federais ou militares federais.</p>
+                    <p class="artigo"><strong>Art. 32º - Corregedor Adjunto da Guarnição</strong> O Corregedor Adjunto auxiliará o Corregedor Titular, competindo-lhe:</p>
+                    <p class="inciso">I - acompanhar os atos e procedimentos administrativos;</p>
+                    <p class="inciso">II - emitir manifestação técnica quando solicitado;</p>
+                    <p class="inciso">III - substituir o Corregedor Titular em suas ausências ou impedimentos.</p>
+                    <p class="artigo"><strong>Art. 33º - Limitação do voto do Corregedor Adjunto</strong> O Corregedor Adjunto somente exercerá direito a voto nos julgamentos quando estiver no exercício da substituição do Corregedor Titular.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO XI - DO CONSELHO DE CORREGEDORES DO BRASIL</h3>
+                    <p class="artigo"><strong>Art. 34º - Instituição do Conselho</strong> Fica instituído o Conselho de Corregedores do Brasil, órgão colegiado de julgamento administrativo de alta relevância no âmbito da CRG-G.</p>
+                    <p class="artigo"><strong>Art. 35º - Composição do Conselho</strong> O Conselho de Corregedores do Brasil será composto por:</p>
+                    <p class="inciso">I - Dois Corregedores de cada Polícia;</p>
+                    <p class="inciso">II - dois representantes do Exército Brasileiro, indicados pela respectiva Corregedoria Militar, com participação restrita aos limites definidos nesta Lei.</p>
+                    <p class="artigo"><strong>Art. 35-A</strong> - Os representantes do Exército Brasileiro possuem direito a voto em igualdade de condições com os demais membros do Conselho de Corregedores do Brasil, participando de todas as deliberações, inclusive aquelas de natureza disciplinar envolvendo integrantes de outras instituições.</p>
+                    <p class="paragrafo"><strong>Parágrafo único</strong> - Quando a matéria, direta ou indiretamente, envolver integrante do Exército Brasileiro, o Conselho limitar-se-á a deliberar exclusivamente sobre a remessa dos autos à autoridade militar competente, ficando vedada qualquer apreciação de mérito ou votação sobre o conteúdo do caso.</p>
+                    <p class="artigo"><strong>Art. 36º - Direito de voto</strong> No âmbito do Conselho:</p>
+                    <p class="inciso">I - cada corregedor terá direito a um voto;</p>
+                    <p class="inciso">II - o Corregedor Geral exercerá voto duplo;</p>
+                    <p class="inciso">III - o voto do Corregedor Adjunto somente será computado na ausência do titular.</p>
+                    <p class="artigo"><strong>Art. 36-A - Quórum</strong> O Conselho de Corregedores do Brasil somente poderá deliberar com a presença da maioria absoluta de seus membros.</p>
+                    <p class="artigo"><strong>Art. 36-B - Empate</strong> Em caso de empate na votação, o voto do Corregedor Geral será decisivo, salvo nos recursos, onde somente os adjuntos deliberam.</p>
+                    <p class="artigo"><strong>Art. 37º - Competência do Conselho</strong> Compete ao Conselho de Corregedores do Brasil julgar processos administrativos disciplinares envolvendo agentes ocupantes de cargos superiores, nos termos do art. 13 desta Lei.</p>
+                    <p class="paragrafo"><strong>Parágrafo único</strong> - A competência prevista neste artigo não se aplica a integrantes do Exército Brasileiro, hipótese em que o Conselho limitar-se-á à remessa formal dos autos à autoridade militar competente.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO XII - DO FUNCIONAMENTO DOS JULGAMENTOS COLEGIADOS</h3>
+                    <p class="artigo"><strong>Art. 38º - Sentença administrativa</strong> Encerrada a instrução, o Corregedor Geral proferirá sentença administrativa fundamentada, submetendo-a à apreciação do Conselho, quando cabível.</p>
+                    <p class="artigo"><strong>Art. 39º - Modalidades de deliberação</strong> O Conselho deliberará exclusivamente entre as seguintes opções:</p>
+                    <p class="inciso">I - absolvição;</p>
+                    <p class="inciso">II - condenação;</p>
+                    <p class="inciso">III - ajuste de sentença.</p>
+                    <p class="artigo"><strong>Art. 40º - Ajuste de sentença</strong> Na hipótese de ajuste de sentença:</p>
+                    <p class="inciso">I - cada corregedor apresentará fundamentação própria;</p>
+                    <p class="inciso">II - o Corregedor Geral proferirá nova sentença administrativa;</p>
+                    <p class="inciso">III - a nova sentença será submetida à votação final, restrita às opções de absolvição ou condenação.</p>
+                    <p class="artigo"><strong>Art. 41º - Resultado do julgamento</strong> O resultado será proclamado pelo Corregedor Geral, registrando-se os votos e fundamentos, garantindo-se publicidade nos limites do sigilo legal.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO XIII - DOS RECURSOS ADMINISTRATIVOS</h3>
+                    <p class="artigo"><strong>Art. 42º - Cabimento do recurso</strong> Das decisões administrativas proferidas no âmbito da CRG-G caberá recurso administrativo, nos termos desta Lei Orgânica.</p>
+                    <p class="artigo"><strong>Art. 43º - Instância recursal</strong> O recurso será julgado por Conselho Recursal formado exclusivamente pelos Corregedores Adjuntos das guarnições policiais.</p>
+                    <p class="artigo"><strong>Art. 43-A - Prazo para recurso</strong> O recurso administrativo deverá ser interposto no prazo máximo de 48 (quarenta e oito) horas após a ciência da decisão.</p>
+                    <p class="artigo"><strong>Art. 43-B - Efeito suspensivo</strong> O recurso não suspende automaticamente a execução da decisão, salvo determinação expressa do Conselho Recursal.</p>
+                    <p class="artigo"><strong>Art. 44º - Finalidade do sistema recursal</strong> O sistema recursal tem por finalidade:</p>
+                    <p class="inciso">I - assegurar o duplo exame administrativo da decisão;</p>
+                    <p class="inciso">II - evitar decisões circulares;</p>
+                    <p class="inciso">III - impedir influência hierárquica ou corporativista;</p>
+                    <p class="inciso">IV - reforçar a imparcialidade institucional da CRG-G.</p>
+                    <p class="artigo"><strong>Art. 45º - Limites do julgamento recursal</strong> O Conselho Recursal poderá:</p>
+                    <p class="inciso">I - manter a decisão recorrida;</p>
+                    <p class="inciso">II - reformar a decisão;</p>
+                    <p class="inciso">III - anular o processo, total ou parcialmente, quando constatado vício insanável.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO XIV - DAS SANÇÕES ADMINISTRATIVAS</h3>
+                    <p class="artigo"><strong>Art. 46º - Espécies de sanções</strong> As sanções administrativas aplicáveis no âmbito da CRG-G observarão a gravidade da infração e poderão consistir em:</p>
+                    <p class="inciso">I - advertência;</p>
+                    <p class="inciso">II - suspensão;</p>
+                    <p class="inciso">III - perda de função ou comando;</p>
+                    <p class="inciso">IV - exclusão ou demissão, nos termos da legislação aplicável.</p>
+                    <p class="artigo"><strong>Art. 47º - Critérios de aplicação</strong> Na aplicação da sanção administrativa serão considerados:</p>
+                    <p class="inciso">I - a natureza e a gravidade da infração;</p>
+                    <p class="inciso">II - o grau de dolo ou culpa;</p>
+                    <p class="inciso">III - a repercussão institucional do fato;</p>
+                    <p class="inciso">IV - os antecedentes funcionais do agente.</p>
+                    <p class="artigo"><strong>Art. 48º - Proporcionalidade da pena</strong> É vedada a aplicação de sanção desproporcional ou dissociada dos fatos apurados, sob pena de nulidade da decisão administrativa.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO XV - DOS EFEITOS DAS DECISÕES ADMINISTRATIVAS</h3>
+                    <p class="artigo"><strong>Art. 49º - Efeitos internos</strong> As decisões administrativas da CRG-G produzem efeitos imediatos na esfera funcional do agente, respeitados os limites legais.</p>
+                    <p class="artigo"><strong>Art. 50º - Comunicação às instituições competentes</strong> As decisões da CRG-G serão comunicadas:</p>
+                    <p class="inciso">I - à instituição de origem do agente;</p>
+                    <p class="inciso">II - ao órgão de pessoal competente;</p>
+                    <p class="inciso">III - ao Ministério Público, quando houver repercussão penal.</p>
+                    <p class="artigo"><strong>Art. 51º - Independência das esferas</strong> A decisão administrativa não impede, nem condiciona, eventual responsabilização penal ou civil decorrente dos mesmos fatos.</p>
+                    <p class="artigo"><strong>Art. 51-A - Publicidade restrita</strong> As decisões administrativas deverão ser publicadas no âmbito interno da instituição, respeitando sigilo legal e proteção de dados sensíveis.</p>
+                    <p class="artigo"><strong>Art. 52º - Revisão administrativa</strong> A revisão de decisão administrativa somente será admitida quando surgirem fatos novos ou provas relevantes, na forma do regimento interno.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO XVI - DOS ATOS ADMINISTRATIVOS DA CRG-G</h3>
+                    <p class="artigo"><strong>Art. 53º - Atos administrativos</strong> A CRG-G praticará exclusivamente atos administrativos compatíveis com sua natureza disciplinar, observados os limites constitucionais e legais.</p>
+                    <p class="artigo"><strong>Art. 54º - Espécies de atos</strong> Constituem atos administrativos da CRG-G, entre outros:</p>
+                    <p class="inciso">I - instauração de procedimento administrativo disciplinar;</p>
+                    <p class="inciso">II - requisição de informações e documentos funcionais;</p>
+                    <p class="inciso">III - designação de audiências administrativas;</p>
+                    <p class="inciso">IV - expedição de intimações administrativas;</p>
+                    <p class="inciso">V - decisões e sentenças administrativas disciplinares.</p>
+                    <p class="artigo"><strong>Art. 55º - Intimação administrativa</strong> A intimação administrativa é o ato formal destinado a cientificar policial ou agente de segurança pública para:</p>
+                    <p class="inciso">I - comparecimento a audiência administrativa;</p>
+                    <p class="inciso">II - prestação de esclarecimentos;</p>
+                    <p class="inciso">III - apresentação de defesa ou manifestação técnica;</p>
+                    <p class="inciso">IV - cumprimento de determinação administrativa legítima.</p>
+                    <p class="artigo"><strong>Art. 56º - Autoridade competente para expedir intimação</strong> A intimação administrativa somente poderá ser expedida por:</p>
+                    <p class="inciso">I - Corregedor Geral das Polícias Titular;</p>
+                    <p class="inciso">II - Corregedor Geral das Polícias Adjunto, quando no exercício da substituição.</p>
+                    <p class="paragrafo"><strong>Parágrafo único</strong> - É vedada a expedição de intimação administrativa em desfavor de cidadãos não integrantes das forças policiais.</p>
+                    <p class="artigo"><strong>Art. 57º - Limites da intimação</strong> A intimação administrativa:</p>
+                    <p class="inciso">I - não possui natureza coercitiva penal;</p>
+                    <p class="inciso">II - não autoriza condução forçada;</p>
+                    <p class="inciso">III - não implica restrição de direitos fundamentais;</p>
+                    <p class="inciso">IV - não substitui ordem judicial.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO XVII - DAS NULIDADES E IRREGULARIDADES</h3>
+                    <p class="artigo"><strong>Art. 58º - Nulidade dos atos</strong> Serão nulos os atos administrativos praticados no âmbito da CRG-G quando:</p>
+                    <p class="inciso">I - houver violação ao contraditório ou à ampla defesa;</p>
+                    <p class="inciso">II - forem praticados por autoridade incompetente;</p>
+                    <p class="inciso">III - desrespeitarem os limites previstos nesta Lei Orgânica;</p>
+                    <p class="inciso">IV - decorrerem de prova ilícita.</p>
+                    <p class="artigo"><strong>Art. 59º - Nulidade relativa e absoluta</strong> A nulidade será:</p>
+                    <p class="inciso">I - absoluta, quando houver violação a direito fundamental;</p>
+                    <p class="inciso">II - relativa, quando o vício não comprometer a legalidade ou a defesa, devendo ser arguida na primeira oportunidade.</p>
+                    <p class="artigo"><strong>Art. 60º - Convalidação</strong> Os atos administrativos que apresentarem vício sanável poderão ser convalidados, desde que não haja prejuízo ao investigado ou à legalidade do procedimento.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO XVIII - DAS DISPOSIÇÕES GERAIS E TRANSITÓRIAS</h3>
+                    <p class="artigo"><strong>Art. 61º - Aplicação subsidiária</strong> Aplicam-se subsidiariamente aos procedimentos da CRG-G as normas do direito administrativo disciplinar, desde que compatíveis com esta Lei Orgânica.</p>
+                    <p class="artigo"><strong>Art. 62º - Observância obrigatória</strong> As disposições desta Lei Orgânica são de observância obrigatória por todas as corregedorias internas das instituições policiais abrangidas.</p>
+                    <p class="artigo"><strong>Art. 63º - Regulamentação complementar</strong> A CRG-G poderá editar atos normativos internos para regulamentar esta Lei, vedada qualquer ampliação de competência ou de poder coercitivo.</p>
+                    <p class="artigo"><strong>Art. 64º - Vigência</strong> Esta Lei Orgânica entra em vigor na data de sua publicação.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO XIX - DA RESPONSABILIZAÇÃO DO CORREGEDOR GERAL DAS POLÍCIAS</h3>
+                    <p class="artigo"><strong>Art. 65º - Responsabilização do Corregedor Geral</strong> O Corregedor Geral das Polícias está sujeito à responsabilização administrativa, penal e civil por atos praticados no exercício de suas funções, nos termos da lei.</p>
+                    <p class="artigo"><strong>Art. 66º - Hipóteses de apuração</strong> A apuração de conduta do Corregedor Geral ocorrerá quando houver indícios de:</p>
+                    <p class="inciso">I - abuso de poder;</p>
+                    <p class="inciso">II - favorecimento indevido;</p>
+                    <p class="inciso">III - desvio de finalidade;</p>
+                    <p class="inciso">IV - violação aos princípios da legalidade, imparcialidade ou moralidade administrativa.</p>
+                    <p class="artigo"><strong>Art. 67º - Órgão competente para julgamento</strong> O Corregedor Geral será julgado, na esfera administrativa, por:</p>
+                    <p class="inciso">I - Conselho de Corregedores do Brasil;</p>
+                    <p class="inciso">II - Corregedor Geral Titular, quando o investigado for o Adjunto;</p>
+                    <p class="inciso">III - juiz competente, obrigatoriamente presente.</p>
+                    <p class="artigo"><strong>Art. 68º - Garantias e limites</strong> O julgamento observará:</p>
+                    <p class="inciso">I - contraditório e ampla defesa;</p>
+                    <p class="inciso">II - fundamentação das decisões;</p>
+                    <p class="inciso">III - vedação a julgamento sigiloso injustificado;</p>
+                    <p class="inciso">IV - independência entre as esferas administrativa e penal.</p>
+                    <p class="artigo"><strong>Art. 69º - Efeitos da decisão</strong> A decisão administrativa poderá resultar em:</p>
+                    <p class="inciso">I - absolvição;</p>
+                    <p class="inciso">II - condenação administrativa;</p>
+                    <p class="inciso">III - afastamento do cargo, sem prejuízo de outras responsabilidades legais.</p>
+
+                    <h2 class="leg-section-title">PARTE ESPECIAL</h2>
+                    
+                    <h3 class="leg-subsection-title">TÍTULO I - DA OBRIGATORIEDADE E PADRONIZAÇÃO DOS REGIMENTOS INTERNOS</h3>
+                    <p class="artigo"><strong>Art. 70º - Obrigatoriedade de regimento interno</strong> Todas as instituições policiais e departamentos subordinados à CRG-G deverão possuir regimento interno disciplinar próprio, em estrita conformidade com esta Lei Orgânica.</p>
+                    <p class="artigo"><strong>Art. 71º - Padronização mínima obrigatória</strong> Os regimentos internos deverão observar, obrigatoriamente:</p>
+                    <p class="inciso">I - os princípios institucionais da CRG-G;</p>
+                    <p class="inciso">II - as garantias do investigado previstas na Parte Geral;</p>
+                    <p class="inciso">III - os limites de atuação administrativa;</p>
+                    <p class="inciso">IV - a competência fiscalizatória da CRG-G.</p>
+                    <p class="artigo"><strong>Art. 72º - Vedação a normas conflitantes</strong> É vedada a edição de regimento interno que:</p>
+                    <p class="inciso">I - restrinja direitos assegurados nesta Lei;</p>
+                    <p class="inciso">II - amplie poderes coercitivos das corregedorias internas;</p>
+                    <p class="inciso">III - dificulte ou impeça a atuação da CRG-G.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO II - DOS PROCEDIMENTOS DISCIPLINARES INTERNOS</h3>
+                    <p class="artigo"><strong>Art. 73º - Instauração do procedimento interno</strong> Os procedimentos disciplinares internos deverão ser instaurados mediante ato formal e fundamentado da corregedoria da instituição.</p>
+                    <p class="artigo"><strong>Art. 74º - Dever de comunicação à CRG-G</strong> Deverá ser comunicada à CRG-G a instauração de procedimento disciplinar que envolva:</p>
+                    <p class="inciso">I - oficiais superiores;</p>
+                    <p class="inciso">II - cargos de comando ou chefia;</p>
+                    <p class="inciso">III - fatos de repercussão institucional relevante.</p>
+                    <p class="artigo"><strong>Art. 75º - Acompanhamento e fiscalização</strong> A CRG-G poderá acompanhar, fiscalizar ou requisitar informações sobre qualquer procedimento interno, a qualquer tempo.</p>
+                    <p class="artigo"><strong>Art. 76º - Dever de colaboração</strong> É dever das corregedorias internas colaborar integralmente com a CRG-G, fornecendo documentos, informações e acesso aos autos quando solicitado.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO III - DA AVOCAÇÃO E INTERVENÇÃO CORRECIONAL</h3>
+                    <p class="artigo"><strong>Art. 77º - Avocação de procedimento</strong> A CRG-G poderá avocar procedimento disciplinar em curso quando verificar:</p>
+                    <p class="inciso">I - omissão injustificada;</p>
+                    <p class="inciso">II - atraso excessivo;</p>
+                    <p class="inciso">III - risco à imparcialidade;</p>
+                    <p class="inciso">IV - tentativa de blindagem hierárquica.</p>
+                    <p class="artigo"><strong>Art. 78º - Intervenção correcional</strong> A intervenção da CRG-G poderá consistir em:</p>
+                    <p class="inciso">I - assunção integral do procedimento;</p>
+                    <p class="inciso">II - substituição da autoridade correcional local;</p>
+                    <p class="inciso">III - determinação de medidas administrativas saneadoras.</p>
+                    <p class="artigo"><strong>Art. 79º - Limites da intervenção</strong> A intervenção correcional não autoriza:</p>
+                    <p class="inciso">I - ampliação de sanções além das previstas em lei;</p>
+                    <p class="inciso">II - violação ao contraditório e à ampla defesa;</p>
+                    <p class="inciso">III - adoção de medidas restritivas sem ordem judicial.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO IV - DOS DEVERES CORRECIONAIS E DA HIERARQUIA INSTITUCIONAL</h3>
+                    <p class="artigo"><strong>Art. 80º - Dever de observância hierárquica</strong> As corregedorias internas e os agentes submetidos à CRG-G deverão observar rigorosamente a hierarquia funcional própria de cada instituição policial, sem prejuízo do controle exercido pela Corregedoria Geral.</p>
+                    <p class="artigo"><strong>Art. 81º - Distinção entre instituições militares e civis</strong> Para fins correcionais, reconhecem-se as seguintes naturezas institucionais:</p>
+                    <p class="inciso">I - instituições de natureza militar: PMERJ, BOPE e ROTA;</p>
+                    <p class="inciso">II - institutions de natureza militar estadual: Exército Brasileiro;</p>
+                    <p class="inciso">III - instituições de natureza civil: Polícia Federal, Polícia Civil e Polícia Rodoviária Federal.</p>
+                    <p class="artigo"><strong>Art. 82º - Regras procedimentais diferenciadas</strong> Os procedimentos disciplinares poderão observar regras específicas conforme a natureza da instituição:</p>
+                    <p class="inciso">I - respeito à hierarquia e disciplina militar, no caso das instituições previstas no inciso I do artigo anterior;</p>
+                    <p class="inciso">II - observância do regime funcional civil, no caso das instituições previstas no inciso III.</p>
+                    <p class="paragrafo"><strong>Parágrafo único</strong> - As diferenças procedimentais não poderão suprimir garantias, ampliar poderes punitivos ou afastar o controle da CRG-G.</p>
+                    <p class="artigo"><strong>Art. 83º - Supremacia da Lei Orgânica da CRG-G</strong> A Lei Orgânica da Corregedoria Geral das Polícias constitui norma correcional suprema, prevalecendo sobre regulamentos, portarias ou regimentos internos das instituições policiais nela abrangidas.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO V - DAS INFRAÇÕES ADMINISTRATIVAS GRAVES</h3>
+                    <p class="artigo"><strong>Art. 84º - Infrações administrativas graves</strong> Constituem infrações administrativas graves, passíveis de apuração pela CRG-G, as condutas que atentem contra:</p>
+                    <p class="inciso">I - a legalidade;</p>
+                    <p class="inciso">II - a moralidade administrativa;</p>
+                    <p class="inciso">III - a hierarquia e disciplina institucional;</p>
+                    <p class="inciso">IV - os direitos fundamentais;</p>
+                    <p class="inciso">V - a credibilidade da instituição policial.</p>
+                    <p class="artigo"><strong>Art. 85º - Infrações funcionais qualificadas</strong> São consideradas infrações funcionais qualificadas, dentre outras:</p>
+                    <p class="inciso">I - abuso de autoridade;</p>
+                    <p class="inciso">II - favorecimento indevido;</p>
+                    <p class="inciso">III - obstrução de procedimento correcional;</p>
+                    <p class="inciso">IV - descumprimento deliberado de decisão da CRG-G;</p>
+                    <p class="inciso">V - tentativa de blindagem hierárquica ou institucional.</p>
+                    <p class="artigo"><strong>Art. 86º - Autonomia da tipificação</strong> A caracterização da infração administrativa independe da existência ou do resultado de processo penal, respeitada a independência das esferas.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO VI - DAS SANÇÕES POR DESCUMPRIMENTO INSTITUCIONAL</h3>
+                    <p class="artigo"><strong>Art. 87º - Descumprimento institucional</strong> Configura descumprimento institucional grave:</p>
+                    <p class="inciso">I - deixar de cumprir determinação legítima da CRG-G;</p>
+                    <p class="inciso">II - recusar ou retardar injustificadamente o fornecimento de informações;</p>
+                    <p class="inciso">III - editar ato normativo interno em desacordo com esta Lei Orgânica.</p>
+                    <p class="artigo"><strong>Art. 88º - Responsabilização de comando</strong> O descumprimento institucional imputável a órgão, unidade ou departamento implicará responsabilização administrativa do respectivo comandante, chefe ou dirigente.</p>
+                    <p class="artigo"><strong>Art. 89º - Sanções aplicáveis</strong> Sem prejuízo das sanções individuais, poderão ser aplicadas sanções administrativas institucionais, tais como:</p>
+                    <p class="inciso">I - advertência formal ao comando;</p>
+                    <p class="inciso">II - anulação de ato administrativo irregular;</p>
+                    <p class="inciso">III - intervenção correcional, nos termos da Parte Geral;</p>
+                    <p class="inciso">IV - comunicação ao Poder Executivo e aos órgãos de controle.</p>
+                    <p class="artigo"><strong>Art. 89-A - Sanção institucional agravada</strong> Caso órgão, unidade ou departamento descumpra reiteradamente determinação da CRG-G, poderá ser submetido a intervenção direta com substituição temporária de comando.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO VII - DA CLASSIFICAÇÃO DAS INFRAÇÕES ADMINISTRATIVAS</h3>
+                    <p class="artigo"><strong>Art. 90º - Classificação das infrações</strong> As infrações administrativas disciplinares classificam-se em:</p>
+                    <p class="inciso">I - leves;</p>
+                    <p class="inciso">II - médias;</p>
+                    <p class="inciso">III - graves;</p>
+                    <p class="inciso">IV - gravíssimas.</p>
+                    <p class="artigo"><strong>Art. 91º - Critério de classificação</strong> A classificação observará, cumulativamente:</p>
+                    <p class="inciso">I - o grau de lesão à hierarquia e disciplina;</p>
+                    <p class="inciso">II - a repercussão institucional;</p>
+                    <p class="inciso">III - a violação a direitos fundamentais;</p>
+                    <p class="inciso">IV - a posição hierárquica do agente;</p>
+                    <p class="inciso">V - a reincidência.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO VIII - DA GRADAÇÃO DAS SANÇÕES ADMINISTRATIVAS</h3>
+                    <p class="artigo"><strong>Art. 92º - Correspondência entre infração e sanção</strong> As sanções administrativas observarão a seguinte gradação mínima:</p>
+                    <p class="inciso">I - infração leve: advertência;</p>
+                    <p class="inciso">II - infração média: suspensão;</p>
+                    <p class="inciso">III - infração grave: perda de função, cargo ou comando;</p>
+                    <p class="inciso">IV - infração gravíssima: exclusão, demissão ou destituição definitiva.</p>
+                    <p class="artigo"><strong>Art. 93º - Vedação à pena automática</strong> É vedada a aplicação automática de sanção sem análise individualizada da conduta e da culpabilidade administrativa.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO IX - DAS SANÇÕES APLICÁVEIS A INSTITUIÇÕES MILITARES</h3>
+                    <p class="artigo"><strong>Art. 94º - Regime disciplinar militar</strong> Aos integrantes da PMERJ, BOPE e ROTA aplicam-se sanções administrativas observando:</p>
+                    <p class="inciso">I - o princípio da hierarquia militar;</p>
+                    <p class="inciso">II - o princípio da disciplina;</p>
+                    <p class="inciso">III - a cadeia de comando.</p>
+                    <p class="paragrafo"><strong>Parágrafo único</strong> - As disposições deste Título não se aplicam aos integrantes do Exército Brasileiro, que permanecem sujeitos exclusivamente ao regime disciplinar militar próprio.</p>
+                    <p class="artigo"><strong>Art. 95º - Sanções específicas ao regime militar</strong> Além das sanções gerais previstas nesta Lei, poderão ser aplicadas:</p>
+                    <p class="inciso">I - perda de comando;</p>
+                    <p class="inciso">II - afastamento de função operacional;</p>
+                    <p class="inciso">III - rebaixamento funcional administrativo, quando previsto em norma interna compatível com esta Lei.</p>
+                    <p class="paragrafo"><strong>Parágrafo único</strong> - Nenhuma sanção militar poderá contrariar e/ou afastar o controle da CRG-G.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO X - DAS SANÇÕES APLICÁVEIS A INSTITUIÇÕES CIVIS</h3>
+                    <p class="artigo"><strong>Art. 96º - Regime disciplinar civil</strong> Aos integrantes da Polícia Federal, Polícia Civil e Polícia Rodoviária Federal aplicam-se sanções administrativas segundo o regime funcional civil.</p>
+                    <p class="artigo"><strong>Art. 97º - Sanções no regime civil</strong> Poderão ser aplicadas, conforme o caso:</p>
+                    <p class="inciso">I - advertência formal;</p>
+                    <p class="inciso">II - suspensão funcional;</p>
+                    <p class="inciso">III - destituição de função ou chefia;</p>
+                    <p class="inciso">IV - demissão administrativa.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO XI - DAS CIRCUNSTÂNCIAS AGRAVANTES E ATENUANTES</h3>
+                    <p class="artigo"><strong>Art. 98º - Circunstâncias agravantes</strong> Constituem circunstâncias agravantes:</p>
+                    <p class="inciso">I - abuso de autoridade;</p>
+                    <p class="inciso">II - uso do cargo para obtenção de vantagem;</p>
+                    <p class="inciso">III - tentativa de obstrução correcional;</p>
+                    <p class="inciso">IV - prática da infração em contexto de comando;</p>
+                    <p class="inciso">V - reincidência específica.</p>
+                    <p class="artigo"><strong>Art. 99º - Circunstâncias atenuantes</strong> Constituem circunstâncias atenuantes:</p>
+                    <p class="inciso">I - confissão espontânea;</p>
+                    <p class="inciso">II - colaboração efetiva com a apuração;</p>
+                    <p class="inciso">III - inexistência de antecedentes funcionais;</p>
+                    <p class="inciso">IV - reparação voluntária do dano.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO XII - DO CONCURSO DE INFRAÇÕES ADMINISTRATIVAS</h3>
+                    <p class="artigo"><strong>Art. 100º - Concurso material</strong> Quando o agente praticar mais de uma infração administrativa autônoma, as sanções poderão ser aplicadas cumulativamente, respeitado o princípio da proporcionalidade.</p>
+                    <p class="artigo"><strong>Art. 101º - Infração continuada</strong> Quando diversas condutas configurarem continuidade administrativa, será aplicada sanção única, agravada.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO XIII - DOS EFEITOS FUNCIONAIS DAS SANÇÕES</h3>
+                    <p class="artigo"><strong>Art. 102º - Efeitos diretos</strong> As sanções administrativas produzem efeitos imediatos sobre:</p>
+                    <p class="inciso">I - cargo;</p>
+                    <p class="inciso">II - função;</p>
+                    <p class="inciso">III - comando;</p>
+                    <p class="inciso">IV - progressão funcional.</p>
+                    <p class="artigo"><strong>Art. 103º - Efeitos secundários</strong> A condenação administrativa poderá gerar:</p>
+                    <p class="inciso">I - impedimento para cargos de comando;</p>
+                    <p class="inciso">II - vedação a funções sensíveis;</p>
+                    <p class="inciso">III - registro funcional obrigatório.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO XIX - DA EXECUÇÃO DA SANÇÃO ADMINISTRATIVA</h3>
+                    <p class="artigo"><strong>Art. 104º - Execução</strong> A execução da sanção administrativa é de responsabilidade da instituição de origem, sob fiscalização direta da CRG-G.</p>
+                    <p class="artigo"><strong>Art. 105º - Descumprimento da execução</strong> O descumprimento injustificado da sanção aplicada configura infração administrativa gravíssima do comando responsável.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO XX - DA SUPREMACIA CORRECIONAL</h3>
+                    <p class="artigo"><strong>Art. 106 - Descumprimento de decisões do Conselho</strong> Caso alguma corregedoria interna se recuse a acatar ordens ou decisões do Conselho de Corregedores do Brasil, a CRG-G poderá determinar a substituição imediata dos responsáveis por essa corregedoria, garantindo a continuidade do controle correcional e a observância das decisões colegiadas.</p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - A substituição dos responsáveis poderá incluir Corregedor Titular e Adjunto, assegurando a designação de servidores qualificados para o exercício temporário das funções correcionais.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - A medida de substituição não exime os substituídos de eventual responsabilização administrativa ou funcional pelos atos praticados ou pela omissão no cumprimento das decisões do Conselho.</p>
+                    <p class="paragrafo"><strong>§ 3º</strong> - A Corregedoria substituta deverá atuar estritamente nos limites das decisões do Conselho e da CRG-G, não podendo praticar atos que ampliem sanções ou alterem procedimentos legais.</p>
+                    <p class="paragrafo"><strong>§ 4º</strong> - Todas as ações referentes à substituição deverão ser formalmente registradas e comunicadas à instituição de origem, garantindo transparência e publicidade interna compatível com o sigilo legal.</p>
+                    <p class="artigo"><strong>Art. 107 - Norma suprema</strong> A Lei Orgânica da Corregedoria Geral das Polícias prevalece sobre:</p>
+                    <p class="inciso">I - regulamentos internos;</p>
+                    <p class="inciso">II - portarias;</p>
+                    <p class="inciso">III - ordens de comando;</p>
+                    <p class="inciso">IV - costumes administrativos;</p>
+                    <p class="inciso">V - sendo subordinada apenas às leis que regem o Estado.</p>
+                    <p class="paragrafo"><strong>Parágrafo único</strong> - Nenhuma norma interna poderá mitigar sanção aplicada pela CRG-G.</p>
+                    <p class="artigo"><strong>Art. 107-A - Interpretação institucional</strong> Para fins desta Lei Orgânica, a atuação fiscalizatória da Polícia Federal e da Polícia Civil no âmbito da CRG-G possui natureza administrativa disciplinar externa, não se confundindo com corregedorias internas, atividade de polícia judiciária ou persecução penal.</p>
+                    <p class="artigo"><strong>Art. 107-B - Efetividade da fiscalização</strong> A possibilidade de fiscalização a qualquer tempo e sem aviso prévio constitui elemento essencial da atividade correcional, não podendo ser interpretada como violação a direitos, desde que observados os limites, garantias e competências previstos nesta Lei Orgânica.</p>
+                </div>
+            </div>
+
+            <!-- LEI ORGÂNICA MP -->
+            <div class="tab-pane fade" id="loemp" role="tabpanel">
+                <div class="leg-box">
+                    <h1 class="leg-title">LEI ORGÂNICA ESTADUAL DO MINISTÉRIO PÚBLICO (LOEMP)</h1>
+
+                    <h2 class="leg-section-title">PARTE GERAL</h2>
+
+                    <h3 class="leg-subsection-title">TÍTULO I - DISPOSIÇÕES FUNDAMENTAIS, PRINCÍPIOS E DEFINIÇÕES</h3>
+                    <p class="artigo"><strong>Art. 1º Natureza Institucional</strong> O Ministério Público é instituição permanente, essencial à função jurisdicional do Estado, incumbindo-lhe a defesa da ordem jurídica, do regime democrático e dos interesses sociais e individuais indisponíveis.</p>
+                    <p class="artigo"><strong>Art. 2º - Princípios Institucionais</strong> São princípios institucionais do Ministério Público a unidade, a indivisibilidade e a independência funcional.</p>
+                    <p class="artigo"><strong>Art. 3º - Autonomia Funcional</strong> O Ministério Público atuará com independência funcional, observando os princípios da legalidade e da obrigatoriedade da ação penal.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO II - DA ESTRUTURA E DAS ATRIBUIÇÕES</h3>
+                    <p class="artigo"><strong>Art. 4º - Da Chefia da Instituição</strong> O Ministério Público tem como chefe e representante máximo o Procurador-Geral da República do Estado do Brasil.</p>
+                    <p class="artigo"><strong>Art. 5º - Titularidade da Ação Penal</strong> Compete privativamente ao Ministério Público promover a ação penal pública, nos termos da Constituição Estadual e da lei.</p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - Tomando conhecimento de infração penal de ação pública, a autoridade competente deverá agir nos termos da lei.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - Iniciada a ação penal pública, o órgão acusador não poderá dela desistir.</p>
+                    <p class="artigo"><strong>Art. 6º - Defesa do Consumidor e Ordem Civil</strong> O Ministério Público possui iniciativa para atuar na reparação de danos materiais e morais em defesa dos consumidores, de forma civil.</p>
+                    <p class="artigo"><strong>Art. 7º - Do Controle Externo da Atividade Policial</strong> O Ministério Público exercerá o controle externo da atividade policial, zelando pela legalidade dos atos investigativos e pelo respeito aos direitos fundamentais.</p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - O Ministério Público e o Poder Judiciário exercerão controle da legalidade do inquérito policial por meio do acesso aos registros constantes no BRAJUD.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - Quando a fiscalização, inspeção ou auditoria envolver a Polícia Rodoviária Federal ou o Exército Brasileiro no âmbito da Corregedoria Geral das Polícias (CRG-G), a atuação dependerá de acompanhamento obrigatório e manifestação formal do Procurador-Geral da República.</p>
+                    <p class="artigo"><strong>Art. 8º - Atuação na Investigação Criminal</strong> Durante a fase investigativa, o Ministério Público poderá:</p>
+                    <p class="inciso">I - requisitar diligências à autoridade policial;</p>
+                    <p class="inciso">II - acompanhar atos investigatórios;</p>
+                    <p class="inciso">III - requerer medidas cautelares ao Juiz das Garantias.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO III - DAS GARANTIAS, DEVERES E VEDAÇÕES</h3>
+                    <p class="artigo"><strong>Art. 9º Garantias</strong> Aos membros do Ministério Público, por exercerem função essencial à Justiça, são aplicadas as garantias constitucionais necessárias ao livre exercício de sua independência.</p>
+                    <p class="artigo"><strong>Art. 10º - Impedimentos e Suspeição</strong> Aplicam-se ao Ministério Público, no que couber, às hipóteses de impedimento e suspeição previstas para o juiz.</p>
+                    <p class="artigo"><strong>Art. 11º - Vedações</strong> É expressamente vedado ao membro do Ministério Público:</p>
+                    <p class="inciso">I - atuar em processo no qual tenha interesse direto ou indireto;</p>
+                    <p class="inciso">II - atuar com corporativismo para proteção ilegítima de agentes públicos;</p>
+                    <p class="inciso">III - desistir da ação penal após o seu início.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO IV - DA RESPONSABILIDADE E DO FORO POR PRERROGATIVA DE FUNÇÃO</h3>
+                    <p class="artigo"><strong>Art. 12º - Do Foro do Procurador-Geral da República</strong> O Procurador-Geral da República do Estado do Brasil responde, nos crimes comuns e de responsabilidade praticados no exercício do cargo, perante o Supremo Tribunal Estadual, observados o devido processo legal, o contraditório e a ampla defesa.</p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - A instauração de investigação ou processo dependerá de decisão fundamentada do Supremo Tribunal Estadual, vedada a atuação de ofício de órgãos policiais ou administrativos.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - O Procurador-Geral da República somente poderá ser ouvido, intimado ou submetido a medidas cautelares por determinação expressa do Supremo Tribunal Estadual.</p>
+                    <p class="artigo"><strong>Art. 13º - Infrações e Abusos</strong> O uso indevido do direito penal para fins de perseguição política, ideológica ou pessoal enseja a nulidade do ato e responsabilização dos agentes envolvidos, aplicando-se integralmente aos membros do Ministério Público.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO V - DOS PROCEDIMENTOS ESPECIAIS</h3>
+                    <p class="artigo"><strong>Art. 14º - Do Arquivamento de Inquérito</strong> O arquivamento do inquérito ou das peças de informação somente poderá ser determinado pelo Poder Judiciário, mediante requerimento do Ministério Público.</p>
+                    <p class="paragrafo"><strong>Parágrafo único</strong> - A autoridade policial não poderá arquivar o inquérito policial, cabendo tal decisão exclusivamente ao Ministério Público, com controle judicial.</p>
+                    <p class="artigo"><strong>Art. 15º - Do Acordo de Não Persecução Penal</strong> Nos crimes sem violência ou grave ameaça, e com pena mínima reduzida, o Ministério Público poderá propor acordo de não persecução penal.</p>
+                    <p class="paragrafo"><strong>§ 1º</strong> - Para a proposição do acordo, exige-se que haja confissão formal do investigado.</p>
+                    <p class="paragrafo"><strong>§ 2º</strong> - O fato não poderá ser insignificante, e a medida deve ser suficiente para reprovação e prevenção do crime.</p>
+                    <p class="artigo"><strong>Art. 16º - Da Quebra de Sigilo e Medidas Invasivas</strong> A interceptação de comunicações somente será admitida mediante ordem judicial fundamentada e requerimento do Ministério Público ou representação da autoridade policial.</p>
+
+                    <h3 class="leg-subsection-title">TÍTULO VI - DISPOSIÇÕES FINAIS</h3>
+                    <p class="artigo"><strong>Art. 17º - Prazos e Obrigatoriedade</strong> Presentes os pressupostos legais, o Ministério Público deverá promover a ação penal.</p>
+                    <p class="paragrafo"><strong>Parágrafo único</strong> - O Ministério Público oferecerá denúncia no prazo legal, e o descumprimento injustificado do prazo ensejará responsabilidade funcional.</p>
+                    <p class="artigo"><strong>Art. 18º - Aplicação Subsidiária</strong> Aplicam-se subsidiariamente a esta Lei Orgânica as normas previstas no Código de Processo Penal, no Código de Processo Civil, e, sobretudo, na Constituição Estadual do Brasil.</p>
+
+                    <p class="artigo mt-5 text-center text-muted" style="font-size: 0.85rem;"><em>Redigido por: Procurador Geral da República - Woozie MuuH<br>Brasil RP, 30/05/2026</em></p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function pesquisarPalavra() {
+            const input = document.getElementById('searchInput');
+            const termo = input.value.trim().toLowerCase();
+            const elementos = document.querySelectorAll('.artigo, .paragrafo, .inciso, .leg-subsection-title, .leg-section-title');
+            
+            if (!termo) {
+                limparPesquisa();
+                return;
+            }
+
+            elementos.forEach(el => {
+                const texto = el.innerText.toLowerCase();
+                if (texto.includes(termo)) {
+                    el.style.display = '';
+                } else {
+                    el.style.display = 'none';
+                }
+            });
+        }
+
+        function limparPesquisa() {
+            const input = document.getElementById('searchInput');
+            input.value = '';
+            const elementos = document.querySelectorAll('.artigo, .paragrafo, .inciso, .leg-subsection-title, .leg-section-title');
+            elementos.forEach(el => {
+                el.style.display = '';
+            });
+        }
+    </script>
+</body>
+</html>
