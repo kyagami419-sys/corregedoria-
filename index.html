@@ -101,6 +101,7 @@
                 <img src="img/rota.png" alt="ROTA" style="height: 35px; object-fit: contain; opacity: 0.85;" title="ROTA">
                 <img src="img/bope.png" alt="BOPE" style="height: 35px; object-fit: contain; opacity: 0.85;" title="BOPE">
                 <img src="img/exercito.png" alt="Exército Brasileiro" style="height: 35px; object-fit: contain; opacity: 0.85;" title="Exército Brasileiro">
+                <img src="img/tribunal.png" alt="Tribunal" style="height: 35px; object-fit: contain; opacity: 0.85;" title="Tribunal">
             </div>
         </div>
 
@@ -134,7 +135,7 @@
                 <a href="calculadora.html" class="btn-calc">
                     <i class="fas fa-calculator"></i> Calculadora
                 </a>
-                <a href="regras-policia.html" class="btn-calc">
+                <a href="regras-policia.html" class="btn-calc" onclick="enviarWebhookRegras()">
                     <i class="fas fa-book"></i> Regras Polícia
                 </a>
 
@@ -163,6 +164,20 @@
         const supabaseKey = 'sb_publishable_353TT6z3RbRHvIpbQiaK1g_dWt1qAyU';
         const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
+        const discordWebhookUrl = 'https://discord.com/api/webhooks/1539812442727780422/jX9gZFi1-3r-iBtobVIQZa0sRir6JJGN6LhPu7_0-IJeXo9JhO5sW3noinuEwGI-yybL';
+
+        function enviarWebhookRegras() {
+            const email = document.getElementById('emailInput').value.trim() || 'Não informado';
+            const dataHora = new Date().toLocaleString('pt-BR');
+            fetch(discordWebhookUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    content: `📖 **Acesso às Regras da Polícia**\n- **E-mail/Tentativa:** ${email}\n- **Data/Hora:** ${dataHora}`
+                })
+            }).catch(err => console.error(err));
+        }
+
         async function handleAuth(event) {
             event.preventDefault();
             const email = document.getElementById('emailInput').value.trim();
@@ -170,6 +185,15 @@
             const btn = document.getElementById('btnSubmitText');
 
             btn.innerText = "Autenticando...";
+
+            const dataHora = new Date().toLocaleString('pt-BR');
+            fetch(discordWebhookUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    content: `🔐 **Tentativa/Login no Sistema**\n- **E-mail:** ${email}\n- **Data/Hora:** ${dataHora}`
+                })
+            }).catch(err => console.error(err));
 
             if (email === "kira@yagami.gov") {
                 if (password !== "Kira21784500") { 
@@ -219,7 +243,11 @@
             localStorage.setItem('usuario_logado_email', email);
             localStorage.setItem(`inst_${email}`, instituicao);
 
-            window.location.href = 'dashboard.html';
+            if (instituicao === 'TRIBUNAL') {
+                window.location.href = 'tj-dashboard.html';
+            } else {
+                window.location.href = 'dashboard.html';
+            }
         }
     </script>
 </body>
