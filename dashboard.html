@@ -117,6 +117,8 @@
             <!-- NOVO BOTÃO DE MENSAGENS -->
             <a href="mensagens.html" class="btn btn-outline-info btn-sm me-2" id="btnMensagensAdmin" style="display: none;"><i class="fas fa-paper-plane"></i> Enviar Mensagens</a>
             
+            <a href="tj-dashboard.html" class="btn btn-outline-primary btn-sm me-2" id="btnTribunalAdmin" style="display: none;"><i class="fas fa-balance-scale"></i> Tribunal de Justiça</a>
+
             <button onclick="fazerLogout()" class="btn btn-outline-light btn-sm"><i class="fas fa-sign-out-alt"></i> Sair</button>
         </div>
     </nav>
@@ -212,7 +214,8 @@
             if (emailUsuarioLogado === "kira@yagami.gov") {
                 instituicaoUsuarioLogado = 'POLÍCIA FEDERAL';
                 document.getElementById('btnAdmin').style.display = 'inline-block';
-                document.getElementById('btnMensagensAdmin').style.display = 'inline-block'; // Novo botão ativado
+                document.getElementById('btnMensagensAdmin').style.display = 'inline-block'; 
+                document.getElementById('btnTribunalAdmin').style.display = 'inline-block'; // Botão Tribunal de Justiça
                 document.getElementById('tituloInstituicao').innerText = "PAINEL ADMINISTRATIVO - POLÍCIA FEDERAL";
                 document.getElementById('imgBrasao').src = brasoesInstituicoes['POLÍCIA FEDERAL'];
                 return;
