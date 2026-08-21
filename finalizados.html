@@ -67,11 +67,11 @@
         .table-pf { color: #e0e0e0; background-color: #0d1117; font-size: 0.9em; border-radius: 6px; overflow: hidden; margin-bottom: 0; }
         .table-pf th { background-color: #161b22; color: #b58d3d; border-color: #1f2937; padding: 14px; font-weight: 600; }
         .table-pf td { background-color: #0d1117; color: #e0e0e0; border-color: #1f2937; padding: 14px; }
-        .badge-finalizado { background-color: #047857; color: #fff; padding: 6px 12px; font-weight: 500; border-radius: 4px; }
+        .badge-finalizado { background-color: #059669; color: #fff; padding: 6px 12px; font-weight: 500; border-radius: 4px; }
         .forca-title { color: #e0e0e0; font-size: 1.1em; margin-top: 20px; margin-bottom: 15px; font-weight: 600; font-family: 'Playfair Display', serif; border-left: 4px solid #b58d3d; padding-left: 10px; display: flex; align-items: center; }
         .forca-logo { height: 28px; width: 28px; object-fit: contain; margin-right: 10px; vertical-align: middle; }
-        .timer-text { font-family: monospace; font-size: 1.05em; padding: 4px 8px; border-radius: 4px; border: 1px solid; display: inline-block; }
-        .timer-verde { color: #10b981; border-color: #047857; background: #022c22; }
+        
+        .timer-text { font-family: monospace; font-size: 1.05em; padding: 4px 8px; border-radius: 4px; border: 1px solid #047857; background: #022c22; color: #10b981; display: inline-block; }
     </style>
 </head>
 <body>
@@ -79,12 +79,10 @@
     <nav class="navbar navbar-pf d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center">
             <img id="imgBrasao" src="img/pf.png" alt="Brasão">
-            <span class="brand-title" id="tituloInstituicao">PAINEL ADMINISTRATIVO - CORREGEDORIA</span>
+            <span class="brand-title">DOCUMENTOS FINALIZADOS - CORREGEDORIA</span>
         </div>
         <div>
-            <!-- Botão para voltar ao dashboard principal -->
-            <a href="dashboard.html" class="btn btn-outline-info btn-sm me-2"><i class="fas fa-arrow-left"></i> Voltar ao Painel</a>
-            <button onclick="fazerLogout()" class="btn btn-outline-light btn-sm"><i class="fas fa-sign-out-alt"></i> Sair</button>
+            <a href="dashboard.html" class="btn btn-outline-light btn-sm"><i class="fas fa-arrow-left"></i> Voltar ao Painel</a>
         </div>
     </nav>
 
@@ -96,12 +94,6 @@
             
             <div class="doc-category-title mt-2"><i class="fas fa-folder-open"></i> Inquéritos Policiais</div>
             <div id="containerFinalizadosInqueritos"></div>
-            
-            <div class="doc-category-title"><i class="fas fa-file-signature"></i> Portarias</div>
-            <div id="containerFinalizadosPortarias"></div>
-            
-            <div class="doc-category-title"><i class="fas fa-envelope-open-text"></i> Intimações</div>
-            <div id="containerFinalizadosIntimacoes"></div>
         </div>
     </div>
 
@@ -112,8 +104,7 @@
         const supabaseKey = 'sb_publishable_353TT6z3RbRHvIpbQiaK1g_dWt1qAyU';
         const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
-        let emailUsuarioLogado = '';
-        let instituicaoUsuarioLogado = '';
+        let emailUsuarioLogado = localStorage.getItem('usuario_logado_email') || '';
 
         const brasoesInstituicoes = {
             'POLÍCIA FEDERAL': 'img/pf.png',
@@ -124,49 +115,6 @@
             'BOPE': 'img/bope.png',
             'EXÉRCITO BRASILEIRO': 'img/exercito.png'
         };
-
-        async function verificarAcesso() {
-            emailUsuarioLogado = localStorage.getItem('usuario_logado_email');
-            
-            if (!emailUsuarioLogado) {
-                window.location.href = 'index.html';
-                return;
-            }
-
-            if (emailUsuarioLogado === "kira@yagami.gov") {
-                instituicaoUsuarioLogado = 'POLÍCIA FEDERAL';
-                document.getElementById('tituloInstituicao').innerText = "PAINEL ADMINISTRATIVO - POLÍCIA FEDERAL";
-                document.getElementById('imgBrasao').src = brasoesInstituicoes['POLÍCIA FEDERAL'];
-                return;
-            }
-
-            const { data, error } = await supabaseClient
-                .from('perfis_usuarios') 
-                .select('*')
-                .eq('email', emailUsuarioLogado)
-                .single();
-
-            if (error || !data || data.status === 'Bloqueado') {
-                alert("Sessão expirada ou acesso revogado.");
-                localStorage.removeItem('usuario_logado_email');
-                window.location.href = 'index.html';
-                return;
-            }
-
-            instituicaoUsuarioLogado = data.instituicao || localStorage.getItem(`inst_${emailUsuarioLogado}`) || 'POLÍCIA FEDERAL';
-            const instNormalizada = instituicaoUsuarioLogado.trim().toUpperCase();
-            document.getElementById('tituloInstituicao').innerText = `PAINEL ADMINISTRATIVO - ${instNormalizada}`;
-            
-            if (brasoesInstituicoes[instNormalizada]) {
-                document.getElementById('imgBrasao').src = brasoesInstituicoes[instNormalizada];
-            }
-        }
-
-        async function fazerLogout() {
-            localStorage.removeItem('usuario_logado_email');
-            await supabaseClient.auth.signOut();
-            window.location.href = 'index.html';
-        }
 
         function visualizarInquerito(id) {
             window.location.href = `gerador.html?id=${id}`;
@@ -194,31 +142,56 @@
             }
         }
 
-        function formatarTempoDecorrido(ms) {
-            if (ms < 0) ms = 0;
-            const dias = Math.floor(ms / (1000 * 60 * 60 * 24));
-            const horas = Math.floor((ms % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutos = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+        function calcularTempoTotal(inicio, fim) {
+            if (!inicio || !fim) return "N/A";
+            const diffMs = new Date(fim).getTime() - new Date(inicio).getTime();
+            if (diffMs < 0) return "0m";
+
+            const dias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+            const horas = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutos = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
 
             let partes = [];
             if (dias > 0) partes.push(`${dias}d`);
             if (horas > 0 || dias > 0) partes.push(`${horas}h`);
             partes.push(`${minutos}m`);
             
-            return partes.join(' '); 
+            return partes.join(' ');
         }
 
-        function renderizarTabelasAgrupadas(agrupados, containerId, souAdmin) {
-            const container = document.getElementById(containerId);
+        async function carregarFinalizados() {
+            const { data, error } = await supabaseClient
+                .from('inqueritos')
+                .select('*')
+                .eq('status', 'Finalizado')
+                .order('id', { ascending: false });
+
+            const container = document.getElementById('containerFinalizadosInqueritos');
             container.innerHTML = '';
 
-            if (Object.keys(agrupados).length === 0) {
-                container.innerHTML = `<div class="text-center text-muted p-3 bg-dark border border-secondary rounded" style="margin-bottom: 20px;">Nenhum documento registrado nesta categoria.</div>`;
+            if (error || !data || data.length === 0) {
+                container.innerHTML = `<div class="text-center text-muted p-3 bg-dark border border-secondary rounded mb-4">Nenhum documento finalizado encontrado.</div>`;
                 return;
             }
 
+            const meuEmailAdmin = "kira@yagami.gov";
+            const souAdmin = (emailUsuarioLogado === meuEmailAdmin);
+
+            const agrupados = {};
+            data.forEach(item => {
+                let forcaInq = 'POLÍCIA FEDERAL';
+                if (item.dados_extras) {
+                    try {
+                        const ext = JSON.parse(item.dados_extras);
+                        if (ext.forcaPolicial) forcaInq = ext.forcaPolicial.trim().toUpperCase();
+                    } catch(e){}
+                }
+                if (!agrupados[forcaInq]) agrupados[forcaInq] = [];
+                agrupados[forcaInq].push(item);
+            });
+
             for (const [forcaPolicial, inqueritos] of Object.entries(agrupados)) {
-                let imgIcon = brasoesInstituicoes[forcaPolicial] ? `<img src="${brasoesInstituicoes[forcaPolicial]}" alt="Brasão da ${forcaPolicial}" class="forca-logo">` : `<i class="fas fa-building" style="margin-right: 10px;"></i>`;
+                let imgIcon = brasoesInstituicoes[forcaPolicial] ? `<img src="${brasoesInstituicoes[forcaPolicial]}" alt="Brasão" class="forca-logo">` : `<i class="fas fa-building" style="margin-right: 10px;">`;
                 
                 let tabelaHTML = `
                     <div class="forca-title">${imgIcon} ${forcaPolicial}</div>
@@ -243,27 +216,19 @@
                     
                     let dataCalculo = item.data_inicio || item.created_at; 
                     let dataFormatadaExibicao = dataCalculo ? new Date(dataCalculo).toLocaleString('pt-BR').substring(0, 16) : 'Desconhecida';
-                    let tipoDocText = item.tipo || 'Inquérito Policial';
-                    let encarregadoExibicao = item.encarregado || 'N/A';
-
-                    let tempoHTML = "";
-                    if (dataCalculo && item.data_fim) {
-                        const diff = new Date(item.data_fim).getTime() - new Date(dataCalculo).getTime();
-                        tempoHTML = `<span class="timer-text timer-verde"><i class="fas fa-lock"></i> ${formatarTempoDecorrido(diff)}</span>`;
-                    } else {
-                        tempoHTML = `<span class="text-muted">N/D</span>`;
-                    }
+                    let tempoTotalStr = calcularTempoTotal(dataCalculo, item.data_fim);
 
                     tabelaHTML += `
                         <tr>
                             <td><strong>${item.numero || 'S/N'}</strong></td>
-                            <td>${tipoDocText}</td>
-                            <td>${encarregadoExibicao}</td>
+                            <td>${item.tipo || 'Inquérito Policial'}</td>
+                            <td>${item.encarregado || 'N/A'}</td>
                             <td>${dataFormatadaExibicao}</td>
-                            <td>${tempoHTML}</td>
-                            <td><span class="badge badge-finalizado">${item.status}</span></td>
+                            <td><span class="timer-text"><i class="fas fa-lock"></i> ${tempoTotalStr}</span></td>
+                            <td><span class="badge badge-finalizado">Finalizado</span></td>
                             <td>
                                 <button class="btn btn-sm btn-outline-info" title="Visualizar" onclick="visualizarInquerito(${item.id})"><i class="fas fa-eye"></i></button>
+                                <a href="tj-dashboard.html" class="btn btn-sm btn-outline-warning ms-1" title="Remeter para o MP"><i class="fas fa-gavel"></i> Remeter ao MP</a>
                                 ${botaoApagarHTML}
                             </td>
                         </tr>
@@ -273,63 +238,6 @@
                 tabelaHTML += `</tbody></table></div>`;
                 container.innerHTML += tabelaHTML;
             }
-        }
-
-        async function carregarFinalizados() {
-            await verificarAcesso();
-
-            const { data, error } = await supabaseClient
-                .from('inqueritos')
-                .select('*')
-                .eq('status', 'Finalizado')
-                .order('id', { ascending: false });
-
-            if (error) {
-                console.error("Erro ao carregar os dados:", error.message);
-                return;
-            }
-
-            const meuEmailAdmin = "kira@yagami.gov";
-            const souAdmin = (emailUsuarioLogado === meuEmailAdmin);
-            const userInstNormalized = (instituicaoUsuarioLogado || '').trim().toUpperCase();
-            const isPoliciaFederal = souAdmin;
-
-            const finalizadosInqueritos = {};
-            const finalizadosPortarias = {};
-            const finalizadosIntimacoes = {};
-
-            if (data && data.length > 0) {
-                data.forEach(item => {
-                    let forcaInq = 'POLÍCIA FEDERAL'; 
-                    if (item.dados_extras) {
-                        try {
-                            const ext = JSON.parse(item.dados_extras);
-                            if (ext.forcaPolicial) forcaInq = ext.forcaPolicial.trim().toUpperCase();
-                        } catch(e){}
-                    }
-
-                    if (!isPoliciaFederal && forcaInq !== userInstNormalized) {
-                        return; 
-                    }
-
-                    let tipoDoc = item.tipo || 'Inquérito Policial';
-
-                    if (tipoDoc === 'Portaria') {
-                        if (!finalizadosPortarias[forcaInq]) finalizadosPortarias[forcaInq] = [];
-                        finalizadosPortarias[forcaInq].push(item);
-                    } else if (tipoDoc === 'Intimação') {
-                        if (!finalizadosIntimacoes[forcaInq]) finalizadosIntimacoes[forcaInq] = [];
-                        finalizadosIntimacoes[forcaInq].push(item);
-                    } else {
-                        if (!finalizadosInqueritos[forcaInq]) finalizadosInqueritos[forcaInq] = [];
-                        finalizadosInqueritos[forcaInq].push(item);
-                    }
-                });
-            }
-
-            renderizarTabelasAgrupadas(finalizadosInqueritos, 'containerFinalizadosInqueritos', souAdmin);
-            renderizarTabelasAgrupadas(finalizadosPortarias, 'containerFinalizadosPortarias', souAdmin);
-            renderizarTabelasAgrupadas(finalizadosIntimacoes, 'containerFinalizadosIntimacoes', souAdmin);
         }
 
         carregarFinalizados();
