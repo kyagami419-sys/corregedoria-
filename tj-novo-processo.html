@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novo Processo - Tribunal de Justiça</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { background: radial-gradient(circle at top, #0f172a 0%, #020617 100%); color: #e2e8f0; font-family: 'Inter', sans-serif; min-height: 100vh; margin: 0; }
+        .navbar-tj { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); border-bottom: 2px solid #b58d3d; padding: 12px 30px; }
+        .navbar-tj .brand-title { color: #ffffff; font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1.25em; letter-spacing: 1.5px; }
+        .container-main { padding: 40px 20px; max-width: 1000px; margin: 0 auto; }
+        .section-box { background-color: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .section-header { border-bottom: 1px solid #1e293b; padding-bottom: 15px; margin-bottom: 25px; font-size: 1.2rem; font-weight: 600; color: #b58d3d; font-family: 'Playfair Display', serif; }
+        .form-label { color: #94a3b8; font-size: 0.85em; font-weight: 500; text-transform: uppercase; }
+        .form-control, .form-select { background-color: #1e293b; border: 1px solid #334155; color: #ffffff; }
+        .form-control:focus, .form-select:focus { background-color: #0f172a; color: #ffffff; border-color: #b58d3d; box-shadow: 0 0 0 0.25rem rgba(181, 141, 61, 0.25); }
+        .btn-gold { background-color: #b58d3d; color: #fff; border: none; padding: 12px 25px; border-radius: 4px; font-weight: 600; transition: 0.2s; width: 100%; }
+        .btn-gold:hover { background-color: #c49a3c; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-tj d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+            <i class="fas fa-balance-scale fs-3 me-3" style="color: #b58d3d;"></i>
+            <span class="brand-title">NOVO PROCESSO</span>
+        </div>
+        <div><a href="tj-dashboard.html" class="btn btn-outline-light btn-sm"><i class="fas fa-arrow-left"></i> Voltar ao Painel</a></div>
+    </nav>
+
+    <div class="container-main">
+        <div class="section-box">
+            <div class="section-header"><i class="fas fa-folder-plus"></i> Formulário de Autuação</div>
+            <form id="formNovoProcesso">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Nº do Processo</label>
+                        <input type="text" class="form-control" placeholder="Gerado Automaticamente" disabled>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Classe Processual</label>
+                        <select class="form-select">
+                            <option>Ação Penal</option>
+                            <option>Habeas Corpus</option>
+                            <option>Mandado de Segurança</option>
+                            <option>Ação Civil</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Data de Autuação</label>
+                        <input type="datetime-local" class="form-control" id="dataAtual">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Requerente / Autor</label>
+                        <input type="text" class="form-control" placeholder="Nome da parte autora">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Requerido / Réu</label>
+                        <input type="text" class="form-control" placeholder="Nome da parte ré">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Assunto Principal</label>
+                        <input type="text" class="form-control" placeholder="Ex: Tráfico, Furto, Indenização...">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Petição Inicial / Fatos</label>
+                        <textarea class="form-control" rows="8" placeholder="Descreva os fatos e fundamentos legais..."></textarea>
+                    </div>
+                    <div class="col-12 mt-4">
+                        <button type="button" class="btn-gold" onclick="alert('Processo autuado com sucesso!')"><i class="fas fa-gavel"></i> Distribuir Processo</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        const agora = new Date();
+        agora.setMinutes(agora.getMinutes() - agora.getTimezoneOffset());
+        document.getElementById('dataAtual').value = agora.toISOString().slice(0,16);
+    </script>
+</body>
+</html>

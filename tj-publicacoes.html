@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Publicações - Tribunal de Justiça</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { background: radial-gradient(circle at top, #0f172a 0%, #020617 100%); color: #e2e8f0; font-family: 'Inter', sans-serif; min-height: 100vh; margin: 0; }
+        .navbar-tj { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); border-bottom: 2px solid #b58d3d; padding: 12px 30px; }
+        .navbar-tj .brand-title { color: #ffffff; font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1.25em; letter-spacing: 1.5px; }
+        .container-main { padding: 40px 20px; max-width: 1300px; margin: 0 auto; }
+        
+        .section-box { background-color: #0f172a; border: 1px solid #1e293b; border-radius: 8px; margin-bottom: 30px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .section-header { background-color: #1e293b; padding: 15px 20px; font-size: 1.1rem; font-weight: 600; color: #b58d3d; border-bottom: 1px solid #334155; font-family: 'Playfair Display', serif; }
+        
+        .table-tj { width: 100%; color: #e2e8f0; font-size: 0.9rem; margin-bottom: 0; }
+        .table-tj th { background-color: #162032; color: #94a3b8; font-weight: 600; padding: 12px 20px; border-bottom: 1px solid #334155; text-transform: uppercase; font-size: 0.8rem; }
+        .table-tj td { background-color: #0f172a; padding: 15px 20px; border-bottom: 1px solid #1e293b; vertical-align: middle; }
+        
+        .badge-concluido { background-color: #065f46; color: #d1fae5; padding: 5px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
+        .badge-despacho { background-color: #1e3a8a; color: #bfdbfe; padding: 5px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
+        .btn-view { background-color: transparent; border: 1px solid #475569; color: #cbd5e1; padding: 6px 12px; border-radius: 4px; font-size: 0.85rem; transition: 0.2s; text-decoration: none; }
+        .btn-view:hover { background-color: #b58d3d; border-color: #b58d3d; color: #fff; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-tj d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+            <i class="fas fa-book fs-3 me-3" style="color: #b58d3d;"></i>
+            <span class="brand-title">DIÁRIO DA JUSTIÇA ELETRÔNICO</span>
+        </div>
+        <div><a href="tj-dashboard.html" class="btn btn-outline-light btn-sm"><i class="fas fa-arrow-left"></i> Voltar ao Painel</a></div>
+    </nav>
+
+    <div class="container-main">
+        
+        <!-- PROCESSOS CONCLUÍDOS -->
+        <div class="section-box">
+            <div class="section-header"><i class="fas fa-check-double"></i> Processos Transitados em Julgado (Concluídos)</div>
+            <div class="table-responsive">
+                <table class="table-tj">
+                    <thead>
+                        <tr>
+                            <th>Nº Processo</th>
+                            <th>Classe Processual</th>
+                            <th>Partes</th>
+                            <th>Data de Baixa</th>
+                            <th>Status Final</th>
+                            <th class="text-center">Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>5001122-10.2026</strong></td>
+                            <td>Ação Penal</td>
+                            <td>Ministério Público x João da Silva</td>
+                            <td>12/07/2026</td>
+                            <td><span class="badge-concluido">Arquivado Definitivamente</span></td>
+                            <td class="text-center"><a href="#" class="btn-view"><i class="fas fa-eye"></i> Ler Sentença</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- DESPACHOS E DECISÕES -->
+        <div class="section-box">
+            <div class="section-header"><i class="fas fa-pen-nib"></i> Despachos e Decisões Publicadas</div>
+            <div class="table-responsive">
+                <table class="table-tj">
+                    <thead>
+                        <tr>
+                            <th>Nº Processo Vinculado</th>
+                            <th>Tipo de Documento</th>
+                            <th>Data da Publicação</th>
+                            <th>Magistrado(a)</th>
+                            <th class="text-center">Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>5001472-60.2026</strong></td>
+                            <td><span class="badge-despacho">Decisão Interlocutória</span></td>
+                            <td>15/08/2026</td>
+                            <td>Vara Criminal Central</td>
+                            <td class="text-center"><a href="#" class="btn-view"><i class="fas fa-file-alt"></i> Visualizar</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>5009102-44.2026</strong></td>
+                            <td><span class="badge-despacho">Despacho de Mero Expediente</span></td>
+                            <td>14/08/2026</td>
+                            <td>Vara Cível</td>
+                            <td class="text-center"><a href="#" class="btn-view"><i class="fas fa-file-alt"></i> Visualizar</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- INTIMAÇÕES -->
+        <div class="section-box">
+            <div class="section-header"><i class="fas fa-envelope-open-text"></i> Intimações Eletrônicas Expedidas</div>
+            <div class="table-responsive">
+                <table class="table-tj">
+                    <thead>
+                        <tr>
+                            <th>Destinatário</th>
+                            <th>Processo Referência</th>
+                            <th>Data Expedição</th>
+                            <th>Prazo de Retorno</th>
+                            <th class="text-center">Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>OAB/RS 107410 - Alice Bittencourt</strong></td>
+                            <td>5001472-60.2026</td>
+                            <td>13/08/2026</td>
+                            <td><span class="text-danger">15 Dias</span></td>
+                            <td class="text-center"><a href="#" class="btn-view"><i class="fas fa-print"></i> Certidão</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
