@@ -532,10 +532,11 @@
                 extras.despachoJuiz = despacho.trim();
                 extras.dataDecisao = new Date().toISOString();
 
+                // Status alterado para 'Arquivado' para sincronizar com a página de Publicações
                 const { error } = await supabaseClient
                     .from('inqueritos')
                     .update({ 
-                        status: 'Arquivado Definitivamente', 
+                        status: 'Arquivado', 
                         dados_extras: JSON.stringify(extras) 
                     })
                     .eq('id', id);
