@@ -199,28 +199,44 @@
             
             let textoGeral = "";
 
-            // Se houver texto direto na coluna principal
             if (data.conteudo) textoGeral += data.conteudo + "\n\n";
             if (data.texto) textoGeral += data.texto + "\n\n";
 
-            // Se houver dados salvos em JSON (dados_extras), extrai tudo o que estiver dentro
             if (data.dados_extras) {
                 try {
                     const ext = JSON.parse(data.dados_extras);
                     
-                    // Varre todas as chaves do JSON para garantir que nenhum depoimento, link ou campo fique de fora
                     for (const [chave, valor] of Object.entries(ext)) {
-                        if (valor && typeof valor === 'string' && valor.trim() !== "") {
-                            // Formata o nome da chave para ficar legível (ex: investigadoNome -> Investigado Nome)
+                        if (valor !== null && valor !== undefined && valor !== "") {
                             let nomeFormatado = chave.replace(/([A-Z])/g, ' $1').toUpperCase();
-                            textoGeral += `[ ${nomeFormatado} ]\n${valor}\n\n`;
-                        } else if (Array.isArray(valor)) {
-                            let nomeFormatado = chave.replace(/([A-Z])/g, ' $1').toUpperCase();
-                            textoGeral += `[ ${nomeFormatado} ]\n` + valor.join('\n') + `\n\n`;
+                            let textoItem = "";
+
+                            if (typeof valor === 'string') {
+                                textoItem = valor;
+                            } else if (Array.isArray(valor)) {
+                                textoItem = valor.map((el) => {
+                                    if (typeof el === 'object' && el !== null) {
+                                        return Object.entries(el)
+                                            .map(([k, v]) => `• ${k.toUpperCase()}: ${v}`)
+                                            .join('\n');
+                                    }
+                                    return `• ${el}`;
+                                }).join('\n\n');
+                            } else if (typeof valor === 'object') {
+                                textoItem = Object.entries(valor)
+                                    .map(([k, v]) => `• ${k.toUpperCase()}: ${v}`)
+                                    .join('\n');
+                            } else {
+                                textoItem = String(valor);
+                            }
+
+                            if (textoItem.trim() !== "") {
+                                textoGeral += `[ ${nomeFormatado} ]\n${textoItem}\n\n`;
+                            }
                         }
                     }
                 } catch(e) {
-                    textoGeral += "\n[Dados Extras Brutos]\n" + data.dados_extras;
+                    textoGeral += "\n[Dados Extras]\n" + data.dados_extras;
                 }
             }
 
