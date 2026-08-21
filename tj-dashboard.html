@@ -532,7 +532,7 @@
                 extras.despachoJuiz = despacho.trim();
                 extras.dataDecisao = new Date().toISOString();
 
-                // Status alterado para 'Arquivado' para sincronizar com a página de Publicações
+                // Salva como Arquivado para ir para a página de Publicações
                 const { error } = await supabaseClient
                     .from('inqueritos')
                     .update({ 
@@ -548,10 +548,14 @@
                 }
 
             } else if (status === 'Aguardando Despacho (Denúncia)') {
-                if (!confirm(`Deseja receber a denúncia e transformar o documento ${numero} em um PROCESSO EM ANDAMENTO?`)) return;
+                // AQUI FOI ADICIONADO A CAIXA DE TEXTO (PROMPT) PARA DENÚNCIA TAMBÉM
+                const despacho = window.prompt(`Informe o DESPACHO / DECISÃO DE RECEBIMENTO DA DENÚNCIA para o documento ${numero}:`);
+                if (!despacho || despacho.trim() === "") return;
 
+                extras.despachoJuiz = despacho.trim();
                 extras.dataDecisao = new Date().toISOString();
 
+                // Salva como Processo em Andamento para ir para a tabela superior
                 const { error } = await supabaseClient
                     .from('inqueritos')
                     .update({ 
@@ -563,7 +567,7 @@
                 
                 if (error) alert("Erro: " + error.message);
                 else {
-                    alert("Denúncia aceita! O documento foi convertido para um Processo em Andamento (Ação Penal).");
+                    alert("Despacho assinado! A denúncia foi aceita e convertida para Processo em Andamento.");
                     carregarDespachosPendentes();
                     carregarProcessosEmAndamento();
                 }
