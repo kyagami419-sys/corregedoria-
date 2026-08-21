@@ -433,6 +433,9 @@
             const andamentoPortarias = {};
             const andamentoIntimacoes = {};
 
+            // Lista de status que pertencem ao fluxo do Tribunal de Justiça/MP e não devem aparecer como "Em Andamento"
+            const statusOcultosPolicial = ['Remetido ao MP', 'Aguardando Despacho (Denúncia)', 'Aguardando Despacho (Arquivamento)', 'Arquivado MP'];
+
             if (data && data.length > 0) {
                 data.forEach(item => {
                     let forcaInq = 'POLÍCIA FEDERAL'; 
@@ -452,7 +455,7 @@
                     if (item.status === 'Finalizado') {
                         qtdFinalizados++;
                         if (tipoDoc !== 'Inquérito Policial') qtdOutros++;
-                    } else if (item.status !== 'Arquivado') {
+                    } else if (item.status !== 'Arquivado' && !statusOcultosPolicial.includes(item.status)) {
                         qtdAndamento++;
                         if (tipoDoc !== 'Inquérito Policial') qtdOutros++;
                         
