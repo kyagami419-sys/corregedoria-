@@ -32,7 +32,7 @@
             letter-spacing: 1.5px; 
         }
 
-        .container-main { padding: 40px 20px; max-width: 900px; margin: 0 auto; }
+        .container-main { padding: 40px 20px; max-width: 1000px; margin: 0 auto; }
         
         .document-box {
             background-color: #0f172a;
@@ -153,8 +153,8 @@
             </div>
 
             <div class="info-group mt-2">
-                <span class="info-label">Conteúdo / Descrição do Inquérito</span>
-                <div class="content-box" id="valConteudo">Carregando texto do documento...</div>
+                <span class="info-label">Conteúdo Completo, Depoimentos e Anexos do Inquérito</span>
+                <div class="content-box" id="valConteudo">Carregando dados do inquérito...</div>
             </div>
 
             <div class="text-center mt-4">
@@ -197,21 +197,38 @@
             document.getElementById('valEncarregado').innerText = data.encarregado || 'N/A';
             document.getElementById('valStatus').innerText = data.status || 'N/A';
             
-            // Pega o conteúdo do inquérito (seja texto direto ou via dados_extras)
-            let textoConteúdo = data.conteudo || data.texto || 'Nenhum conteúdo detalhado informado.';
+            let textoGeral = "";
+
+            // Se houver texto direto na coluna principal
+            if (data.conteudo) textoGeral += data.conteudo + "\n\n";
+            if (data.texto) textoGeral += data.texto + "\n\n";
+
+            // Se houver dados salvos em JSON (dados_extras), extrai tudo o que estiver dentro
             if (data.dados_extras) {
                 try {
                     const ext = JSON.parse(data.dados_extras);
-                    if (ext.motivoMP) {
-                        textoConteúdo += `\n\n--- MOTIVO / MANIFESTAÇÃO DO MINISTÉRIO PÚBLICO ---\n${ext.motivoMP}`;
+                    
+                    // Varre todas as chaves do JSON para garantir que nenhum depoimento, link ou campo fique de fora
+                    for (const [chave, valor] of Object.entries(ext)) {
+                        if (valor && typeof valor === 'string' && valor.trim() !== "") {
+                            // Formata o nome da chave para ficar legível (ex: investigadoNome -> Investigado Nome)
+                            let nomeFormatado = chave.replace(/([A-Z])/g, ' $1').toUpperCase();
+                            textoGeral += `[ ${nomeFormatado} ]\n${valor}\n\n`;
+                        } else if (Array.isArray(valor)) {
+                            let nomeFormatado = chave.replace(/([A-Z])/g, ' $1').toUpperCase();
+                            textoGeral += `[ ${nomeFormatado} ]\n` + valor.join('\n') + `\n\n`;
+                        }
                     }
-                    if (ext.despachoJuiz) {
-                        textoConteúdo += `\n\n--- DESPACHO / DECISÃO DO JUIZ ---\n${ext.despachoJuiz}`;
-                    }
-                } catch(e){}
+                } catch(e) {
+                    textoGeral += "\n[Dados Extras Brutos]\n" + data.dados_extras;
+                }
             }
 
-            document.getElementById('valConteudo').innerText = textoConteúdo;
+            if (textoGeral.trim() === "") {
+                textoGeral = "Nenhum conteúdo detalhado registrado neste inquérito.";
+            }
+
+            document.getElementById('valConteudo').innerText = textoGeral;
         }
 
         carregarDetalhesVisualizacao();
