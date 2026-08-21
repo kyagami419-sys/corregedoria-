@@ -194,6 +194,23 @@
             }
         }
 
+        // Função Nova: Remeter Inquérito ao Ministério Público
+        async function remeterAoMP(id, numero) {
+            if (!confirm(`Deseja remeter o inquérito nº ${numero} ao Ministério Público?`)) return;
+
+            const { error } = await supabaseClient
+                .from('inqueritos')
+                .update({ status: 'Remetido ao MP' })
+                .eq('id', id);
+
+            if (error) {
+                alert("Erro ao remeter inquérito: " + error.message);
+            } else {
+                alert("Inquérito remetido ao Ministério Público com sucesso!");
+                carregarFinalizados(); // Recarrega a tabela atualizando o status visual
+            }
+        }
+
         function formatarTempoDecorrido(ms) {
             if (ms < 0) ms = 0;
             const dias = Math.floor(ms / (1000 * 60 * 60 * 24));
@@ -246,6 +263,12 @@
                     let tipoDocText = item.tipo || 'Inquérito Policial';
                     let encarregadoExibicao = item.encarregado || 'N/A';
 
+                    // Botão Remeter ao MP aparece apenas se for Inquérito Policial e ainda não tiver sido remetido
+                    let botaoRemeterHTML = '';
+                    if (tipoDocText === 'Inquérito Policial' && item.status === 'Finalizado') {
+                        botaoRemeterHTML = `<button class="btn btn-sm btn-outline-warning ms-1" title="Remeter ao MP" onclick="remeterAoMP(${item.id}, '${item.numero}')"><i class="fas fa-gavel"></i> Remeter</button>`;
+                    }
+
                     let tempoHTML = "";
                     if (dataCalculo && item.data_fim) {
                         const diff = new Date(item.data_fim).getTime() - new Date(dataCalculo).getTime();
@@ -261,9 +284,10 @@
                             <td>${encarregadoExibicao}</td>
                             <td>${dataFormatadaExibicao}</td>
                             <td>${tempoHTML}</td>
-                            <td><span class="badge badge-finalizado">${item.status}</span></td>
+                            <td><span class="badge badge-finalizado" ${item.status !== 'Finalizado' ? 'style="background-color: #0284c7;"' : ''}>${item.status}</span></td>
                             <td>
                                 <button class="btn btn-sm btn-outline-info" title="Visualizar" onclick="visualizarInquerito(${item.id})"><i class="fas fa-eye"></i></button>
+                                ${botaoRemeterHTML}
                                 ${botaoApagarHTML}
                             </td>
                         </tr>
@@ -281,7 +305,7 @@
             const { data, error } = await supabaseClient
                 .from('inqueritos')
                 .select('*')
-                .eq('status', 'Finalizado')
+                .in('status', ['Finalizado', 'Remetido ao MP', 'Arquivado MP']) // Incluídos os novos status para manter histórico
                 .order('id', { ascending: false });
 
             if (error) {
