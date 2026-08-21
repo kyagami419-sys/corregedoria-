@@ -222,7 +222,7 @@
                             <th class="text-center">Ação</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="tabelaDespachos">
                         <tr>
                             <td colspan="5" class="text-center text-muted">Nenhum despacho pendente.</td>
                         </tr>
@@ -279,8 +279,8 @@
                     document.getElementById('btnAdminVoltar').style.display = "inline-block";
                 }
 
-                // Carrega os inquéritos encaminhados ao MP após verificar a sessão
                 carregarInqueritosMP();
+                carregarDespachosPendentes();
             }
         });
 
@@ -289,7 +289,7 @@
             window.location.href = 'index.html'; 
         }
 
-        // Função para carregar e exibir Inquéritos com status "Remetido ao MP"
+        // --- CARREGAR INQUÉRITOS (MP) ---
         async function carregarInqueritosMP() {
             const { data, error } = await supabaseClient
                 .from('inqueritos')
@@ -336,24 +336,92 @@
             });
         }
 
-        // Ações demonstrativas para o MP
+        // --- AÇÕES DO MP ---
         async function denunciarInqueritoMP(id, numero) {
-            alert(`Ação de Denúncia (Fase Judicial) para o inquérito ${numero} registrada.\n(Funcionalidade de denúncia em desenvolvimento)`);
+            const motivo = window.prompt(`Informe os termos ou o motivo da DENÚNCIA para o inquérito ${numero}:`);
+            if (!motivo || motivo.trim() === "") return; // Cancela se clicar em cancelar ou enviar vazio
+
+            processarAcaoMP(id, numero, 'Aguardando Despacho (Denúncia)', motivo);
         }
 
         async function arquivarInqueritoMP(id, numero) {
-            if (!confirm(`Deseja realmente ARQUIVAR o inquérito ${numero}? Ele será removido da fila do Ministério Público.`)) return;
+            const motivo = window.prompt(`Informe o motivo para solicitar o ARQUIVAMENTO do inquérito ${numero}:`);
+            if (!motivo || motivo.trim() === "") return;
+
+            processarAcaoMP(id, numero, 'Aguardando Despacho (Arquivamento)', motivo);
+        }
+
+        async function processarAcaoMP(id, numero, novoStatus, motivo) {
+            // Busca os dados extras atuais para não perder as informações do inquérito
+            const { data: inqData } = await supabaseClient.from('inqueritos').select('dados_extras').eq('id', id).single();
+            
+            let extras = {};
+            if (inqData && inqData.dados_extras) {
+                try { extras = JSON.parse(inqData.dados_extras); } catch(e){}
+            }
+            
+            // Adiciona o motivo digitado pelo MP
+            extras.motivoMP = motivo.trim();
 
             const { error } = await supabaseClient
                 .from('inqueritos')
-                .update({ status: 'Arquivado MP' })
+                .update({ 
+                    status: novoStatus,
+                    dados_extras: JSON.stringify(extras)
+                })
                 .eq('id', id);
 
             if (error) {
-                alert("Erro ao arquivar: " + error.message);
+                alert("Erro ao enviar para despacho: " + error.message);
             } else {
+                alert(`Inquérito ${numero} encaminhado para a Caixa de Despachos do Juiz!`);
                 carregarInqueritosMP();
+                carregarDespachosPendentes();
             }
+        }
+
+        // --- CARREGAR DESPACHOS PENDENTES (MESA DO JUIZ) ---
+        async function carregarDespachosPendentes() {
+            const { data, error } = await supabaseClient
+                .from('inqueritos')
+                .select('*')
+                .in('status', ['Aguardando Despacho (Denúncia)', 'Aguardando Despacho (Arquivamento)'])
+                .order('id', { ascending: false });
+
+            const tbody = document.getElementById('tabelaDespachos');
+            tbody.innerHTML = '';
+
+            if (error || !data || data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Nenhum despacho pendente.</td></tr>`;
+                return;
+            }
+
+            data.forEach(item => {
+                let tipoDecisao = item.status === 'Aguardando Despacho (Denúncia)' ? 'Decisão: Recebimento de Denúncia' : 'Decisão: Homologação de Arquivamento';
+                
+                // Extrai o motivo preenchido pelo MP
+                let motivo = "Motivo não informado.";
+                if (item.dados_extras) {
+                    try {
+                        const ext = JSON.parse(item.dados_extras);
+                        if (ext.motivoMP) motivo = ext.motivoMP;
+                    } catch(e) {}
+                }
+
+                let dataRef = item.created_at ? new Date(item.created_at).toLocaleDateString('pt-BR') : '';
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td><a href="#" class="text-info text-decoration-none" title="Ver processo original">${item.numero || 'S/N'}</a></td>
+                        <td>${tipoDecisao} <br><small class="text-muted">Motivo: ${motivo}</small></td>
+                        <td>${dataRef}</td>
+                        <td>Vara Criminal</td>
+                        <td class="text-center">
+                            <button class="btn-gold" onclick="alert('Assinatura de Despacho (Ação em desenvolvimento)')"><i class="fas fa-signature"></i> Assinar e Publicar</button>
+                        </td>
+                    </tr>
+                `;
+            });
         }
     </script>
 </body>
