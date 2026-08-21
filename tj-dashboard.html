@@ -361,7 +361,8 @@
                         <td>${dataRef}</td>
                         <td><span class="badge-status bg-andamento">Em Instrução</span></td>
                         <td class="text-center">
-                            <button class="btn-action text-info border-info me-1" title="Visualizar" onclick="window.location.href='tj-visualizar.html?id=${item.id}'"><i class="fas fa-eye"></i> Visualizar</button>
+                            <!-- AGORA APONTA PARA A NOVA PÁGINA DE PROCESSO -->
+                            <button class="btn-action text-info border-info me-1" title="Visualizar Processo" onclick="window.location.href='tj-processo.html?id=${item.id}'"><i class="fas fa-eye"></i> Visualizar</button>
                             ${botaoApagarHTML}
                         </td>
                     </tr>
@@ -410,7 +411,7 @@
                         <td>${dataFormatada}</td>
                         <td><span class="badge-status" style="background-color: #0284c7; color: #e0f2fe;">Aguardando MP</span></td>
                         <td class="text-center">
-                            <button class="btn-action text-info border-info me-1" title="Visualizar" onclick="window.location.href='tj-visualizar.html?id=${item.id}'"><i class="fas fa-eye"></i> Visualizar</button>
+                            <button class="btn-action text-info border-info me-1" title="Visualizar Inquérito" onclick="window.location.href='tj-visualizar.html?id=${item.id}'"><i class="fas fa-eye"></i> Visualizar</button>
                             <button class="btn-action text-success border-success me-1" title="Fazer Denúncia" onclick="denunciarInqueritoMP(${item.id}, '${item.numero}')"><i class="fas fa-bullhorn"></i> Denunciar</button>
                             <button class="btn-action text-danger border-danger me-1" title="Arquivar Inquérito" onclick="arquivarInqueritoMP(${item.id}, '${item.numero}')"><i class="fas fa-archive"></i> Arquivar</button>
                             ${botaoApagarHTML}
@@ -508,7 +509,7 @@
                         <td>${dataRef}</td>
                         <td>Vara Criminal</td>
                         <td class="text-center">
-                            <button class="btn-action text-info border-info me-1" title="Visualizar" onclick="window.location.href='tj-visualizar.html?id=${item.id}'"><i class="fas fa-eye"></i> Visualizar</button>
+                            <button class="btn-action text-info border-info me-1" title="Visualizar Inquérito" onclick="window.location.href='tj-visualizar.html?id=${item.id}'"><i class="fas fa-eye"></i> Visualizar</button>
                             <button class="btn-gold me-1" onclick="assinarDespacho(${item.id}, '${item.numero}', '${item.status}')"><i class="fas fa-signature"></i> Assinar e Publicar</button>
                             ${botaoApagarHTML}
                         </td>
@@ -532,7 +533,6 @@
                 extras.despachoJuiz = despacho.trim();
                 extras.dataDecisao = new Date().toISOString();
 
-                // Salva como Arquivado para ir para a página de Publicações
                 const { error } = await supabaseClient
                     .from('inqueritos')
                     .update({ 
@@ -548,14 +548,12 @@
                 }
 
             } else if (status === 'Aguardando Despacho (Denúncia)') {
-                // AQUI FOI ADICIONADO A CAIXA DE TEXTO (PROMPT) PARA DENÚNCIA TAMBÉM
                 const despacho = window.prompt(`Informe o DESPACHO / DECISÃO DE RECEBIMENTO DA DENÚNCIA para o documento ${numero}:`);
                 if (!despacho || despacho.trim() === "") return;
 
                 extras.despachoJuiz = despacho.trim();
                 extras.dataDecisao = new Date().toISOString();
 
-                // Salva como Processo em Andamento para ir para a tabela superior
                 const { error } = await supabaseClient
                     .from('inqueritos')
                     .update({ 
@@ -567,7 +565,7 @@
                 
                 if (error) alert("Erro: " + error.message);
                 else {
-                    alert("Despacho assinado! A denúncia foi aceita e convertida para Processo em Andamento.");
+                    alert("Denúncia aceita! O documento foi convertido para um Processo em Andamento (Ação Penal).");
                     carregarDespachosPendentes();
                     carregarProcessosEmAndamento();
                 }
