@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerenciamento de Usuários - Polícia Federal</title>
+    <title>Gerenciamento de Usuários - Corregedoria</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -30,8 +30,8 @@
 
     <nav class="navbar navbar-pf d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center">
-            <img src="https://cdn.discordapp.com/attachments/1506412452643082390/1536434427230552084/Policia_Federal.svg.webp?ex=6a7b6391&is=6a7a1211&hm=e5c65d33e35b7a6c80747b36eaeb68321eead96e507c238b2585e77b73f665c4&" alt="PF">
-            <span class="brand-title">GERENCIAMENTO DE ACESSOS - CORREGEDORIA P.F.</span>
+            <i class="fas fa-shield-alt fs-3 me-3" style="color: #d4af37;"></i>
+            <span class="brand-title">GERENCIAMENTO DE ACESSOS - SISTEMA INTEGRADO</span>
         </div>
         <div>
             <a href="dashboard.html" class="btn btn-outline-light btn-sm"><i class="fas fa-arrow-left"></i> Voltar ao Painel</a>
@@ -46,7 +46,7 @@
             <div class="row g-3">
                 <div class="col-md-4">
                     <label class="form-label text-muted">E-mail do Usuário</label>
-                    <input type="email" id="novoEmail" class="form-control" placeholder="usuario@pf.gov.br">
+                    <input type="email" id="novoEmail" class="form-control" placeholder="usuario@sistema.gov.br">
                 </div>
                 <div class="col-md-3">
                     <label class="form-label text-muted">Senha Temporária</label>
@@ -55,6 +55,9 @@
                 <div class="col-md-3">
                     <label class="form-label text-muted">Instituição / Cargo</label>
                     <select id="novoInstituicao" class="form-select">
+                        <option value="PROMOTOR">Promotor (Ministério Público)</option>
+                        <option value="JUIZ">Juiz (Tribunal de Justiça)</option>
+                        <option value="ADVOGADO">Advogado (OAB)</option>
                         <option value="POLÍCIA FEDERAL">Polícia Federal</option>
                         <option value="POLÍCIA CIVIL">Polícia Civil</option>
                         <option value="POLÍCIA MILITAR">Polícia Militar</option>
@@ -62,7 +65,6 @@
                         <option value="ROTA">ROTA</option>
                         <option value="BOPE">BOPE</option>
                         <option value="EXÉRCITO BRASILEIRO">Exército Brasileiro</option>
-                        <option value="TRIBUNAL">Tribunal de Justiça</option>
                     </select>
                 </div>
                 <div class="col-md-2 d-flex align-items-end">
@@ -102,11 +104,6 @@
 
         let emailUsuarioLogado = localStorage.getItem('usuario_logado_email') || '';
 
-        async function verificarAcesso() {
-            emailUsuarioLogado = localStorage.getItem('usuario_logado_email') || '';
-        }
-        verificarAcesso();
-
         async function cadastrarUsuario() {
             const email = document.getElementById('novoEmail').value.trim();
             const password = document.getElementById('novaSenha').value.trim();
@@ -117,7 +114,6 @@
                 return;
             }
 
-            // Salva a instituição escolhida no localStorage para vincular ao e-mail
             localStorage.setItem(`inst_${email}`, instituicao);
 
             const { data, error } = await supabaseClient.auth.signUp({ 
@@ -135,10 +131,6 @@
                 { email: email, status: 'Ativo' }
             ]);
 
-            if (errTab) {
-                console.log("Perfil já existente.");
-            }
-
             alert("Usuário cadastrado com sucesso!");
             document.getElementById('novoEmail').value = '';
             document.getElementById('novaSenha').value = '';
@@ -151,17 +143,15 @@
             tbody.innerHTML = '';
 
             if (error || !data || data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">Nenhum usuário cadastrado encontrado.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">Nenhum usuário encontrado.</td></tr>`;
                 return;
             }
 
-            const meuEmailAdmin = "kira@yagami.gov"; 
-            const souAdmin = (emailUsuarioLogado === meuEmailAdmin);
+            const souAdmin = (emailUsuarioLogado === "kira@yagami.gov");
 
             data.forEach(user => {
                 const statusAtual = user.status || 'Ativo';
-                // Pega a instituição salva no localStorage ou assume a selecionada, mantendo o valor correto
-                const instituicaoUser = localStorage.getItem(`inst_${user.email}`) || user.instituicao || 'POLÍCIA FEDERAL';
+                const instituicaoUser = localStorage.getItem(`inst_${user.email}`) || user.instituicao || 'Não Informada';
                 const badgeClass = statusAtual === 'Bloqueado' ? 'badge-bloqueado' : 'badge-ativo';
                 
                 const tr = document.createElement('tr');
@@ -183,35 +173,17 @@
         }
 
         async function alterarStatus(emailUser, novoStatus) {
-            if (emailUsuarioLogado !== "kira@yagami.gov") {
-                alert("Acesso negado.");
-                return;
-            }
+            if (emailUsuarioLogado !== "kira@yagami.gov") return;
             const { error } = await supabaseClient.from('perfis_usuarios').update({ status: novoStatus }).eq('email', emailUser);
-            if (error) {
-                alert("Erro ao alterar status: " + error.message);
-            } else {
-                alert(`Usuário alterado para: ${novoStatus}`);
-                carregarUsuarios();
-            }
+            if (!error) { carregarUsuarios(); }
         }
 
         async function apagarUsuario(emailUser) {
-            if (emailUsuarioLogado !== "kira@yagami.gov") {
-                alert("Acesso negado. Apenas a administradora principal pode apagar usuários.");
-                return;
-            }
-
-            if (!confirm(`Tem certeza que deseja apagar permanentemente o usuário ${emailUser}? Ele perderá todo o acesso.`)) return;
-
+            if (emailUsuarioLogado !== "kira@yagami.gov") return;
+            if (!confirm(`Apagar permanentemente o usuário ${emailUser}?`)) return;
             localStorage.removeItem(`inst_${emailUser}`);
             const { error } = await supabaseClient.from('perfis_usuarios').delete().eq('email', emailUser);
-            if (error) {
-                alert("Erro ao apagar usuário: " + error.message);
-            } else {
-                alert("Usuário apagado com sucesso!");
-                carregarUsuarios();
-            }
+            if (!error) { carregarUsuarios(); }
         }
 
         carregarUsuarios();
