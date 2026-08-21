@@ -153,7 +153,7 @@
             </div>
 
             <div class="info-group mt-2">
-                <span class="info-label">Conteúdo Completo, Depoimentos e Anexos do Inquérito</span>
+                <span class="info-label">Conteúdo Completo, Relato Histórico, Conclusão e Anexos do Inquérito</span>
                 <div class="content-box" id="valConteudo">Carregando dados do inquérito...</div>
             </div>
 
@@ -199,16 +199,23 @@
             
             let textoGeral = "";
 
-            if (data.conteudo) textoGeral += data.conteudo + "\n\n";
-            if (data.texto) textoGeral += data.texto + "\n\n";
+            // Garante captura de campos diretos comuns na tabela principal
+            const camposDiretos = ['conteudo', 'texto', 'relato', 'historico', 'relato_historico', 'conclusao', 'local', 'fatos', 'observacoes'];
+            camposDiretos.forEach(campo => {
+                if (data[campo] && typeof data[campo] === 'string' && data[campo].trim() !== "") {
+                    let nomeFormatado = campo.replace(/([A-Z])/g, ' $1').replace('_', ' ').toUpperCase();
+                    textoGeral += `[ ${nomeFormatado} ]\n${data[campo]}\n\n`;
+                }
+            });
 
+            // Varre todos os campos salvos no JSON de dados extras
             if (data.dados_extras) {
                 try {
                     const ext = JSON.parse(data.dados_extras);
                     
                     for (const [chave, valor] of Object.entries(ext)) {
                         if (valor !== null && valor !== undefined && valor !== "") {
-                            let nomeFormatado = chave.replace(/([A-Z])/g, ' $1').toUpperCase();
+                            let nomeFormatado = chave.replace(/([A-Z])/g, ' $1').replace('_', ' ').toUpperCase();
                             let textoItem = "";
 
                             if (typeof valor === 'string') {
@@ -217,14 +224,14 @@
                                 textoItem = valor.map((el) => {
                                     if (typeof el === 'object' && el !== null) {
                                         return Object.entries(el)
-                                            .map(([k, v]) => `• ${k.toUpperCase()}: ${v}`)
+                                            .map(([k, v]) => `• ${k.replace(/([A-Z])/g, ' $1').replace('_', ' ').toUpperCase()}: ${v}`)
                                             .join('\n');
                                     }
                                     return `• ${el}`;
                                 }).join('\n\n');
                             } else if (typeof valor === 'object') {
                                 textoItem = Object.entries(valor)
-                                    .map(([k, v]) => `• ${k.toUpperCase()}: ${v}`)
+                                    .map(([k, v]) => `• ${k.replace(/([A-Z])/g, ' $1').replace('_', ' ').toUpperCase()}: ${v}`)
                                     .join('\n');
                             } else {
                                 textoItem = String(valor);
