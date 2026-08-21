@@ -183,7 +183,6 @@
         <div class="section-box">
             <div class="section-header">
                 <div><i class="fas fa-file-signature"></i> Central de Mandados</div>
-                <!-- Link corrigido para tj-expedir-mandado.html -->
                 <a href="tj-expedir-mandado.html" class="btn-gold"><i class="fas fa-plus"></i> Expedir Mandado</a>
             </div>
             <div class="table-responsive">
@@ -249,20 +248,10 @@
                             <th class="text-center">Ações do MP</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <!-- Linha de demonstração para exibir os botões -->
+                    <tbody id="tabelaInqueritosMP">
                         <tr>
-                            <td><strong>INQ-102/26</strong></td>
-                            <td>Polícia Federal</td>
-                            <td>Em Apuração</td>
-                            <td>20/08/2026</td>
-                            <td><span class="badge-status" style="background-color: #0284c7; color: #e0f2fe;">Aguardando MP</span></td>
-                            <td class="text-center">
-                                <button class="btn-action text-success border-success me-1" title="Fazer Denúncia"><i class="fas fa-bullhorn"></i> Denunciar</button>
-                                <button class="btn-action text-danger border-danger" title="Arquivar Inquérito"><i class="fas fa-archive"></i> Arquivar</button>
-                            </td>
+                            <td colspan="6" class="text-center text-muted">Carregando inquéritos...</td>
                         </tr>
-                        <!-- Fim da linha de demonstração -->
                     </tbody>
                 </table>
             </div>
@@ -270,8 +259,14 @@
 
     </div>
 
+    <!-- Inicialização do Supabase para o TJ Dashboard carregar os Inquéritos Dinamicamente -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
+        const supabaseUrl = 'https://qnfckdzotzenaqaswqjb.supabase.co'; 
+        const supabaseKey = 'sb_publishable_353TT6z3RbRHvIpbQiaK1g_dWt1qAyU';
+        const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
         document.addEventListener('DOMContentLoaded', function() {
             const emailLogado = localStorage.getItem('usuario_logado_email');
             
@@ -283,12 +278,82 @@
                 if (emailLogado === "kira@yagami.gov") {
                     document.getElementById('btnAdminVoltar').style.display = "inline-block";
                 }
+
+                // Carrega os inquéritos encaminhados ao MP após verificar a sessão
+                carregarInqueritosMP();
             }
         });
 
         function fazerLogout() {
             localStorage.removeItem('usuario_logado_email');
             window.location.href = 'index.html'; 
+        }
+
+        // Função para carregar e exibir Inquéritos com status "Remetido ao MP"
+        async function carregarInqueritosMP() {
+            const { data, error } = await supabaseClient
+                .from('inqueritos')
+                .select('*')
+                .eq('status', 'Remetido ao MP')
+                .order('id', { ascending: false });
+
+            const tbody = document.getElementById('tabelaInqueritosMP');
+            tbody.innerHTML = '';
+
+            if (error || !data || data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted">Nenhum inquérito aguardando ação do Ministério Público.</td></tr>`;
+                return;
+            }
+
+            data.forEach(item => {
+                let forcaInq = 'POLÍCIA FEDERAL';
+                let investigadoStr = 'Em Apuração';
+
+                if (item.dados_extras) {
+                    try {
+                        const ext = JSON.parse(item.dados_extras);
+                        if (ext.forcaPolicial) forcaInq = ext.forcaPolicial.toUpperCase();
+                        if (ext.investigadoNome && ext.investigadoNome.trim() !== "") investigadoStr = ext.investigadoNome;
+                    } catch(e) {}
+                }
+
+                let dataRef = item.data_fim || item.created_at;
+                let dataFormatada = dataRef ? new Date(dataRef).toLocaleDateString('pt-BR') : 'Data Indisponível';
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${item.numero || 'S/N'}</strong></td>
+                        <td>${forcaInq}</td>
+                        <td>${investigadoStr}</td>
+                        <td>${dataFormatada}</td>
+                        <td><span class="badge-status" style="background-color: #0284c7; color: #e0f2fe;">Aguardando MP</span></td>
+                        <td class="text-center">
+                            <button class="btn-action text-success border-success me-1" title="Fazer Denúncia" onclick="denunciarInqueritoMP(${item.id}, '${item.numero}')"><i class="fas fa-bullhorn"></i> Denunciar</button>
+                            <button class="btn-action text-danger border-danger" title="Arquivar Inquérito" onclick="arquivarInqueritoMP(${item.id}, '${item.numero}')"><i class="fas fa-archive"></i> Arquivar</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Ações demonstrativas para o MP
+        async function denunciarInqueritoMP(id, numero) {
+            alert(`Ação de Denúncia (Fase Judicial) para o inquérito ${numero} registrada.\n(Funcionalidade de denúncia em desenvolvimento)`);
+        }
+
+        async function arquivarInqueritoMP(id, numero) {
+            if (!confirm(`Deseja realmente ARQUIVAR o inquérito ${numero}? Ele será removido da fila do Ministério Público.`)) return;
+
+            const { error } = await supabaseClient
+                .from('inqueritos')
+                .update({ status: 'Arquivado MP' })
+                .eq('id', id);
+
+            if (error) {
+                alert("Erro ao arquivar: " + error.message);
+            } else {
+                carregarInqueritosMP();
+            }
         }
     </script>
 </body>
