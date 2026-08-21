@@ -38,7 +38,7 @@
         
         .container-main { padding: 30px 20px; max-width: 1400px; margin: 0 auto; }
 
-        /* Cards de Estatísticas (Topo) */
+        /* Cards de Estatísticas */
         .stats-card { 
             background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); 
             border: 1px solid #334155; 
@@ -51,7 +51,6 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             transition: transform 0.2s;
         }
-        .stats-card:hover { transform: translateY(-3px); border-color: #b58d3d; }
         .stats-card h3 { font-size: 2.2em; margin: 0; color: #ffffff; font-weight: 700; font-family: 'Playfair Display', serif; }
         .stats-card p { margin: 0; color: #94a3b8; font-size: 0.85em; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
         .stats-icon { font-size: 2.5em; color: #b58d3d; opacity: 0.9; }
@@ -76,9 +75,7 @@
             align-items: center;
             justify-content: space-between;
             font-family: 'Playfair Display', serif;
-            letter-spacing: 1px;
         }
-        .section-header i { margin-right: 10px; }
 
         /* Tabelas */
         .table-tj { width: 100%; color: #e2e8f0; font-size: 0.9rem; margin-bottom: 0; }
@@ -86,11 +83,8 @@
         .table-tj td { background-color: #0f172a; padding: 15px 20px; border-bottom: 1px solid #1e293b; vertical-align: middle; }
         .table-tj tr:hover td { background-color: #1e293b; }
         
-        /* Badges e Botões */
         .badge-status { padding: 5px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
         .bg-andamento { background-color: #b45309; color: #fef3c7; }
-        .bg-urgente { background-color: #7f1d1d; color: #fecaca; }
-        .bg-concluido { background-color: #065f46; color: #d1fae5; }
         
         .btn-action { background-color: transparent; border: 1px solid #475569; color: #cbd5e1; padding: 6px 12px; border-radius: 4px; font-size: 0.85rem; transition: 0.2s; cursor: pointer; }
         .btn-action:hover { background-color: #b58d3d; border-color: #b58d3d; color: #fff; }
@@ -102,7 +96,6 @@
 </head>
 <body>
 
-    <!-- NAVBAR -->
     <nav class="navbar navbar-tj d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center">
             <i class="fas fa-balance-scale fs-3 me-3" style="color: #b58d3d;"></i>
@@ -110,49 +103,34 @@
         </div>
         <div>
             <span class="me-4 text-muted" id="userEmailDisplay" style="font-size: 0.9rem;"><i class="fas fa-user-tie"></i> carregando...</span>
-            
             <a href="tj-publicacoes.html" class="btn btn-outline-warning btn-sm me-2"><i class="fas fa-book"></i> Publicações</a>
-            
             <a href="dashboard.html" class="btn btn-outline-info btn-sm me-2" id="btnAdminVoltar" style="display: none;"><i class="fas fa-shield-alt"></i> Painel Polícia</a>
-            
             <button onclick="fazerLogout()" class="btn btn-outline-light btn-sm"><i class="fas fa-sign-out-alt"></i> Sair</button>
         </div>
     </nav>
 
     <div class="container-main">
-        
-        <!-- CARDS DE ESTATÍSTICAS -->
         <div class="row mb-2">
             <div class="col-md-4">
                 <div class="stats-card">
-                    <div>
-                        <p>Processos Ativos</p>
-                        <h3 id="statProcessos">0</h3>
-                    </div>
+                    <div><p>Processos Ativos</p><h3 id="statProcessos">0</h3></div>
                     <i class="fas fa-folder-open stats-icon"></i>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="stats-card">
-                    <div>
-                        <p>Mandados Pendentes</p>
-                        <h3>0</h3>
-                    </div>
+                    <div><p>Mandados Pendentes</p><h3>0</h3></div>
                     <i class="fas fa-scroll stats-icon"></i>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="stats-card">
-                    <div>
-                        <p>Despachos P/ Assinar</p>
-                        <h3 id="statDespachos" style="color: #fca5a5;">0</h3>
-                    </div>
+                    <div><p>Despachos P/ Assinar</p><h3 id="statDespachos" style="color: #fca5a5;">0</h3></div>
                     <i class="fas fa-pen-nib stats-icon" style="color: #ef4444;"></i>
                 </div>
             </div>
         </div>
 
-        <!-- SEÇÃO 1: PROCESSOS -->
         <div class="section-box">
             <div class="section-header">
                 <div><i class="fas fa-gavel"></i> Processos em Andamento</div>
@@ -160,103 +138,31 @@
             </div>
             <div class="table-responsive">
                 <table class="table-tj">
-                    <thead>
-                        <tr>
-                            <th>Nº Processo</th>
-                            <th>Classe Processual</th>
-                            <th>Partes (Autor x Réu)</th>
-                            <th>Data</th>
-                            <th>Status</th>
-                            <th class="text-center">Ação</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabelaProcessos">
-                        <tr>
-                            <td colspan="6" class="text-center text-muted">Nenhum processo em andamento.</td>
-                        </tr>
-                    </tbody>
+                    <thead><tr><th>Nº Processo</th><th>Classe Processual</th><th>Partes (Autor x Réu)</th><th>Data</th><th>Status</th><th class="text-center">Ação</th></tr></thead>
+                    <tbody id="tabelaProcessos"><tr><td colspan="6" class="text-center text-muted">Nenhum processo em andamento.</td></tr></tbody>
                 </table>
             </div>
         </div>
 
-        <!-- SEÇÃO 2: MANDADOS -->
-        <div class="section-box">
-            <div class="section-header">
-                <div><i class="fas fa-file-signature"></i> Central de Mandados</div>
-                <a href="tj-expedir-mandado.html" class="btn-gold"><i class="fas fa-plus"></i> Expedir Mandado</a>
-            </div>
-            <div class="table-responsive">
-                <table class="table-tj">
-                    <thead>
-                        <tr>
-                            <th>Nº Mandado</th>
-                            <th>Tipo de Mandado</th>
-                            <th>Alvo / Destinatário</th>
-                            <th>Validade</th>
-                            <th>Status</th>
-                            <th class="text-center">Ação</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td colspan="6" class="text-center text-muted">Nenhum mandado pendente.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- SEÇÃO 3: DESPACHOS -->
         <div class="section-box border-warning" style="border-color: #8a6a1c !important;">
-            <div class="section-header" style="background-color: #1a150b;">
-                <div style="color: #e3b341;"><i class="fas fa-inbox"></i> Caixa de Despachos Pendentes</div>
-            </div>
+            <div class="section-header" style="background-color: #1a150b;"><div style="color: #e3b341;"><i class="fas fa-inbox"></i> Caixa de Despachos Pendentes</div></div>
             <div class="table-responsive">
                 <table class="table-tj">
-                    <thead>
-                        <tr>
-                            <th>Nº Processo Referência</th>
-                            <th>Tipo de Decisão/Despacho</th>
-                            <th>Data da Conclusão</th>
-                            <th>Mesa do Juiz</th>
-                            <th class="text-center">Ação</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabelaDespachos">
-                        <tr>
-                            <td colspan="5" class="text-center text-muted">Nenhum despacho pendente.</td>
-                        </tr>
-                    </tbody>
+                    <thead><tr><th>Nº Processo Referência</th><th>Tipo de Decisão/Despacho</th><th>Data da Conclusão</th><th>Mesa do Juiz</th><th class="text-center">Ação</th></tr></thead>
+                    <tbody id="tabelaDespachos"><tr><td colspan="5" class="text-center text-muted">Nenhum despacho pendente.</td></tr></tbody>
                 </table>
             </div>
         </div>
 
-        <!-- SEÇÃO 4: INQUÉRITOS (MINISTÉRIO PÚBLICO) -->
         <div class="section-box border-info" style="border-color: #0369a1 !important;">
-            <div class="section-header" style="background-color: #082f49; color: #38bdf8; border-bottom-color: #0369a1;">
-                <div><i class="fas fa-shield-alt"></i> Inquéritos Policiais (Ministério Público)</div>
-            </div>
+            <div class="section-header" style="background-color: #082f49; color: #38bdf8; border-bottom-color: #0369a1;"><div><i class="fas fa-shield-alt"></i> Inquéritos Policiais (Ministério Público)</div></div>
             <div class="table-responsive">
                 <table class="table-tj">
-                    <thead>
-                        <tr>
-                            <th>Nº Inquérito</th>
-                            <th>Origem (Força Policial)</th>
-                            <th>Investigado / Indiciado</th>
-                            <th>Data Recebimento</th>
-                            <th>Status</th>
-                            <th class="text-center">Ações do MP</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabelaInqueritosMP">
-                        <tr>
-                            <td colspan="6" class="text-center text-muted">Carregando inquéritos...</td>
-                        </tr>
-                    </tbody>
+                    <thead><tr><th>Nº Inquérito</th><th>Origem (Força Policial)</th><th>Investigado / Indiciado</th><th>Data Recebimento</th><th>Status</th><th class="text-center">Ações</th></tr></thead>
+                    <tbody id="tabelaInqueritosMP"><tr><td colspan="6" class="text-center text-muted">Carregando inquéritos...</td></tr></tbody>
                 </table>
             </div>
         </div>
-
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -266,22 +172,34 @@
         const supabaseKey = 'sb_publishable_353TT6z3RbRHvIpbQiaK1g_dWt1qAyU';
         const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
-        document.addEventListener('DOMContentLoaded', function() {
+        let isJuiz = false;
+        let isPromotor = false;
+
+        document.addEventListener('DOMContentLoaded', async function() {
             const emailLogado = localStorage.getItem('usuario_logado_email');
-            
             if (!emailLogado) {
                 window.location.href = 'index.html';
-            } else {
-                document.getElementById('userEmailDisplay').innerHTML = `<i class="fas fa-user-tie"></i> ${emailLogado}`;
-                
-                if (emailLogado === "kira@yagami.gov") {
-                    document.getElementById('btnAdminVoltar').style.display = "inline-block";
-                }
-
-                carregarProcessosEmAndamento();
-                carregarInqueritosMP();
-                carregarDespachosPendentes();
+                return;
             }
+
+            document.getElementById('userEmailDisplay').innerHTML = `<i class="fas fa-user-tie"></i> ${emailLogado}`;
+            if (emailLogado === "kira@yagami.gov") {
+                document.getElementById('btnAdminVoltar').style.display = "inline-block";
+                isJuiz = true;
+                isPromotor = true;
+            } else {
+                const cargo = localStorage.getItem(`inst_${emailLogado}`);
+                if (cargo === 'JUIZ') {
+                    isJuiz = true;
+                    isPromotor = true; // Juiz tem hierarquia pra tudo
+                } else if (cargo === 'PROMOTOR') {
+                    isPromotor = true;
+                }
+            }
+
+            carregarProcessosEmAndamento();
+            carregarInqueritosMP();
+            carregarDespachosPendentes();
         });
 
         function fazerLogout() {
@@ -289,287 +207,139 @@
             window.location.href = 'index.html'; 
         }
 
-        // Função universal para apagar documentos (Admin apenas)
         async function apagarDocumentoTJ(id, numero) {
-            const emailLogado = localStorage.getItem('usuario_logado_email');
-            if (emailLogado !== "kira@yagami.gov") {
-                alert("Apenas a administradora principal pode apagar documentos.");
-                return;
-            }
-
             if (!confirm(`ATENÇÃO: Deseja realmente APAGAR permanentemente o documento nº ${numero}?`)) return;
-
-            const { error } = await supabaseClient
-                .from('inqueritos')
-                .delete()
-                .eq('id', id);
-
-            if (error) {
-                alert("Erro ao apagar documento: " + error.message);
-            } else {
-                alert("Documento apagado com sucesso!");
-                carregarProcessosEmAndamento();
-                carregarInqueritosMP();
-                carregarDespachosPendentes();
-            }
+            const { error } = await supabaseClient.from('inqueritos').delete().eq('id', id);
+            if (!error) { location.reload(); }
         }
 
-        // --- CARREGAR PROCESSOS EM ANDAMENTO ---
         async function carregarProcessosEmAndamento() {
-            const { data, error } = await supabaseClient
-                .from('inqueritos')
-                .select('*')
-                .eq('status', 'Processo em Andamento')
-                .order('id', { ascending: false });
-
+            const { data } = await supabaseClient.from('inqueritos').select('*').eq('status', 'Processo em Andamento').order('id', { ascending: false });
             const tbody = document.getElementById('tabelaProcessos');
             tbody.innerHTML = '';
-            const emailLogado = localStorage.getItem('usuario_logado_email');
-
-            if (error || !data) {
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted">Nenhum processo em andamento.</td></tr>`;
+            
+            if (!data || data.length === 0) {
                 document.getElementById('statProcessos').innerText = '0';
-                return;
-            }
-
-            document.getElementById('statProcessos').innerText = String(data.length);
-
-            if (data.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted">Nenhum processo em andamento.</td></tr>`;
                 return;
             }
+            document.getElementById('statProcessos').innerText = String(data.length);
 
             data.forEach(item => {
                 let partesStr = 'Ministério Público <span class="text-muted">x</span> Investigado';
                 if (item.dados_extras) {
                     try {
                         const ext = JSON.parse(item.dados_extras);
-                        if (ext.investigadoNome && ext.investigadoNome.trim() !== "") {
-                            partesStr = `Ministério Público <span class="text-muted">x</span> ${ext.investigadoNome}`;
-                        }
+                        if (ext.investigadoNome) partesStr = `Ministério Público <span class="text-muted">x</span> ${ext.investigadoNome}`;
                     } catch(e) {}
                 }
+                
+                const emailLogado = localStorage.getItem('usuario_logado_email');
+                let acoes = `<button class="btn-action text-info border-info me-1" title="Visualizar Processo" onclick="window.location.href='tj-processo.html?id=${item.id}'"><i class="fas fa-eye"></i> Visualizar</button>`;
+                if (emailLogado === "kira@yagami.gov") acoes += `<button class="btn-action text-danger border-danger" onclick="apagarDocumentoTJ(${item.id}, '${item.numero}')"><i class="fas fa-trash"></i></button>`;
 
-                let dataRef = item.created_at ? new Date(item.created_at).toLocaleDateString('pt-BR') : 'Data Indisponível';
-                let botaoApagarHTML = (emailLogado === "kira@yagami.gov") ? `<button class="btn-action text-danger border-danger ms-1" title="Apagar" onclick="apagarDocumentoTJ(${item.id}, '${item.numero}')"><i class="fas fa-trash"></i></button>` : '';
-
-                tbody.innerHTML += `
-                    <tr>
-                        <td><strong>${item.numero || 'S/N'}</strong></td>
-                        <td>${item.tipo || 'Ação Penal'}</td>
-                        <td>${partesStr}</td>
-                        <td>${dataRef}</td>
-                        <td><span class="badge-status bg-andamento">Em Instrução</span></td>
-                        <td class="text-center">
-                            <!-- AGORA APONTA PARA A NOVA PÁGINA DE PROCESSO -->
-                            <button class="btn-action text-info border-info me-1" title="Visualizar Processo" onclick="window.location.href='tj-processo.html?id=${item.id}'"><i class="fas fa-eye"></i> Visualizar</button>
-                            ${botaoApagarHTML}
-                        </td>
-                    </tr>
-                `;
+                tbody.innerHTML += `<tr>
+                    <td><strong>${item.numero || 'S/N'}</strong></td><td>Ação Penal</td><td>${partesStr}</td>
+                    <td>${new Date(item.created_at).toLocaleDateString('pt-BR')}</td>
+                    <td><span class="badge-status bg-andamento">Em Instrução</span></td>
+                    <td class="text-center">${acoes}</td>
+                </tr>`;
             });
         }
 
-        // --- CARREGAR INQUÉRITOS (MP) ---
         async function carregarInqueritosMP() {
-            const { data, error } = await supabaseClient
-                .from('inqueritos')
-                .select('*')
-                .eq('status', 'Remetido ao MP')
-                .order('id', { ascending: false });
-
+            const { data } = await supabaseClient.from('inqueritos').select('*').eq('status', 'Remetido ao MP').order('id', { ascending: false });
             const tbody = document.getElementById('tabelaInqueritosMP');
             tbody.innerHTML = '';
-            const emailLogado = localStorage.getItem('usuario_logado_email');
-
-            if (error || !data || data.length === 0) {
+            
+            if (!data || data.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted">Nenhum inquérito aguardando ação do Ministério Público.</td></tr>`;
                 return;
             }
 
             data.forEach(item => {
-                let forcaInq = 'POLÍCIA FEDERAL';
-                let investigadoStr = 'Em Apuração';
-
-                if (item.dados_extras) {
-                    try {
-                        const ext = JSON.parse(item.dados_extras);
-                        if (ext.forcaPolicial) forcaInq = ext.forcaPolicial.toUpperCase();
-                        if (ext.investigadoNome && ext.investigadoNome.trim() !== "") investigadoStr = ext.investigadoNome;
-                    } catch(e) {}
+                const emailLogado = localStorage.getItem('usuario_logado_email');
+                let acoes = `<button class="btn-action text-info border-info me-1" title="Visualizar Inquérito" onclick="window.location.href='tj-visualizar.html?id=${item.id}'"><i class="fas fa-eye"></i> Visualizar</button>`;
+                
+                if (isPromotor) {
+                    acoes += `<button class="btn-action text-success border-success me-1" onclick="denunciarInqueritoMP(${item.id}, '${item.numero}')"><i class="fas fa-bullhorn"></i> Denunciar</button>
+                              <button class="btn-action text-danger border-danger me-1" onclick="arquivarInqueritoMP(${item.id}, '${item.numero}')"><i class="fas fa-archive"></i> Arquivar</button>`;
                 }
+                if (emailLogado === "kira@yagami.gov") acoes += `<button class="btn-action text-danger border-danger" onclick="apagarDocumentoTJ(${item.id}, '${item.numero}')"><i class="fas fa-trash"></i></button>`;
 
-                let dataRef = item.data_fim || item.created_at;
-                let dataFormatada = dataRef ? new Date(dataRef).toLocaleDateString('pt-BR') : 'Data Indisponível';
-                let botaoApagarHTML = (emailLogado === "kira@yagami.gov") ? `<button class="btn-action text-danger border-danger ms-1" title="Apagar" onclick="apagarDocumentoTJ(${item.id}, '${item.numero}')"><i class="fas fa-trash"></i></button>` : '';
-
-                tbody.innerHTML += `
-                    <tr>
-                        <td><strong>${item.numero || 'S/N'}</strong></td>
-                        <td>${forcaInq}</td>
-                        <td>${investigadoStr}</td>
-                        <td>${dataFormatada}</td>
-                        <td><span class="badge-status" style="background-color: #0284c7; color: #e0f2fe;">Aguardando MP</span></td>
-                        <td class="text-center">
-                            <button class="btn-action text-info border-info me-1" title="Visualizar Inquérito" onclick="window.location.href='tj-visualizar.html?id=${item.id}'"><i class="fas fa-eye"></i> Visualizar</button>
-                            <button class="btn-action text-success border-success me-1" title="Fazer Denúncia" onclick="denunciarInqueritoMP(${item.id}, '${item.numero}')"><i class="fas fa-bullhorn"></i> Denunciar</button>
-                            <button class="btn-action text-danger border-danger me-1" title="Arquivar Inquérito" onclick="arquivarInqueritoMP(${item.id}, '${item.numero}')"><i class="fas fa-archive"></i> Arquivar</button>
-                            ${botaoApagarHTML}
-                        </td>
-                    </tr>
-                `;
+                tbody.innerHTML += `<tr>
+                    <td><strong>${item.numero || 'S/N'}</strong></td><td>POLÍCIA FEDERAL</td><td>Em Apuração</td>
+                    <td>${new Date(item.created_at).toLocaleDateString('pt-BR')}</td>
+                    <td><span class="badge-status" style="background-color: #0284c7; color: #e0f2fe;">Aguardando MP</span></td>
+                    <td class="text-center">${acoes}</td>
+                </tr>`;
             });
         }
 
-        // --- AÇÕES DO MP ---
         async function denunciarInqueritoMP(id, numero) {
             const motivo = window.prompt(`Informe os termos ou o motivo da DENÚNCIA para o inquérito ${numero}:`);
-            if (!motivo || motivo.trim() === "") return; 
-
-            processarAcaoMP(id, numero, 'Aguardando Despacho (Denúncia)', motivo);
+            if (motivo) processarAcaoMP(id, numero, 'Aguardando Despacho (Denúncia)', motivo);
         }
 
         async function arquivarInqueritoMP(id, numero) {
             const motivo = window.prompt(`Informe o motivo para solicitar o ARQUIVAMENTO do inquérito ${numero}:`);
-            if (!motivo || motivo.trim() === "") return;
-
-            processarAcaoMP(id, numero, 'Aguardando Despacho (Arquivamento)', motivo);
+            if (motivo) processarAcaoMP(id, numero, 'Aguardando Despacho (Arquivamento)', motivo);
         }
 
         async function processarAcaoMP(id, numero, novoStatus, motivo) {
             const { data: inqData } = await supabaseClient.from('inqueritos').select('dados_extras').eq('id', id).single();
-            
-            let extras = {};
-            if (inqData && inqData.dados_extras) {
-                try { extras = JSON.parse(inqData.dados_extras); } catch(e){}
-            }
-            
+            let extras = inqData && inqData.dados_extras ? JSON.parse(inqData.dados_extras) : {};
             extras.motivoMP = motivo.trim();
 
-            const { error } = await supabaseClient
-                .from('inqueritos')
-                .update({ 
-                    status: novoStatus,
-                    dados_extras: JSON.stringify(extras)
-                })
-                .eq('id', id);
-
-            if (error) {
-                alert("Erro ao enviar para despacho: " + error.message);
-            } else {
-                alert(`Inquérito ${numero} encaminhado para a Caixa de Despachos do Juiz!`);
-                carregarInqueritosMP();
-                carregarDespachosPendentes();
-            }
+            const { error } = await supabaseClient.from('inqueritos').update({ status: novoStatus, dados_extras: JSON.stringify(extras) }).eq('id', id);
+            if (!error) { alert(`Ação processada e encaminhada ao Juiz!`); location.reload(); }
         }
 
-        // --- CARREGAR DESPACHOS PENDENTES (MESA DO JUIZ) ---
         async function carregarDespachosPendentes() {
-            const { data, error } = await supabaseClient
-                .from('inqueritos')
-                .select('*')
-                .in('status', ['Aguardando Despacho (Denúncia)', 'Aguardando Despacho (Arquivamento)'])
-                .order('id', { ascending: false });
-
+            const { data } = await supabaseClient.from('inqueritos').select('*').in('status', ['Aguardando Despacho (Denúncia)', 'Aguardando Despacho (Arquivamento)']).order('id', { ascending: false });
             const tbody = document.getElementById('tabelaDespachos');
             tbody.innerHTML = '';
-            const emailLogado = localStorage.getItem('usuario_logado_email');
-
-            if (error || !data) {
-                tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Nenhum despacho pendente.</td></tr>`;
+            
+            if (!data || data.length === 0) {
                 document.getElementById('statDespachos').innerText = '0';
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Nenhum despacho pendente.</td></tr>`;
                 return;
             }
-
             document.getElementById('statDespachos').innerText = String(data.length);
 
-            if (data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Nenhum despacho pendente.</td></tr>`;
-                return;
-            }
-
             data.forEach(item => {
-                let tipoDecisao = item.status === 'Aguardando Despacho (Denúncia)' ? 'Decisão: Recebimento de Denúncia' : 'Decisão: Homologação de Arquivamento';
+                let tipoDecisao = item.status.includes('Denúncia') ? 'Recebimento de Denúncia' : 'Homologação de Arquivamento';
                 
-                let motivo = "Motivo não informado.";
-                if (item.dados_extras) {
-                    try {
-                        const ext = JSON.parse(item.dados_extras);
-                        if (ext.motivoMP) motivo = ext.motivoMP;
-                    } catch(e) {}
+                const emailLogado = localStorage.getItem('usuario_logado_email');
+                let acoes = `<button class="btn-action text-info border-info me-1" title="Visualizar Inquérito" onclick="window.location.href='tj-visualizar.html?id=${item.id}'"><i class="fas fa-eye"></i> Visualizar</button>`;
+                
+                if (isJuiz) {
+                    acoes += `<button class="btn-gold me-1" onclick="assinarDespacho(${item.id}, '${item.numero}', '${item.status}')"><i class="fas fa-signature"></i> Assinar e Publicar</button>`;
                 }
+                if (emailLogado === "kira@yagami.gov") acoes += `<button class="btn-action text-danger border-danger" onclick="apagarDocumentoTJ(${item.id}, '${item.numero}')"><i class="fas fa-trash"></i></button>`;
 
-                let dataRef = item.created_at ? new Date(item.created_at).toLocaleDateString('pt-BR') : '';
-                let botaoApagarHTML = (emailLogado === "kira@yagami.gov") ? `<button class="btn-action text-danger border-danger ms-1" title="Apagar" onclick="apagarDocumentoTJ(${item.id}, '${item.numero}')"><i class="fas fa-trash"></i></button>` : '';
-
-                tbody.innerHTML += `
-                    <tr>
-                        <td><strong>${item.numero || 'S/N'}</strong></td>
-                        <td>${tipoDecisao} <br><small class="text-muted">Motivo MP: ${motivo}</small></td>
-                        <td>${dataRef}</td>
-                        <td>Vara Criminal</td>
-                        <td class="text-center">
-                            <button class="btn-action text-info border-info me-1" title="Visualizar Inquérito" onclick="window.location.href='tj-visualizar.html?id=${item.id}'"><i class="fas fa-eye"></i> Visualizar</button>
-                            <button class="btn-gold me-1" onclick="assinarDespacho(${item.id}, '${item.numero}', '${item.status}')"><i class="fas fa-signature"></i> Assinar e Publicar</button>
-                            ${botaoApagarHTML}
-                        </td>
-                    </tr>
-                `;
+                tbody.innerHTML += `<tr>
+                    <td><strong>${item.numero || 'S/N'}</strong></td><td>${tipoDecisao}</td>
+                    <td>${new Date(item.created_at).toLocaleDateString('pt-BR')}</td><td>Vara Criminal</td>
+                    <td class="text-center">${acoes}</td>
+                </tr>`;
             });
         }
 
-        // --- AÇÕES DO JUIZ (ASSINAR DESPACHO) ---
         async function assinarDespacho(id, numero, status) {
-            const { data: inqData } = await supabaseClient.from('inqueritos').select('dados_extras, tipo').eq('id', id).single();
-            let extras = {};
-            if (inqData && inqData.dados_extras) {
-                try { extras = JSON.parse(inqData.dados_extras); } catch(e){}
-            }
+            const { data: inqData } = await supabaseClient.from('inqueritos').select('dados_extras').eq('id', id).single();
+            let extras = inqData && inqData.dados_extras ? JSON.parse(inqData.dados_extras) : {};
+            
+            const despacho = window.prompt(`Informe o DESPACHO / DECISÃO para o documento ${numero}:`);
+            if (!despacho || despacho.trim() === "") return;
 
-            if (status === 'Aguardando Despacho (Arquivamento)') {
-                const despacho = window.prompt(`Informe o DESPACHO DE ARQUIVAMENTO para o documento ${numero}:`);
-                if (!despacho || despacho.trim() === "") return;
+            extras.despachoJuiz = despacho.trim();
+            extras.dataDecisao = new Date().toISOString();
 
-                extras.despachoJuiz = despacho.trim();
-                extras.dataDecisao = new Date().toISOString();
-
-                const { error } = await supabaseClient
-                    .from('inqueritos')
-                    .update({ 
-                        status: 'Arquivado', 
-                        dados_extras: JSON.stringify(extras) 
-                    })
-                    .eq('id', id);
-
-                if (error) alert("Erro: " + error.message);
-                else {
-                    alert("Despacho assinado! O documento foi arquivado e enviado automaticamente para o Diário (Publicações).");
-                    carregarDespachosPendentes();
-                }
-
-            } else if (status === 'Aguardando Despacho (Denúncia)') {
-                const despacho = window.prompt(`Informe o DESPACHO / DECISÃO DE RECEBIMENTO DA DENÚNCIA para o documento ${numero}:`);
-                if (!despacho || despacho.trim() === "") return;
-
-                extras.despachoJuiz = despacho.trim();
-                extras.dataDecisao = new Date().toISOString();
-
-                const { error } = await supabaseClient
-                    .from('inqueritos')
-                    .update({ 
-                        status: 'Processo em Andamento',
-                        tipo: 'Ação Penal',
-                        dados_extras: JSON.stringify(extras) 
-                    })
-                    .eq('id', id);
-                
-                if (error) alert("Erro: " + error.message);
-                else {
-                    alert("Denúncia aceita! O documento foi convertido para um Processo em Andamento (Ação Penal).");
-                    carregarDespachosPendentes();
-                    carregarProcessosEmAndamento();
-                }
-            }
+            let novoStatus = status.includes('Arquivamento') ? 'Arquivado' : 'Processo em Andamento';
+            
+            const { error } = await supabaseClient.from('inqueritos').update({ status: novoStatus, tipo: 'Ação Penal', dados_extras: JSON.stringify(extras) }).eq('id', id);
+            if (!error) { alert("Despacho assinado e publicado com sucesso!"); location.reload(); }
         }
     </script>
 </body>
