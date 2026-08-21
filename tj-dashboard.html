@@ -94,8 +94,10 @@
         
         .btn-action { background-color: transparent; border: 1px solid #475569; color: #cbd5e1; padding: 6px 12px; border-radius: 4px; font-size: 0.85rem; transition: 0.2s; cursor: pointer; }
         .btn-action:hover { background-color: #b58d3d; border-color: #b58d3d; color: #fff; }
-        .btn-gold { background-color: #b58d3d; color: #fff; border: none; padding: 6px 15px; border-radius: 4px; font-weight: 600; font-size: 0.85rem; transition: 0.2s; }
-        .btn-gold:hover { background-color: #c49a3c; }
+        
+        /* Adicionado text-decoration: none e display inline-block para os botões <a> */
+        .btn-gold { background-color: #b58d3d; color: #fff; border: none; padding: 6px 15px; border-radius: 4px; font-weight: 600; font-size: 0.85rem; transition: 0.2s; text-decoration: none; display: inline-block; cursor: pointer; }
+        .btn-gold:hover { background-color: #c49a3c; color: #fff; }
 
     </style>
 </head>
@@ -109,7 +111,13 @@
         </div>
         <div>
             <span class="me-4 text-muted" id="userEmailDisplay" style="font-size: 0.9rem;"><i class="fas fa-user-tie"></i> carregando...</span>
+            
+            <!-- Botão para Publicações (Diário Eletrônico) -->
+            <a href="tj-publicacoes.html" class="btn btn-outline-warning btn-sm me-2"><i class="fas fa-book"></i> Publicações</a>
+            
+            <!-- Botão de Voltar da Administradora -->
             <a href="dashboard.html" class="btn btn-outline-info btn-sm me-2" id="btnAdminVoltar" style="display: none;"><i class="fas fa-shield-alt"></i> Painel Polícia</a>
+            
             <button onclick="fazerLogout()" class="btn btn-outline-light btn-sm"><i class="fas fa-sign-out-alt"></i> Sair</button>
         </div>
     </nav>
@@ -151,7 +159,8 @@
         <div class="section-box">
             <div class="section-header">
                 <div><i class="fas fa-gavel"></i> Processos em Andamento</div>
-                <button class="btn-gold"><i class="fas fa-plus"></i> Novo Processo</button>
+                <!-- Link direcionando para o arquivo tj-novo-processo.html -->
+                <a href="tj-novo-processo.html" class="btn-gold"><i class="fas fa-plus"></i> Novo Processo</a>
             </div>
             <div class="table-responsive">
                 <table class="table-tj">
@@ -178,7 +187,8 @@
         <div class="section-box">
             <div class="section-header">
                 <div><i class="fas fa-file-signature"></i> Central de Mandados</div>
-                <button class="btn-gold"><i class="fas fa-plus"></i> Expedir Mandado</button>
+                <!-- Link direcionando para o arquivo tj-mandado.html -->
+                <a href="tj-mandado.html" class="btn-gold"><i class="fas fa-plus"></i> Expedir Mandado</a>
             </div>
             <div class="table-responsive">
                 <table class="table-tj">
@@ -249,7 +259,6 @@
         // Função de Sair do sistema
         function fazerLogout() {
             localStorage.removeItem('usuario_logado_email');
-            // Como a página de login original é index.html, ele voltará para ela
             window.location.href = 'index.html'; 
         }
     </script>
