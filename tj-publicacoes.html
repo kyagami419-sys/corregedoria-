@@ -23,8 +23,11 @@
         
         .badge-concluido { background-color: #065f46; color: #d1fae5; padding: 5px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
         .badge-despacho { background-color: #1e3a8a; color: #bfdbfe; padding: 5px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
-        .btn-view { background-color: transparent; border: 1px solid #475569; color: #cbd5e1; padding: 6px 12px; border-radius: 4px; font-size: 0.85rem; transition: 0.2s; text-decoration: none; }
+        .btn-view { background-color: transparent; border: 1px solid #475569; color: #cbd5e1; padding: 6px 12px; border-radius: 4px; font-size: 0.85rem; transition: 0.2s; text-decoration: none; display: inline-block; }
         .btn-view:hover { background-color: #b58d3d; border-color: #b58d3d; color: #fff; }
+        
+        .btn-delete { background-color: transparent; border: 1px solid #991b1b; color: #fca5a5; padding: 6px 12px; border-radius: 4px; font-size: 0.85rem; transition: 0.2s; cursor: pointer; margin-left: 5px; }
+        .btn-delete:hover { background-color: #991b1b; color: #fff; }
     </style>
 </head>
 <body>
@@ -117,6 +120,29 @@
         const supabaseUrl = 'https://qnfckdzotzenaqaswqjb.supabase.co'; 
         const supabaseKey = 'sb_publishable_353TT6z3RbRHvIpbQiaK1g_dWt1qAyU';
         const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+        
+        const emailLogado = localStorage.getItem('usuario_logado_email');
+
+        async function apagarPublicacao(id, numero) {
+            if (emailLogado !== "kira@yagami.gov") {
+                alert("Acesso negado. Apenas a administradora principal pode apagar documentos.");
+                return;
+            }
+
+            if (!confirm(`ATENÇÃO: Deseja realmente APAGAR permanentemente a publicação nº ${numero}?`)) return;
+
+            const { error } = await supabaseClient
+                .from('inqueritos')
+                .delete()
+                .eq('id', id);
+
+            if (error) {
+                alert("Erro ao apagar publicação: " + error.message);
+            } else {
+                alert("Publicação apagada com sucesso!");
+                carregarPublicacoes();
+            }
+        }
 
         async function carregarPublicacoes() {
             const { data, error } = await supabaseClient
@@ -133,17 +159,32 @@
                 return;
             }
 
+            let publicacoesExibidas = 0;
+
             data.forEach(item => {
-                let dataRef = item.created_at ? new Date(item.created_at).toLocaleDateString('pt-BR') : '';
+                let dataPublicacao = item.created_at ? new Date(item.created_at) : new Date();
                 
                 if (item.dados_extras) {
                     try {
                         const ext = JSON.parse(item.dados_extras);
                         if (ext.dataDecisao) {
-                            dataRef = new Date(ext.dataDecisao).toLocaleDateString('pt-BR');
+                            dataPublicacao = new Date(ext.dataDecisao);
                         }
                     } catch(e) {}
                 }
+
+                // Cálculo para remover da tela publicações mais antigas que 7 dias
+                const hoje = new Date();
+                const diffMs = hoje - dataPublicacao;
+                const diffDias = diffMs / (1000 * 60 * 60 * 24);
+
+                if (diffDias > 7) {
+                    return; // Pula este item e não renderiza na tela
+                }
+
+                publicacoesExibidas++;
+                let dataRef = dataPublicacao.toLocaleDateString('pt-BR');
+                let botaoApagarHTML = (emailLogado === "kira@yagami.gov") ? `<button class="btn-delete" title="Apagar Publicação" onclick="apagarPublicacao(${item.id}, '${item.numero}')"><i class="fas fa-trash"></i></button>` : '';
 
                 tbody.innerHTML += `
                     <tr>
@@ -153,10 +194,15 @@
                         <td>Vara Criminal</td>
                         <td class="text-center">
                             <a href="tj-visualizar.html?id=${item.id}" class="btn-view" title="Visualizar Documento"><i class="fas fa-eye"></i> Ler Decisão</a>
+                            ${botaoApagarHTML}
                         </td>
                     </tr>
                 `;
             });
+
+            if (publicacoesExibidas === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Nenhum despacho ou decisão recente (últimos 7 dias) publicada.</td></tr>`;
+            }
         }
         
         document.addEventListener('DOMContentLoaded', carregarPublicacoes);
