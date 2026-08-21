@@ -108,8 +108,9 @@
             <span class="brand-title">TRIBUNAL DE JUSTIÇA - DASHBOARD</span>
         </div>
         <div>
-            <span class="me-4 text-muted" style="font-size: 0.9rem;"><i class="fas fa-user-tie"></i> magistrado@tj.gov.br</span>
-            <button class="btn btn-outline-light btn-sm"><i class="fas fa-sign-out-alt"></i> Sair</button>
+            <span class="me-4 text-muted" id="userEmailDisplay" style="font-size: 0.9rem;"><i class="fas fa-user-tie"></i> carregando...</span>
+            <a href="dashboard.html" class="btn btn-outline-info btn-sm me-2" id="btnAdminVoltar" style="display: none;"><i class="fas fa-shield-alt"></i> Painel Polícia</a>
+            <button onclick="fazerLogout()" class="btn btn-outline-light btn-sm"><i class="fas fa-sign-out-alt"></i> Sair</button>
         </div>
     </nav>
 
@@ -121,7 +122,7 @@
                 <div class="stats-card">
                     <div>
                         <p>Processos Ativos</p>
-                        <h3>142</h3>
+                        <h3>0</h3>
                     </div>
                     <i class="fas fa-folder-open stats-icon"></i>
                 </div>
@@ -130,7 +131,7 @@
                 <div class="stats-card">
                     <div>
                         <p>Mandados Pendentes</p>
-                        <h3>18</h3>
+                        <h3>0</h3>
                     </div>
                     <i class="fas fa-scroll stats-icon"></i>
                 </div>
@@ -139,7 +140,7 @@
                 <div class="stats-card">
                     <div>
                         <p>Despachos P/ Assinar</p>
-                        <h3 style="color: #fca5a5;">05</h3>
+                        <h3 style="color: #fca5a5;">0</h3>
                     </div>
                     <i class="fas fa-pen-nib stats-icon" style="color: #ef4444;"></i>
                 </div>
@@ -166,34 +167,7 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td><strong>5001472-60.2026</strong></td>
-                            <td>Execução de Título Extrajudicial</td>
-                            <td>Bittencourt Contabilidade <span class="text-muted">x</span> Tower Tecnologia</td>
-                            <td>10/07/2026</td>
-                            <td><span class="badge-status bg-andamento">Aguardando Despacho</span></td>
-                            <td class="text-center">
-                                <a href="tj-processo.html" class="btn-action text-decoration-none" title="Ver Detalhes"><i class="fas fa-eye"></i> Visualizar</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><strong>5008993-21.2026</strong></td>
-                            <td>Ação Penal</td>
-                            <td>Ministério Público <span class="text-muted">x</span> John Doe</td>
-                            <td>08/07/2026</td>
-                            <td><span class="badge-status bg-andamento">Em Instrução</span></td>
-                            <td class="text-center">
-                                <button class="btn-action" title="Ver Detalhes"><i class="fas fa-eye"></i> Visualizar</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><strong>5009102-44.2026</strong></td>
-                            <td>Habeas Corpus</td>
-                            <td>Carlos Silva <span class="text-muted">x</span> Polícia Militar</td>
-                            <td>05/07/2026</td>
-                            <td><span class="badge-status bg-urgente">Urgente - Liminar</span></td>
-                            <td class="text-center">
-                                <button class="btn-action" title="Ver Detalhes"><i class="fas fa-eye"></i> Visualizar</button>
-                            </td>
+                            <td colspan="6" class="text-center text-muted">Nenhum processo em andamento.</td>
                         </tr>
                     </tbody>
                 </table>
@@ -220,34 +194,7 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td><strong>MAND-082/26</strong></td>
-                            <td><span class="text-danger fw-bold">Prisão Preventiva</span></td>
-                            <td>Marcos "Sombra" de Souza (RG: 9982)</td>
-                            <td>20/08/2026</td>
-                            <td><span class="badge-status bg-andamento">Pendente de Cumprimento</span></td>
-                            <td class="text-center">
-                                <button class="btn-action" title="Imprimir/PDF"><i class="fas fa-file-pdf"></i> PDF</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><strong>MAND-083/26</strong></td>
-                            <td>Busca e Apreensão</td>
-                            <td>Sede Facção XYZ (Bairro Centro)</td>
-                            <td>12/07/2026</td>
-                            <td><span class="badge-status bg-urgente">Aguardando Assinatura</span></td>
-                            <td class="text-center">
-                                <button class="btn-action text-warning border-warning" title="Assinar Digitalmente"><i class="fas fa-pen-nib"></i> Assinar</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><strong>MAND-075/26</strong></td>
-                            <td><span class="text-success fw-bold">Alvará de Soltura</span></td>
-                            <td>Felipe Camargo (Penitenciária Máxima)</td>
-                            <td>Sem validade</td>
-                            <td><span class="badge-status bg-concluido">Cumprido</span></td>
-                            <td class="text-center">
-                                <button class="btn-action" title="Visualizar"><i class="fas fa-eye"></i> Visualizar</button>
-                            </td>
+                            <td colspan="6" class="text-center text-muted">Nenhum mandado pendente.</td>
                         </tr>
                     </tbody>
                 </table>
@@ -272,22 +219,7 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td><a href="#" class="text-info text-decoration-none">5001472-60.2026</a></td>
-                            <td>Despacho Mero Expediente (Citação do Réu)</td>
-                            <td>10/07/2026 às 14:30</td>
-                            <td>Vara Cível</td>
-                            <td class="text-center">
-                                <button class="btn-gold"><i class="fas fa-signature"></i> Assinar e Publicar</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><a href="#" class="text-info text-decoration-none">5009102-44.2026</a></td>
-                            <td>Decisão Interlocutória (Apreciação de Liminar)</td>
-                            <td>09/07/2026 às 18:15</td>
-                            <td>Vara Criminal</td>
-                            <td class="text-center">
-                                <button class="btn-gold"><i class="fas fa-signature"></i> Assinar e Publicar</button>
-                            </td>
+                            <td colspan="5" class="text-center text-muted">Nenhum despacho pendente.</td>
                         </tr>
                     </tbody>
                 </table>
@@ -297,5 +229,29 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Sistema de verificação de login e configuração do botão admin
+        document.addEventListener('DOMContentLoaded', function() {
+            const emailLogado = localStorage.getItem('usuario_logado_email');
+            
+            if (!emailLogado) {
+                window.location.href = 'index.html'; // Redireciona se não estiver logado
+            } else {
+                document.getElementById('userEmailDisplay').innerHTML = `<i class="fas fa-user-tie"></i> ${emailLogado}`;
+                
+                // Exibe o botão de voltar à polícia apenas para a administradora
+                if (emailLogado === "kira@yagami.gov") {
+                    document.getElementById('btnAdminVoltar').style.display = "inline-block";
+                }
+            }
+        });
+
+        // Função de Sair do sistema
+        function fazerLogout() {
+            localStorage.removeItem('usuario_logado_email');
+            // Como a página de login original é index.html, ele voltará para ela
+            window.location.href = 'index.html'; 
+        }
+    </script>
 </body>
 </html>
