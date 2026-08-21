@@ -127,7 +127,7 @@
                 <div class="stats-card">
                     <div>
                         <p>Processos Ativos</p>
-                        <h3>0</h3>
+                        <h3 id="statProcessos">0</h3>
                     </div>
                     <i class="fas fa-folder-open stats-icon"></i>
                 </div>
@@ -145,7 +145,7 @@
                 <div class="stats-card">
                     <div>
                         <p>Despachos P/ Assinar</p>
-                        <h3 style="color: #fca5a5;">0</h3>
+                        <h3 id="statDespachos" style="color: #fca5a5;">0</h3>
                     </div>
                     <i class="fas fa-pen-nib stats-icon" style="color: #ef4444;"></i>
                 </div>
@@ -326,7 +326,15 @@
             tbody.innerHTML = '';
             const emailLogado = localStorage.getItem('usuario_logado_email');
 
-            if (error || !data || data.length === 0) {
+            if (error || !data) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted">Nenhum processo em andamento.</td></tr>`;
+                document.getElementById('statProcessos').innerText = '0';
+                return;
+            }
+
+            document.getElementById('statProcessos').innerText = String(data.length);
+
+            if (data.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted">Nenhum processo em andamento.</td></tr>`;
                 return;
             }
@@ -353,7 +361,7 @@
                         <td>${dataRef}</td>
                         <td><span class="badge-status bg-andamento">Em Instrução</span></td>
                         <td class="text-center">
-                            <button class="btn-action text-info border-info me-1" title="Visualizar" onclick="window.location.href='gerador.html?id=${item.id}'"><i class="fas fa-eye"></i> Visualizar</button>
+                            <button class="btn-action text-info border-info me-1" title="Visualizar" onclick="window.location.href='tj-visualizar.html?id=${item.id}'"><i class="fas fa-eye"></i> Visualizar</button>
                             ${botaoApagarHTML}
                         </td>
                     </tr>
@@ -402,7 +410,7 @@
                         <td>${dataFormatada}</td>
                         <td><span class="badge-status" style="background-color: #0284c7; color: #e0f2fe;">Aguardando MP</span></td>
                         <td class="text-center">
-                            <button class="btn-action text-info border-info me-1" title="Visualizar" onclick="window.location.href='gerador.html?id=${item.id}'"><i class="fas fa-eye"></i></button>
+                            <button class="btn-action text-info border-info me-1" title="Visualizar" onclick="window.location.href='tj-visualizar.html?id=${item.id}'"><i class="fas fa-eye"></i> Visualizar</button>
                             <button class="btn-action text-success border-success me-1" title="Fazer Denúncia" onclick="denunciarInqueritoMP(${item.id}, '${item.numero}')"><i class="fas fa-bullhorn"></i> Denunciar</button>
                             <button class="btn-action text-danger border-danger me-1" title="Arquivar Inquérito" onclick="arquivarInqueritoMP(${item.id}, '${item.numero}')"><i class="fas fa-archive"></i> Arquivar</button>
                             ${botaoApagarHTML}
@@ -466,7 +474,15 @@
             tbody.innerHTML = '';
             const emailLogado = localStorage.getItem('usuario_logado_email');
 
-            if (error || !data || data.length === 0) {
+            if (error || !data) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Nenhum despacho pendente.</td></tr>`;
+                document.getElementById('statDespachos').innerText = '0';
+                return;
+            }
+
+            document.getElementById('statDespachos').innerText = String(data.length);
+
+            if (data.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Nenhum despacho pendente.</td></tr>`;
                 return;
             }
@@ -492,7 +508,7 @@
                         <td>${dataRef}</td>
                         <td>Vara Criminal</td>
                         <td class="text-center">
-                            <button class="btn-action text-info border-info me-1" title="Visualizar" onclick="window.location.href='gerador.html?id=${item.id}'"><i class="fas fa-eye"></i></button>
+                            <button class="btn-action text-info border-info me-1" title="Visualizar" onclick="window.location.href='tj-visualizar.html?id=${item.id}'"><i class="fas fa-eye"></i> Visualizar</button>
                             <button class="btn-gold me-1" onclick="assinarDespacho(${item.id}, '${item.numero}', '${item.status}')"><i class="fas fa-signature"></i> Assinar e Publicar</button>
                             ${botaoApagarHTML}
                         </td>

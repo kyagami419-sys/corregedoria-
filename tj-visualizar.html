@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizar Documento - Tribunal de Justiça</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { 
+            background: radial-gradient(circle at top, #0f172a 0%, #020617 100%); 
+            color: #e2e8f0; 
+            font-family: 'Inter', sans-serif; 
+            min-height: 100vh; 
+            margin: 0;
+            padding-bottom: 50px;
+        }
+        
+        .navbar-tj { 
+            background: rgba(15, 23, 42, 0.95); 
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid #b58d3d; 
+            padding: 12px 30px; 
+        }
+        .navbar-tj .brand-title { 
+            color: #ffffff; 
+            font-family: 'Playfair Display', serif;
+            font-weight: 700; 
+            font-size: 1.25em; 
+            letter-spacing: 1.5px; 
+        }
+
+        .container-main { padding: 40px 20px; max-width: 900px; margin: 0 auto; }
+        
+        .document-box {
+            background-color: #0f172a;
+            border: 1px solid #1e293b;
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+
+        .doc-header {
+            text-align: center;
+            border-bottom: 2px solid #b58d3d;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .doc-header h2 {
+            font-family: 'Playfair Display', serif;
+            color: #b58d3d;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .info-group {
+            background-color: #162032;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+        }
+
+        .info-label {
+            color: #94a3b8;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .info-value {
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 500;
+            word-break: break-word;
+        }
+
+        .content-box {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            padding: 25px;
+            color: #e2e8f0;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            font-size: 0.95rem;
+            margin-top: 10px;
+        }
+
+        .btn-gold {
+            background-color: #b58d3d;
+            color: #fff;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: 0.2s;
+            text-decoration: none;
+        }
+        .btn-gold:hover { background-color: #c49a3c; color: #fff; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-tj d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+            <i class="fas fa-balance-scale fs-3 me-3" style="color: #b58d3d;"></i>
+            <span class="brand-title">VISUALIZAÇÃO OFICIAL DE DOCUMENTO</span>
+        </div>
+        <div>
+            <a href="tj-dashboard.html" class="btn btn-outline-light btn-sm"><i class="fas fa-arrow-left"></i> Voltar ao Painel</a>
+        </div>
+    </nav>
+
+    <div class="container-main">
+        <div class="document-box">
+            <div class="doc-header">
+                <h2>TRIBUNAL DE JUSTIÇA</h2>
+                <p class="text-muted mb-0" id="tipoDocumentoTitulo">Carregando detalhes do documento...</p>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="info-group">
+                        <span class="info-label">Número do Documento / Inquérito</span>
+                        <span class="info-value" id="valNumero">Carregando...</span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="info-group">
+                        <span class="info-label">Tipo</span>
+                        <span class="info-value" id="valTipo">Carregando...</span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="info-group">
+                        <span class="info-label">Encarregado / Responsável</span>
+                        <span class="info-value" id="valEncarregado">Carregando...</span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="info-group">
+                        <span class="info-label">Status Atual</span>
+                        <span class="info-value text-warning" id="valStatus">Carregando...</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-group mt-2">
+                <span class="info-label">Conteúdo / Descrição do Inquérito</span>
+                <div class="content-box" id="valConteudo">Carregando texto do documento...</div>
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="tj-dashboard.html" class="btn btn-gold"><i class="fas fa-arrow-left"></i> Voltar ao Painel do Tribunal</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const supabaseUrl = 'https://qnfckdzotzenaqaswqjb.supabase.co'; 
+        const supabaseKey = 'sb_publishable_353TT6z3RbRHvIpbQiaK1g_dWt1qAyU';
+        const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
+        async function carregarDetalhesVisualizacao() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const docId = urlParams.get('id');
+
+            if (!docId) {
+                alert("Nenhum documento selecionado.");
+                window.location.href = 'tj-dashboard.html';
+                return;
+            }
+
+            const { data, error } = await supabaseClient
+                .from('inqueritos')
+                .select('*')
+                .eq('id', docId)
+                .single();
+
+            if (error || !data) {
+                alert("Erro ao carregar os dados do documento.");
+                window.location.href = 'tj-dashboard.html';
+                return;
+            }
+
+            document.getElementById('tipoDocumentoTitulo').innerText = data.tipo || 'Inquérito Policial';
+            document.getElementById('valNumero').innerText = data.numero || 'S/N';
+            document.getElementById('valTipo').innerText = data.tipo || 'Inquérito Policial';
+            document.getElementById('valEncarregado').innerText = data.encarregado || 'N/A';
+            document.getElementById('valStatus').innerText = data.status || 'N/A';
+            
+            // Pega o conteúdo do inquérito (seja texto direto ou via dados_extras)
+            let textoConteúdo = data.conteudo || data.texto || 'Nenhum conteúdo detalhado informado.';
+            if (data.dados_extras) {
+                try {
+                    const ext = JSON.parse(data.dados_extras);
+                    if (ext.motivoMP) {
+                        textoConteúdo += `\n\n--- MOTIVO / MANIFESTAÇÃO DO MINISTÉRIO PÚBLICO ---\n${ext.motivoMP}`;
+                    }
+                    if (ext.despachoJuiz) {
+                        textoConteúdo += `\n\n--- DESPACHO / DECISÃO DO JUIZ ---\n${ext.despachoJuiz}`;
+                    }
+                } catch(e){}
+            }
+
+            document.getElementById('valConteudo').innerText = textoConteúdo;
+        }
+
+        carregarDetalhesVisualizacao();
+    </script>
+</body>
+</html>
