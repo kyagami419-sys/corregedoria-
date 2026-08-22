@@ -113,7 +113,6 @@
 
     </div>
 
-    <!-- Inicialização do Banco de Dados para carregar os despachos arquivados -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
@@ -145,11 +144,11 @@
         }
 
         async function carregarPublicacoes() {
-            // Agora busca tanto Despachos Arquivados quanto os Processos Encerrados
+            // Adicionado 'Arquivado MP' por segurança caso os arquivamentos venham do Promotor
             const { data, error } = await supabaseClient
                 .from('inqueritos')
                 .select('*')
-                .in('status', ['Arquivado', 'Processo Encerrado'])
+                .in('status', ['Arquivado', 'Arquivado MP', 'Processo Encerrado'])
                 .order('id', { ascending: false });
 
             const tbodyDespachos = document.getElementById('tabelaDespachosPublicados');
@@ -168,28 +167,32 @@
             let processosExibidos = 0;
 
             data.forEach(item => {
-                let dataPublicacao = item.created_at ? new Date(item.created_at) : new Date();
+                let dataRef = "Data Indisponível";
                 let partes = "Não Informado";
                 
-                if (item.dados_extras) {
-                    try {
+                // Tratamento seguro de datas para evitar "Invalid Date" quebrar o código
+                try {
+                    let d = item.created_at ? new Date(item.created_at) : new Date();
+                    
+                    if (item.dados_extras) {
                         const ext = JSON.parse(item.dados_extras);
                         if (ext.dataDecisao) {
-                            dataPublicacao = new Date(ext.dataDecisao);
+                            d = new Date(ext.dataDecisao);
                         }
                         // Pega o nome do investigado para a tabela de Processos
                         if (ext.investigadoNome) {
                             partes = "MP x " + ext.investigadoNome;
                         }
-                    } catch(e) {}
+                    }
+
+                    // Se a data for válida, formata ela
+                    if (!isNaN(d.getTime())) {
+                        dataRef = d.toLocaleDateString('pt-BR');
+                    }
+                } catch(e) {
+                    console.error("Erro ao ler dados extras", e);
                 }
 
-                // Cálculo para remover da tela despachos mais antigos que 7 dias
-                const hoje = new Date();
-                const diffMs = hoje - dataPublicacao;
-                const diffDias = diffMs / (1000 * 60 * 60 * 24);
-
-                let dataRef = dataPublicacao.toLocaleDateString('pt-BR');
                 let botaoApagarHTML = (emailLogado === "kira@yagami.gov") ? `<button class="btn-delete" title="Apagar Publicação" onclick="apagarPublicacao(${item.id}, '${item.numero}')"><i class="fas fa-trash"></i></button>` : '';
 
                 if (item.status === 'Processo Encerrado') {
@@ -207,9 +210,7 @@
                             </td>
                         </tr>
                     `;
-                } else if (item.status === 'Arquivado') {
-                    if (diffDias > 7) return; // Pula este despacho se for maior que 7 dias (Não renderiza na tela)
-                    
+                } else if (item.status === 'Arquivado' || item.status === 'Arquivado MP') {
                     despachosExibidos++;
                     tbodyDespachos.innerHTML += `
                         <tr>
@@ -227,7 +228,7 @@
             });
 
             if (despachosExibidos === 0) {
-                tbodyDespachos.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Nenhum despacho ou decisão recente (últimos 7 dias) publicada.</td></tr>`;
+                tbodyDespachos.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Nenhum despacho ou decisão publicada.</td></tr>`;
             }
             if (processosExibidos === 0) {
                 tbodyProcessos.innerHTML = `<tr><td colspan="6" class="text-center text-muted">Nenhum processo concluído no momento.</td></tr>`;
