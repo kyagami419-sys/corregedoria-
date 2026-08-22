@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Processos - Tribunal de Justiça</title>
+    <title>Autos do Processo - Tribunal de Justiça</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -46,7 +46,7 @@
         .content-box-mp { border-color: #0284c7; background-color: #082f49; }
         .content-box-juiz { border-color: #b58d3d; background-color: #1a150b; }
 
-        .btn-gold { background-color: #b58d3d; color: #fff; border: none; padding: 10px 25px; border-radius: 4px; font-weight: 600; transition: 0.2s; text-decoration: none; }
+        .btn-gold { background-color: #b58d3d; color: #fff; border: none; padding: 10px 25px; border-radius: 4px; font-weight: 600; transition: 0.2s; text-decoration: none; display: inline-block;}
         .btn-gold:hover { background-color: #c49a3c; color: #fff; }
     </style>
 </head>
@@ -64,7 +64,7 @@
         <div class="process-box">
             <div class="doc-header">
                 <h2>TRIBUNAL DE JUSTIÇA</h2>
-                <p class="text-muted mb-0">AÇÃO PENAL - PROCESSO EM ANDAMENTO</p>
+                <p class="text-muted mb-0">AÇÃO PENAL - ANDAMENTO PROCESSUAL</p>
             </div>
 
             <!-- Dados do Processo -->
@@ -75,24 +75,27 @@
                 <div class="col-md-6"><div class="info-group"><span class="info-label">Status Processual</span><span class="info-value text-warning" id="valStatus">Carregando...</span></div></div>
             </div>
 
-            <!-- Denúncia do MP -->
-            <h3 class="section-title"><i class="fas fa-bullhorn"></i> Peça Inicial: Denúncia do Ministério Público</h3>
-            <div class="content-box content-box-mp" id="valDenuncia">Carregando texto da denúncia...</div>
-
-            <!-- Despacho do Juiz -->
-            <h3 class="section-title"><i class="fas fa-signature"></i> Decisão Interlocutória: Recebimento da Denúncia (Juiz)</h3>
-            <div class="content-box content-box-juiz" id="valDespacho">Carregando despacho do Juiz...</div>
-
-            <!-- DEFESA E MANIFESTAÇÃO DO ADVOGADO -->
-            <h3 class="section-title"><i class="fas fa-briefcase"></i> Defesa e Manifestações (Advogado Constituído)</h3>
-            <div id="areaAdvogado"></div>
-
-            <!-- Inquérito Original -->
-            <h3 class="section-title"><i class="fas fa-folder-open"></i> Autos do Inquérito Policial (Provas e Histórico)</h3>
+            <!-- Evento 01: Inquérito Original -->
+            <h3 class="section-title"><i class="fas fa-folder-open"></i> Evento 01: Autos do Inquérito Policial (Provas e Histórico)</h3>
             <div class="content-box" id="valInqueritoBase">Carregando histórico do inquérito...</div>
 
+            <!-- Evento 02: Denúncia do MP -->
+            <h3 class="section-title"><i class="fas fa-bullhorn"></i> Evento 02: Peça Inicial - Denúncia do Ministério Público</h3>
+            <div class="content-box content-box-mp" id="valDenuncia">Carregando texto da denúncia...</div>
+
+            <!-- Evento 03: Despacho do Juiz -->
+            <h3 class="section-title"><i class="fas fa-signature"></i> Evento 03: Decisão Interlocutória - Recebimento da Denúncia</h3>
+            <div class="content-box content-box-juiz" id="valDespacho">Carregando despacho do Juiz...</div>
+
+            <!-- Demais Eventos e Manifestações Dinâmicas -->
+            <div id="areaEventosDinamicos"></div>
+
+            <div class="text-center mt-5" id="btnManifestacao" style="display: none;">
+                <button class="btn btn-gold" onclick="novaManifestacao()"><i class="fas fa-pen"></i> Nova Manifestação / Ato Processual</button>
+            </div>
+
             <div class="text-center mt-5">
-                <a href="tj-dashboard.html" class="btn btn-gold"><i class="fas fa-arrow-left"></i> Voltar aos Processos</a>
+                <a href="tj-dashboard.html" class="btn btn-outline-light"><i class="fas fa-arrow-left"></i> Voltar aos Processos</a>
             </div>
         </div>
     </div>
@@ -105,6 +108,9 @@
 
         let isJuiz = false;
         let isAdvogado = false;
+        let isPromotor = false;
+        let emailLogadoGlobal = '';
+        let cargoLogado = '';
 
         async function carregarDetalhesProcesso() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -115,13 +121,17 @@
             const { data, error } = await supabaseClient.from('inqueritos').select('*').eq('id', docId).single();
             if (error || !data) { alert("Erro ao carregar."); window.location.href = 'tj-dashboard.html'; return; }
 
-            // Verificação de cargos
-            const emailLogado = localStorage.getItem('usuario_logado_email');
-            if (emailLogado === "kira@yagami.gov") isJuiz = true;
-            else {
-                const cargo = localStorage.getItem(`inst_${emailLogado}`);
-                if (cargo === 'JUIZ') isJuiz = true;
-                if (cargo === 'ADVOGADO') isAdvogado = true;
+            // Verificação de cargos e permissões
+            emailLogadoGlobal = localStorage.getItem('usuario_logado_email') || '';
+            if (emailLogadoGlobal === "kira@yagami.gov") {
+                isJuiz = true;
+                isPromotor = true;
+                cargoLogado = "Administradora / Juíza";
+            } else {
+                const cargo = localStorage.getItem(`inst_${emailLogadoGlobal}`);
+                if (cargo === 'JUIZ') { isJuiz = true; cargoLogado = "Juiz(a)"; }
+                else if (cargo === 'PROMOTOR') { isPromotor = true; cargoLogado = "Promotor(a)"; }
+                else if (cargo === 'ADVOGADO') { isAdvogado = true; cargoLogado = "Advogado(a)"; }
             }
 
             document.getElementById('valNumero').innerText = data.numero || 'S/N';
@@ -141,7 +151,7 @@
                     if (extras.despachoJuiz) despachoJuiz = extras.despachoJuiz;
                     
                     for (const [chave, valor] of Object.entries(extras)) {
-                        if (!['motivoMP', 'despachoJuiz', 'advogadoEmail', 'manifestacaoDefesa'].includes(chave) && valor) {
+                        if (!['motivoMP', 'despachoJuiz', 'advogadoEmail', 'manifestacaoDefesa', 'eventosProcesso'].includes(chave) && valor) {
                             let nome = chave.replace(/([A-Z])/g, ' $1').replace('_', ' ').toUpperCase();
                             textoInquerito += `[ ${nome} ]\n${typeof valor === 'object' ? JSON.stringify(valor) : valor}\n\n`;
                         }
@@ -159,26 +169,61 @@
             document.getElementById('valDespacho').innerText = despachoJuiz;
             document.getElementById('valInqueritoBase').innerText = textoInquerito || "Nenhum histórico policial detalhado.";
 
-            // Controle da Defesa / Advogado
-            let textoDefesa = extras.manifestacaoDefesa || "A defesa ainda não se manifestou nos autos.";
+            // -----------------------------------------------------------------------------------
+            // EVENTOS DINÂMICOS (Defesa Legada, Advogado Constituído e Novas Manifestações)
+            // -----------------------------------------------------------------------------------
             let advogadoAtribuido = extras.advogadoEmail || "Nenhum advogado constituído pelo Juízo.";
             
-            let htmlDefesa = `
+            let htmlEventos = `
+                <h3 class="section-title" style="margin-top: 50px;"><i class="fas fa-briefcase"></i> Representação Legal da Defesa</h3>
                 <div class="info-group">
-                    <span class="info-label">Advogado Constituído (E-mail de Cadastro)</span>
+                    <span class="info-label">Advogado Constituído (E-mail de Cadastro no Sistema)</span>
                     <span class="info-value text-info">${advogadoAtribuido}</span>
                 </div>
-                <div class="content-box" style="border-color: #475569;">${textoDefesa}</div>
             `;
 
             if (isJuiz) {
-                htmlDefesa += `<div class="text-center mt-3"><button class="btn btn-outline-info" onclick="atribuirAdvogado(${docId})"><i class="fas fa-user-plus"></i> Atribuir Advogado ao Processo</button></div>`;
-            }
-            if (isAdvogado && extras.advogadoEmail === emailLogado) {
-                htmlDefesa += `<div class="text-center mt-3"><button class="btn btn-gold" onclick="adicionarManifestacao(${docId})"><i class="fas fa-pen"></i> Escrever Nova Manifestação (Petição)</button></div>`;
+                htmlEventos += `<div class="text-center mt-2 mb-5"><button class="btn btn-outline-info btn-sm" onclick="atribuirAdvogado(${docId})"><i class="fas fa-user-plus"></i> Atribuir / Alterar Advogado do Processo</button></div>`;
             }
 
-            document.getElementById('areaAdvogado').innerHTML = htmlDefesa;
+            let numEventoAtual = 4; // Começa a contar do 4, pois 1=Inquérito, 2=Denúncia, 3=Despacho
+
+            // Se existir uma manifestação antiga salva no método antigo, mostramos como Evento 04
+            if (extras.manifestacaoDefesa) {
+                htmlEventos += `
+                <h3 class="section-title"><i class="fas fa-file-alt"></i> Evento ${String(numEventoAtual).padStart(2, '0')}: Manifestação Inicial da Defesa (Legado)</h3>
+                <div class="content-box" style="border-color: #475569;">${extras.manifestacaoDefesa}</div>
+                `;
+                numEventoAtual++;
+            }
+
+            // Exibe todos os novos eventos criados de forma dinâmica
+            let eventosExtras = extras.eventosProcesso || [];
+            eventosExtras.forEach(ev => {
+                let corBorda = '#334155';
+                let corFundo = '#1e293b';
+
+                if (ev.cargo.includes('Juiz')) { corBorda = '#b58d3d'; corFundo = '#1a150b'; }
+                if (ev.cargo.includes('Promotor')) { corBorda = '#0284c7'; corFundo = '#082f49'; }
+                if (ev.cargo.includes('Advogado')) { corBorda = '#475569'; }
+
+                htmlEventos += `
+                <h3 class="section-title"><i class="fas fa-file-alt"></i> Evento ${String(numEventoAtual).padStart(2, '0')}: Manifestação / Ato - ${ev.cargo}</h3>
+                <div class="content-box" style="border-color: ${corBorda}; background-color: ${corFundo};">
+                    <div style="font-size: 0.85em; color: #94a3b8; margin-bottom: 15px; border-bottom: 1px solid #334155; padding-bottom: 8px;">
+                        <strong>Data e Hora:</strong> ${ev.data} <span style="margin: 0 15px;">|</span> <strong>Autor Registrado:</strong> ${ev.autor}
+                    </div>
+                    ${ev.texto}
+                </div>`;
+                numEventoAtual++;
+            });
+
+            document.getElementById('areaEventosDinamicos').innerHTML = htmlEventos;
+
+            // Mostra o botão de manifestação apenas para as partes autorizadas
+            if (isJuiz || isPromotor || (isAdvogado && extras.advogadoEmail === emailLogadoGlobal)) {
+                document.getElementById('btnManifestacao').style.display = 'block';
+            }
         }
 
         window.atribuirAdvogado = async function(id) {
@@ -193,20 +238,32 @@
             if (!error) { alert("Advogado constituído com sucesso!"); location.reload(); }
         }
 
-        window.adicionarManifestacao = async function(id) {
-            const manifestacao = window.prompt("Digite os termos da sua manifestação / petição no processo:");
+        window.novaManifestacao = async function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+            if (!id) return;
+
+            const manifestacao = window.prompt("Digite os termos da sua manifestação, intimação ou ato processual:");
             if (!manifestacao || manifestacao.trim() === "") return;
 
             const { data } = await supabaseClient.from('inqueritos').select('dados_extras').eq('id', id).single();
             let extras = data && data.dados_extras ? JSON.parse(data.dados_extras) : {};
             
-            let dataFormatada = new Date().toLocaleDateString('pt-BR');
-            let novaManifestacao = `[Manifestação Registrada em ${dataFormatada}]\n${manifestacao.trim()}`;
+            let eventosProcesso = extras.eventosProcesso || [];
             
-            extras.manifestacaoDefesa = extras.manifestacaoDefesa ? extras.manifestacaoDefesa + `\n\n${novaManifestacao}` : novaManifestacao;
+            let dataFormatada = new Date().toLocaleDateString('pt-BR') + " às " + new Date().toLocaleTimeString('pt-BR');
+            
+            eventosProcesso.push({
+                data: dataFormatada,
+                autor: emailLogadoGlobal,
+                cargo: cargoLogado,
+                texto: manifestacao.trim()
+            });
+
+            extras.eventosProcesso = eventosProcesso;
 
             const { error } = await supabaseClient.from('inqueritos').update({ dados_extras: JSON.stringify(extras) }).eq('id', id);
-            if (!error) { alert("Manifestação anexada aos autos com sucesso!"); location.reload(); }
+            if (!error) { alert("Ato processual registrado com sucesso!"); location.reload(); }
         }
 
         carregarDetalhesProcesso();
