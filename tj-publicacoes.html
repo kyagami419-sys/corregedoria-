@@ -44,7 +44,7 @@
         <!-- PROCESSOS CONCLUÍDOS -->
         <div class="section-box">
             <div class="section-header"><i class="fas fa-check-double"></i> Processos Transitados em Julgado (Concluídos)</div>
-            <div class="table-responsive">
+            <div class="table-responsive" style="overflow: visible;">
                 <table class="table-tj">
                     <thead>
                         <tr>
@@ -68,7 +68,7 @@
         <!-- DESPACHOS E DECISÕES -->
         <div class="section-box">
             <div class="section-header"><i class="fas fa-pen-nib"></i> Despachos e Decisões Publicadas</div>
-            <div class="table-responsive">
+            <div class="table-responsive" style="overflow: visible;">
                 <table class="table-tj">
                     <thead>
                         <tr>
@@ -91,7 +91,7 @@
         <!-- INTIMAÇÕES -->
         <div class="section-box">
             <div class="section-header"><i class="fas fa-envelope-open-text"></i> Intimações Eletrônicas Expedidas</div>
-            <div class="table-responsive">
+            <div class="table-responsive" style="overflow: visible;">
                 <table class="table-tj">
                     <thead>
                         <tr>
@@ -102,7 +102,7 @@
                             <th class="text-center">Ação</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="tabelaIntimacoes">
                         <tr>
                             <td colspan="5" class="text-center text-muted">Nenhuma intimação expedida.</td>
                         </tr>
@@ -143,34 +143,47 @@
             }
         }
 
+        window.moverProcesso = async function(id, novoStatus) {
+            if (!confirm(`Deseja mover este item para a categoria selecionada?`)) return;
+            const { error } = await supabaseClient.from('inqueritos').update({ status: novoStatus }).eq('id', id);
+            if (!error) {
+                alert("Movido com sucesso!");
+                carregarPublicacoes();
+            } else {
+                alert("Erro ao mover: " + error.message);
+            }
+        }
+
         async function carregarPublicacoes() {
-            // Adicionado 'Arquivado MP' por segurança caso os arquivamentos venham do Promotor
             const { data, error } = await supabaseClient
                 .from('inqueritos')
                 .select('*')
-                .in('status', ['Arquivado', 'Arquivado MP', 'Processo Encerrado'])
+                .in('status', ['Arquivado', 'Arquivado MP', 'Processo Encerrado', 'Intimação Expedida'])
                 .order('id', { ascending: false });
 
             const tbodyDespachos = document.getElementById('tabelaDespachosPublicados');
             const tbodyProcessos = document.getElementById('tabelaProcessosConcluidos');
+            const tbodyIntimacoes = document.getElementById('tabelaIntimacoes');
             
             tbodyDespachos.innerHTML = '';
             tbodyProcessos.innerHTML = '';
+            tbodyIntimacoes.innerHTML = '';
 
             if (error || !data || data.length === 0) {
                 tbodyDespachos.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Nenhum despacho ou decisão publicada.</td></tr>`;
                 tbodyProcessos.innerHTML = `<tr><td colspan="6" class="text-center text-muted">Nenhum processo concluído no momento.</td></tr>`;
+                tbodyIntimacoes.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Nenhuma intimação expedida.</td></tr>`;
                 return;
             }
 
             let despachosExibidos = 0;
             let processosExibidos = 0;
+            let intimacoesExibidas = 0;
 
             data.forEach(item => {
                 let dataRef = "Data Indisponível";
                 let partes = "Não Informado";
                 
-                // Tratamento seguro de datas para evitar "Invalid Date" quebrar o código
                 try {
                     let d = item.created_at ? new Date(item.created_at) : new Date();
                     
@@ -179,13 +192,11 @@
                         if (ext.dataDecisao) {
                             d = new Date(ext.dataDecisao);
                         }
-                        // Pega o nome do investigado para a tabela de Processos
                         if (ext.investigadoNome) {
                             partes = "MP x " + ext.investigadoNome;
                         }
                     }
 
-                    // Se a data for válida, formata ela
                     if (!isNaN(d.getTime())) {
                         dataRef = d.toLocaleDateString('pt-BR');
                     }
@@ -195,7 +206,21 @@
 
                 let botaoApagarHTML = (emailLogado === "kira@yagami.gov") ? `<button class="btn-delete" title="Apagar Publicação" onclick="apagarPublicacao(${item.id}, '${item.numero}')"><i class="fas fa-trash"></i></button>` : '';
 
-                if (item.status === 'Processo Encerrado') {
+                // HTML do Botão Mover
+                let botaoMoverHTML = `
+                    <div class="dropdown d-inline-block ms-1">
+                        <button class="btn btn-sm btn-outline-warning dropdown-toggle" type="button" data-bs-toggle="dropdown" style="padding: 5px 10px; font-size: 0.85rem; border-color: #b58d3d; color: #b58d3d;">
+                            <i class="fas fa-exchange-alt"></i> Mover
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-dark" style="font-size: 0.85rem; z-index: 9999;">
+                            <li><a class="dropdown-item" href="#" onclick="moverProcesso(${item.id}, 'Processo Encerrado')">Para Concluídos</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="moverProcesso(${item.id}, 'Arquivado')">Para Despachos</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="moverProcesso(${item.id}, 'Intimação Expedida')">Para Intimações</a></li>
+                        </ul>
+                    </div>
+                `;
+
+                if (item.status === 'Processo Encerrado' || item.status.includes('Encerrado')) {
                     processosExibidos++;
                     tbodyProcessos.innerHTML += `
                         <tr>
@@ -204,8 +229,9 @@
                             <td>${partes}</td>
                             <td>${dataRef}</td>
                             <td><span class="badge-concluido">Transitado em Julgado</span></td>
-                            <td class="text-center">
+                            <td class="text-center" style="white-space: nowrap;">
                                 <a href="tj-processo.html?id=${item.id}" class="btn-view" title="Visualizar Autos"><i class="fas fa-eye"></i> Autos</a>
+                                ${botaoMoverHTML}
                                 ${botaoApagarHTML}
                             </td>
                         </tr>
@@ -218,8 +244,25 @@
                             <td>Despacho de Arquivamento</td>
                             <td>${dataRef}</td>
                             <td>Vara Criminal</td>
-                            <td class="text-center">
+                            <td class="text-center" style="white-space: nowrap;">
                                 <a href="tj-visualizar.html?id=${item.id}" class="btn-view" title="Visualizar Documento"><i class="fas fa-eye"></i> Ler Decisão</a>
+                                ${botaoMoverHTML}
+                                ${botaoApagarHTML}
+                            </td>
+                        </tr>
+                    `;
+                } else if (item.status === 'Intimação Expedida') {
+                    intimacoesExibidas++;
+                    let destinatario = partes.replace('MP x ', '');
+                    tbodyIntimacoes.innerHTML += `
+                        <tr>
+                            <td><strong>${destinatario}</strong></td>
+                            <td>${item.numero || 'S/N'}</td>
+                            <td>${dataRef}</td>
+                            <td><span class="badge bg-warning text-dark" style="padding: 5px 10px; font-size: 0.75rem;">Aguardando Manifestação</span></td>
+                            <td class="text-center" style="white-space: nowrap;">
+                                <a href="tj-processo.html?id=${item.id}" class="btn-view" title="Visualizar Autos"><i class="fas fa-eye"></i> Autos</a>
+                                ${botaoMoverHTML}
                                 ${botaoApagarHTML}
                             </td>
                         </tr>
@@ -232,6 +275,9 @@
             }
             if (processosExibidos === 0) {
                 tbodyProcessos.innerHTML = `<tr><td colspan="6" class="text-center text-muted">Nenhum processo concluído no momento.</td></tr>`;
+            }
+            if (intimacoesExibidas === 0) {
+                tbodyIntimacoes.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Nenhuma intimação expedida.</td></tr>`;
             }
         }
         
