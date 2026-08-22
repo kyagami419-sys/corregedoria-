@@ -154,6 +154,27 @@
             }
         }
 
+        window.alterarStatusIntimacao = async function(id, novoStatus) {
+            if (!confirm(`Deseja alterar o status desta intimação para '${novoStatus}'?`)) return;
+
+            const { data: inqData } = await supabaseClient.from('inqueritos').select('dados_extras').eq('id', id).single();
+            let extras = {};
+            if (inqData && inqData.dados_extras) {
+                try {
+                    extras = JSON.parse(inqData.dados_extras);
+                } catch(e) {}
+            }
+            
+            extras.statusIntimacao = novoStatus;
+
+            const { error } = await supabaseClient.from('inqueritos').update({ dados_extras: JSON.stringify(extras) }).eq('id', id);
+            if (!error) {
+                carregarPublicacoes();
+            } else {
+                alert("Erro ao alterar status: " + error.message);
+            }
+        }
+
         async function carregarPublicacoes() {
             const { data, error } = await supabaseClient
                 .from('inqueritos')
@@ -183,6 +204,7 @@
             data.forEach(item => {
                 let dataRef = "Data Indisponível";
                 let partes = "Não Informado";
+                let statusIntimacao = "Aguardando Manifestação";
                 
                 try {
                     let d = item.created_at ? new Date(item.created_at) : new Date();
@@ -194,6 +216,9 @@
                         }
                         if (ext.investigadoNome) {
                             partes = "MP x " + ext.investigadoNome;
+                        }
+                        if (ext.statusIntimacao) {
+                            statusIntimacao = ext.statusIntimacao;
                         }
                     }
 
@@ -253,12 +278,30 @@
                 } else if (item.status === 'Intimação Expedida') {
                     intimacoesExibidas++;
                     let destinatario = partes.replace('MP x ', '');
+                    
+                    let corBadge = "bg-warning text-dark";
+                    if (statusIntimacao === "Intimado") corBadge = "bg-success text-white";
+                    if (statusIntimacao === "Não Intimado") corBadge = "bg-danger text-white";
+
+                    let dropdownStatus = `
+                        <div class="dropdown d-inline-block">
+                            <button class="btn btn-sm ${corBadge} dropdown-toggle" type="button" data-bs-toggle="dropdown" style="padding: 5px 10px; font-size: 0.75rem; border: none; font-weight: 600;">
+                                ${statusIntimacao}
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-dark" style="font-size: 0.85rem; z-index: 9999;">
+                                <li><a class="dropdown-item" href="#" onclick="alterarStatusIntimacao(${item.id}, 'Aguardando Manifestação')">Aguardando Manifestação</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="alterarStatusIntimacao(${item.id}, 'Intimado')">Intimado</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="alterarStatusIntimacao(${item.id}, 'Não Intimado')">Não Intimado</a></li>
+                            </ul>
+                        </div>
+                    `;
+
                     tbodyIntimacoes.innerHTML += `
                         <tr>
                             <td><strong>${destinatario}</strong></td>
                             <td>${item.numero || 'S/N'}</td>
                             <td>${dataRef}</td>
-                            <td><span class="badge bg-warning text-dark" style="padding: 5px 10px; font-size: 0.75rem;">Aguardando Manifestação</span></td>
+                            <td>${dropdownStatus}</td>
                             <td class="text-center" style="white-space: nowrap;">
                                 <a href="tj-intimacao.html?id=${item.id}" class="btn-view" title="Visualizar Intimação"><i class="fas fa-file-signature"></i> Ver Intimação</a>
                                 ${botaoMoverHTML}
