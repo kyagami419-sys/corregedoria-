@@ -189,8 +189,9 @@
 
             const { error } = await supabaseClient.from('inqueritos').insert([{
                 numero: numAleatorio,
+                tipo: classe, // Define o tipo para manter a organização correta
                 status: statusFinal,
-                texto: peticao,
+                relato: peticao, // CORREÇÃO: Usando 'relato' no lugar de 'texto'
                 dados_extras: JSON.stringify(dadosExtras)
             }]);
 
