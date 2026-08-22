@@ -94,6 +94,10 @@
                 <button class="btn btn-gold" onclick="novaManifestacao()"><i class="fas fa-pen"></i> Nova Manifestação / Ato Processual</button>
             </div>
 
+            <div class="text-center mt-3" id="btnEncerrar" style="display: none;">
+                <button class="btn btn-danger" onclick="encerrarProcesso()"><i class="fas fa-gavel"></i> Encerrar Processo</button>
+            </div>
+
             <div class="text-center mt-5">
                 <a href="tj-dashboard.html" class="btn btn-outline-light"><i class="fas fa-arrow-left"></i> Voltar aos Processos</a>
             </div>
@@ -129,7 +133,7 @@
                 cargoLogado = "Administradora / Juíza";
             } else {
                 const cargo = localStorage.getItem(`inst_${emailLogadoGlobal}`);
-                if (cargo === 'JUIZ') { isJuiz = true; cargoLogado = "Juiz(a)"; }
+                if (cargo === 'JUIZ' || cargo === 'TRIBUNAL') { isJuiz = true; cargoLogado = "Juiz(a)"; }
                 else if (cargo === 'PROMOTOR') { isPromotor = true; cargoLogado = "Promotor(a)"; }
                 else if (cargo === 'ADVOGADO') { isAdvogado = true; cargoLogado = "Advogado(a)"; }
             }
@@ -224,6 +228,11 @@
             if (isJuiz || isPromotor || (isAdvogado && extras.advogadoEmail === emailLogadoGlobal)) {
                 document.getElementById('btnManifestacao').style.display = 'block';
             }
+
+            // Mostra o botão de Encerrar Processo APENAS para o Juiz
+            if (isJuiz) {
+                document.getElementById('btnEncerrar').style.display = 'block';
+            }
         }
 
         window.atribuirAdvogado = async function(id) {
@@ -264,6 +273,23 @@
 
             const { error } = await supabaseClient.from('inqueritos').update({ dados_extras: JSON.stringify(extras) }).eq('id', id);
             if (!error) { alert("Ato processual registrado com sucesso!"); location.reload(); }
+        }
+
+        window.encerrarProcesso = async function() {
+            if(!confirm("Tem certeza que deseja encerrar este processo? Ele será enviado para a aba de Publicações.")) return;
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+            if (!id) return;
+
+            const { error } = await supabaseClient.from('inqueritos').update({ status: 'Processo Encerrado' }).eq('id', id);
+            
+            if (!error) { 
+                alert("Processo encerrado com sucesso!"); 
+                window.location.href = 'tj-publicacoes.html'; 
+            } else {
+                alert("Erro ao encerrar o processo: " + error.message);
+            }
         }
 
         carregarDetalhesProcesso();
