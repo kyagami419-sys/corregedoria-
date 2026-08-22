@@ -56,7 +56,6 @@
                         <input type="datetime-local" class="form-control" id="dataAtual">
                     </div>
                     
-                    <!-- REQUERENTES -->
                     <div class="col-md-6" id="containerAutores">
                         <label class="form-label d-flex justify-content-between align-items-center">
                             <span>Requerente / Autor</span>
@@ -65,7 +64,6 @@
                         <input type="text" class="form-control autor-input mb-2" placeholder="Nome da parte autora">
                     </div>
                     
-                    <!-- REQUERIDOS -->
                     <div class="col-md-6" id="containerReus">
                         <label class="form-label d-flex justify-content-between align-items-center">
                             <span>Requerido / Réu</span>
@@ -83,7 +81,6 @@
                         <textarea class="form-control" id="peticaoFatos" rows="8" placeholder="Descreva os fatos, fundamentos legais ou o texto da intimação/despacho..."></textarea>
                     </div>
                     
-                    <!-- ÁREA DO BOTÃO DINÂMICA (Só Juiz Aprova/Distribui) -->
                     <div class="col-12 mt-4" id="areaBotaoAcao">
                         <p class="text-center text-muted">Carregando permissões...</p>
                     </div>
@@ -94,32 +91,27 @@
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // Data atual automática
         const agora = new Date();
         agora.setMinutes(agora.getMinutes() - agora.getTimezoneOffset());
         document.getElementById('dataAtual').value = agora.toISOString().slice(0,16);
 
-        // Conexão com Banco de Dados
         const supabaseUrl = 'https://qnfckdzotzenaqaswqjb.supabase.co'; 
         const supabaseKey = 'sb_publishable_353TT6z3RbRHvIpbQiaK1g_dWt1qAyU';
         const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
-        // Verificação de Cargo/Juiz
         const emailLogado = localStorage.getItem('usuario_logado_email') || '';
         const cargoLogado = localStorage.getItem(`inst_${emailLogado}`) || '';
         const isJuiz = (emailLogado === 'kira@yagami.gov' || cargoLogado === 'JUIZ' || cargoLogado === 'TRIBUNAL');
 
-        // Renderiza o botão baseado no cargo do usuário logado
         document.addEventListener('DOMContentLoaded', () => {
             const btnArea = document.getElementById('areaBotaoAcao');
             if (isJuiz) {
-                btnArea.innerHTML = `<button type="button" class="btn-gold" onclick="salvarProcesso()"><i class="fas fa-gavel"></i> Distribuir / Publicar Documento</button>`;
+                btnArea.innerHTML = `<button type="button" class="btn-gold" onclick="salvarProcesso()"><i class="fas fa-gavel"></i> Registrar no Sistema (Ação / Despacho)</button>`;
             } else {
                 btnArea.innerHTML = `<button type="button" class="btn btn-outline-warning w-100 py-2" onclick="salvarProcesso()"><i class="fas fa-paper-plane"></i> Enviar para Aprovação do Juiz</button>`;
             }
         });
 
-        // Funções para adicionar múltiplos campos de pessoas
         function adicionarAutor(e) {
             if(e) e.preventDefault();
             const container = document.getElementById('containerAutores');
@@ -140,7 +132,6 @@
             container.appendChild(input);
         }
 
-        // Lógica de Salvamento e Envio ao Banco
         async function salvarProcesso() {
             const classe = document.getElementById('classeSel').value;
             const dataAutuacao = document.getElementById('dataAtual').value;
@@ -152,27 +143,24 @@
                 return;
             }
 
-            // Puxa todos os nomes preenchidos nas caixas
             const autores = Array.from(document.querySelectorAll('.autor-input')).map(i => i.value).filter(v => v.trim() !== '');
             const reus = Array.from(document.querySelectorAll('.reu-input')).map(i => i.value).filter(v => v.trim() !== '');
             
-            // Formata o título das partes
             let partes = "Não Informado";
             if(autores.length > 0 && reus.length > 0) partes = autores.join(', ') + " x " + reus.join(', ');
             else if (autores.length > 0) partes = autores.join(', ');
             else if (reus.length > 0) partes = reus.join(', ');
 
-            // Define para onde o documento vai baseado em quem preencheu
+            // REGRA CORRIGIDA: Se for despacho vai sempre pra mesa do Juiz
             let statusFinal = 'Pendente de Assinatura'; 
             if (isJuiz) {
-                if (classe === 'Despacho') statusFinal = 'Arquivado';
-                else if (classe === 'Intimação') statusFinal = 'Intimação Expedida';
+                if (classe === 'Intimação') statusFinal = 'Intimação Expedida';
+                else if (classe === 'Despacho') statusFinal = 'Pendente de Assinatura'; // Vai para mesa do Juiz
                 else statusFinal = 'Em Instrução';
             }
 
             const numAleatorio = "TJ-" + Math.floor(Math.random() * 9999999);
             
-            // Travar o botão para evitar clique duplo
             const btnArea = document.getElementById('areaBotaoAcao');
             btnArea.style.pointerEvents = 'none';
             btnArea.style.opacity = '0.7';
@@ -189,9 +177,9 @@
 
             const { error } = await supabaseClient.from('inqueritos').insert([{
                 numero: numAleatorio,
-                tipo: classe, // Define o tipo para manter a organização correta
+                tipo: classe,
                 status: statusFinal,
-                relato: peticao, // CORREÇÃO ATIVA: Usando 'relato' para salvar o texto do documento no banco
+                relato: peticao, 
                 dados_extras: JSON.stringify(dadosExtras)
             }]);
 
@@ -200,17 +188,8 @@
                 btnArea.style.pointerEvents = 'auto';
                 btnArea.style.opacity = '1';
             } else {
-                if (isJuiz) {
-                    alert("Documento validado e publicado com sucesso!");
-                    if (classe === 'Despacho' || classe === 'Intimação') {
-                        window.location.href = 'tj-publicacoes.html';
-                    } else {
-                        window.location.href = 'tj-dashboard.html';
-                    }
-                } else {
-                    alert("Documento enviado com sucesso para a mesa do Juiz para análise e aprovação!");
-                    window.location.href = 'tj-dashboard.html';
-                }
+                alert("Documento gerado com sucesso e enviado para a Mesa do Juiz / Sistema!");
+                window.location.href = 'tj-dashboard.html';
             }
         }
     </script>
