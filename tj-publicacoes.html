@@ -206,7 +206,6 @@
 
                 let botaoApagarHTML = (emailLogado === "kira@yagami.gov") ? `<button class="btn-delete" title="Apagar Publicação" onclick="apagarPublicacao(${item.id}, '${item.numero}')"><i class="fas fa-trash"></i></button>` : '';
 
-                // HTML do Botão Mover
                 let botaoMoverHTML = `
                     <div class="dropdown d-inline-block ms-1">
                         <button class="btn btn-sm btn-outline-warning dropdown-toggle" type="button" data-bs-toggle="dropdown" style="padding: 5px 10px; font-size: 0.85rem; border-color: #b58d3d; color: #b58d3d;">
@@ -261,7 +260,7 @@
                             <td>${dataRef}</td>
                             <td><span class="badge bg-warning text-dark" style="padding: 5px 10px; font-size: 0.75rem;">Aguardando Manifestação</span></td>
                             <td class="text-center" style="white-space: nowrap;">
-                                <a href="tj-processo.html?id=${item.id}" class="btn-view" title="Visualizar Autos"><i class="fas fa-eye"></i> Autos</a>
+                                <a href="tj-intimacao.html?id=${item.id}" class="btn-view" title="Visualizar Intimação"><i class="fas fa-file-signature"></i> Ver Intimação</a>
                                 ${botaoMoverHTML}
                                 ${botaoApagarHTML}
                             </td>
