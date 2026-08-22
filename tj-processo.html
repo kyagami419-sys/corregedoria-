@@ -155,7 +155,7 @@
                     if (extras.despachoJuiz) despachoJuiz = extras.despachoJuiz;
                     
                     for (const [chave, valor] of Object.entries(extras)) {
-                        if (!['motivoMP', 'despachoJuiz', 'advogadoEmail', 'manifestacaoDefesa', 'eventosProcesso'].includes(chave) && valor) {
+                        if (!['motivoMP', 'despachoJuiz', 'advogadoEmail', 'manifestacaoDefesa', 'eventosProcesso', 'dataDecisao'].includes(chave) && valor) {
                             let nome = chave.replace(/([A-Z])/g, ' $1').replace('_', ' ').toUpperCase();
                             textoInquerito += `[ ${nome} ]\n${typeof valor === 'object' ? JSON.stringify(valor) : valor}\n\n`;
                         }
@@ -173,9 +173,7 @@
             document.getElementById('valDespacho').innerText = despachoJuiz;
             document.getElementById('valInqueritoBase').innerText = textoInquerito || "Nenhum histórico policial detalhado.";
 
-            // -----------------------------------------------------------------------------------
-            // EVENTOS DINÂMICOS (Defesa Legada, Advogado Constituído e Novas Manifestações)
-            // -----------------------------------------------------------------------------------
+            // EVENTOS DINÂMICOS
             let advogadoAtribuido = extras.advogadoEmail || "Nenhum advogado constituído pelo Juízo.";
             
             let htmlEventos = `
@@ -190,9 +188,8 @@
                 htmlEventos += `<div class="text-center mt-2 mb-5"><button class="btn btn-outline-info btn-sm" onclick="atribuirAdvogado(${docId})"><i class="fas fa-user-plus"></i> Atribuir / Alterar Advogado do Processo</button></div>`;
             }
 
-            let numEventoAtual = 4; // Começa a contar do 4, pois 1=Inquérito, 2=Denúncia, 3=Despacho
+            let numEventoAtual = 4;
 
-            // Se existir uma manifestação antiga salva no método antigo, mostramos como Evento 04
             if (extras.manifestacaoDefesa) {
                 htmlEventos += `
                 <h3 class="section-title"><i class="fas fa-file-alt"></i> Evento ${String(numEventoAtual).padStart(2, '0')}: Manifestação Inicial da Defesa (Legado)</h3>
@@ -201,7 +198,6 @@
                 numEventoAtual++;
             }
 
-            // Exibe todos os novos eventos criados de forma dinâmica
             let eventosExtras = extras.eventosProcesso || [];
             eventosExtras.forEach(ev => {
                 let corBorda = '#334155';
@@ -224,12 +220,10 @@
 
             document.getElementById('areaEventosDinamicos').innerHTML = htmlEventos;
 
-            // Mostra o botão de manifestação apenas para as partes autorizadas
             if (isJuiz || isPromotor || (isAdvogado && extras.advogadoEmail === emailLogadoGlobal)) {
                 document.getElementById('btnManifestacao').style.display = 'block';
             }
 
-            // Mostra o botão de Encerrar Processo APENAS para o Juiz
             if (isJuiz) {
                 document.getElementById('btnEncerrar').style.display = 'block';
             }
@@ -259,7 +253,6 @@
             let extras = data && data.dados_extras ? JSON.parse(data.dados_extras) : {};
             
             let eventosProcesso = extras.eventosProcesso || [];
-            
             let dataFormatada = new Date().toLocaleDateString('pt-BR') + " às " + new Date().toLocaleTimeString('pt-BR');
             
             eventosProcesso.push({
@@ -275,20 +268,41 @@
             if (!error) { alert("Ato processual registrado com sucesso!"); location.reload(); }
         }
 
+        // FUNÇÃO CORRIGIDA PARA REGISTRAR A DATA E ARQUIVAR/ENCERRAR
         window.encerrarProcesso = async function() {
-            if(!confirm("Tem certeza que deseja encerrar este processo? Ele será enviado para a aba de Publicações.")) return;
+            if(!confirm("Tem certeza que deseja encerrar e arquivar este processo? Ele será enviado para a aba de Publicações.")) return;
             
             const urlParams = new URLSearchParams(window.location.search);
             const id = urlParams.get('id');
             if (!id) return;
 
-            const { error } = await supabaseClient.from('inqueritos').update({ status: 'Processo Encerrado' }).eq('id', id);
-            
-            if (!error) { 
-                alert("Processo encerrado com sucesso!"); 
-                window.location.href = 'tj-publicacoes.html'; 
-            } else {
-                alert("Erro ao encerrar o processo: " + error.message);
+            try {
+                // Recupera os dados extras atuais para não perder nada
+                const { data: inqData } = await supabaseClient.from('inqueritos').select('dados_extras').eq('id', id).single();
+                let extras = {};
+                if (inqData && inqData.dados_extras) {
+                    extras = JSON.parse(inqData.dados_extras);
+                }
+                
+                // Grava a data exata de agora para que a página de publicações consiga ler corretamente e exibir
+                const dataExata = new Date().toISOString();
+                extras.dataDecisao = dataExata;
+
+                // Atualiza o processo e a data_fim para o sistema registrar a baixa
+                const { error } = await supabaseClient.from('inqueritos').update({ 
+                    status: 'Processo Encerrado', 
+                    data_fim: dataExata,
+                    dados_extras: JSON.stringify(extras)
+                }).eq('id', id);
+                
+                if (error) throw error;
+                
+                alert("Processo encerrado com sucesso! Redirecionando...");
+                // Redireciona de forma forçada para a página de publicações
+                window.location.replace('tj-publicacoes.html');
+                
+            } catch (err) {
+                alert("Erro ao encerrar o processo: " + err.message);
             }
         }
 
