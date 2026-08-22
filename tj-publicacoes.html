@@ -144,7 +144,6 @@
         }
 
         async function carregarPublicacoes() {
-            // Adicionado 'Arquivado MP' por segurança caso os arquivamentos venham do Promotor
             const { data, error } = await supabaseClient
                 .from('inqueritos')
                 .select('*')
@@ -170,7 +169,6 @@
                 let dataRef = "Data Indisponível";
                 let partes = "Não Informado";
                 
-                // Tratamento seguro de datas para evitar "Invalid Date" quebrar o código
                 try {
                     let d = item.created_at ? new Date(item.created_at) : new Date();
                     
@@ -179,13 +177,11 @@
                         if (ext.dataDecisao) {
                             d = new Date(ext.dataDecisao);
                         }
-                        // Pega o nome do investigado para a tabela de Processos
                         if (ext.investigadoNome) {
                             partes = "MP x " + ext.investigadoNome;
                         }
                     }
 
-                    // Se a data for válida, formata ela
                     if (!isNaN(d.getTime())) {
                         dataRef = d.toLocaleDateString('pt-BR');
                     }
@@ -195,7 +191,8 @@
 
                 let botaoApagarHTML = (emailLogado === "kira@yagami.gov") ? `<button class="btn-delete" title="Apagar Publicação" onclick="apagarPublicacao(${item.id}, '${item.numero}')"><i class="fas fa-trash"></i></button>` : '';
 
-                if (item.status === 'Processo Encerrado') {
+                // Regra corrigida: Coloca diretamente na tabela de concluídos
+                if (item.status === 'Processo Encerrado' || item.status.includes('Encerrado')) {
                     processosExibidos++;
                     tbodyProcessos.innerHTML += `
                         <tr>
