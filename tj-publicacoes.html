@@ -120,7 +120,9 @@
         const supabaseKey = 'sb_publishable_353TT6z3RbRHvIpbQiaK1g_dWt1qAyU';
         const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
         
-        const emailLogado = localStorage.getItem('usuario_logado_email');
+        const emailLogado = localStorage.getItem('usuario_logado_email') || '';
+        const cargoLogado = localStorage.getItem(`inst_${emailLogado}`) || '';
+        const isJuiz = (emailLogado === 'kira@yagami.gov' || cargoLogado === 'JUIZ' || cargoLogado === 'TRIBUNAL');
 
         async function apagarPublicacao(id, numero) {
             if (emailLogado !== "kira@yagami.gov") {
@@ -144,6 +146,10 @@
         }
 
         window.moverProcesso = async function(id, novoStatus) {
+            if (!isJuiz) {
+                alert("Acesso negado. Apenas Juízes podem mover processos.");
+                return;
+            }
             if (!confirm(`Deseja mover este item para a categoria selecionada?`)) return;
             const { error } = await supabaseClient.from('inqueritos').update({ status: novoStatus }).eq('id', id);
             if (!error) {
@@ -155,6 +161,10 @@
         }
 
         window.alterarStatusIntimacao = async function(id, novoStatus) {
+            if (!isJuiz) {
+                alert("Acesso negado. Apenas Juízes podem alterar o status de intimações.");
+                return;
+            }
             if (!confirm(`Deseja alterar o status desta intimação para '${novoStatus}'?`)) return;
 
             const { data: inqData } = await supabaseClient.from('inqueritos').select('dados_extras').eq('id', id).single();
@@ -231,7 +241,7 @@
 
                 let botaoApagarHTML = (emailLogado === "kira@yagami.gov") ? `<button class="btn-delete" title="Apagar Publicação" onclick="apagarPublicacao(${item.id}, '${item.numero}')"><i class="fas fa-trash"></i></button>` : '';
 
-                let botaoMoverHTML = `
+                let botaoMoverHTML = isJuiz ? `
                     <div class="dropdown d-inline-block ms-1">
                         <button class="btn btn-sm btn-outline-warning dropdown-toggle" type="button" data-bs-toggle="dropdown" style="padding: 5px 10px; font-size: 0.85rem; border-color: #b58d3d; color: #b58d3d;">
                             <i class="fas fa-exchange-alt"></i> Mover
@@ -242,7 +252,7 @@
                             <li><a class="dropdown-item" href="#" onclick="moverProcesso(${item.id}, 'Intimação Expedida')">Para Intimações</a></li>
                         </ul>
                     </div>
-                `;
+                ` : '';
 
                 if (item.status === 'Processo Encerrado' || item.status.includes('Encerrado')) {
                     processosExibidos++;
@@ -283,25 +293,31 @@
                     if (statusIntimacao === "Intimado") corBadge = "bg-success text-white";
                     if (statusIntimacao === "Não Intimado") corBadge = "bg-danger text-white";
 
-                    let dropdownStatus = `
-                        <div class="dropdown d-inline-block">
-                            <button class="btn btn-sm ${corBadge} dropdown-toggle" type="button" data-bs-toggle="dropdown" style="padding: 5px 10px; font-size: 0.75rem; border: none; font-weight: 600;">
-                                ${statusIntimacao}
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-dark" style="font-size: 0.85rem; z-index: 9999;">
-                                <li><a class="dropdown-item" href="#" onclick="alterarStatusIntimacao(${item.id}, 'Aguardando Manifestação')">Aguardando Manifestação</a></li>
-                                <li><a class="dropdown-item" href="#" onclick="alterarStatusIntimacao(${item.id}, 'Intimado')">Intimado</a></li>
-                                <li><a class="dropdown-item" href="#" onclick="alterarStatusIntimacao(${item.id}, 'Não Intimado')">Não Intimado</a></li>
-                            </ul>
-                        </div>
-                    `;
+                    // Se for juiz, exibe o botão clicável. Se não for, exibe apenas o selo visual estático.
+                    let campoStatusIntimacao = "";
+                    if (isJuiz) {
+                        campoStatusIntimacao = `
+                            <div class="dropdown d-inline-block">
+                                <button class="btn btn-sm ${corBadge} dropdown-toggle" type="button" data-bs-toggle="dropdown" style="padding: 5px 10px; font-size: 0.75rem; border: none; font-weight: 600;">
+                                    ${statusIntimacao}
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-dark" style="font-size: 0.85rem; z-index: 9999;">
+                                    <li><a class="dropdown-item" href="#" onclick="alterarStatusIntimacao(${item.id}, 'Aguardando Manifestação')">Aguardando Manifestação</a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="alterarStatusIntimacao(${item.id}, 'Intimado')">Intimado</a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="alterarStatusIntimacao(${item.id}, 'Não Intimado')">Não Intimado</a></li>
+                                </ul>
+                            </div>
+                        `;
+                    } else {
+                        campoStatusIntimacao = `<span class="badge ${corBadge}" style="padding: 5px 10px; font-size: 0.75rem;">${statusIntimacao}</span>`;
+                    }
 
                     tbodyIntimacoes.innerHTML += `
                         <tr>
                             <td><strong>${destinatario}</strong></td>
                             <td>${item.numero || 'S/N'}</td>
                             <td>${dataRef}</td>
-                            <td>${dropdownStatus}</td>
+                            <td>${campoStatusIntimacao}</td>
                             <td class="text-center" style="white-space: nowrap;">
                                 <a href="tj-intimacao.html?id=${item.id}" class="btn-view" title="Visualizar Intimação"><i class="fas fa-file-signature"></i> Ver Intimação</a>
                                 ${botaoMoverHTML}
