@@ -19,14 +19,14 @@
         .form-control, .form-select { background-color: #1e293b; border: 1px solid #334155; color: #ffffff; }
         .form-control:focus, .form-select:focus { background-color: #0f172a; color: #ffffff; border-color: #b58d3d; box-shadow: 0 0 0 0.25rem rgba(181, 141, 61, 0.25); }
         .btn-gold { background-color: #b58d3d; color: #fff; border: none; padding: 12px 25px; border-radius: 4px; font-weight: 600; transition: 0.2s; width: 100%; }
-        .btn-gold:hover { background-color: #c49a3c; }
+        .btn-gold:hover { background-color: #c49a3c; color: #fff;}
     </style>
 </head>
 <body>
     <nav class="navbar navbar-tj d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center">
             <i class="fas fa-balance-scale fs-3 me-3" style="color: #b58d3d;"></i>
-            <span class="brand-title">NOVO PROCESSO</span>
+            <span class="brand-title">NOVO PROCESSO / DOCUMENTO</span>
         </div>
         <div><a href="tj-dashboard.html" class="btn btn-outline-light btn-sm"><i class="fas fa-arrow-left"></i> Voltar ao Painel</a></div>
     </nav>
@@ -37,49 +37,181 @@
             <form id="formNovoProcesso">
                 <div class="row g-3">
                     <div class="col-md-4">
-                        <label class="form-label">Nº do Processo</label>
+                        <label class="form-label">Nº do Processo / Doc</label>
                         <input type="text" class="form-control" placeholder="Gerado Automaticamente" disabled>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Classe Processual</label>
-                        <select class="form-select">
+                        <select class="form-select" id="classeSel">
                             <option>Ação Penal</option>
+                            <option>Ação Civil</option>
                             <option>Habeas Corpus</option>
                             <option>Mandado de Segurança</option>
-                            <option>Ação Civil</option>
+                            <option style="color: #b58d3d; font-weight: bold;">Despacho</option>
+                            <option style="color: #b58d3d; font-weight: bold;">Intimação</option>
                         </select>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Data de Autuação</label>
                         <input type="datetime-local" class="form-control" id="dataAtual">
                     </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Requerente / Autor</label>
-                        <input type="text" class="form-control" placeholder="Nome da parte autora">
+                    
+                    <!-- REQUERENTES -->
+                    <div class="col-md-6" id="containerAutores">
+                        <label class="form-label d-flex justify-content-between align-items-center">
+                            <span>Requerente / Autor</span>
+                            <a href="#" onclick="adicionarAutor(event)" class="text-warning text-decoration-none" style="text-transform: none; font-size: 0.8rem;"><i class="fas fa-plus"></i> Adicionar Mais</a>
+                        </label>
+                        <input type="text" class="form-control autor-input mb-2" placeholder="Nome da parte autora">
                     </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Requerido / Réu</label>
-                        <input type="text" class="form-control" placeholder="Nome da parte ré">
+                    
+                    <!-- REQUERIDOS -->
+                    <div class="col-md-6" id="containerReus">
+                        <label class="form-label d-flex justify-content-between align-items-center">
+                            <span>Requerido / Réu</span>
+                            <a href="#" onclick="adicionarReu(event)" class="text-warning text-decoration-none" style="text-transform: none; font-size: 0.8rem;"><i class="fas fa-plus"></i> Adicionar Mais</a>
+                        </label>
+                        <input type="text" class="form-control reu-input mb-2" placeholder="Nome da parte ré">
                     </div>
+                    
                     <div class="col-12">
                         <label class="form-label">Assunto Principal</label>
-                        <input type="text" class="form-control" placeholder="Ex: Tráfico, Furto, Indenização...">
+                        <input type="text" class="form-control" id="assuntoPrincipal" placeholder="Ex: Tráfico, Furto, Despacho Saneador, Intimação de Testemunha...">
                     </div>
                     <div class="col-12">
-                        <label class="form-label">Petição Inicial / Fatos</label>
-                        <textarea class="form-control" rows="8" placeholder="Descreva os fatos e fundamentos legais..."></textarea>
+                        <label class="form-label">Petição Inicial / Fatos / Teor do Documento</label>
+                        <textarea class="form-control" id="peticaoFatos" rows="8" placeholder="Descreva os fatos, fundamentos legais ou o texto da intimação/despacho..."></textarea>
                     </div>
-                    <div class="col-12 mt-4">
-                        <button type="button" class="btn-gold" onclick="alert('Processo autuado com sucesso!')"><i class="fas fa-gavel"></i> Distribuir Processo</button>
+                    
+                    <!-- ÁREA DO BOTÃO DINÂMICA (Só Juiz Aprova/Distribui) -->
+                    <div class="col-12 mt-4" id="areaBotaoAcao">
+                        <p class="text-center text-muted">Carregando permissões...</p>
                     </div>
                 </div>
             </form>
         </div>
     </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
+        // Data atual automática
         const agora = new Date();
         agora.setMinutes(agora.getMinutes() - agora.getTimezoneOffset());
         document.getElementById('dataAtual').value = agora.toISOString().slice(0,16);
+
+        // Conexão com Banco de Dados
+        const supabaseUrl = 'https://qnfckdzotzenaqaswqjb.supabase.co'; 
+        const supabaseKey = 'sb_publishable_353TT6z3RbRHvIpbQiaK1g_dWt1qAyU';
+        const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
+        // Verificação de Cargo/Juiz
+        const emailLogado = localStorage.getItem('usuario_logado_email') || '';
+        const cargoLogado = localStorage.getItem(`inst_${emailLogado}`) || '';
+        const isJuiz = (emailLogado === 'kira@yagami.gov' || cargoLogado === 'JUIZ' || cargoLogado === 'TRIBUNAL');
+
+        // Renderiza o botão baseado no cargo do usuário logado
+        document.addEventListener('DOMContentLoaded', () => {
+            const btnArea = document.getElementById('areaBotaoAcao');
+            if (isJuiz) {
+                btnArea.innerHTML = `<button type="button" class="btn-gold" onclick="salvarProcesso()"><i class="fas fa-gavel"></i> Distribuir / Publicar Documento</button>`;
+            } else {
+                btnArea.innerHTML = `<button type="button" class="btn btn-outline-warning w-100 py-2" onclick="salvarProcesso()"><i class="fas fa-paper-plane"></i> Enviar para Aprovação do Juiz</button>`;
+            }
+        });
+
+        // Funções para adicionar múltiplos campos de pessoas
+        function adicionarAutor(e) {
+            if(e) e.preventDefault();
+            const container = document.getElementById('containerAutores');
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'form-control autor-input mb-2';
+            input.placeholder = 'Nome de outro requerente/autor';
+            container.appendChild(input);
+        }
+
+        function adicionarReu(e) {
+            if(e) e.preventDefault();
+            const container = document.getElementById('containerReus');
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'form-control reu-input mb-2';
+            input.placeholder = 'Nome de outro requerido/réu';
+            container.appendChild(input);
+        }
+
+        // Lógica de Salvamento e Envio ao Banco
+        async function salvarProcesso() {
+            const classe = document.getElementById('classeSel').value;
+            const dataAutuacao = document.getElementById('dataAtual').value;
+            const assunto = document.getElementById('assuntoPrincipal').value;
+            const peticao = document.getElementById('peticaoFatos').value;
+
+            if (!peticao || peticao.trim() === '') {
+                alert("Por favor, preencha o teor do documento / petição.");
+                return;
+            }
+
+            // Puxa todos os nomes preenchidos nas caixas
+            const autores = Array.from(document.querySelectorAll('.autor-input')).map(i => i.value).filter(v => v.trim() !== '');
+            const reus = Array.from(document.querySelectorAll('.reu-input')).map(i => i.value).filter(v => v.trim() !== '');
+            
+            // Formata o título das partes
+            let partes = "Não Informado";
+            if(autores.length > 0 && reus.length > 0) partes = autores.join(', ') + " x " + reus.join(', ');
+            else if (autores.length > 0) partes = autores.join(', ');
+            else if (reus.length > 0) partes = reus.join(', ');
+
+            // Define para onde o documento vai baseado em quem preencheu
+            let statusFinal = 'Pendente de Assinatura'; 
+            if (isJuiz) {
+                if (classe === 'Despacho') statusFinal = 'Arquivado';
+                else if (classe === 'Intimação') statusFinal = 'Intimação Expedida';
+                else statusFinal = 'Em Instrução';
+            }
+
+            const numAleatorio = "TJ-" + Math.floor(Math.random() * 9999999);
+            
+            // Travar o botão para evitar clique duplo
+            const btnArea = document.getElementById('areaBotaoAcao');
+            btnArea.style.pointerEvents = 'none';
+            btnArea.style.opacity = '0.7';
+
+            const dadosExtras = {
+                classeProcessual: classe,
+                assunto: assunto,
+                autores: autores,
+                reus: reus,
+                investigadoNome: reus.join(', '), 
+                partes: partes,
+                dataDecisao: dataAutuacao
+            };
+
+            const { error } = await supabaseClient.from('inqueritos').insert([{
+                numero: numAleatorio,
+                status: statusFinal,
+                texto: peticao,
+                dados_extras: JSON.stringify(dadosExtras)
+            }]);
+
+            if (error) {
+                alert("Erro ao salvar documento: " + error.message);
+                btnArea.style.pointerEvents = 'auto';
+                btnArea.style.opacity = '1';
+            } else {
+                if (isJuiz) {
+                    alert("Documento validado e publicado com sucesso!");
+                    if (classe === 'Despacho' || classe === 'Intimação') {
+                        window.location.href = 'tj-publicacoes.html';
+                    } else {
+                        window.location.href = 'tj-dashboard.html';
+                    }
+                } else {
+                    alert("Documento enviado com sucesso para a mesa do Juiz para análise e aprovação!");
+                    window.location.href = 'tj-dashboard.html';
+                }
+            }
+        }
     </script>
 </body>
 </html>
