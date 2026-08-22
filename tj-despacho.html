@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizar Despacho - Tribunal de Justiça</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { 
+            background: radial-gradient(circle at top, #0f172a 0%, #020617 100%); 
+            color: #e2e8f0; 
+            font-family: 'Inter', sans-serif; 
+            min-height: 100vh; 
+            margin: 0;
+            padding-bottom: 50px;
+        }
+        
+        .navbar-tj { 
+            background: rgba(15, 23, 42, 0.95); 
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid #b58d3d; 
+            padding: 12px 30px; 
+        }
+        .navbar-tj .brand-title { 
+            color: #ffffff; 
+            font-family: 'Playfair Display', serif;
+            font-weight: 700; 
+            font-size: 1.25em; 
+            letter-spacing: 1.5px; 
+        }
+
+        .container-main { padding: 40px 20px; max-width: 900px; margin: 0 auto; }
+        
+        .process-box { background-color: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 50px; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+        .doc-header { text-align: center; border-bottom: 2px solid #b58d3d; padding-bottom: 20px; margin-bottom: 40px; }
+        .doc-header h2 { font-family: 'Playfair Display', serif; color: #b58d3d; font-weight: 700; letter-spacing: 1px; margin-bottom: 10px; }
+        .doc-header h5 { color: #e2e8f0; font-weight: 400; font-family: 'Playfair Display', serif; text-transform: uppercase; letter-spacing: 2px; }
+        
+        .info-group { background-color: #162032; border: 1px solid #334155; border-radius: 6px; padding: 15px 20px; margin-bottom: 20px; }
+        .info-label { color: #94a3b8; font-size: 0.8rem; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 5px; display: block; }
+        .info-value { color: #ffffff; font-size: 1.05rem; font-weight: 500; word-break: break-word; }
+        
+        .section-title { color: #b58d3d; font-family: 'Playfair Display', serif; font-size: 1.3rem; border-bottom: 1px solid #334155; padding-bottom: 10px; margin-top: 40px; margin-bottom: 20px; text-align: center; }
+
+        .content-box { background-color: #1e293b; border: 1px solid #334155; border-radius: 6px; padding: 35px; color: #e2e8f0; line-height: 1.8; white-space: pre-wrap; font-size: 1.05rem; text-align: justify; }
+        
+        .signature-box { text-align: center; margin-top: 60px; padding-top: 20px; }
+        .signature-line { width: 300px; height: 1px; background-color: #b58d3d; margin: 0 auto 10px auto; }
+        .signature-title { color: #94a3b8; font-size: 0.9rem; font-weight: 500; text-transform: uppercase; }
+
+        .btn-gold { background-color: #b58d3d; color: #fff; border: none; padding: 10px 25px; border-radius: 4px; font-weight: 600; transition: 0.2s; text-decoration: none; display: inline-block;}
+        .btn-gold:hover { background-color: #c49a3c; color: #fff; }
+        
+        @media print {
+            body { background: white; color: black; }
+            .navbar-tj, .btn-gold, .btn-outline-light { display: none !important; }
+            .process-box { border: none; box-shadow: none; padding: 0; }
+            .content-box, .info-group { background-color: white !important; border: 1px solid #ccc !important; color: black !important; }
+            .info-label, .signature-title { color: #555 !important; }
+            .info-value { color: black !important; }
+            .doc-header h2 { color: black !important; }
+            .section-title { color: black !important; border-bottom: 1px solid #ccc !important; }
+            .signature-line { background-color: black !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-tj d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+            <i class="fas fa-pen-nib fs-3 me-3" style="color: #b58d3d;"></i>
+            <span class="brand-title">SISTEMA DE PUBLICAÇÕES</span>
+        </div>
+        <div><a href="tj-publicacoes.html" class="btn btn-outline-light btn-sm"><i class="fas fa-arrow-left"></i> Voltar ao Diário</a></div>
+    </nav>
+
+    <div class="container-main">
+        <div class="process-box">
+            <div class="doc-header">
+                <h2>TRIBUNAL DE JUSTIÇA</h2>
+                <h5>VISUALIZAR DESPACHO</h5>
+            </div>
+
+            <!-- Dados do Despacho -->
+            <div class="row">
+                <div class="col-md-6"><div class="info-group"><span class="info-label">Nº do Documento / Processo</span><span class="info-value" id="valNumero">Carregando...</span></div></div>
+                <div class="col-md-6"><div class="info-group"><span class="info-label">Data da Decisão</span><span class="info-value text-warning" id="valData">Carregando...</span></div></div>
+                <div class="col-md-12"><div class="info-group"><span class="info-label">Partes Envolvidas</span><span class="info-value" id="valPartes">Carregando...</span></div></div>
+                <div class="col-md-12"><div class="info-group"><span class="info-label">Assunto</span><span class="info-value" id="valAssunto">Carregando...</span></div></div>
+            </div>
+
+            <!-- Teor da Decisão -->
+            <h3 class="section-title">Teor da Decisão / Despacho</h3>
+            <div class="content-box" id="valTexto">Carregando o texto da decisão...</div>
+            
+            <div class="signature-box">
+                <div class="signature-line"></div>
+                <div class="signature-title">Assinado Eletronicamente por Magistrado(a)</div>
+                <div style="font-size: 0.8rem; color: #64748b; margin-top: 5px;">Tribunal de Justiça - Vara Criminal</div>
+            </div>
+
+            <div class="text-center mt-5">
+                <button class="btn btn-gold me-3" onclick="window.print()"><i class="fas fa-print"></i> Imprimir Documento</button>
+                <a href="tj-publicacoes.html" class="btn btn-outline-light"><i class="fas fa-arrow-left"></i> Voltar para Publicações</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const supabaseUrl = 'https://qnfckdzotzenaqaswqjb.supabase.co'; 
+        const supabaseKey = 'sb_publishable_353TT6z3RbRHvIpbQiaK1g_dWt1qAyU';
+        const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
+        async function carregarDocumento() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const docId = urlParams.get('id');
+
+            if (!docId) { window.location.href = 'tj-publicacoes.html'; return; }
+
+            const { data, error } = await supabaseClient.from('inqueritos').select('*').eq('id', docId).single();
+            if (error || !data) { alert("Erro ao carregar o documento."); window.location.href = 'tj-publicacoes.html'; return; }
+
+            document.getElementById('valNumero').innerText = data.numero || 'S/N';
+            document.getElementById('valTexto').innerText = data.relato || data.texto || "Nenhum texto registrado.";
+
+            let partes = "Não Informado";
+            let assunto = "Despacho Geral";
+            let dataDecisao = new Date(data.created_at).toLocaleString('pt-BR');
+
+            if (data.dados_extras) {
+                try {
+                    const extras = JSON.parse(data.dados_extras);
+                    
+                    if (extras.partes) {
+                        partes = extras.partes;
+                    } else if (extras.investigadoNome) {
+                        partes = "Ministério Público x " + extras.investigadoNome;
+                    }
+
+                    if (extras.assunto) assunto = extras.assunto;
+                    
+                    if (extras.dataDecisao) {
+                        let d = new Date(extras.dataDecisao);
+                        if (!isNaN(d.getTime())) dataDecisao = d.toLocaleString('pt-BR');
+                    }
+                } catch(e) {}
+            }
+
+            document.getElementById('valPartes').innerText = partes;
+            document.getElementById('valAssunto').innerText = assunto;
+            document.getElementById('valData').innerText = dataDecisao;
+        }
+
+        carregarDocumento();
+    </script>
+</body>
+</html>
