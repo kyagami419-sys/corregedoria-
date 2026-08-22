@@ -246,7 +246,8 @@
             localStorage.setItem('usuario_logado_email', email);
             localStorage.setItem(`inst_${email}`, instituicao);
 
-            if (instituicao === 'TRIBUNAL') {
+            // AQUI FOI FEITA A CORREÇÃO SOLICITADA
+            if (instituicao === 'TRIBUNAL' || instituicao === 'JUIZ' || instituicao === 'PROMOTOR' || instituicao === 'ADVOGADO') {
                 window.location.href = 'tj-dashboard.html';
             } else {
                 window.location.href = 'dashboard.html';
