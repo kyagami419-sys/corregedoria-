@@ -346,6 +346,9 @@
             container.appendChild(row);
         }
 
+        // =========================================================================
+        // ATUALIZAÇÃO DO LAYOUT DO PDF DA INTIMAÇÃO
+        // =========================================================================
         async function intimarEnvolvido(botao) {
             const row = botao.parentElement.parentElement;
             const nome = row.querySelector('.i-nome').value.trim();
@@ -359,11 +362,9 @@
             const dataAtual = new Date();
             const dataHoraAtualFormatada = formatDatetime(dataAtual.toISOString());
             
-            // Calcula o prazo de +1 dia
             const dataAmanha = new Date();
             dataAmanha.setDate(dataAmanha.getDate() + 1);
             
-            // Formata a data de amanhã para o input do tipo "datetime-local" (yyyy-mm-ddThh:mm)
             const yyyy = dataAmanha.getFullYear();
             const mm = String(dataAmanha.getMonth() + 1).padStart(2, '0');
             const dd = String(dataAmanha.getDate()).padStart(2, '0');
@@ -381,9 +382,7 @@
 
             let arrayAssinaturas = [{ 
                 text: `Documento assinado eletronicamente por ${nomeAssinante}, ${cargoAssinante}, em ${dataHoraAtualFormatada}, conforme art. 1º, III, "b" da Lei 11.419/2006.`, 
-                fontSize: 9, 
-                italics: true, 
-                margin: [0, 0, 0, 8] 
+                style: 'assinaturaText'
             }];
 
             let forcaSelecionada = instituicaoUserGlobal;
@@ -394,17 +393,38 @@
             }
 
             let docDefinition = {
+                pageSize: 'A4',
+                pageMargins: [40, 60, 40, 60],
+                header: function(currentPage, pageCount, pageSize) {
+                    return { text: forcaSelecionada.toUpperCase(), alignment: 'center', margin: [0, 20, 0, 0], fontSize: 10, bold: true, color: '#64748b' };
+                },
+                footer: function(currentPage, pageCount) {
+                    return { text: `Página ${currentPage} de ${pageCount}`, style: 'footerText' };
+                },
                 content: [
-                    { text: forcaSelecionada, alignment: 'center', bold: true, fontSize: 14 },
-                    { text: 'INTIMAÇÃO', alignment: 'center', bold: true, fontSize: 14, margin: [0, 10, 0, 20] },
-                    { text: `Intimação nº ${numIntimacao}`, fontSize: 12, bold: true },
-                    { text: `Sr(a). ${nome}, portador(a) do RG ${rg || '***'}, fica intimado(a) a comparecer no dia ${dataLimiteStr} às ${horaLimite}.`, fontSize: 11, margin: [0, 15, 0, 15] },
-                    { text: 'MOTIVO:', bold: true, fontSize: 10 },
-                    { text: motivo, fontSize: 10, margin: [0, 5, 0, 30] },
-                    { text: 'ASSINATURAS', bold: true, fontSize: 10, margin: [0, 10, 0, 5] },
+                    { text: forcaSelecionada.toUpperCase(), style: 'headerTitle' },
+                    { text: 'INTIMAÇÃO OFICIAL', style: 'docTitle' },
+                    { text: `Intimação nº ${numIntimacao}`, style: 'label', margin: [0, 0, 0, 15] },
+                    { text: `Sr(a). ${nome}, portador(a) do RG ${rg || '***'}, fica intimado(a) a comparecer no dia ${dataLimiteStr} às ${horaLimite}.`, style: 'normalText', margin: [0, 0, 0, 15] },
+                    {
+                        table: { widths: ['*'], body: [ [{ text: 'MOTIVO DA INTIMAÇÃO', style: 'sectionHeader', border: [false, false, false, false] }] ] }, layout: 'noBorders', margin: [0, 15, 0, 10]
+                    },
+                    { text: motivo, style: 'normalText', margin: [0, 5, 0, 30], alignment: 'justify' },
+                    {
+                        table: { widths: ['*'], body: [ [{ text: 'ASSINATURAS', style: 'sectionHeader', border: [false, false, false, false] }] ] }, layout: 'noBorders', margin: [0, 15, 0, 10]
+                    },
                     ...arrayAssinaturas
                 ],
-                defaultStyle: { font: 'Roboto' }
+                styles: {
+                    headerTitle: { fontSize: 18, bold: true, alignment: 'center', margin: [0, 0, 0, 5], color: '#0f172a' },
+                    docTitle: { fontSize: 14, bold: true, alignment: 'center', margin: [0, 0, 0, 20], color: '#b58d3d' },
+                    sectionHeader: { fontSize: 11, bold: true, color: '#ffffff', fillColor: '#1e293b', margin: [5, 5, 5, 5] },
+                    normalText: { fontSize: 10, margin: [0, 2, 0, 2], color: '#1e293b', lineHeight: 1.3 },
+                    label: { fontSize: 10, bold: true, color: '#0f172a' },
+                    assinaturaText: { fontSize: 9, italics: true, margin: [0, 0, 0, 8], color: '#475569' },
+                    footerText: { fontSize: 8, italics: true, alignment: 'center', margin: [0, 10, 0, 0], color: '#94a3b8' }
+                },
+                defaultStyle: { font: 'Roboto', fontSize: 10, color: '#1e293b' }
             };
 
             const nomeArquivo = `Intimacao_${nome.replace(/\s+/g, '_')}.pdf`;
@@ -422,9 +442,8 @@
                 tipo: 'Intimação',
                 encarregado: nomeAssinante,
                 natureza: motivo,
-                status: 'Em Andamento', // Garante que vai para a aba de andamento
+                status: 'Em Andamento', 
                 data_inicio: dataAtual.toISOString(),
-                // data_fim ausente propositalmente para não finalizar
                 dados_extras: JSON.stringify(extrasObj)
             };
 
@@ -634,7 +653,7 @@
                                 const extras = JSON.parse(data.dados_extras);
                                 document.getElementById('nomeIntimado').value = extras.nomeIntimado || '';
                                 document.getElementById('rgIntimado').value = extras.rgIntimado || '';
-                                document.getElementById('dataIntimacao').value = extras.dataIntimacao || ''; // Campo único
+                                document.getElementById('dataIntimacao').value = extras.dataIntimacao || ''; 
                             } catch(e) {}
                         }
 
@@ -743,6 +762,9 @@
             return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR');
         }
 
+        // =========================================================================
+        // ATUALIZAÇÃO DO LAYOUT DO GERADOR DE PDF PRINCIPAL
+        // =========================================================================
         function gerarPDF() {
             const tipoSelecionado = document.querySelector('input[name="docType"]:checked').value;
             const isPortaria = (tipoSelecionado === 'portaria');
@@ -755,11 +777,26 @@
                 const nome = row.querySelector('.i-assNome').value;
                 const cargo = row.querySelector('.i-assCargo').value;
                 if(nome) {
-                    arrayAssinaturas.push({ text: `Documento assinado eletronicamente por ${nome}, ${cargo}, em ${dataHoraAtual}, conforme art. 1º, III, "b" da Lei 11.419/2006.`, fontSize: 9, italics: true, margin: [0, 0, 0, 8] });
+                    arrayAssinaturas.push({ text: `Documento assinado eletronicamente por ${nome}, ${cargo}, em ${dataHoraAtual}, conforme art. 1º, III, "b" da Lei 11.419/2006.`, style: 'assinaturaText' });
                 }
             });
 
-            let docDefinition = { content: [], defaultStyle: { font: 'Roboto' } };
+            let docDefinition = { 
+                pageSize: 'A4',
+                pageMargins: [40, 60, 40, 60],
+                content: [],
+                styles: {
+                    headerTitle: { fontSize: 18, bold: true, alignment: 'center', margin: [0, 0, 0, 5], color: '#0f172a' },
+                    docTitle: { fontSize: 14, bold: true, alignment: 'center', margin: [0, 0, 0, 20], color: '#b58d3d' },
+                    sectionHeader: { fontSize: 11, bold: true, color: '#ffffff', fillColor: '#1e293b', margin: [5, 5, 5, 5] },
+                    normalText: { fontSize: 10, margin: [0, 2, 0, 2], color: '#1e293b', lineHeight: 1.3 },
+                    label: { fontSize: 10, bold: true, color: '#0f172a' },
+                    assinaturaText: { fontSize: 9, italics: true, margin: [0, 0, 0, 8], color: '#475569' },
+                    footerText: { fontSize: 8, italics: true, alignment: 'center', margin: [0, 10, 0, 0], color: '#94a3b8' }
+                },
+                defaultStyle: { font: 'Roboto', fontSize: 10, color: '#1e293b' }
+            };
+
             let nomeArquivo = 'Documento.pdf';
 
             let forcaSelecionada = instituicaoUserGlobal;
@@ -769,7 +806,18 @@
                 forcaSelecionada = selectForca.value;
             }
 
-            const buildSectionHeader = (title) => ({ table: { widths: ['*'], body: [ [{ text: title, bold: true, fillColor: '#e2e2e2', margin: [5, 5, 5, 5] }] ] }, layout: 'noBorders', margin: [0, 10, 0, 5] });
+            docDefinition.header = function(currentPage, pageCount, pageSize) {
+                return { text: forcaSelecionada.toUpperCase(), alignment: 'center', margin: [0, 20, 0, 0], fontSize: 10, bold: true, color: '#64748b' };
+            };
+            docDefinition.footer = function(currentPage, pageCount) {
+                return { text: `Página ${currentPage} de ${pageCount}`, style: 'footerText' };
+            };
+
+            const buildSectionHeader = (title) => ({
+                table: { widths: ['*'], body: [ [{ text: title.toUpperCase(), style: 'sectionHeader', border: [false, false, false, false] }] ] },
+                layout: 'noBorders',
+                margin: [0, 15, 0, 10]
+            });
 
             if (isPortaria) {
                 const num = document.getElementById('numPortaria').value || 'S/N';
@@ -779,12 +827,12 @@
                 nomeArquivo = `Portaria_${num.replace(/\//g, '-')}.pdf`;
                 
                 docDefinition.content = [
-                    { text: instituicaoUserGlobal, alignment: 'center', bold: true, fontSize: 14 },
-                    { text: 'PORTARIA', alignment: 'center', bold: true, fontSize: 14, margin: [0, 10, 0, 20] },
-                    { text: `Portaria nº ${num}`, fontSize: 12, margin: [0, 0, 0, 10] },
-                    { text: `Data de Emissão: ${formatDatetime(data)}`, fontSize: 10, margin: [0, 0, 0, 20] },
-                    { text: texto, fontSize: 10, alignment: 'justify', margin: [0, 0, 0, 40] },
-                    { text: 'ASSINATURAS', bold: true, fontSize: 10, margin: [0, 10, 0, 5] },
+                    { text: forcaSelecionada.toUpperCase(), style: 'headerTitle' },
+                    { text: 'PORTARIA OFICIAL', style: 'docTitle' },
+                    { text: `Portaria nº ${num}`, style: 'label', margin: [0, 0, 0, 10] },
+                    { text: `Data de Emissão: ${formatDatetime(data)}`, style: 'normalText', margin: [0, 0, 0, 20] },
+                    { text: texto, style: 'normalText', alignment: 'justify', margin: [0, 0, 0, 40] },
+                    buildSectionHeader('ASSINATURAS'),
                     ...arrayAssinaturas
                 ];
             } 
@@ -811,13 +859,13 @@
                 }
 
                 docDefinition.content = [
-                    { text: instituicaoUserGlobal, alignment: 'center', bold: true, fontSize: 14 },
-                    { text: 'INTIMAÇÃO', alignment: 'center', bold: true, fontSize: 14, margin: [0, 10, 0, 20] },
-                    { text: `Intimação nº ${num}`, fontSize: 12, bold: true },
-                    { text: `Sr(a). ${nome}, portador(a) do RG ${rg}, fica intimado(a) a comparecer ${dataHoraFormatada}.`, fontSize: 11, margin: [0, 15, 0, 15] },
-                    { text: 'MOTIVO:', bold: true, fontSize: 10 },
-                    { text: motivo, fontSize: 10, margin: [0, 5, 0, 30] },
-                    { text: 'ASSINATURAS', bold: true, fontSize: 10, margin: [0, 10, 0, 5] },
+                    { text: forcaSelecionada.toUpperCase(), style: 'headerTitle' },
+                    { text: 'INTIMAÇÃO OFICIAL', style: 'docTitle' },
+                    { text: `Intimação nº ${num}`, style: 'label', margin: [0, 0, 0, 15] },
+                    { text: `Sr(a). ${nome}, portador(a) do RG ${rg}, fica intimado(a) a comparecer ${dataHoraFormatada}.`, style: 'normalText', margin: [0, 0, 0, 15] },
+                    buildSectionHeader('MOTIVO DA INTIMAÇÃO'),
+                    { text: motivo, style: 'normalText', margin: [0, 5, 0, 30], alignment: 'justify' },
+                    buildSectionHeader('ASSINATURAS'),
                     ...arrayAssinaturas
                 ];
             }
@@ -835,52 +883,53 @@
                 nomeArquivo = `Investigacao_${num.replace(/\//g, '-')}.pdf`;
 
                 let arrayLideres = [];
-                let index = 0;
+                let index = 1;
                 document.querySelectorAll('#liderancaContainer .dynamic-row').forEach(row => {
                     const lNome = row.querySelector('.i-lidNome').value;
                     const lRG = row.querySelector('.i-lidRG').value;
                     const lFunc = row.querySelector('.i-lidFunc').value;
                     const lLink = row.querySelector('.i-lidLink').value;
                     if(lNome) {
-                        arrayLideres.push({ text: `• Líder ${String(index).padStart(2, '0')} - Nome: ${lNome} | RG: ${lRG} | Função: ${lFunc}\n  Prova: ${lLink}`, fontSize: 10, margin: [0, 2, 0, 6] });
+                        arrayLideres.push({ text: `• Líder ${String(index).padStart(2, '0')} - Nome: ${lNome} | RG: ${lRG} | Função: ${lFunc}\n  Prova/Foto: ${lLink}`, style: 'normalText', margin: [0, 0, 0, 6] });
                         index++;
                     }
                 });
 
                 docDefinition.content = [
-                    { text: forcaSelecionada, alignment: 'center', bold: true, fontSize: 14 },
-                    { text: 'RELATÓRIO DE INVESTIGAÇÃO', alignment: 'center', bold: true, fontSize: 14, margin: [0, 5, 0, 15] },
+                    { text: forcaSelecionada.toUpperCase(), style: 'headerTitle' },
+                    { text: 'RELATÓRIO DE INVESTIGAÇÃO', style: 'docTitle' },
                     
-                    buildSectionHeader('INICIAL'),
-                    { columns: [ [{ text: `Nº Relatório: ${num}`, fontSize: 10 }, { text: `Data: ${data}`, fontSize: 10 }], [{ text: `Objetivo: ${obj}`, fontSize: 10 }, { text: `Crimes: ${cri}`, fontSize: 10 }] ], margin: [0, 0, 0, 5] },
-                    { columns: [ [{ text: `Responsável: ${resp}`, fontSize: 10 }], [{ text: `Setor: ${setor}`, fontSize: 10 }] ], margin: [0, 0, 0, 5] },
-                    { text: `Finalidade: ${fin}`, fontSize: 10, margin: [0, 2, 0, 5] },
-                    { text: `Organização: ${org} - Localização: ${loc}`, fontSize: 10, margin: [0, 0, 0, 10] },
+                    buildSectionHeader('DADOS INICIAIS'),
+                    { columns: [ { text: [{text:'Nº Relatório: ', style:'label'}, num] }, { text: [{text:'Data: ', style:'label'}, data] } ], margin: [0, 0, 0, 5] },
+                    { columns: [ { text: [{text:'Objetivo: ', style:'label'}, obj] }, { text: [{text:'Crimes: ', style:'label'}, cri] } ], margin: [0, 0, 0, 5] },
+                    { columns: [ { text: [{text:'Responsável: ', style:'label'}, resp] }, { text: [{text:'Setor: ', style:'label'}, setor] } ], margin: [0, 0, 0, 5] },
+                    { text: [{text:'Finalidade: ', style:'label'}, fin], margin: [0, 2, 0, 5] },
+                    { text: [{text:'Organização Investigada: ', style:'label'}, `${org} - Localização: ${loc}`], margin: [0, 0, 0, 10] },
 
                     buildSectionHeader('LIDERANÇA IDENTIFICADA'),
-                    (arrayLideres.length > 0 ? arrayLideres : { text: 'Nenhum líder registrado.', fontSize: 10 }),
+                    (arrayLideres.length > 0 ? arrayLideres : { text: 'Nenhum líder registrado.', style: 'normalText' }),
 
                     buildSectionHeader('ESTRUTURA E LOGÍSTICA'),
-                    { text: `• Baú do Líder: ${document.getElementById('invLogBauLider').value || 'N/A'}`, fontSize: 10, margin: [0, 2] },
-                    { text: `• Baú da Gerência: ${document.getElementById('invLogBauGerencia').value || 'N/A'}`, fontSize: 10, margin: [0, 2] },
-                    { text: `• Baú de Membros: ${document.getElementById('invLogBauMembros').value || 'N/A'}`, fontSize: 10, margin: [0, 2] },
-                    { text: `• Foto Aérea: ${document.getElementById('invLogAerea').value || 'N/A'}`, fontSize: 10, margin: [0, 2] },
-                    { text: `• Foto da P1: ${document.getElementById('invLogP1').value || 'N/A'}`, fontSize: 10, margin: [0, 2] },
-                    { text: `• Foto da P2: ${document.getElementById('invLogP2').value || 'N/A'}`, fontSize: 10, margin: [0, 2] },
-                    { text: `• Foto Rota de Farm: ${document.getElementById('invLogRotaFarm').value || 'N/A'}`, fontSize: 10, margin: [0, 2] },
-                    { text: `• Foto Blip da Rota: ${document.getElementById('invLogBlip').value || 'N/A'}`, fontSize: 10, margin: [0, 2] },
-                    { text: `• Rastreamento GPS: ${document.getElementById('invLogGPS').value || 'N/A'}`, fontSize: 10, margin: [0, 10] },
+                    { text: [{text:'• Baú do Líder: ', style:'label'}, document.getElementById('invLogBauLider').value || 'N/A'], style: 'normalText' },
+                    { text: [{text:'• Baú da Gerência: ', style:'label'}, document.getElementById('invLogBauGerencia').value || 'N/A'], style: 'normalText' },
+                    { text: [{text:'• Baú de Membros: ', style:'label'}, document.getElementById('invLogBauMembros').value || 'N/A'], style: 'normalText' },
+                    { text: [{text:'• Foto Aérea: ', style:'label'}, document.getElementById('invLogAerea').value || 'N/A'], style: 'normalText' },
+                    { text: [{text:'• Foto da P1: ', style:'label'}, document.getElementById('invLogP1').value || 'N/A'], style: 'normalText' },
+                    { text: [{text:'• Foto da P2: ', style:'label'}, document.getElementById('invLogP2').value || 'N/A'], style: 'normalText' },
+                    { text: [{text:'• Foto Rota de Farm: ', style:'label'}, document.getElementById('invLogRotaFarm').value || 'N/A'], style: 'normalText' },
+                    { text: [{text:'• Foto Blip da Rota: ', style:'label'}, document.getElementById('invLogBlip').value || 'N/A'], style: 'normalText' },
+                    { text: [{text:'• Rastreamento GPS: ', style:'label'}, document.getElementById('invLogGPS').value || 'N/A'], style: 'normalText', margin: [0, 0, 0, 10] },
 
-                    buildSectionHeader('COMÉRCIO'),
-                    { text: `• Produto Vendido (Áudio): ${document.getElementById('invComProduto').value || 'N/A'}`, fontSize: 10, margin: [0, 2] },
-                    { text: `• Vídeo (Membro Vendendo): ${document.getElementById('invComVidVenda').value || 'N/A'}`, fontSize: 10, margin: [0, 2] },
-                    { text: `• Vídeo (Membro Falando): ${document.getElementById('invComVidFalando').value || 'N/A'}`, fontSize: 10, margin: [0, 2] },
-                    { text: `• Vídeo (QG Completo): ${document.getElementById('invComVidQG').value || 'N/A'}`, fontSize: 10, margin: [0, 2] },
-                    { text: `• Foto (Indivíduos Armados): ${document.getElementById('invComFotoArmados').value || 'N/A'}`, fontSize: 10, margin: [0, 2] },
-                    { text: `• Foto (Vestimentas Padrão): ${document.getElementById('invComFotoRoupas').value || 'N/A'}`, fontSize: 10, margin: [0, 15] },
+                    buildSectionHeader('COMÉRCIO E ATIVIDADE'),
+                    { text: [{text:'• Produto Vendido (Áudio): ', style:'label'}, document.getElementById('invComProduto').value || 'N/A'], style: 'normalText' },
+                    { text: [{text:'• Vídeo (Membro Vendendo): ', style:'label'}, document.getElementById('invComVidVenda').value || 'N/A'], style: 'normalText' },
+                    { text: [{text:'• Vídeo (Membro Falando): ', style:'label'}, document.getElementById('invComVidFalando').value || 'N/A'], style: 'normalText' },
+                    { text: [{text:'• Vídeo (QG Completo): ', style:'label'}, document.getElementById('invComVidQG').value || 'N/A'], style: 'normalText' },
+                    { text: [{text:'• Foto (Indivíduos Armados): ', style:'label'}, document.getElementById('invComFotoArmados').value || 'N/A'], style: 'normalText' },
+                    { text: [{text:'• Foto (Vestimentas Padrão): ', style:'label'}, document.getElementById('invComFotoRoupas').value || 'N/A'], style: 'normalText', margin: [0, 0, 0, 15] },
 
                     buildSectionHeader('ASSINATURAS'), 
-                    (arrayAssinaturas.length > 0 ? arrayAssinaturas : { text: 'Nenhuma assinatura registrada.', fontSize: 9 })
+                    (arrayAssinaturas.length > 0 ? arrayAssinaturas : { text: 'Nenhuma assinatura registrada.', style: 'assinaturaText' })
                 ];
             }
             else {
@@ -908,38 +957,56 @@
                     const papel = row.querySelector('.i-papel').value;
                     const rg = row.querySelector('.i-passaporte').value || '***';
                     const tel = row.querySelector('.i-tel').value || '***';
-                    arrayEnvolvidos.push({ text: `• ${nome} (${papel}) | RG: ${rg} | Tel: ${tel}`, fontSize: 10, margin: [0, 2, 0, 2] });
+                    arrayEnvolvidos.push({ text: `• ${nome} (${papel}) | RG: ${rg} | Tel: ${tel}`, style: 'normalText' });
                 });
 
                 let arrayEvidencias = [];
                 document.querySelectorAll('#evidenciasContainer .dynamic-row').forEach(row => {
                     const nome = row.querySelector('.i-provaNome').value;
                     const link = row.querySelector('.i-provaLink').value;
-                    if(nome || link) arrayEvidencias.push({ text: `• ${nome}: ${link}`, fontSize: 10, margin: [0, 2, 0, 2] });
+                    if(nome || link) arrayEvidencias.push({ text: `• ${nome}: ${link}`, style: 'normalText' });
                 });
 
                 let arrayDepoimentos = [];
                 document.querySelectorAll('#depoimentosContainer .dynamic-row').forEach(row => {
                     const nome = row.querySelector('.i-depNome').value;
                     const link = row.querySelector('.i-depLink').value;
-                    if(nome || link) arrayDepoimentos.push({ text: `• Depoente: ${nome} - ${link}`, fontSize: 10, margin: [0, 2, 0, 2] });
+                    if(nome || link) arrayDepoimentos.push({ text: `• Depoente ${nome} - ${link}`, style: 'normalText' });
                 });
 
                 docDefinition.content = [
-                    { text: forcaSelecionada, alignment: 'center', bold: true, fontSize: 14 },
-                    { text: 'INQUÉRITO POLICIAL', alignment: 'center', bold: true, fontSize: 14, margin: [0, 5, 0, 5] },
-                    { text: `n° ${numInq}`, alignment: 'center', bold: true, fontSize: 12, margin: [0, 0, 0, 15] },
-                    { columns: [ [{ text: `Diretora Geral: ${dirGeral}`, fontSize: 10 }, { text: `Encarregado(a): ${encarregado}`, fontSize: 10 }, { text: `Perito Criminal: ${perito}`, fontSize: 10 }], [{ text: `Escrivão: ${escrivao}`, fontSize: 10 }, { text: `Investigador: ${investigador}`, fontSize: 10 }, { text: `Setor: ${setor}`, fontSize: 10 }] ], margin: [0, 0, 0, 10] },
+                    { text: forcaSelecionada.toUpperCase(), style: 'headerTitle' },
+                    { text: 'INQUÉRITO POLICIAL', style: 'docTitle' },
+                    { text: `Nº ${numInq}`, alignment: 'center', bold: true, fontSize: 12, margin: [0, -15, 0, 15] },
+                    
+                    buildSectionHeader('DADOS DA AUTORIDADE'),
+                    { columns: [ { text: [{text:'Diretora Geral: ', style:'label'}, dirGeral] }, { text: [{text:'Encarregado(a): ', style:'label'}, encarregado] }, { text: [{text:'Perito Criminal: ', style:'label'}, perito] } ], margin: [0, 0, 0, 5] },
+                    { columns: [ { text: [{text:'Escrivão: ', style:'label'}, escrivao] }, { text: [{text:'Investigador: ', style:'label'}, investigador] }, { text: [{text:'Setor: ', style:'label'}, setor] } ], margin: [0, 0, 0, 10] },
+                    
                     buildSectionHeader('DADOS DO REGISTRO'),
-                    { text: `Início: ${dataInicio} | Fim: ${dataFim}`, fontSize: 10, margin: [0, 2, 0, 2] },
-                    { text: `Local: ${local} - Bairro: ${bairro} - Município: ${municipio}`, fontSize: 10, margin: [0, 2, 0, 2] },
-                    buildSectionHeader('NATUREZA'), { text: natureza, fontSize: 10 },
-                    buildSectionHeader('ENVOLVIDOS'), (arrayEnvolvidos.length > 0 ? arrayEnvolvidos : { text: 'Nenhum envolvido registrado.', fontSize: 10 }),
-                    buildSectionHeader('RELATO / HISTÓRICO'), { text: relato, fontSize: 10, alignment: 'justify' },
-                    buildSectionHeader('EVIDÊNCIAS'), (arrayEvidencias.length > 0 ? arrayEvidencias : { text: 'Nenhuma evidência registrada.', fontSize: 10 }),
-                    buildSectionHeader('DEPOIMENTOS'), (arrayDepoimentos.length > 0 ? arrayDepoimentos : { text: 'Nenhum depoimento registrado.', fontSize: 10 }),
-                    buildSectionHeader('CONCLUSÃO'), { text: conclusao, fontSize: 10, alignment: 'justify' },
-                    buildSectionHeader('ASSINATURAS'), (arrayAssinaturas.length > 0 ? arrayAssinaturas : { text: 'Nenhuma assinatura registrada.', fontSize: 9 })
+                    { columns: [ { text: [{text:'Início: ', style:'label'}, dataInicio] }, { text: [{text:'Fim: ', style:'label'}, dataFim] } ], margin: [0, 2, 0, 5] },
+                    { text: [{text:'Local do Fato: ', style:'label'}, `${local} - Bairro: ${bairro} - Município: ${municipio}`], margin: [0, 2, 0, 5] },
+                    
+                    buildSectionHeader('NATUREZA DA INFRAÇÃO'), 
+                    { text: natureza, style: 'normalText' },
+                    
+                    buildSectionHeader('ENVOLVIDOS'), 
+                    (arrayEnvolvidos.length > 0 ? arrayEnvolvidos : { text: 'Nenhum envolvido registrado.', style: 'normalText' }),
+                    
+                    buildSectionHeader('RELATO / HISTÓRICO'), 
+                    { text: relato, style: 'normalText', alignment: 'justify' },
+                    
+                    buildSectionHeader('EVIDÊNCIAS APREENDIDAS'), 
+                    (arrayEvidencias.length > 0 ? arrayEvidencias : { text: 'Nenhuma evidência registrada.', style: 'normalText' }),
+                    
+                    buildSectionHeader('DEPOIMENTOS COLHIDOS'), 
+                    (arrayDepoimentos.length > 0 ? arrayDepoimentos : { text: 'Nenhum depoimento registrado.', style: 'normalText' }),
+                    
+                    buildSectionHeader('CONCLUSÃO FINAL'), 
+                    { text: conclusao, style: 'normalText', alignment: 'justify' },
+                    
+                    buildSectionHeader('ASSINATURAS DO DOCUMENTO'), 
+                    (arrayAssinaturas.length > 0 ? arrayAssinaturas : { text: 'Nenhuma assinatura registrada.', style: 'assinaturaText' })
                 ];
             }
 
