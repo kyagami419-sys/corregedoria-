@@ -56,7 +56,7 @@
                             <th class="text-center">Ação</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="tabelaProcessosConcluidos">
                         <tr>
                             <td colspan="6" class="text-center text-muted">Nenhum processo concluído no momento.</td>
                         </tr>
@@ -129,7 +129,7 @@
                 return;
             }
 
-            if (!confirm(`ATENÇÃO: Deseja realmente APAGAR permanentemente a publicação nº ${numero}?`)) return;
+            if (!confirm(`ATENÇÃO: Deseja realmente APAGAR permanentemente o registro nº ${numero}?`)) return;
 
             const { error } = await supabaseClient
                 .from('inqueritos')
@@ -145,24 +145,31 @@
         }
 
         async function carregarPublicacoes() {
+            // Agora busca tanto Despachos Arquivados quanto os Processos Encerrados
             const { data, error } = await supabaseClient
                 .from('inqueritos')
                 .select('*')
-                .eq('status', 'Arquivado')
+                .in('status', ['Arquivado', 'Processo Encerrado'])
                 .order('id', { ascending: false });
 
-            const tbody = document.getElementById('tabelaDespachosPublicados');
-            tbody.innerHTML = '';
+            const tbodyDespachos = document.getElementById('tabelaDespachosPublicados');
+            const tbodyProcessos = document.getElementById('tabelaProcessosConcluidos');
+            
+            tbodyDespachos.innerHTML = '';
+            tbodyProcessos.innerHTML = '';
 
             if (error || !data || data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Nenhum despacho ou decisão publicada.</td></tr>`;
+                tbodyDespachos.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Nenhum despacho ou decisão publicada.</td></tr>`;
+                tbodyProcessos.innerHTML = `<tr><td colspan="6" class="text-center text-muted">Nenhum processo concluído no momento.</td></tr>`;
                 return;
             }
 
-            let publicacoesExibidas = 0;
+            let despachosExibidos = 0;
+            let processosExibidos = 0;
 
             data.forEach(item => {
                 let dataPublicacao = item.created_at ? new Date(item.created_at) : new Date();
+                let partes = "Não Informado";
                 
                 if (item.dados_extras) {
                     try {
@@ -170,38 +177,60 @@
                         if (ext.dataDecisao) {
                             dataPublicacao = new Date(ext.dataDecisao);
                         }
+                        // Pega o nome do investigado para a tabela de Processos
+                        if (ext.investigadoNome) {
+                            partes = "MP x " + ext.investigadoNome;
+                        }
                     } catch(e) {}
                 }
 
-                // Cálculo para remover da tela publicações mais antigas que 7 dias
+                // Cálculo para remover da tela despachos mais antigos que 7 dias
                 const hoje = new Date();
                 const diffMs = hoje - dataPublicacao;
                 const diffDias = diffMs / (1000 * 60 * 60 * 24);
 
-                if (diffDias > 7) {
-                    return; // Pula este item e não renderiza na tela
-                }
-
-                publicacoesExibidas++;
                 let dataRef = dataPublicacao.toLocaleDateString('pt-BR');
                 let botaoApagarHTML = (emailLogado === "kira@yagami.gov") ? `<button class="btn-delete" title="Apagar Publicação" onclick="apagarPublicacao(${item.id}, '${item.numero}')"><i class="fas fa-trash"></i></button>` : '';
 
-                tbody.innerHTML += `
-                    <tr>
-                        <td><strong>${item.numero || 'S/N'}</strong></td>
-                        <td>Despacho de Arquivamento</td>
-                        <td>${dataRef}</td>
-                        <td>Vara Criminal</td>
-                        <td class="text-center">
-                            <a href="tj-visualizar.html?id=${item.id}" class="btn-view" title="Visualizar Documento"><i class="fas fa-eye"></i> Ler Decisão</a>
-                            ${botaoApagarHTML}
-                        </td>
-                    </tr>
-                `;
+                if (item.status === 'Processo Encerrado') {
+                    processosExibidos++;
+                    tbodyProcessos.innerHTML += `
+                        <tr>
+                            <td><strong>${item.numero || 'S/N'}</strong></td>
+                            <td>Ação Penal</td>
+                            <td>${partes}</td>
+                            <td>${dataRef}</td>
+                            <td><span class="badge-concluido">Transitado em Julgado</span></td>
+                            <td class="text-center">
+                                <a href="tj-processo.html?id=${item.id}" class="btn-view" title="Visualizar Autos"><i class="fas fa-eye"></i> Autos</a>
+                                ${botaoApagarHTML}
+                            </td>
+                        </tr>
+                    `;
+                } else if (item.status === 'Arquivado') {
+                    if (diffDias > 7) return; // Pula este despacho se for maior que 7 dias (Não renderiza na tela)
+                    
+                    despachosExibidos++;
+                    tbodyDespachos.innerHTML += `
+                        <tr>
+                            <td><strong>${item.numero || 'S/N'}</strong></td>
+                            <td>Despacho de Arquivamento</td>
+                            <td>${dataRef}</td>
+                            <td>Vara Criminal</td>
+                            <td class="text-center">
+                                <a href="tj-visualizar.html?id=${item.id}" class="btn-view" title="Visualizar Documento"><i class="fas fa-eye"></i> Ler Decisão</a>
+                                ${botaoApagarHTML}
+                            </td>
+                        </tr>
+                    `;
+                }
             });
 
-            if (publicacoesExibidas === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Nenhum despacho ou decisão recente (últimos 7 dias) publicada.</td></tr>`;
+            if (despachosExibidos === 0) {
+                tbodyDespachos.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Nenhum despacho ou decisão recente (últimos 7 dias) publicada.</td></tr>`;
+            }
+            if (processosExibidos === 0) {
+                tbodyProcessos.innerHTML = `<tr><td colspan="6" class="text-center text-muted">Nenhum processo concluído no momento.</td></tr>`;
             }
         }
         
