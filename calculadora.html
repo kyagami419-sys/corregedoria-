@@ -139,6 +139,7 @@
                         <div class="col-md-12 mb-2">
                             <label class="form-label">Instituição Policial Efetuando a Prisão</label>
                             <select id="calcInstituicao" class="form-select">
+                                <option value="" selected disabled>Selecione a Instituição...</option>
                                 <option value="PF">Polícia Federal (PF)</option>
                                 <option value="CIVIL">Polícia Civil</option>
                                 <option value="PM">Polícia Militar (PM)</option>
@@ -517,6 +518,13 @@
         // Copiar Relatório Completo
         function copiarRelatorio() {
             const selecaoInst = document.getElementById('calcInstituicao');
+            const instValue = selecaoInst.value;
+            
+            if (!instValue || instValue === "") {
+                alert("Por favor, selecione a Instituição Policial antes de gerar o relatório.");
+                return;
+            }
+            
             const instNomeDisplay = selecaoInst.options[selecaoInst.selectedIndex].text;
             const acusado = document.getElementById('calcAcusadoNome').value || 'Não informado';
             const passaporte = document.getElementById('calcAcusadoID').value || 'S/N';
@@ -572,8 +580,14 @@
                 return;
             }
 
-            const instValue = document.getElementById('calcInstituicao').value;
             const selecaoInst = document.getElementById('calcInstituicao');
+            const instValue = selecaoInst.value;
+            
+            if (!instValue || instValue === "") {
+                alert("Por favor, selecione a Instituição Policial efetuando a prisão antes de enviar.");
+                return;
+            }
+
             const instNomeDisplay = selecaoInst.options[selecaoInst.selectedIndex].text;
 
             const acusado = document.getElementById('calcAcusadoNome').value || 'Não informado';
@@ -738,7 +752,7 @@
         function limparCalculadora() {
             if(!confirm("Deseja realmente limpar todos os campos e seleções?")) return;
             
-            document.getElementById('calcInstituicao').value = 'PF';
+            document.getElementById('calcInstituicao').value = '';
             document.getElementById('calcAcusadoNome').value = '';
             document.getElementById('calcAcusadoID').value = '';
             document.getElementById('calcAdvNome').value = '';
