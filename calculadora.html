@@ -139,6 +139,7 @@
                         <div class="col-md-12 mb-2">
                             <label class="form-label">Instituição Policial Efetuando a Prisão</label>
                             <select id="calcInstituicao" class="form-select">
+                                <option value="" selected disabled>Selecione a Instituição...</option>
                                 <option value="PF">Polícia Federal (PF)</option>
                                 <option value="CIVIL">Polícia Civil</option>
                                 <option value="PM">Polícia Militar (PM)</option>
@@ -167,9 +168,11 @@
                         <div class="col-md-8"><label class="form-label">Advogado Constituído</label><input type="text" id="calcAdvNome" class="form-control" placeholder="Nome do Advogado (se houver)"></div>
                         <div class="col-md-4"><label class="form-label">OAB</label><input type="text" id="calcAdvOAB" class="form-control" placeholder="Nº da OAB"></div>
 
-                        <!-- Campos para Upload / Ctrl+V -->
+                        <!-- Campos para Upload / Ctrl+V (AGORA COM 4 FOTOS) -->
                         <div class="col-md-6"><label class="form-label text-warning"><i class="fas fa-camera"></i> Foto do Inventário (Arquivo ou Ctrl+V)</label><input type="file" id="calcFotoInventario" class="form-control" accept="image/*"></div>
                         <div class="col-md-6"><label class="form-label text-warning"><i class="fas fa-camera"></i> Foto do Rosco (Arquivo ou Ctrl+V)</label><input type="file" id="calcFotoRosco" class="form-control" accept="image/*"></div>
+                        <div class="col-md-6"><label class="form-label text-warning"><i class="fas fa-camera"></i> Foto Adicional 1 (Arquivo ou Ctrl+V)</label><input type="file" id="calcFotoExtra1" class="form-control" accept="image/*"></div>
+                        <div class="col-md-6"><label class="form-label text-warning"><i class="fas fa-camera"></i> Foto Adicional 2 (Arquivo ou Ctrl+V)</label><input type="file" id="calcFotoExtra2" class="form-control" accept="image/*"></div>
 
                         <div class="col-12"><label class="form-label">Relato Breve do Ocorrido</label><textarea id="calcRelato" class="form-control" rows="3" placeholder="Descreva os acontecimentos resumidamente..."></textarea></div>
                     </div>
@@ -339,13 +342,15 @@
         let atenuantesAtivos = [];
         let isWebhookOnCooldown = false;
 
-        // Configuração Sistema Ctrl+V nas Imagens
+        // Configuração Sistema Ctrl+V nas Imagens (AGORA COM 4 FOTOS)
         document.addEventListener('paste', function(e) {
             if (e.clipboardData && e.clipboardData.files && e.clipboardData.files.length > 0) {
                 const file = e.clipboardData.files[0];
                 if (file.type.startsWith('image/')) {
                     const invInput = document.getElementById('calcFotoInventario');
                     const rosInput = document.getElementById('calcFotoRosco');
+                    const ex1Input = document.getElementById('calcFotoExtra1');
+                    const ex2Input = document.getElementById('calcFotoExtra2');
                     
                     const dataTransfer = new DataTransfer();
                     dataTransfer.items.add(file);
@@ -356,8 +361,14 @@
                     } else if (!rosInput.files.length) {
                         rosInput.files = dataTransfer.files;
                         alert("Imagem colada com sucesso no campo: Foto do Rosco");
+                    } else if (!ex1Input.files.length) {
+                        ex1Input.files = dataTransfer.files;
+                        alert("Imagem colada com sucesso no campo: Foto Adicional 1");
+                    } else if (!ex2Input.files.length) {
+                        ex2Input.files = dataTransfer.files;
+                        alert("Imagem colada com sucesso no campo: Foto Adicional 2");
                     } else {
-                        alert("Os dois campos de foto já estão preenchidos!");
+                        alert("Todos os 4 campos de foto já estão preenchidos!");
                     }
                 }
             }
@@ -514,9 +525,16 @@
             return lista;
         }
 
-        // Copiar Relatório Completo
+        // Copiar Relatório Completo (AGORA BEM FORMATADO)
         function copiarRelatorio() {
             const selecaoInst = document.getElementById('calcInstituicao');
+            const instValue = selecaoInst.value;
+            
+            if (!instValue || instValue === "") {
+                alert("Por favor, selecione a Instituição Policial antes de gerar o relatório.");
+                return;
+            }
+            
             const instNomeDisplay = selecaoInst.options[selecaoInst.selectedIndex].text;
             const acusado = document.getElementById('calcAcusadoNome').value || 'Não informado';
             const passaporte = document.getElementById('calcAcusadoID').value || 'S/N';
@@ -525,6 +543,8 @@
             
             const fotoInventarioStr = document.getElementById('calcFotoInventario').files.length > 0 ? 'Imagem Anexada no Sistema' : 'Nenhuma';
             const fotoRoscoStr = document.getElementById('calcFotoRosco').files.length > 0 ? 'Imagem Anexada no Sistema' : 'Nenhuma';
+            const fotoEx1Str = document.getElementById('calcFotoExtra1').files.length > 0 ? 'Imagem Anexada no Sistema' : 'Nenhuma';
+            const fotoEx2Str = document.getElementById('calcFotoExtra2').files.length > 0 ? 'Imagem Anexada no Sistema' : 'Nenhuma';
             
             const relato = document.getElementById('calcRelato').value || 'Nenhum relato informado.';
 
@@ -533,17 +553,19 @@
                 return;
             }
 
-            let texto = `=== REGISTRO DE PRISÃO ===\n`;
-            texto += `Instituição: ${instNomeDisplay}\n`;
-            texto += `Acusado(a): ${acusado} | Passaporte/ID: ${passaporte}\n`;
-            texto += `Oficiais Responsáveis:\n${getListaPoliciaisString(false)}`;
-            texto += `Advogado: ${adv} | OAB: ${oab}\n`;
-            texto += `Foto do Inventário: ${fotoInventarioStr}\n`;
-            texto += `Foto do Rosco: ${fotoRoscoStr}\n\n`;
+            let texto = `**⚖️ === REGISTRO DE PRISÃO === ⚖️**\n\n`;
+            texto += `**🏢 Instituição:** ${instNomeDisplay}\n`;
+            texto += `**👤 Acusado(a):** ${acusado} | **ID:** ${passaporte}\n`;
+            texto += `**👮 Oficiais Responsáveis:**\n${getListaPoliciaisString(false)}`;
+            texto += `**💼 Advogado:** ${adv} | **OAB:** ${oab}\n`;
+            texto += `**📷 Foto do Inventário:** ${fotoInventarioStr}\n`;
+            texto += `**📷 Foto do Rosco:** ${fotoRoscoStr}\n`;
+            texto += `**📷 Foto Adicional 1:** ${fotoEx1Str}\n`;
+            texto += `**📷 Foto Adicional 2:** ${fotoEx2Str}\n\n`;
             
-            texto += `CRIMES COMETIDOS:\n`;
+            texto += `**📝 CRIMES COMETIDOS:**\n`;
             crimesSelecionados.forEach(c => {
-                texto += `- ${c.nome} (${c.meses} meses | ${formatarMoeda(c.multa)})\n`;
+                texto += `• ${c.nome} (${c.meses} meses | ${formatarMoeda(c.multa)})\n`;
             });
 
             let atenuantesNomes = [];
@@ -552,11 +574,13 @@
             if (atenuantesAtivos.includes('confesso')) atenuantesNomes.push('Réu Confesso (-20%)');
             if (atenuantesAtivos.includes('colaboracao')) atenuantesNomes.push('Colaboração (-10%)');
 
-            texto += `\nATENUANTES: ${atenuantesNomes.length > 0 ? atenuantesNomes.join(', ') : 'Nenhuma'}\n`;
-            texto += `\n>> PENA FINAL: ${document.getElementById('resMesesFinais').innerText} <<\n`;
-            texto += `>> MULTA FINAL: ${document.getElementById('resMulta').innerText} <<\n\n`;
-            texto += `RELATO DO OCORRIDO:\n${relato}\n`;
-            texto += `==========================`;
+            texto += `\n**📉 ATENUANTES:** ${atenuantesNomes.length > 0 ? atenuantesNomes.join(', ') : 'Nenhuma'}\n`;
+            texto += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+            texto += `**⏳ PENA FINAL:** ${document.getElementById('resMesesFinais').innerText}\n`;
+            texto += `**💸 MULTA FINAL:** ${document.getElementById('resMulta').innerText}\n`;
+            texto += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+            texto += `**📄 RELATO DO OCORRIDO:**\n${relato}\n`;
+            texto += `=================================`;
 
             navigator.clipboard.writeText(texto).then(() => {
                 alert("Relatório copiado para a área de transferência com sucesso!");
@@ -565,15 +589,21 @@
             });
         }
 
-        // Sistema de envio pro Discord Duplo + Imagens (FormData)
+        // Sistema de envio pro Discord (AGORA COM AS 4 FOTOS)
         function enviarRelatorioWebhook() {
             if (isWebhookOnCooldown) {
                 alert("Aguarde 15 segundos antes de enviar novamente para evitar spam.");
                 return;
             }
 
-            const instValue = document.getElementById('calcInstituicao').value;
             const selecaoInst = document.getElementById('calcInstituicao');
+            const instValue = selecaoInst.value;
+            
+            if (!instValue || instValue === "") {
+                alert("Por favor, selecione a Instituição Policial efetuando a prisão antes de enviar.");
+                return;
+            }
+
             const instNomeDisplay = selecaoInst.options[selecaoInst.selectedIndex].text;
 
             const acusado = document.getElementById('calcAcusadoNome').value || 'Não informado';
@@ -642,42 +672,53 @@
             
             const invFile = document.getElementById('calcFotoInventario').files[0];
             const rosFile = document.getElementById('calcFotoRosco').files[0];
+            const ex1File = document.getElementById('calcFotoExtra1').files[0];
+            const ex2File = document.getElementById('calcFotoExtra2').files[0];
 
-            if (invFile) {
-                formData.append(`file${fileCount}`, invFile, 'inventario.png');
-                payload.embeds[0].image = { url: `attachment://inventario.png` };
-                fileCount++;
-            }
-
-            if (rosFile) {
-                formData.append(`file${fileCount}`, rosFile, 'rosco.png');
-                if (invFile) {
-                    // Discord só permite 1 imagem principal por embed, então se tiver as duas, criamos um segundo embed só para a foto
-                    payload.embeds.push({
-                        color: 11898173,
-                        image: { url: `attachment://rosco.png` }
-                    });
-                } else {
-                    payload.embeds[0].image = { url: `attachment://rosco.png` };
+            function addImageToWebhook(file, filename) {
+                if (file) {
+                    formData.append(`file${fileCount}`, file, filename);
+                    if (fileCount === 0) {
+                        payload.embeds[0].image = { url: `attachment://${filename}` };
+                    } else {
+                        payload.embeds.push({
+                            color: 11898173,
+                            image: { url: `attachment://${filename}` }
+                        });
+                    }
+                    fileCount++;
                 }
             }
 
+            addImageToWebhook(invFile, 'inventario.png');
+            addImageToWebhook(rosFile, 'rosco.png');
+            addImageToWebhook(ex1File, 'extra1.png');
+            addImageToWebhook(ex2File, 'extra2.png');
+
             formData.append('payload_json', JSON.stringify(payload));
 
-            // Configuração dos Webhooks
-            const webhookGeral = "https://discord.com/api/webhooks/1538236408060190831/sY_rGiwko3_vQANr9wTwG6GGd-_8-4euYKhfEgMRWAxU-0UJsCpH2OZcoD7C_TaqfS_D";
+            // ==========================================
+            // ÁREA DE CONFIGURAÇÃO DE WEBHOOKS
+            // Cole aqui os links de cada departamento
+            // ==========================================
             const webhooksEspecificos = {
                 "PF": "https://discord.com/api/webhooks/1538259400848965653/2Spj51kVrTwZ63RdrVy_SPk76Yzxf508wlsGIeN2AwkxuccVNWxaoGpmAiiDz3_OBwCI",
-                "CIVIL": "", // Cole o link da CIVIL aqui no futuro
-                "PM": "https://discord.com/api/webhooks/1540944930761867274/Lqd6V820PspGykKmatq4-Y1F59nR4yocBjXAXd06-mHo1TaH5X8ey2homjpODAw7UPVd",    // Cole o link da PM aqui no futuro
-                "PRF": "",   // Cole o link da PRF aqui no futuro
-                "PFILHA": "https://discord.com/api/webhooks/1538313594138009710/KFV-Gfnyfe4o2DoifMW04PbuxDsZUZGM1Bj7uxDwZdO4zOxhFJXgziZBwk9SawRkUHVv",// Cole o link da PFILHA aqui no futuro
-                "ROTA": "https://discord.com/api/webhooks/1540058886281629808/kzP8cMl77lvQQuPJirqUyahg78rHa1lQsvkxpjmI5cZebbXG-A99wM_hG8mS3R_wYm1S",  // Cole o link da ROTA aqui no futuro
-                "BOPE": "https://discord.com/api/webhooks/1538322273474453584/ZjAXrh2yZ9MItJNmD7lfn1mFfK99U_P4qKo24UP1dhh3RVGaiRcaYbIWS6WXXV9XNowB",   // Cole o link do BOPE aqui no futuro
-                "EXERCITO": "" // Cole o link do Exército aqui no futuro
+                "CIVIL": "",
+                "PM": "https://discord.com/api/webhooks/1540944930761867274/Lqd6V820PspGykKmatq4-Y1F59nR4yocBjXAXd06-mHo1TaH5X8ey2homjpODAw7UPVd",
+                "PRF": "",
+                "PFILHA": "https://discord.com/api/webhooks/1538313594138009710/KFV-Gfnyfe4o2DoifMW04PbuxDsZUZGM1Bj7uxDwZdO4zOxhFJXgziZBwk9SawRkUHVv",
+                "ROTA": "https://discord.com/api/webhooks/1540058886281629808/kzP8cMl77lvQQuPJirqUyahg78rHa1lQsvkxpjmI5cZebbXG-A99wM_hG8mS3R_wYm1S",
+                "BOPE": "https://discord.com/api/webhooks/1538322273474453584/ZjAXrh2yZ9MItJNmD7lfn1mFfK99U_P4qKo24UP1dhh3RVGaiRcaYbIWS6WXXV9XNowB",
+                "EXERCITO": ""
             };
+            // ==========================================
 
             const webhookEspecificoDaPolicia = webhooksEspecificos[instValue];
+
+            if (!webhookEspecificoDaPolicia || webhookEspecificoDaPolicia.trim() === "") {
+                alert(`O link do Discord (Webhook) para a instituição ${instNomeDisplay} ainda não foi configurado no código.`);
+                return;
+            }
 
             const btnWebhook = document.getElementById('btnEnviarDiscord');
             const btnOriginalText = '<i class="fab fa-discord"></i> Enviar Relatório';
@@ -686,31 +727,23 @@
             btnWebhook.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
             btnWebhook.disabled = true;
 
-            // Envia para a Webhook Geral e para a Específica ao mesmo tempo
-            let requests = [];
-            requests.push(fetch(webhookGeral, { method: 'POST', body: formData }));
-
-            if (webhookEspecificoDaPolicia && webhookEspecificoDaPolicia.trim() !== "") {
-                requests.push(fetch(webhookEspecificoDaPolicia, { method: 'POST', body: formData }));
-            }
-
-            Promise.all(requests).then(responses => {
-                let allOk = responses.every(r => r.ok);
-                if (allOk) {
-                    alert("Relatório enviado para os Canais do Discord com sucesso!");
+            // Envia APENAS para a Webhook Específica da polícia selecionada
+            fetch(webhookEspecificoDaPolicia, { method: 'POST', body: formData })
+            .then(response => {
+                if (response.ok) {
+                    alert(`Relatório enviado para o canal da ${instNomeDisplay} com sucesso!`);
                     
-                    // NOVO: Registra o cooldown de 2 horas para o ID após o envio bem-sucedido
                     if (passaporte !== 'S/N' && passaporte !== '') {
                         const idCooldowns = JSON.parse(localStorage.getItem('cooldowns_acusados') || '{}');
-                        idCooldowns[passaporte] = Date.now() + (2 * 60 * 60 * 1000); // + 2 horas em milissegundos
+                        idCooldowns[passaporte] = Date.now() + (2 * 60 * 60 * 1000); 
                         localStorage.setItem('cooldowns_acusados', JSON.stringify(idCooldowns));
                     }
-
                 } else {
-                    alert("O relatório foi processado, mas ocorreu um erro ao enviar para um dos canais configurados.");
+                    alert("Ocorreu um erro ao enviar para o canal. Verifique se o link da Webhook está correto.");
                 }
                 iniciarCooldown(btnWebhook, btnOriginalText);
-            }).catch(err => {
+            })
+            .catch(err => {
                 alert("Erro de conexão ao enviar para o Discord.");
                 iniciarCooldown(btnWebhook, btnOriginalText);
             });
@@ -738,13 +771,15 @@
         function limparCalculadora() {
             if(!confirm("Deseja realmente limpar todos os campos e seleções?")) return;
             
-            document.getElementById('calcInstituicao').value = 'PF';
+            document.getElementById('calcInstituicao').value = '';
             document.getElementById('calcAcusadoNome').value = '';
             document.getElementById('calcAcusadoID').value = '';
             document.getElementById('calcAdvNome').value = '';
             document.getElementById('calcAdvOAB').value = '';
             document.getElementById('calcFotoInventario').value = '';
             document.getElementById('calcFotoRosco').value = '';
+            document.getElementById('calcFotoExtra1').value = '';
+            document.getElementById('calcFotoExtra2').value = '';
             document.getElementById('calcRelato').value = '';
             document.getElementById('searchCrime').value = '';
 
