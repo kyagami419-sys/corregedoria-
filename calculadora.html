@@ -678,20 +678,28 @@
 
             formData.append('payload_json', JSON.stringify(payload));
 
-            // Configuração dos Webhooks
-            const webhookGeral = "https://discord.com/api/webhooks/1538236408060190831/sY_rGiwko3_vQANr9wTwG6GGd-_8-4euYKhfEgMRWAxU-0UJsCpH2OZcoD7C_TaqfS_D";
+            // ==========================================
+            // ÁREA DE CONFIGURAÇÃO DE WEBHOOKS
+            // Cole aqui os links de cada departamento
+            // ==========================================
             const webhooksEspecificos = {
-                "PF": "",
-                "CIVIL": "", // Cole o link da CIVIL aqui no futuro
-                "PM": "https://discord.com/api/webhooks/1538259400848965653/2Spj51kVrTwZ63RdrVy_SPk76Yzxf508wlsGIeN2AwkxuccVNWxaoGpmAiiDz3_OBwCI",    // Cole o link da PM aqui no futuro
-                "PRF": "",   // Cole o link da PRF aqui no futuro
-                "PFILHA": "https://discord.com/api/webhooks/1538313594138009710/KFV-Gfnyfe4o2DoifMW04PbuxDsZUZGM1Bj7uxDwZdO4zOxhFJXgziZBwk9SawRkUHVv",// Cole o link da PFILHA aqui no futuro
-                "ROTA": "https://discord.com/api/webhooks/1540058886281629808/kzP8cMl77lvQQuPJirqUyahg78rHa1lQsvkxpjmI5cZebbXG-A99wM_hG8mS3R_wYm1S",  // Cole o link da ROTA aqui no futuro
-                "BOPE": "https://discord.com/api/webhooks/1538322273474453584/ZjAXrh2yZ9MItJNmD7lfn1mFfK99U_P4qKo24UP1dhh3RVGaiRcaYbIWS6WXXV9XNowB",   // Cole o link do BOPE aqui no futuro
-                "EXERCITO": "" // Cole o link do Exército aqui no futuro
+                "PF": "https://discord.com/api/webhooks/1538259400848965653/2Spj51kVrTwZ63RdrVy_SPk76Yzxf508wlsGIeN2AwkxuccVNWxaoGpmAiiDz3_OBwCI",
+                "CIVIL": "",
+                "PM": "https://discord.com/api/webhooks/1540944930761867274/Lqd6V820PspGykKmatq4-Y1F59nR4yocBjXAXd06-mHo1TaH5X8ey2homjpODAw7UPVd",
+                "PRF": "",
+                "PFILHA": "https://discord.com/api/webhooks/1538313594138009710/KFV-Gfnyfe4o2DoifMW04PbuxDsZUZGM1Bj7uxDwZdO4zOxhFJXgziZBwk9SawRkUHVv",
+                "ROTA": "https://discord.com/api/webhooks/1540058886281629808/kzP8cMl77lvQQuPJirqUyahg78rHa1lQsvkxpjmI5cZebbXG-A99wM_hG8mS3R_wYm1S",
+                "BOPE": "https://discord.com/api/webhooks/1538322273474453584/ZjAXrh2yZ9MItJNmD7lfn1mFfK99U_P4qKo24UP1dhh3RVGaiRcaYbIWS6WXXV9XNowB",
+                "EXERCITO": ""
             };
+            // ==========================================
 
             const webhookEspecificoDaPolicia = webhooksEspecificos[instValue];
+
+            if (!webhookEspecificoDaPolicia || webhookEspecificoDaPolicia.trim() === "") {
+                alert(`O link do Discord (Webhook) para a instituição ${instNomeDisplay} ainda não foi configurado no código.`);
+                return;
+            }
 
             const btnWebhook = document.getElementById('btnEnviarDiscord');
             const btnOriginalText = '<i class="fab fa-discord"></i> Enviar Relatório';
@@ -700,31 +708,23 @@
             btnWebhook.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
             btnWebhook.disabled = true;
 
-            // Envia para a Webhook Geral e para a Específica ao mesmo tempo
-            let requests = [];
-            requests.push(fetch(webhookGeral, { method: 'POST', body: formData }));
-
-            if (webhookEspecificoDaPolicia && webhookEspecificoDaPolicia.trim() !== "") {
-                requests.push(fetch(webhookEspecificoDaPolicia, { method: 'POST', body: formData }));
-            }
-
-            Promise.all(requests).then(responses => {
-                let allOk = responses.every(r => r.ok);
-                if (allOk) {
-                    alert("Relatório enviado para os Canais do Discord com sucesso!");
+            // Envia APENAS para a Webhook Específica da polícia selecionada
+            fetch(webhookEspecificoDaPolicia, { method: 'POST', body: formData })
+            .then(response => {
+                if (response.ok) {
+                    alert(`Relatório enviado para o canal da ${instNomeDisplay} com sucesso!`);
                     
-                    // NOVO: Registra o cooldown de 2 horas para o ID após o envio bem-sucedido
                     if (passaporte !== 'S/N' && passaporte !== '') {
                         const idCooldowns = JSON.parse(localStorage.getItem('cooldowns_acusados') || '{}');
-                        idCooldowns[passaporte] = Date.now() + (2 * 60 * 60 * 1000); // + 2 horas em milissegundos
+                        idCooldowns[passaporte] = Date.now() + (2 * 60 * 60 * 1000); 
                         localStorage.setItem('cooldowns_acusados', JSON.stringify(idCooldowns));
                     }
-
                 } else {
-                    alert("O relatório foi processado, mas ocorreu um erro ao enviar para um dos canais configurados.");
+                    alert("Ocorreu um erro ao enviar para o canal. Verifique se o link da Webhook está correto.");
                 }
                 iniciarCooldown(btnWebhook, btnOriginalText);
-            }).catch(err => {
+            })
+            .catch(err => {
                 alert("Erro de conexão ao enviar para o Discord.");
                 iniciarCooldown(btnWebhook, btnOriginalText);
             });
