@@ -515,7 +515,7 @@
             return lista;
         }
 
-        // Copiar Relatório Completo
+        // Copiar Relatório Completo (MODIFICADO APENAS A ESTÉTICA AQUI)
         function copiarRelatorio() {
             const selecaoInst = document.getElementById('calcInstituicao');
             const instValue = selecaoInst.value;
@@ -541,17 +541,17 @@
                 return;
             }
 
-            let texto = `=== REGISTRO DE PRISÃO ===\n`;
-            texto += `Instituição: ${instNomeDisplay}\n`;
-            texto += `Acusado(a): ${acusado} | Passaporte/ID: ${passaporte}\n`;
-            texto += `Oficiais Responsáveis:\n${getListaPoliciaisString(false)}`;
-            texto += `Advogado: ${adv} | OAB: ${oab}\n`;
-            texto += `Foto do Inventário: ${fotoInventarioStr}\n`;
-            texto += `Foto do Rosco: ${fotoRoscoStr}\n\n`;
+            let texto = `**⚖️ === REGISTRO DE PRISÃO === ⚖️**\n\n`;
+            texto += `**🏢 Instituição:** ${instNomeDisplay}\n`;
+            texto += `**👤 Acusado(a):** ${acusado} | **ID:** ${passaporte}\n`;
+            texto += `**👮 Oficiais Responsáveis:**\n${getListaPoliciaisString(false)}`;
+            texto += `**💼 Advogado:** ${adv} | **OAB:** ${oab}\n`;
+            texto += `**📷 Foto do Inventário:** ${fotoInventarioStr}\n`;
+            texto += `**📷 Foto do Rosco:** ${fotoRoscoStr}\n\n`;
             
-            texto += `CRIMES COMETIDOS:\n`;
+            texto += `**📝 CRIMES COMETIDOS:**\n`;
             crimesSelecionados.forEach(c => {
-                texto += `- ${c.nome} (${c.meses} meses | ${formatarMoeda(c.multa)})\n`;
+                texto += `• ${c.nome} (${c.meses} meses | ${formatarMoeda(c.multa)})\n`;
             });
 
             let atenuantesNomes = [];
@@ -560,11 +560,13 @@
             if (atenuantesAtivos.includes('confesso')) atenuantesNomes.push('Réu Confesso (-20%)');
             if (atenuantesAtivos.includes('colaboracao')) atenuantesNomes.push('Colaboração (-10%)');
 
-            texto += `\nATENUANTES: ${atenuantesNomes.length > 0 ? atenuantesNomes.join(', ') : 'Nenhuma'}\n`;
-            texto += `\n>> PENA FINAL: ${document.getElementById('resMesesFinais').innerText} <<\n`;
-            texto += `>> MULTA FINAL: ${document.getElementById('resMulta').innerText} <<\n\n`;
-            texto += `RELATO DO OCORRIDO:\n${relato}\n`;
-            texto += `==========================`;
+            texto += `\n**📉 ATENUANTES:** ${atenuantesNomes.length > 0 ? atenuantesNomes.join(', ') : 'Nenhuma'}\n`;
+            texto += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+            texto += `**⏳ PENA FINAL:** ${document.getElementById('resMesesFinais').innerText}\n`;
+            texto += `**💸 MULTA FINAL:** ${document.getElementById('resMulta').innerText}\n`;
+            texto += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+            texto += `**📄 RELATO DO OCORRIDO:**\n${relato}\n`;
+            texto += `=================================`;
 
             navigator.clipboard.writeText(texto).then(() => {
                 alert("Relatório copiado para a área de transferência com sucesso!");
