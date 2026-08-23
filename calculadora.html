@@ -589,7 +589,7 @@
             });
         }
 
-        // Sistema de envio pro Discord (AGORA COM AS 4 FOTOS)
+        // Sistema de envio pro Discord (AGORA COM AS 4 FOTOS E ENVIO DUPLO RESTAURADO)
         function enviarRelatorioWebhook() {
             if (isWebhookOnCooldown) {
                 alert("Aguarde 15 segundos antes de enviar novamente para evitar spam.");
@@ -699,8 +699,9 @@
 
             // ==========================================
             // ÁREA DE CONFIGURAÇÃO DE WEBHOOKS
-            // Cole aqui os links de cada departamento
             // ==========================================
+            const webhookGeral = "https://discord.com/api/webhooks/1538236408060190831/sY_rGiwko3_vQANr9wTwG6GGd-_8-4euYKhfEgMRWAxU-0UJsCpH2OZcoD7C_TaqfS_D";
+            
             const webhooksEspecificos = {
                 "PF": "https://discord.com/api/webhooks/1538259400848965653/2Spj51kVrTwZ63RdrVy_SPk76Yzxf508wlsGIeN2AwkxuccVNWxaoGpmAiiDz3_OBwCI",
                 "CIVIL": "",
@@ -715,11 +716,6 @@
 
             const webhookEspecificoDaPolicia = webhooksEspecificos[instValue];
 
-            if (!webhookEspecificoDaPolicia || webhookEspecificoDaPolicia.trim() === "") {
-                alert(`O link do Discord (Webhook) para a instituição ${instNomeDisplay} ainda não foi configurado no código.`);
-                return;
-            }
-
             const btnWebhook = document.getElementById('btnEnviarDiscord');
             const btnOriginalText = '<i class="fab fa-discord"></i> Enviar Relatório';
             
@@ -727,11 +723,22 @@
             btnWebhook.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
             btnWebhook.disabled = true;
 
-            // Envia APENAS para a Webhook Específica da polícia selecionada
-            fetch(webhookEspecificoDaPolicia, { method: 'POST', body: formData })
-            .then(response => {
-                if (response.ok) {
-                    alert(`Relatório enviado para o canal da ${instNomeDisplay} com sucesso!`);
+            // Envia para a Webhook Geral e para a Específica ao mesmo tempo
+            let requests = [];
+            requests.push(fetch(webhookGeral, { method: 'POST', body: formData }));
+
+            if (webhookEspecificoDaPolicia && webhookEspecificoDaPolicia.trim() !== "") {
+                requests.push(fetch(webhookEspecificoDaPolicia, { method: 'POST', body: formData }));
+            } else {
+                alert(`Aviso: O link do Discord (Webhook) específico para a ${instNomeDisplay} ainda não foi configurado. O relatório será enviado apenas para o registro geral.`);
+            }
+
+            Promise.all(requests).then(responses => {
+                let allOk = responses.every(r => r.ok);
+                
+                // Considera sucesso se pelo menos a geral foi enviada
+                if (allOk || responses.length > 0) {
+                    alert("Relatório enviado para os Canais do Discord com sucesso!");
                     
                     if (passaporte !== 'S/N' && passaporte !== '') {
                         const idCooldowns = JSON.parse(localStorage.getItem('cooldowns_acusados') || '{}');
@@ -739,11 +746,10 @@
                         localStorage.setItem('cooldowns_acusados', JSON.stringify(idCooldowns));
                     }
                 } else {
-                    alert("Ocorreu um erro ao enviar para o canal. Verifique se o link da Webhook está correto.");
+                    alert("Ocorreu um erro ao enviar para os canais do Discord.");
                 }
                 iniciarCooldown(btnWebhook, btnOriginalText);
-            })
-            .catch(err => {
+            }).catch(err => {
                 alert("Erro de conexão ao enviar para o Discord.");
                 iniciarCooldown(btnWebhook, btnOriginalText);
             });
