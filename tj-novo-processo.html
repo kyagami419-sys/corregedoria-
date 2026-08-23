@@ -33,9 +33,10 @@
 
     <div class="container-main">
         <div class="section-box">
-            <div class="section-header"><i class="fas fa-folder-plus"></i> Formulário de Autuação</div>
+            <div class="section-header"><i class="fas fa-folder-plus"></i> Formulário Completo de Autuação</div>
             <form id="formNovoProcesso">
                 <div class="row g-3">
+                    <!-- LINHA 1 -->
                     <div class="col-md-4">
                         <label class="form-label">Nº do Processo / Doc</label>
                         <input type="text" class="form-control" placeholder="Gerado Automaticamente" disabled>
@@ -56,6 +57,29 @@
                         <input type="datetime-local" class="form-control" id="dataAtual">
                     </div>
                     
+                    <!-- LINHA 2: NOVIDADE -->
+                    <div class="col-md-6">
+                        <label class="form-label">Vara / Competência</label>
+                        <select class="form-select" id="varaSel">
+                            <option>Vara Criminal</option>
+                            <option>Vara Cível</option>
+                            <option>Vara de Família</option>
+                            <option>Tribunal do Júri</option>
+                            <option>Corregedoria</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Prioridade Processual</label>
+                        <select class="form-select" id="prioridadeSel">
+                            <option>Tramitação Normal</option>
+                            <option style="color: #ef4444;">Réu Preso (Urgente)</option>
+                            <option style="color: #f59e0b;">Medida Protetiva</option>
+                            <option>Estatuto do Idoso</option>
+                            <option>Segredo de Justiça</option>
+                        </select>
+                    </div>
+
+                    <!-- LINHA 3: PARTES -->
                     <div class="col-md-6" id="containerAutores">
                         <label class="form-label d-flex justify-content-between align-items-center">
                             <span>Requerente / Autor</span>
@@ -71,11 +95,30 @@
                         </label>
                         <input type="text" class="form-control reu-input mb-2" placeholder="Nome da parte ré">
                     </div>
+
+                    <!-- LINHA 4: NOVIDADE -->
+                    <div class="col-md-8">
+                        <label class="form-label">Advogado(a) Constituído / OAB</label>
+                        <input type="text" class="form-control" id="advogadoDocs" placeholder="Nome do(a) advogado(a) e número da OAB (Opcional)">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Valor da Causa (R$)</label>
+                        <input type="text" class="form-control" id="valorCausa" placeholder="Ex: 50.000,00 (Opcional)">
+                    </div>
                     
+                    <!-- LINHA 5 -->
                     <div class="col-12">
                         <label class="form-label">Assunto Principal</label>
                         <input type="text" class="form-control" id="assuntoPrincipal" placeholder="Ex: Tráfico, Furto, Despacho Saneador, Intimação de Testemunha...">
                     </div>
+
+                    <!-- LINHA 6: NOVIDADE -->
+                    <div class="col-12">
+                        <label class="form-label">Documentos Anexados / Evidências</label>
+                        <input type="text" class="form-control" id="documentosAnexos" placeholder="Ex: Boletim de Ocorrência, Fotos, Laudo Médico, Contrato (Descreva os anexos)">
+                    </div>
+
+                    <!-- LINHA 7 -->
                     <div class="col-12">
                         <label class="form-label">Petição Inicial / Fatos / Teor do Documento</label>
                         <textarea class="form-control" id="peticaoFatos" rows="8" placeholder="Descreva os fatos, fundamentos legais ou o texto da intimação/despacho..."></textarea>
@@ -135,6 +178,13 @@
         async function salvarProcesso() {
             const classe = document.getElementById('classeSel').value;
             const dataAutuacao = document.getElementById('dataAtual').value;
+            
+            const vara = document.getElementById('varaSel').value;
+            const prioridade = document.getElementById('prioridadeSel').value;
+            const advogado = document.getElementById('advogadoDocs').value;
+            const valorCausa = document.getElementById('valorCausa').value;
+            const anexos = document.getElementById('documentosAnexos').value;
+
             const assunto = document.getElementById('assuntoPrincipal').value;
             const peticao = document.getElementById('peticaoFatos').value;
 
@@ -151,11 +201,10 @@
             else if (autores.length > 0) partes = autores.join(', ');
             else if (reus.length > 0) partes = reus.join(', ');
 
-            // REGRA CORRIGIDA: Se for despacho vai sempre pra mesa do Juiz
             let statusFinal = 'Pendente de Assinatura'; 
             if (isJuiz) {
                 if (classe === 'Intimação') statusFinal = 'Intimação Expedida';
-                else if (classe === 'Despacho') statusFinal = 'Pendente de Assinatura'; // Vai para mesa do Juiz
+                else if (classe === 'Despacho') statusFinal = 'Pendente de Assinatura'; 
                 else statusFinal = 'Em Instrução';
             }
 
@@ -172,7 +221,12 @@
                 reus: reus,
                 investigadoNome: reus.join(', '), 
                 partes: partes,
-                dataDecisao: dataAutuacao
+                dataDecisao: dataAutuacao,
+                vara: vara,
+                prioridade: prioridade,
+                advogado: advogado,
+                valorCausa: valorCausa,
+                anexos: anexos
             };
 
             const { error } = await supabaseClient.from('inqueritos').insert([{
