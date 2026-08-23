@@ -139,7 +139,6 @@
                         <div class="col-md-12 mb-2">
                             <label class="form-label">Instituição Policial Efetuando a Prisão</label>
                             <select id="calcInstituicao" class="form-select">
-                                <option value="" selected disabled>Selecione a Instituição...</option>
                                 <option value="PF">Polícia Federal (PF)</option>
                                 <option value="CIVIL">Polícia Civil</option>
                                 <option value="PM">Polícia Militar (PM)</option>
@@ -515,16 +514,9 @@
             return lista;
         }
 
-        // Copiar Relatório Completo (MODIFICADO APENAS A ESTÉTICA AQUI)
+        // Copiar Relatório Completo
         function copiarRelatorio() {
             const selecaoInst = document.getElementById('calcInstituicao');
-            const instValue = selecaoInst.value;
-            
-            if (!instValue || instValue === "") {
-                alert("Por favor, selecione a Instituição Policial antes de gerar o relatório.");
-                return;
-            }
-            
             const instNomeDisplay = selecaoInst.options[selecaoInst.selectedIndex].text;
             const acusado = document.getElementById('calcAcusadoNome').value || 'Não informado';
             const passaporte = document.getElementById('calcAcusadoID').value || 'S/N';
@@ -541,17 +533,17 @@
                 return;
             }
 
-            let texto = `**⚖️ === REGISTRO DE PRISÃO === ⚖️**\n\n`;
-            texto += `**🏢 Instituição:** ${instNomeDisplay}\n`;
-            texto += `**👤 Acusado(a):** ${acusado} | **ID:** ${passaporte}\n`;
-            texto += `**👮 Oficiais Responsáveis:**\n${getListaPoliciaisString(false)}`;
-            texto += `**💼 Advogado:** ${adv} | **OAB:** ${oab}\n`;
-            texto += `**📷 Foto do Inventário:** ${fotoInventarioStr}\n`;
-            texto += `**📷 Foto do Rosco:** ${fotoRoscoStr}\n\n`;
+            let texto = `=== REGISTRO DE PRISÃO ===\n`;
+            texto += `Instituição: ${instNomeDisplay}\n`;
+            texto += `Acusado(a): ${acusado} | Passaporte/ID: ${passaporte}\n`;
+            texto += `Oficiais Responsáveis:\n${getListaPoliciaisString(false)}`;
+            texto += `Advogado: ${adv} | OAB: ${oab}\n`;
+            texto += `Foto do Inventário: ${fotoInventarioStr}\n`;
+            texto += `Foto do Rosco: ${fotoRoscoStr}\n\n`;
             
-            texto += `**📝 CRIMES COMETIDOS:**\n`;
+            texto += `CRIMES COMETIDOS:\n`;
             crimesSelecionados.forEach(c => {
-                texto += `• ${c.nome} (${c.meses} meses | ${formatarMoeda(c.multa)})\n`;
+                texto += `- ${c.nome} (${c.meses} meses | ${formatarMoeda(c.multa)})\n`;
             });
 
             let atenuantesNomes = [];
@@ -560,13 +552,11 @@
             if (atenuantesAtivos.includes('confesso')) atenuantesNomes.push('Réu Confesso (-20%)');
             if (atenuantesAtivos.includes('colaboracao')) atenuantesNomes.push('Colaboração (-10%)');
 
-            texto += `\n**📉 ATENUANTES:** ${atenuantesNomes.length > 0 ? atenuantesNomes.join(', ') : 'Nenhuma'}\n`;
-            texto += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-            texto += `**⏳ PENA FINAL:** ${document.getElementById('resMesesFinais').innerText}\n`;
-            texto += `**💸 MULTA FINAL:** ${document.getElementById('resMulta').innerText}\n`;
-            texto += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
-            texto += `**📄 RELATO DO OCORRIDO:**\n${relato}\n`;
-            texto += `=================================`;
+            texto += `\nATENUANTES: ${atenuantesNomes.length > 0 ? atenuantesNomes.join(', ') : 'Nenhuma'}\n`;
+            texto += `\n>> PENA FINAL: ${document.getElementById('resMesesFinais').innerText} <<\n`;
+            texto += `>> MULTA FINAL: ${document.getElementById('resMulta').innerText} <<\n\n`;
+            texto += `RELATO DO OCORRIDO:\n${relato}\n`;
+            texto += `==========================`;
 
             navigator.clipboard.writeText(texto).then(() => {
                 alert("Relatório copiado para a área de transferência com sucesso!");
@@ -582,14 +572,8 @@
                 return;
             }
 
+            const instValue = document.getElementById('calcInstituicao').value;
             const selecaoInst = document.getElementById('calcInstituicao');
-            const instValue = selecaoInst.value;
-            
-            if (!instValue || instValue === "") {
-                alert("Por favor, selecione a Instituição Policial efetuando a prisão antes de enviar.");
-                return;
-            }
-
             const instNomeDisplay = selecaoInst.options[selecaoInst.selectedIndex].text;
 
             const acusado = document.getElementById('calcAcusadoNome').value || 'Não informado';
@@ -680,28 +664,20 @@
 
             formData.append('payload_json', JSON.stringify(payload));
 
-            // ==========================================
-            // ÁREA DE CONFIGURAÇÃO DE WEBHOOKS
-            // Cole aqui os links de cada departamento
-            // ==========================================
+            // Configuração dos Webhooks
+            const webhookGeral = "https://discord.com/api/webhooks/1538236408060190831/sY_rGiwko3_vQANr9wTwG6GGd-_8-4euYKhfEgMRWAxU-0UJsCpH2OZcoD7C_TaqfS_D";
             const webhooksEspecificos = {
                 "PF": "https://discord.com/api/webhooks/1538259400848965653/2Spj51kVrTwZ63RdrVy_SPk76Yzxf508wlsGIeN2AwkxuccVNWxaoGpmAiiDz3_OBwCI",
-                "CIVIL": "",
-                "PM": "https://discord.com/api/webhooks/1540944930761867274/Lqd6V820PspGykKmatq4-Y1F59nR4yocBjXAXd06-mHo1TaH5X8ey2homjpODAw7UPVd",
-                "PRF": "",
-                "PFILHA": "https://discord.com/api/webhooks/1538313594138009710/KFV-Gfnyfe4o2DoifMW04PbuxDsZUZGM1Bj7uxDwZdO4zOxhFJXgziZBwk9SawRkUHVv",
-                "ROTA": "https://discord.com/api/webhooks/1540058886281629808/kzP8cMl77lvQQuPJirqUyahg78rHa1lQsvkxpjmI5cZebbXG-A99wM_hG8mS3R_wYm1S",
-                "BOPE": "https://discord.com/api/webhooks/1538322273474453584/ZjAXrh2yZ9MItJNmD7lfn1mFfK99U_P4qKo24UP1dhh3RVGaiRcaYbIWS6WXXV9XNowB",
-                "EXERCITO": ""
+                "CIVIL": "", // Cole o link da CIVIL aqui no futuro
+                "PM": "https://discord.com/api/webhooks/1540944930761867274/Lqd6V820PspGykKmatq4-Y1F59nR4yocBjXAXd06-mHo1TaH5X8ey2homjpODAw7UPVd",    // Cole o link da PM aqui no futuro
+                "PRF": "",   // Cole o link da PRF aqui no futuro
+                "PFILHA": "https://discord.com/api/webhooks/1538313594138009710/KFV-Gfnyfe4o2DoifMW04PbuxDsZUZGM1Bj7uxDwZdO4zOxhFJXgziZBwk9SawRkUHVv",// Cole o link da PFILHA aqui no futuro
+                "ROTA": "https://discord.com/api/webhooks/1540058886281629808/kzP8cMl77lvQQuPJirqUyahg78rHa1lQsvkxpjmI5cZebbXG-A99wM_hG8mS3R_wYm1S",  // Cole o link da ROTA aqui no futuro
+                "BOPE": "https://discord.com/api/webhooks/1538322273474453584/ZjAXrh2yZ9MItJNmD7lfn1mFfK99U_P4qKo24UP1dhh3RVGaiRcaYbIWS6WXXV9XNowB",   // Cole o link do BOPE aqui no futuro
+                "EXERCITO": "" // Cole o link do Exército aqui no futuro
             };
-            // ==========================================
 
             const webhookEspecificoDaPolicia = webhooksEspecificos[instValue];
-
-            if (!webhookEspecificoDaPolicia || webhookEspecificoDaPolicia.trim() === "") {
-                alert(`O link do Discord (Webhook) para a instituição ${instNomeDisplay} ainda não foi configurado no código.`);
-                return;
-            }
 
             const btnWebhook = document.getElementById('btnEnviarDiscord');
             const btnOriginalText = '<i class="fab fa-discord"></i> Enviar Relatório';
@@ -710,23 +686,31 @@
             btnWebhook.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
             btnWebhook.disabled = true;
 
-            // Envia APENAS para a Webhook Específica da polícia selecionada
-            fetch(webhookEspecificoDaPolicia, { method: 'POST', body: formData })
-            .then(response => {
-                if (response.ok) {
-                    alert(`Relatório enviado para o canal da ${instNomeDisplay} com sucesso!`);
+            // Envia para a Webhook Geral e para a Específica ao mesmo tempo
+            let requests = [];
+            requests.push(fetch(webhookGeral, { method: 'POST', body: formData }));
+
+            if (webhookEspecificoDaPolicia && webhookEspecificoDaPolicia.trim() !== "") {
+                requests.push(fetch(webhookEspecificoDaPolicia, { method: 'POST', body: formData }));
+            }
+
+            Promise.all(requests).then(responses => {
+                let allOk = responses.every(r => r.ok);
+                if (allOk) {
+                    alert("Relatório enviado para os Canais do Discord com sucesso!");
                     
+                    // NOVO: Registra o cooldown de 2 horas para o ID após o envio bem-sucedido
                     if (passaporte !== 'S/N' && passaporte !== '') {
                         const idCooldowns = JSON.parse(localStorage.getItem('cooldowns_acusados') || '{}');
-                        idCooldowns[passaporte] = Date.now() + (2 * 60 * 60 * 1000); 
+                        idCooldowns[passaporte] = Date.now() + (2 * 60 * 60 * 1000); // + 2 horas em milissegundos
                         localStorage.setItem('cooldowns_acusados', JSON.stringify(idCooldowns));
                     }
+
                 } else {
-                    alert("Ocorreu um erro ao enviar para o canal. Verifique se o link da Webhook está correto.");
+                    alert("O relatório foi processado, mas ocorreu um erro ao enviar para um dos canais configurados.");
                 }
                 iniciarCooldown(btnWebhook, btnOriginalText);
-            })
-            .catch(err => {
+            }).catch(err => {
                 alert("Erro de conexão ao enviar para o Discord.");
                 iniciarCooldown(btnWebhook, btnOriginalText);
             });
@@ -754,7 +738,7 @@
         function limparCalculadora() {
             if(!confirm("Deseja realmente limpar todos os campos e seleções?")) return;
             
-            document.getElementById('calcInstituicao').value = '';
+            document.getElementById('calcInstituicao').value = 'PF';
             document.getElementById('calcAcusadoNome').value = '';
             document.getElementById('calcAcusadoID').value = '';
             document.getElementById('calcAdvNome').value = '';
