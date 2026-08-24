@@ -204,8 +204,7 @@
             let statusFinal = 'Pendente de Assinatura'; 
             if (isJuiz) {
                 if (classe === 'Intimação') statusFinal = 'Intimação Expedida';
-                else if (classe === 'Despacho') statusFinal = 'Pendente de Assinatura'; 
-                else statusFinal = 'Em Instrução';
+                else statusFinal = 'Pendente de Assinatura'; 
             }
 
             const numAleatorio = "TJ-" + Math.floor(Math.random() * 9999999);
