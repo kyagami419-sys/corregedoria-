@@ -201,10 +201,10 @@
             else if (autores.length > 0) partes = autores.join(', ');
             else if (reus.length > 0) partes = reus.join(', ');
 
-            let statusFinal = 'Pendente de Assinatura'; 
+            let statusFinal = 'Despacho Pendente'; 
             if (isJuiz) {
                 if (classe === 'Intimação') statusFinal = 'Intimação Expedida';
-                else statusFinal = 'Pendente de Assinatura'; 
+                else statusFinal = 'Despacho Pendente'; 
             }
 
             const numAleatorio = "TJ-" + Math.floor(Math.random() * 9999999);
@@ -241,7 +241,7 @@
                 btnArea.style.pointerEvents = 'auto';
                 btnArea.style.opacity = '1';
             } else {
-                alert("Documento gerado com sucesso e enviado para a Mesa do Juiz / Sistema!");
+                alert("Documento gerado com sucesso e enviado para a Caixa de Despachos do Tribunal!");
                 window.location.href = 'tj-dashboard.html';
             }
         }
