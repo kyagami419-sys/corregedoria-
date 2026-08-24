@@ -105,27 +105,142 @@
                 <div class="form-section">
                     <h4 class="section-title">Estrutura e Logística</h4>
                     <div class="row g-2">
-                        <div class="col-md-6"><label class="form-label">Foto do Baú do Líder (Link)</label><input type="text" id="invLogBauLider" class="form-control"></div>
-                        <div class="col-md-6"><label class="form-label">Foto do Baú da Gerência (Link)</label><input type="text" id="invLogBauGerencia" class="form-control"></div>
-                        <div class="col-md-6"><label class="form-label">Baú de Membros (Link)</label><input type="text" id="invLogBauMembros" class="form-control"></div>
-                        <div class="col-md-6"><label class="form-label">Foto Aérea (Link)</label><input type="text" id="invLogAerea" class="form-control"></div>
-                        <div class="col-md-6"><label class="form-label">Foto da P1 (Link)</label><input type="text" id="invLogP1" class="form-control"></div>
-                        <div class="col-md-6"><label class="form-label">Foto da P2 (Link)</label><input type="text" id="invLogP2" class="form-control"></div>
-                        <div class="col-md-4"><label class="form-label">Foto da Rota de Farm (Link)</label><input type="text" id="invLogRotaFarm" class="form-control"></div>
-                        <div class="col-md-4"><label class="form-label">Foto Blip da Rota (Link)</label><input type="text" id="invLogBlip" class="form-control"></div>
-                        <div class="col-md-4"><label class="form-label">Imagem Rastreamento GPS (Link)</label><input type="text" id="invLogGPS" class="form-control" placeholder="Com data/hora"></div>
+                        <div class="col-md-6">
+                            <label class="form-label">Foto do Baú do Líder (Link)</label>
+                            <div class="input-group">
+                                <input type="text" id="invLogBauLider" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
+                                <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
+                                <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
+                            </div>
+                            <img class="preview-img mt-1" id="preview_invLogBauLider" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Foto do Baú da Gerência (Link)</label>
+                            <div class="input-group">
+                                <input type="text" id="invLogBauGerencia" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
+                                <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
+                                <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
+                            </div>
+                            <img class="preview-img mt-1" id="preview_invLogBauGerencia" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Baú de Membros (Link)</label>
+                            <div class="input-group">
+                                <input type="text" id="invLogBauMembros" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
+                                <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
+                                <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
+                            </div>
+                            <img class="preview-img mt-1" id="preview_invLogBauMembros" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Foto Aérea (Link)</label>
+                            <div class="input-group">
+                                <input type="text" id="invLogAerea" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
+                                <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
+                                <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
+                            </div>
+                            <img class="preview-img mt-1" id="preview_invLogAerea" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Foto da P1 (Link)</label>
+                            <div class="input-group">
+                                <input type="text" id="invLogP1" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
+                                <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
+                                <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
+                            </div>
+                            <img class="preview-img mt-1" id="preview_invLogP1" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Foto da P2 (Link)</label>
+                            <div class="input-group">
+                                <input type="text" id="invLogP2" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
+                                <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
+                                <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
+                            </div>
+                            <img class="preview-img mt-1" id="preview_invLogP2" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Foto da Rota de Farm (Link)</label>
+                            <div class="input-group">
+                                <input type="text" id="invLogRotaFarm" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
+                                <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
+                                <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
+                            </div>
+                            <img class="preview-img mt-1" id="preview_invLogRotaFarm" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Foto Blip da Rota (Link)</label>
+                            <div class="input-group">
+                                <input type="text" id="invLogBlip" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
+                                <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
+                                <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
+                            </div>
+                            <img class="preview-img mt-1" id="preview_invLogBlip" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Imagem Rastreamento GPS (Link)</label>
+                            <div class="input-group">
+                                <input type="text" id="invLogGPS" class="form-control i-fotoLink" placeholder="Com data/hora (Cole imagem)">
+                                <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
+                                <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
+                            </div>
+                            <img class="preview-img mt-1" id="preview_invLogGPS" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
+                        </div>
                     </div>
                 </div>
 
                 <div class="form-section">
                     <h4 class="section-title">Comércio</h4>
                     <div class="row g-2">
-                        <div class="col-md-6"><label class="form-label">Produto Vendido (membros falando)</label><input type="text" id="invComProduto" class="form-control"></div>
-                        <div class="col-md-6"><label class="form-label">Vídeo: Membro vendendo produto (Link)</label><input type="text" id="invComVidVenda" class="form-control"></div>
-                        <div class="col-md-6"><label class="form-label">Vídeo: Membro falando dos produtos (Link)</label><input type="text" id="invComVidFalando" class="form-control"></div>
-                        <div class="col-md-6"><label class="form-label">Vídeo: QG por completo (Link)</label><input type="text" id="invComVidQG" class="form-control"></div>
-                        <div class="col-md-6"><label class="form-label">Foto: Indivíduos Armados (Link)</label><input type="text" id="invComFotoArmados" class="form-control"></div>
-                        <div class="col-md-6"><label class="form-label">Foto: Vestimentas Padrão no QG (Link)</label><input type="text" id="invComFotoRoupas" class="form-control"></div>
+                        <div class="col-md-6">
+                            <label class="form-label">Produto Vendido (membros falando)</label>
+                            <input type="text" id="invComProduto" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Vídeo: Membro vendendo produto (Link)</label>
+                            <div class="input-group">
+                                <input type="text" id="invComVidVenda" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
+                                <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
+                                <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
+                            </div>
+                            <img class="preview-img mt-1" id="preview_invComVidVenda" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Vídeo: Membro falando dos produtos (Link)</label>
+                            <div class="input-group">
+                                <input type="text" id="invComVidFalando" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
+                                <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
+                                <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
+                            </div>
+                            <img class="preview-img mt-1" id="preview_invComVidFalando" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Vídeo: QG por completo (Link)</label>
+                            <div class="input-group">
+                                <input type="text" id="invComVidQG" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
+                                <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
+                                <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
+                            </div>
+                            <img class="preview-img mt-1" id="preview_invComVidQG" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Foto: Indivíduos Armados (Link)</label>
+                            <div class="input-group">
+                                <input type="text" id="invComFotoArmados" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
+                                <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
+                                <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
+                            </div>
+                            <img class="preview-img mt-1" id="preview_invComFotoArmados" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Foto: Vestimentas Padrão no QG (Link)</label>
+                            <div class="input-group">
+                                <input type="text" id="invComFotoRoupas" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
+                                <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
+                                <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
+                            </div>
+                            <img class="preview-img mt-1" id="preview_invComFotoRoupas" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -272,6 +387,80 @@
             'EXÉRCITO BRASILEIRO': 'img/exercito.png'
         };
 
+        // =========================================================================
+        // SISTEMA DE CTRL+V E COMPRESSÃO DE IMAGENS GERAL
+        // =========================================================================
+        
+        window.previewImageGeral = function(fileInput) {
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+                        const MAX = 600; 
+                        if (width > height && width > MAX) { height *= MAX / width; width = MAX; }
+                        else if (height > MAX) { width *= MAX / height; height = MAX; }
+                        canvas.width = width; canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        const dataUrl = canvas.toDataURL('image/jpeg', 0.7); 
+                        const previewNode = fileInput.parentElement.parentElement.querySelector('.preview-img');
+                        if(previewNode) {
+                            previewNode.src = dataUrl;
+                            previewNode.style.display = 'block';
+                        }
+                    }
+                    img.src = e.target.result;
+                }
+                reader.readAsDataURL(fileInput.files[0]);
+            }
+        };
+
+        document.addEventListener('paste', function(e) {
+            if (e.clipboardData && e.clipboardData.files && e.clipboardData.files.length > 0) {
+                const file = e.clipboardData.files[0];
+                if (file.type.startsWith('image/')) {
+                    
+                    let targetInput = document.activeElement;
+                    
+                    // Se estiver focado num campo específico (Líderes ou Qualquer campo de foto)
+                    if (targetInput && (targetInput.classList.contains('i-lidLink') || targetInput.classList.contains('i-fotoLink'))) {
+                        const fileInput = targetInput.parentElement.querySelector('input[type="file"]');
+                        if (fileInput) {
+                            const dataTransfer = new DataTransfer();
+                            dataTransfer.items.add(file);
+                            fileInput.files = dataTransfer.files;
+                            window.previewImageGeral(fileInput);
+                            e.preventDefault();
+                            return;
+                        }
+                    }
+                    
+                    // Se não estiver focado em nada específico, busca o primeiro campo de imagem que esteja vazio
+                    const inputs = document.querySelectorAll('.i-lidLink, .i-fotoLink');
+                    let target = Array.from(inputs).find(inp => {
+                        const preview = inp.parentElement.parentElement.querySelector('.preview-img');
+                        return !inp.value && (!preview || preview.style.display === 'none');
+                    });
+                    
+                    if (target) {
+                        const fileInput = target.parentElement.querySelector('input[type="file"]');
+                        if (fileInput) {
+                            const dataTransfer = new DataTransfer();
+                            dataTransfer.items.add(file);
+                            fileInput.files = dataTransfer.files;
+                            window.previewImageGeral(fileInput);
+                            e.preventDefault();
+                        }
+                    }
+                }
+            }
+        });
+
         async function verificarAcessoEStatus() {
             let emailUsuarioLogado = localStorage.getItem('usuario_logado_email');
             
@@ -346,9 +535,6 @@
             container.appendChild(row);
         }
 
-        // =========================================================================
-        // ATUALIZAÇÃO DO LAYOUT DO PDF DA INTIMAÇÃO
-        // =========================================================================
         async function intimarEnvolvido(botao) {
             const row = botao.parentElement.parentElement;
             const nome = row.querySelector('.i-nome').value.trim();
@@ -434,7 +620,7 @@
                 forcaPolicial: forcaSelecionada,
                 nomeIntimado: nome,
                 rgIntimado: rg,
-                dataIntimacao: dataFormatadaParaInput // Campo único de data e hora
+                dataIntimacao: dataFormatadaParaInput 
             };
             
             const dadosDoc = {
@@ -503,7 +689,17 @@
                 <div class="col-md-3"><label class="form-label">Líder ${numAtual} - Nome</label><input type="text" class="form-control i-lidNome" value="${dados.nome || ''}"></div>
                 <div class="col-md-2"><label class="form-label">RG</label><input type="text" class="form-control i-lidRG" value="${dados.rg || ''}"></div>
                 <div class="col-md-2"><label class="form-label">Função</label><input type="text" class="form-control i-lidFunc" value="${dados.funcao || ''}"></div>
-                <div class="col-md-4"><label class="form-label">Link Prova/Foto</label><input type="text" class="form-control i-lidLink" value="${dados.link || ''}"></div>
+                
+                <div class="col-md-4">
+                    <label class="form-label">Link Prova / Foto (Ctrl+V)</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control i-lidLink" placeholder="Cole o link ou imagem" value="${dados.link || ''}">
+                        <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
+                        <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()" title="Anexar Imagem Arquivo"><i class="fas fa-camera"></i></button>
+                    </div>
+                    <img class="preview-img mt-1" style="max-width: 100%; max-height: 50px; display: ${dados.b64 ? 'block' : 'none'}; border-radius: 4px;" src="${dados.b64 || ''}">
+                </div>
+                
                 <div class="col-md-1"><button type="button" class="btn btn-danger btn-sm w-100" onclick="this.parentElement.parentElement.remove()"><i class="fas fa-trash"></i></button></div>`;
             container.appendChild(row);
         }
@@ -543,13 +739,20 @@
 
             let lideres = [];
             document.querySelectorAll('#liderancaContainer .dynamic-row').forEach(row => {
+                const previewImg = row.querySelector('.preview-img');
                 lideres.push({
                     nome: row.querySelector('.i-lidNome').value,
                     rg: row.querySelector('.i-lidRG').value,
                     funcao: row.querySelector('.i-lidFunc').value,
-                    link: row.querySelector('.i-lidLink').value
+                    link: row.querySelector('.i-lidLink').value,
+                    b64: (previewImg && previewImg.style.display !== 'none' && previewImg.src.startsWith('data:')) ? previewImg.src : ''
                 });
             });
+
+            const getB64 = (id) => {
+                const img = document.getElementById('preview_' + id);
+                return (img && img.style.display !== 'none' && img.src.startsWith('data:')) ? img.src : '';
+            };
 
             let forcaPolicialSelecionada = instituicaoUserGlobal;
             const selectForca = document.getElementById('forcaPolicial');
@@ -563,7 +766,7 @@
                 
                 nomeIntimado: document.getElementById('nomeIntimado')?.value || '',
                 rgIntimado: document.getElementById('rgIntimado')?.value || '',
-                dataIntimacao: document.getElementById('dataIntimacao')?.value || '', // Campo único
+                dataIntimacao: document.getElementById('dataIntimacao')?.value || '', 
 
                 invData: document.getElementById('invData')?.value || '',
                 invObjetivo: document.getElementById('invObjetivo')?.value || '',
@@ -573,21 +776,38 @@
                 invOrgNome: document.getElementById('invOrgNome')?.value || '',
                 invLocalizacao: document.getElementById('invLocalizacao')?.value || '',
                 lideres: lideres,
+                
                 invLogBauLider: document.getElementById('invLogBauLider')?.value || '',
+                b64_invLogBauLider: getB64('invLogBauLider'),
                 invLogBauGerencia: document.getElementById('invLogBauGerencia')?.value || '',
+                b64_invLogBauGerencia: getB64('invLogBauGerencia'),
                 invLogBauMembros: document.getElementById('invLogBauMembros')?.value || '',
+                b64_invLogBauMembros: getB64('invLogBauMembros'),
                 invLogAerea: document.getElementById('invLogAerea')?.value || '',
+                b64_invLogAerea: getB64('invLogAerea'),
                 invLogP1: document.getElementById('invLogP1')?.value || '',
+                b64_invLogP1: getB64('invLogP1'),
                 invLogP2: document.getElementById('invLogP2')?.value || '',
+                b64_invLogP2: getB64('invLogP2'),
                 invLogRotaFarm: document.getElementById('invLogRotaFarm')?.value || '',
+                b64_invLogRotaFarm: getB64('invLogRotaFarm'),
                 invLogBlip: document.getElementById('invLogBlip')?.value || '',
+                b64_invLogBlip: getB64('invLogBlip'),
                 invLogGPS: document.getElementById('invLogGPS')?.value || '',
+                b64_invLogGPS: getB64('invLogGPS'),
+                
                 invComProduto: document.getElementById('invComProduto')?.value || '',
+                
                 invComVidVenda: document.getElementById('invComVidVenda')?.value || '',
+                b64_invComVidVenda: getB64('invComVidVenda'),
                 invComVidFalando: document.getElementById('invComVidFalando')?.value || '',
+                b64_invComVidFalando: getB64('invComVidFalando'),
                 invComVidQG: document.getElementById('invComVidQG')?.value || '',
+                b64_invComVidQG: getB64('invComVidQG'),
                 invComFotoArmados: document.getElementById('invComFotoArmados')?.value || '',
-                invComFotoRoupas: document.getElementById('invComFotoRoupas')?.value || ''
+                b64_invComFotoArmados: getB64('invComFotoArmados'),
+                invComFotoRoupas: document.getElementById('invComFotoRoupas')?.value || '',
+                b64_invComFotoRoupas: getB64('invComFotoRoupas')
             };
 
             const dadosDoc = {
@@ -705,22 +925,35 @@
                                     extras.lideres.forEach(lid => addLider(lid));
                                 } else { addLider(); addLider(); addLider(); } 
 
-                                document.getElementById('invLogBauLider').value = extras.invLogBauLider || '';
-                                document.getElementById('invLogBauGerencia').value = extras.invLogBauGerencia || '';
-                                document.getElementById('invLogBauMembros').value = extras.invLogBauMembros || '';
-                                document.getElementById('invLogAerea').value = extras.invLogAerea || '';
-                                document.getElementById('invLogP1').value = extras.invLogP1 || '';
-                                document.getElementById('invLogP2').value = extras.invLogP2 || '';
-                                document.getElementById('invLogRotaFarm').value = extras.invLogRotaFarm || '';
-                                document.getElementById('invLogBlip').value = extras.invLogBlip || '';
-                                document.getElementById('invLogGPS').value = extras.invLogGPS || '';
+                                const loadField = (id, val, b64) => {
+                                    const el = document.getElementById(id);
+                                    if(el) el.value = val || '';
+                                    const preview = document.getElementById('preview_' + id);
+                                    if(preview && b64) {
+                                        preview.src = b64;
+                                        preview.style.display = 'block';
+                                    } else if(preview) {
+                                        preview.style.display = 'none';
+                                    }
+                                };
 
+                                loadField('invLogBauLider', extras.invLogBauLider, extras.b64_invLogBauLider);
+                                loadField('invLogBauGerencia', extras.invLogBauGerencia, extras.b64_invLogBauGerencia);
+                                loadField('invLogBauMembros', extras.invLogBauMembros, extras.b64_invLogBauMembros);
+                                loadField('invLogAerea', extras.invLogAerea, extras.b64_invLogAerea);
+                                loadField('invLogP1', extras.invLogP1, extras.b64_invLogP1);
+                                loadField('invLogP2', extras.invLogP2, extras.b64_invLogP2);
+                                loadField('invLogRotaFarm', extras.invLogRotaFarm, extras.b64_invLogRotaFarm);
+                                loadField('invLogBlip', extras.invLogBlip, extras.b64_invLogBlip);
+                                loadField('invLogGPS', extras.invLogGPS, extras.b64_invLogGPS);
+                                
                                 document.getElementById('invComProduto').value = extras.invComProduto || '';
-                                document.getElementById('invComVidVenda').value = extras.invComVidVenda || '';
-                                document.getElementById('invComVidFalando').value = extras.invComVidFalando || '';
-                                document.getElementById('invComVidQG').value = extras.invComVidQG || '';
-                                document.getElementById('invComFotoArmados').value = extras.invComFotoArmados || '';
-                                document.getElementById('invComFotoRoupas').value = extras.invComFotoRoupas || '';
+                                
+                                loadField('invComVidVenda', extras.invComVidVenda, extras.b64_invComVidVenda);
+                                loadField('invComVidFalando', extras.invComVidFalando, extras.b64_invComVidFalando);
+                                loadField('invComVidQG', extras.invComVidQG, extras.b64_invComVidQG);
+                                loadField('invComFotoArmados', extras.invComFotoArmados, extras.b64_invComFotoArmados);
+                                loadField('invComFotoRoupas', extras.invComFotoRoupas, extras.b64_invComFotoRoupas);
                             }
 
                             document.getElementById('delegadosPortariaContainer').innerHTML = '';
@@ -763,7 +996,7 @@
         }
 
         // =========================================================================
-        // ATUALIZAÇÃO DO LAYOUT DO GERADOR DE PDF PRINCIPAL
+        // GERAÇÃO DE PDF OTIMIZADA PARA IMAGENS COLADAS
         // =========================================================================
         function gerarPDF() {
             const tipoSelecionado = document.querySelector('input[name="docType"]:checked').value;
@@ -818,6 +1051,25 @@
                 layout: 'noBorders',
                 margin: [0, 15, 0, 10]
             });
+
+            // Função para extrair imagem e mesclar com os textos do PDF suavemente
+            const buildImgField = (label, id, isLast = false) => {
+                const el = document.getElementById(id);
+                if (!el) return [];
+                const val = el.value || '';
+                const img = document.getElementById('preview_' + id);
+                const b64 = (img && img.style.display !== 'none' && img.src.startsWith('data:')) ? img.src : null;
+
+                let result = [];
+                let bottomMarginText = b64 ? 4 : (isLast ? 10 : 2);
+                let bottomMarginImg = isLast ? 15 : 10;
+                
+                result.push({ text: [{text: label, style:'label'}, val || (b64 ? 'Imagem Anexada Logo Abaixo' : 'N/A')], style: 'normalText', margin: [0, 0, 0, bottomMarginText] });
+                if (b64) {
+                    result.push({ image: b64, fit: [250, 250], margin: [10, 0, 0, bottomMarginImg] });
+                }
+                return result;
+            };
 
             if (isPortaria) {
                 const num = document.getElementById('numPortaria').value || 'S/N';
@@ -889,8 +1141,21 @@
                     const lRG = row.querySelector('.i-lidRG').value;
                     const lFunc = row.querySelector('.i-lidFunc').value;
                     const lLink = row.querySelector('.i-lidLink').value;
+                    
+                    const previewImg = row.querySelector('.preview-img');
+                    const lB64 = (previewImg && previewImg.style.display !== 'none' && previewImg.src.startsWith('data:')) ? previewImg.src : null;
+                    
                     if(lNome) {
-                        arrayLideres.push({ text: `• Líder ${String(index).padStart(2, '0')} - Nome: ${lNome} | RG: ${lRG} | Função: ${lFunc}\n  Prova/Foto: ${lLink}`, style: 'normalText', margin: [0, 0, 0, 6] });
+                        arrayLideres.push({ 
+                            text: `• Líder ${String(index).padStart(2, '0')} - Nome: ${lNome} | RG: ${lRG} | Função: ${lFunc}\n  Prova/Foto: ${lLink || (lB64 ? 'Imagem Anexada Logo Abaixo' : 'N/A')}`, 
+                            style: 'normalText', 
+                            margin: [0, 0, 0, lB64 ? 4 : 6] 
+                        });
+                        
+                        if (lB64) {
+                            arrayLideres.push({ image: lB64, fit: [250, 250], margin: [10, 0, 0, 10] });
+                        }
+                        
                         index++;
                     }
                 });
@@ -910,23 +1175,23 @@
                     (arrayLideres.length > 0 ? arrayLideres : { text: 'Nenhum líder registrado.', style: 'normalText' }),
 
                     buildSectionHeader('ESTRUTURA E LOGÍSTICA'),
-                    { text: [{text:'• Baú do Líder: ', style:'label'}, document.getElementById('invLogBauLider').value || 'N/A'], style: 'normalText' },
-                    { text: [{text:'• Baú da Gerência: ', style:'label'}, document.getElementById('invLogBauGerencia').value || 'N/A'], style: 'normalText' },
-                    { text: [{text:'• Baú de Membros: ', style:'label'}, document.getElementById('invLogBauMembros').value || 'N/A'], style: 'normalText' },
-                    { text: [{text:'• Foto Aérea: ', style:'label'}, document.getElementById('invLogAerea').value || 'N/A'], style: 'normalText' },
-                    { text: [{text:'• Foto da P1: ', style:'label'}, document.getElementById('invLogP1').value || 'N/A'], style: 'normalText' },
-                    { text: [{text:'• Foto da P2: ', style:'label'}, document.getElementById('invLogP2').value || 'N/A'], style: 'normalText' },
-                    { text: [{text:'• Foto Rota de Farm: ', style:'label'}, document.getElementById('invLogRotaFarm').value || 'N/A'], style: 'normalText' },
-                    { text: [{text:'• Foto Blip da Rota: ', style:'label'}, document.getElementById('invLogBlip').value || 'N/A'], style: 'normalText' },
-                    { text: [{text:'• Rastreamento GPS: ', style:'label'}, document.getElementById('invLogGPS').value || 'N/A'], style: 'normalText', margin: [0, 0, 0, 10] },
+                    ...buildImgField('• Baú do Líder: ', 'invLogBauLider'),
+                    ...buildImgField('• Baú da Gerência: ', 'invLogBauGerencia'),
+                    ...buildImgField('• Baú de Membros: ', 'invLogBauMembros'),
+                    ...buildImgField('• Foto Aérea: ', 'invLogAerea'),
+                    ...buildImgField('• Foto da P1: ', 'invLogP1'),
+                    ...buildImgField('• Foto da P2: ', 'invLogP2'),
+                    ...buildImgField('• Foto Rota de Farm: ', 'invLogRotaFarm'),
+                    ...buildImgField('• Foto Blip da Rota: ', 'invLogBlip'),
+                    ...buildImgField('• Rastreamento GPS: ', 'invLogGPS', true),
 
                     buildSectionHeader('COMÉRCIO E ATIVIDADE'),
-                    { text: [{text:'• Produto Vendido (Áudio): ', style:'label'}, document.getElementById('invComProduto').value || 'N/A'], style: 'normalText' },
-                    { text: [{text:'• Vídeo (Membro Vendendo): ', style:'label'}, document.getElementById('invComVidVenda').value || 'N/A'], style: 'normalText' },
-                    { text: [{text:'• Vídeo (Membro Falando): ', style:'label'}, document.getElementById('invComVidFalando').value || 'N/A'], style: 'normalText' },
-                    { text: [{text:'• Vídeo (QG Completo): ', style:'label'}, document.getElementById('invComVidQG').value || 'N/A'], style: 'normalText' },
-                    { text: [{text:'• Foto (Indivíduos Armados): ', style:'label'}, document.getElementById('invComFotoArmados').value || 'N/A'], style: 'normalText' },
-                    { text: [{text:'• Foto (Vestimentas Padrão): ', style:'label'}, document.getElementById('invComFotoRoupas').value || 'N/A'], style: 'normalText', margin: [0, 0, 0, 15] },
+                    { text: [{text:'• Produto Vendido (Áudio): ', style:'label'}, document.getElementById('invComProduto').value || 'N/A'], style: 'normalText', margin: [0, 0, 0, 2] },
+                    ...buildImgField('• Vídeo (Membro Vendendo): ', 'invComVidVenda'),
+                    ...buildImgField('• Vídeo (Membro Falando): ', 'invComVidFalando'),
+                    ...buildImgField('• Vídeo (QG Completo): ', 'invComVidQG'),
+                    ...buildImgField('• Foto (Indivíduos Armados): ', 'invComFotoArmados'),
+                    ...buildImgField('• Foto (Vestimentas Padrão): ', 'invComFotoRoupas', true),
 
                     buildSectionHeader('ASSINATURAS'), 
                     (arrayAssinaturas.length > 0 ? arrayAssinaturas : { text: 'Nenhuma assinatura registrada.', style: 'assinaturaText' })
