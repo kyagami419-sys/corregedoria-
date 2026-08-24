@@ -57,7 +57,7 @@
                         <input type="datetime-local" class="form-control" id="dataAtual">
                     </div>
                     
-                    <!-- LINHA 2: NOVIDADE -->
+                    <!-- LINHA 2 -->
                     <div class="col-md-6">
                         <label class="form-label">Vara / Competência</label>
                         <select class="form-select" id="varaSel">
@@ -96,7 +96,7 @@
                         <input type="text" class="form-control reu-input mb-2" placeholder="Nome da parte ré">
                     </div>
 
-                    <!-- LINHA 4: NOVIDADE -->
+                    <!-- LINHA 4 -->
                     <div class="col-md-8">
                         <label class="form-label">Advogado(a) Constituído / OAB</label>
                         <input type="text" class="form-control" id="advogadoDocs" placeholder="Nome do(a) advogado(a) e número da OAB (Opcional)">
@@ -112,7 +112,7 @@
                         <input type="text" class="form-control" id="assuntoPrincipal" placeholder="Ex: Tráfico, Furto, Despacho Saneador, Intimação de Testemunha...">
                     </div>
 
-                    <!-- LINHA 6: NOVIDADE -->
+                    <!-- LINHA 6 -->
                     <div class="col-12">
                         <label class="form-label">Documentos Anexados / Evidências</label>
                         <input type="text" class="form-control" id="documentosAnexos" placeholder="Ex: Boletim de Ocorrência, Fotos, Laudo Médico, Contrato (Descreva os anexos)">
@@ -225,7 +225,8 @@
                 prioridade: prioridade,
                 advogado: advogado,
                 valorCausa: valorCausa,
-                anexos: anexos
+                anexos: anexos,
+                origemSistema: 'Tribunal de Justiça'
             };
 
             const { error } = await supabaseClient.from('inqueritos').insert([{
