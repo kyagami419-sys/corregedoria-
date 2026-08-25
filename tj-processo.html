@@ -184,7 +184,10 @@
                 </div>
             `;
 
-            if (isJuiz) {
+            // Verifica se o processo está encerrado/bloqueado
+            const isEncerrado = ['Processo Encerrado', 'Transitado em Julgado', 'Arquivado'].includes(data.status);
+
+            if (isJuiz && !isEncerrado) {
                 htmlEventos += `<div class="text-center mt-2 mb-5"><button class="btn btn-outline-info btn-sm" onclick="atribuirAdvogado(${docId})"><i class="fas fa-user-plus"></i> Atribuir / Alterar Advogado do Processo</button></div>`;
             }
 
@@ -217,15 +220,23 @@
                 </div>`;
                 numEventoAtual++;
             });
+            
+            // Exibe mensagem de bloqueio se estiver encerrado
+            if (isEncerrado) {
+                htmlEventos += `<div class="text-center mt-4" style="color: #ef4444; font-weight: bold; padding: 15px; border: 1px dashed #ef4444; border-radius: 6px; background-color: rgba(239, 68, 68, 0.1);"><i class="fas fa-lock"></i> Processo encerrado. Novas manifestações estão bloqueadas.</div>`;
+            }
 
             document.getElementById('areaEventosDinamicos').innerHTML = htmlEventos;
 
-            if (isJuiz || isPromotor || (isAdvogado && extras.advogadoEmail === emailLogadoGlobal)) {
-                document.getElementById('btnManifestacao').style.display = 'block';
-            }
+            // Só exibe botões se o processo NÃO estiver encerrado
+            if (!isEncerrado) {
+                if (isJuiz || isPromotor || (isAdvogado && extras.advogadoEmail === emailLogadoGlobal)) {
+                    document.getElementById('btnManifestacao').style.display = 'block';
+                }
 
-            if (isJuiz) {
-                document.getElementById('btnEncerrar').style.display = 'block';
+                if (isJuiz) {
+                    document.getElementById('btnEncerrar').style.display = 'block';
+                }
             }
         }
 
@@ -233,7 +244,12 @@
             const emailAdv = window.prompt("Informe o E-MAIL exato de cadastro do Advogado no sistema:");
             if (!emailAdv || emailAdv.trim() === "") return;
 
-            const { data } = await supabaseClient.from('inqueritos').select('dados_extras').eq('id', id).single();
+            const { data } = await supabaseClient.from('inqueritos').select('status, dados_extras').eq('id', id).single();
+            if (data && ['Processo Encerrado', 'Transitado em Julgado', 'Arquivado'].includes(data.status)) {
+                alert("Este processo está encerrado e bloqueado.");
+                return;
+            }
+
             let extras = data && data.dados_extras ? JSON.parse(data.dados_extras) : {};
             extras.advogadoEmail = emailAdv.trim();
 
@@ -249,7 +265,13 @@
             const manifestacao = window.prompt("Digite os termos da sua manifestação, intimação ou ato processual:");
             if (!manifestacao || manifestacao.trim() === "") return;
 
-            const { data } = await supabaseClient.from('inqueritos').select('dados_extras').eq('id', id).single();
+            const { data } = await supabaseClient.from('inqueritos').select('status, dados_extras').eq('id', id).single();
+            if (data && ['Processo Encerrado', 'Transitado em Julgado', 'Arquivado'].includes(data.status)) {
+                alert("Este processo já foi encerrado e está bloqueado para novas manifestações.");
+                location.reload();
+                return;
+            }
+
             let extras = data && data.dados_extras ? JSON.parse(data.dados_extras) : {};
             
             let eventosProcesso = extras.eventosProcesso || [];
@@ -268,7 +290,6 @@
             if (!error) { alert("Ato processual registrado com sucesso!"); location.reload(); }
         }
 
-        // FUNÇÃO CORRIGIDA PARA REGISTRAR A DATA E ARQUIVAR/ENCERRAR
         window.encerrarProcesso = async function() {
             if(!confirm("Tem certeza que deseja encerrar e arquivar este processo? Ele será enviado para a aba de Publicações.")) return;
             
