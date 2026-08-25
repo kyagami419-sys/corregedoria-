@@ -134,7 +134,7 @@
         <div class="section-box">
             <div class="section-header">
                 <div><i class="fas fa-gavel"></i> Processos em Andamento</div>
-                <a href="tj-novo-processo.html" class="btn-gold"><i class="fas fa-plus"></i> Novo Processo</a>
+                <a href="tj-novo-processo.html" class="btn-gold" id="btnNovoProcesso" style="display: none;"><i class="fas fa-plus"></i> Novo Processo</a>
             </div>
             <div class="table-responsive">
                 <table class="table-tj">
@@ -195,6 +195,11 @@
                 } else if (cargo === 'PROMOTOR') {
                     isPromotor = true;
                 }
+            }
+
+            // Libera o botão de Novo Processo somente para Juiz ou Promotor
+            if (isJuiz || isPromotor) {
+                document.getElementById('btnNovoProcesso').style.display = "inline-block";
             }
 
             carregarProcessosEmAndamento();
