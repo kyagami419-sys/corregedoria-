@@ -142,7 +142,7 @@
         const supabaseKey = 'sb_publishable_353TT6z3RbRHvIpbQiaK1g_dWt1qAyU';
         const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
-        const emailLogado = localStorage.getItem('usuario_logado_email') || '';
+        const emailLogado = localStorage.getItem('usuario_logado_email'] || '';
         const cargoLogado = localStorage.getItem(`inst_${emailLogado}`) || '';
         const isJuiz = (emailLogado === 'kira@yagami.gov' || cargoLogado === 'JUIZ' || cargoLogado === 'TRIBUNAL');
 
@@ -201,10 +201,11 @@
             else if (autores.length > 0) partes = autores.join(', ');
             else if (reus.length > 0) partes = reus.join(', ');
 
-            let statusFinal = 'Despacho Pendente'; 
+            // Status alterado para exclusivo do Tribunal/Judiciário para que a Polícia Federal filtre e ignore
+            let statusFinal = 'Despacho Pendente (Tribunal)'; 
             if (isJuiz) {
-                if (classe === 'Intimação') statusFinal = 'Intimação Expedida';
-                else statusFinal = 'Despacho Pendente'; 
+                if (classe === 'Intimação') statusFinal = 'Intimação Expedida (Tribunal)';
+                else statusFinal = 'Despacho Pendente (Tribunal)'; 
             }
 
             const numAleatorio = "TJ-" + Math.floor(Math.random() * 9999999);
@@ -247,7 +248,6 @@
                 if (classe === 'Intimação') {
                     const webhookUrl = "https://discord.com/api/webhooks/1541887786322497641/CcmUAqU1pVY1-FqIFX6KC3E8xKVeENoY6tu7lfVpEaskv0oWjtPI5nZ6bQsb74NkAiA_";
                     
-                    // Limitando caracteres de forma segura para não estourar o limite da API do Discord (Erro 400 silenciado)
                     let safeVara = (vara || "Não informado").substring(0, 250);
                     let safePartes = (partes || "Não informado").substring(0, 500);
                     let safeAssunto = (assunto || "Não informado").substring(0, 500);
@@ -257,7 +257,7 @@
                         content: "📢 **Nova Intimação Expedida**",
                         embeds: [{
                             title: "⚖️ Documento Nº: " + numAleatorio,
-                            color: 11898173, // Cor dourada
+                            color: 11898173,
                             fields: [
                                 { name: "Vara / Competência", value: safeVara, inline: true },
                                 { name: "Partes", value: safePartes, inline: true },
