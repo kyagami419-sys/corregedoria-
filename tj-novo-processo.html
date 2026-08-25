@@ -44,12 +44,12 @@
                     <div class="col-md-4">
                         <label class="form-label">Classe Processual</label>
                         <select class="form-select" id="classeSel">
-                            <option>Ação Penal</option>
-                            <option>Ação Civil</option>
-                            <option>Habeas Corpus</option>
-                            <option>Mandado de Segurança</option>
-                            <option style="color: #b58d3d; font-weight: bold;">Despacho</option>
-                            <option style="color: #b58d3d; font-weight: bold;">Intimação</option>
+                            <option value="Ação Penal">Ação Penal</option>
+                            <option value="Ação Civil">Ação Civil</option>
+                            <option value="Habeas Corpus">Habeas Corpus</option>
+                            <option value="Mandado de Segurança">Mandado de Segurança</option>
+                            <option value="Despacho" style="color: #b58d3d; font-weight: bold;">Despacho</option>
+                            <option value="Intimação" style="color: #b58d3d; font-weight: bold;">Intimação</option>
                         </select>
                     </div>
                     <div class="col-md-4">
@@ -246,16 +246,23 @@
                 // --- INÍCIO DISCORD WEBHOOK ---
                 if (classe === 'Intimação') {
                     const webhookUrl = "https://discord.com/api/webhooks/1541887786322497641/CcmUAqU1pVY1-FqIFX6KC3E8xKVeENoY6tu7lfVpEaskv0oWjtPI5nZ6bQsb74NkAiA_";
+                    
+                    // Limitando caracteres de forma segura para não estourar o limite da API do Discord (Erro 400 silenciado)
+                    let safeVara = (vara || "Não informado").substring(0, 250);
+                    let safePartes = (partes || "Não informado").substring(0, 500);
+                    let safeAssunto = (assunto || "Não informado").substring(0, 500);
+                    let safePeticao = peticao.length > 1000 ? peticao.substring(0, 1000) + "..." : peticao;
+
                     const payload = {
                         content: "📢 **Nova Intimação Expedida**",
                         embeds: [{
                             title: "⚖️ Documento Nº: " + numAleatorio,
                             color: 11898173, // Cor dourada
                             fields: [
-                                { name: "Vara / Competência", value: vara || "Não informado", inline: true },
-                                { name: "Partes", value: partes || "Não informado", inline: true },
-                                { name: "Assunto", value: assunto || "Não informado", inline: false },
-                                { name: "Teor da Intimação", value: peticao.length > 1000 ? peticao.substring(0, 1000) + "..." : peticao, inline: false }
+                                { name: "Vara / Competência", value: safeVara, inline: true },
+                                { name: "Partes", value: safePartes, inline: true },
+                                { name: "Assunto", value: safeAssunto, inline: false },
+                                { name: "Teor da Intimação", value: safePeticao, inline: false }
                             ],
                             timestamp: new Date().toISOString()
                         }]
