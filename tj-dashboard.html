@@ -201,6 +201,20 @@
             carregarInqueritosMP();
             carregarDespachosPendentes();
         });
+        
+        // FUNÇÃO DE CORREÇÃO DE DATAS INVÁLIDAS
+        function formatarDataSegura(item) {
+            let dataStr = item.created_at;
+            if (!dataStr && item.dados_extras) {
+                try {
+                    let ext = JSON.parse(item.dados_extras);
+                    dataStr = ext.dataDecisao || ext.dataAutuacao;
+                } catch(e) {}
+            }
+            if (!dataStr) return 'Desconhecida';
+            let d = new Date(dataStr);
+            return isNaN(d.getTime()) ? 'Desconhecida' : d.toLocaleDateString('pt-BR');
+        }
 
         function fazerLogout() {
             localStorage.removeItem('usuario_logado_email');
@@ -240,7 +254,7 @@
 
                 tbody.innerHTML += `<tr>
                     <td><strong>${item.numero || 'S/N'}</strong></td><td>Ação Penal</td><td>${partesStr}</td>
-                    <td>${new Date(item.created_at).toLocaleDateString('pt-BR')}</td>
+                    <td>${formatarDataSegura(item)}</td>
                     <td><span class="badge-status bg-andamento">Em Instrução</span></td>
                     <td class="text-center">${acoes}</td>
                 </tr>`;
@@ -269,7 +283,7 @@
 
                 tbody.innerHTML += `<tr>
                     <td><strong>${item.numero || 'S/N'}</strong></td><td>POLÍCIA FEDERAL</td><td>Em Apuração</td>
-                    <td>${new Date(item.created_at).toLocaleDateString('pt-BR')}</td>
+                    <td>${formatarDataSegura(item)}</td>
                     <td><span class="badge-status" style="background-color: #0284c7; color: #e0f2fe;">Aguardando MP</span></td>
                     <td class="text-center">${acoes}</td>
                 </tr>`;
@@ -322,7 +336,7 @@
 
                 tbody.innerHTML += `<tr>
                     <td><strong>${item.numero || 'S/N'}</strong></td><td>${tipoDecisao}</td>
-                    <td>${new Date(item.created_at).toLocaleDateString('pt-BR')}</td><td>Vara Criminal</td>
+                    <td>${formatarDataSegura(item)}</td><td>Vara Criminal</td>
                     <td class="text-center">${acoes}</td>
                 </tr>`;
             });
