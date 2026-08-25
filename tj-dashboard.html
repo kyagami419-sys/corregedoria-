@@ -202,9 +202,9 @@
             carregarDespachosPendentes();
         });
         
-        // FUNÇÃO DE CORREÇÃO DE DATAS INVÁLIDAS
+        // FUNÇÃO DE CORREÇÃO DE DATAS INVÁLIDAS - AGORA PUXANDO DO 'data_criacao'
         function formatarDataSegura(item) {
-            let dataStr = item.created_at;
+            let dataStr = item.data_criacao || item.data_inicio;
             if (!dataStr && item.dados_extras) {
                 try {
                     let ext = JSON.parse(item.dados_extras);
