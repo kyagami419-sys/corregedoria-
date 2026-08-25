@@ -242,6 +242,37 @@
                 btnArea.style.pointerEvents = 'auto';
                 btnArea.style.opacity = '1';
             } else {
+                
+                // --- INÍCIO DISCORD WEBHOOK ---
+                if (classe === 'Intimação') {
+                    const webhookUrl = "https://discord.com/api/webhooks/1541887786322497641/CcmUAqU1pVY1-FqIFX6KC3E8xKVeENoY6tu7lfVpEaskv0oWjtPI5nZ6bQsb74NkAiA_";
+                    const payload = {
+                        content: "📢 **Nova Intimação Expedida**",
+                        embeds: [{
+                            title: "⚖️ Documento Nº: " + numAleatorio,
+                            color: 11898173, // Cor dourada
+                            fields: [
+                                { name: "Vara / Competência", value: vara || "Não informado", inline: true },
+                                { name: "Partes", value: partes || "Não informado", inline: true },
+                                { name: "Assunto", value: assunto || "Não informado", inline: false },
+                                { name: "Teor da Intimação", value: peticao.length > 1000 ? peticao.substring(0, 1000) + "..." : peticao, inline: false }
+                            ],
+                            timestamp: new Date().toISOString()
+                        }]
+                    };
+
+                    try {
+                        await fetch(webhookUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                    } catch (err) {
+                        console.error("Erro ao enviar webhook do Discord:", err);
+                    }
+                }
+                // --- FIM DISCORD WEBHOOK ---
+
                 alert("Documento gerado com sucesso e enviado para a Caixa de Despachos do Tribunal!");
                 window.location.href = 'tj-dashboard.html';
             }
