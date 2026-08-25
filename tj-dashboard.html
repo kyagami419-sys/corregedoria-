@@ -296,7 +296,8 @@
         }
 
         async function carregarDespachosPendentes() {
-            const { data } = await supabaseClient.from('inqueritos').select('*').in('status', ['Aguardando Despacho (Denúncia)', 'Aguardando Despacho (Arquivamento)']).order('id', { ascending: false });
+            // Adicionado 'Despacho Pendente' para buscar os novos processos aqui no TJ
+            const { data } = await supabaseClient.from('inqueritos').select('*').in('status', ['Aguardando Despacho (Denúncia)', 'Aguardando Despacho (Arquivamento)', 'Despacho Pendente']).order('id', { ascending: false });
             const tbody = document.getElementById('tabelaDespachos');
             tbody.innerHTML = '';
             
@@ -308,7 +309,8 @@
             document.getElementById('statDespachos').innerText = String(data.length);
 
             data.forEach(item => {
-                let tipoDecisao = item.status.includes('Denúncia') ? 'Recebimento de Denúncia' : 'Homologação de Arquivamento';
+                // Definindo o texto corretamente caso seja um Despacho Inicial criado pela página de novo processo
+                let tipoDecisao = item.status.includes('Denúncia') ? 'Recebimento de Denúncia' : (item.status.includes('Arquivamento') ? 'Homologação de Arquivamento' : 'Despacho Inicial');
                 
                 const emailLogado = localStorage.getItem('usuario_logado_email');
                 let acoes = `<button class="btn-action text-info border-info me-1" title="Visualizar Inquérito" onclick="window.location.href='tj-visualizar.html?id=${item.id}'"><i class="fas fa-eye"></i> Visualizar</button>`;

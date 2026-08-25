@@ -428,14 +428,15 @@
             const andamentoPortarias = {};
             const andamentoIntimacoes = {};
 
-            // Oculta completamente do painel policial qualquer status que pertence ao fluxo do TJ / MP
+            // LISTA DE STATUS QUE NÃO DEVEM APARECER NO PAINEL DA POLÍCIA
             const statusForaDoAndamento = [
                 'Finalizado',
                 'Arquivado',
                 'Remetido ao MP',
                 'Aguardando Despacho (Denúncia)',
                 'Aguardando Despacho (Arquivamento)',
-                'Arquivado MP'
+                'Arquivado MP',
+                'Despacho Pendente' // <- Adicionado para ocultar da polícia os despachos pendentes
             ];
 
             if (data && data.length > 0) {
@@ -454,8 +455,8 @@
 
                     let tipoDoc = item.tipo || 'Inquérito Policial';
 
-                    // Se for qualquer status de Finalizado ou Remetido ao TJ/MP
-                    if (item.status === 'Finalizado' || item.status === 'Remetido ao MP' || item.status.includes('Aguardando Despacho') || item.status === 'Arquivado MP') {
+                    // Se for qualquer status de Finalizado ou Remetido ao TJ/MP/Despacho
+                    if (item.status === 'Finalizado' || item.status === 'Remetido ao MP' || item.status.includes('Despacho') || item.status === 'Arquivado MP') {
                         qtdFinalizados++;
                         if (tipoDoc !== 'Inquérito Policial') qtdOutros++;
                     } else if (!statusForaDoAndamento.includes(item.status)) {
