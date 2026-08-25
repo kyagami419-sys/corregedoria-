@@ -257,7 +257,12 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
+        const supabaseUrl = 'https://qnfckdzotzenaqaswqjb.supabase.co'; 
+        const supabaseKey = 'sb_publishable_353TT6z3RbRHvIpbQiaK1g_dWt1qAyU';
+        const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
         const listaCrimes = [
             { id: 1, nome: "Abuso de Autoridade", meses: 50, multa: 300000 },
             { id: 2, nome: "Corrupção Passiva e/ou Ativa", meses: 50, multa: 300000 },
@@ -341,6 +346,46 @@
         let reducaoTotal = 0;
         let atenuantesAtivos = [];
         let isWebhookOnCooldown = false;
+
+        // Função para checar e exibir as mensagens da administração
+        async function checarAvisosCalculadora() {
+            const { data, error } = await supabaseClient
+                .from('mensagens_sistema')
+                .select('*')
+                .eq('email_destino', 'calculadora');
+                
+            if (data && data.length > 0) {
+                let lidas = JSON.parse(localStorage.getItem('avisos_lidos_calc') || '[]');
+                const container = document.querySelector('.container-main');
+                
+                data.forEach(msg => {
+                    // Só exibe se ainda não foi marcado como lido nesta máquina e se já não estiver visível
+                    if (!lidas.includes(msg.id) && !document.getElementById('aviso_' + msg.id)) {
+                        const alertDiv = document.createElement('div');
+                        alertDiv.id = 'aviso_' + msg.id;
+                        alertDiv.className = 'alert alert-dismissible fade show mb-4';
+                        alertDiv.style.backgroundColor = 'rgba(181, 141, 61, 0.15)';
+                        alertDiv.style.color = '#f3f4f6';
+                        alertDiv.style.border = '1px solid #b58d3d';
+                        alertDiv.innerHTML = `
+                            <strong><i class="fas fa-exclamation-triangle" style="color: #b58d3d;"></i> AVISO DA ADMINISTRAÇÃO:</strong><br>
+                            <span style="margin-top: 5px; display: block;">${msg.mensagem.replace(/\n/g, '<br>')}</span>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close" onclick="marcarAvisoLido('${msg.id}')"></button>
+                        `;
+                        container.insertBefore(alertDiv, container.firstChild);
+                    }
+                });
+            }
+        }
+
+        // Marcar aviso como lido permanentemente ao fechar
+        window.marcarAvisoLido = function(id) {
+            let lidas = JSON.parse(localStorage.getItem('avisos_lidos_calc') || '[]');
+            if (!lidas.includes(id)) {
+                lidas.push(id);
+                localStorage.setItem('avisos_lidos_calc', JSON.stringify(lidas));
+            }
+        }
 
         // Configuração Sistema Ctrl+V nas Imagens (AGORA COM 4 FOTOS)
         document.addEventListener('paste', function(e) {
@@ -808,6 +853,8 @@
         window.onload = () => {
             renderizarCrimes();
             addPolicial(); // Inicia com uma linha de policial vazia
+            checarAvisosCalculadora(); // Checa se há algum aviso global logo que a tela carrega
+            setInterval(checarAvisosCalculadora, 30000); // Fica conferindo se há um aviso novo a cada 30 segundos
         };
     </script>
 </body>
