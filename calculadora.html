@@ -170,7 +170,7 @@
 
                         <!-- Campos para Upload / Ctrl+V (AGORA COM 4 FOTOS) -->
                         <div class="col-md-6"><label class="form-label text-warning"><i class="fas fa-camera"></i> Foto do Inventário (Arquivo ou Ctrl+V)</label><input type="file" id="calcFotoInventario" class="form-control" accept="image/*"></div>
-                        <div class="col-md-6"><label class="form-label text-warning"><i class="fas fa-camera"></i> Foto do Rosco (Arquivo ou Ctrl+V)</label><input type="file" id="calcFotoRosco" class="form-control" accept="image/*"></div>
+                        <div class="col-md-6"><label class="form-label text-warning"><i class="fas fa-camera"></i> Foto do Rosto (Arquivo ou Ctrl+V)</label><input type="file" id="calcFotoRosto" class="form-control" accept="image/*"></div>
                         <div class="col-md-6"><label class="form-label text-warning"><i class="fas fa-camera"></i> Foto Adicional 1 (Arquivo ou Ctrl+V)</label><input type="file" id="calcFotoExtra1" class="form-control" accept="image/*"></div>
                         <div class="col-md-6"><label class="form-label text-warning"><i class="fas fa-camera"></i> Foto Adicional 2 (Arquivo ou Ctrl+V)</label><input type="file" id="calcFotoExtra2" class="form-control" accept="image/*"></div>
 
@@ -393,7 +393,7 @@
                 const file = e.clipboardData.files[0];
                 if (file.type.startsWith('image/')) {
                     const invInput = document.getElementById('calcFotoInventario');
-                    const rosInput = document.getElementById('calcFotoRosco');
+                    const rosInput = document.getElementById('calcFotoRosto');
                     const ex1Input = document.getElementById('calcFotoExtra1');
                     const ex2Input = document.getElementById('calcFotoExtra2');
                     
@@ -405,7 +405,7 @@
                         alert("Imagem colada com sucesso no campo: Foto do Inventário");
                     } else if (!rosInput.files.length) {
                         rosInput.files = dataTransfer.files;
-                        alert("Imagem colada com sucesso no campo: Foto do Rosco");
+                        alert("Imagem colada com sucesso no campo: Foto do Rosto");
                     } else if (!ex1Input.files.length) {
                         ex1Input.files = dataTransfer.files;
                         alert("Imagem colada com sucesso no campo: Foto Adicional 1");
@@ -587,7 +587,7 @@
             const oab = document.getElementById('calcAdvOAB').value || 'S/N';
             
             const fotoInventarioStr = document.getElementById('calcFotoInventario').files.length > 0 ? 'Imagem Anexada no Sistema' : 'Nenhuma';
-            const fotoRoscoStr = document.getElementById('calcFotoRosco').files.length > 0 ? 'Imagem Anexada no Sistema' : 'Nenhuma';
+            const fotoRostoStr = document.getElementById('calcFotoRosto').files.length > 0 ? 'Imagem Anexada no Sistema' : 'Nenhuma';
             const fotoEx1Str = document.getElementById('calcFotoExtra1').files.length > 0 ? 'Imagem Anexada no Sistema' : 'Nenhuma';
             const fotoEx2Str = document.getElementById('calcFotoExtra2').files.length > 0 ? 'Imagem Anexada no Sistema' : 'Nenhuma';
             
@@ -604,7 +604,7 @@
             texto += `**👮 Oficiais Responsáveis:**\n${getListaPoliciaisString(false)}`;
             texto += `**💼 Advogado:** ${adv} | **OAB:** ${oab}\n`;
             texto += `**📷 Foto do Inventário:** ${fotoInventarioStr}\n`;
-            texto += `**📷 Foto do Rosco:** ${fotoRoscoStr}\n`;
+            texto += `**📷 Foto do Rosto:** ${fotoRostoStr}\n`;
             texto += `**📷 Foto Adicional 1:** ${fotoEx1Str}\n`;
             texto += `**📷 Foto Adicional 2:** ${fotoEx2Str}\n\n`;
             
@@ -716,7 +716,7 @@
             let fileCount = 0;
             
             const invFile = document.getElementById('calcFotoInventario').files[0];
-            const rosFile = document.getElementById('calcFotoRosco').files[0];
+            const rosFile = document.getElementById('calcFotoRosto').files[0];
             const ex1File = document.getElementById('calcFotoExtra1').files[0];
             const ex2File = document.getElementById('calcFotoExtra2').files[0];
 
@@ -736,7 +736,7 @@
             }
 
             addImageToWebhook(invFile, 'inventario.png');
-            addImageToWebhook(rosFile, 'rosco.png');
+            addImageToWebhook(rosFile, 'rosto.png');
             addImageToWebhook(ex1File, 'extra1.png');
             addImageToWebhook(ex2File, 'extra2.png');
 
@@ -828,7 +828,7 @@
             document.getElementById('calcAdvNome').value = '';
             document.getElementById('calcAdvOAB').value = '';
             document.getElementById('calcFotoInventario').value = '';
-            document.getElementById('calcFotoRosco').value = '';
+            document.getElementById('calcFotoRosto').value = '';
             document.getElementById('calcFotoExtra1').value = '';
             document.getElementById('calcFotoExtra2').value = '';
             document.getElementById('calcRelato').value = '';
