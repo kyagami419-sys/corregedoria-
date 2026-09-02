@@ -1049,9 +1049,9 @@
         // Enviar Webhook
         async function enviarWebhook() {
             let webhookURL;
-            if (abaAtual === 'limpeza') webhookURL = 'https://discord.com/api/webhooks/1544468792162390077/se7LeoWUk7r53RSV9dbu7lNEMVNOtLx7CkxZbcUnN85QQ9V2ljeZEXVLsbk-ANojb8xd';
-            else if (abaAtual === 'alteracao') webhookURL = WEBHOOK_ALTERACAO;
-            else if (abaAtual === 'porte') webhookURL = WEBHOOK_PORTE;
+            if (abaAtual === 'limpeza') webhookURL = 'https://discord.com/api/webhooks/1544786300383658094/GoifATauNUbZAViMd3DLzdxvmkeJjcfwOaCLfVl4ob26qbduzMfoQ73HaL15qAfxi0p4';
+            else if (abaAtual === 'alteracao') webhookURL = 'https://discord.com/api/webhooks/1544786794325745804/M5Zde3C65-wjKm6hCcUV-gVs52mr3QbrfVpnuOSuh6xE62Wj7-_3FiKzpnrB2n9VC9lC';
+            else if (abaAtual === 'porte') webhookURL = 'https://discord.com/api/webhooks/1544786578256433152/ORuatgcc4Q9wwgDfJB_ak0en-j4WVcfgRFIpq1O9-PLhJgZCAPlfA132ba4S-s4eRv_P';
 
             if (webhookURL.startsWith("URL_WEBHOOK")) {
                 alert(`❌ Você precisa inserir a URL do Webhook de ${abaAtual.toUpperCase()} no código fonte (linha ~600).`);
