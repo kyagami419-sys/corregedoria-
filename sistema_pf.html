@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Polícia Federal</title>
+    <!-- Biblioteca para gerar PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #0b101a;
+            --panel-bg: #111824;
+            --border-color: #1f2937;
+            --accent-yellow: #ffcc00;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --input-bg: #070a10;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 20px;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            display: flex;
+            background-color: var(--panel-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+            width: fit-content;
+        }
+
+        .nav-item {
+            padding: 15px 30px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: 0.3s;
+            user-select: none;
+        }
+
+        .nav-item:hover {
+            color: #fff;
+        }
+
+        .nav-item.active {
+            background: linear-gradient(180deg, #ffd700 0%, #ffaa00 100%);
+            color: #000;
+            box-shadow: 0 0 15px rgba(255, 204, 0, 0.4);
+        }
+
+        /* Layout */
+        .container {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 20px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Form Area */
+        .form-panel {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 25px;
+        }
+
+        .form-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            font-family: 'Rajdhani', sans-serif;
+            color: var(--accent-yellow);
+            font-size: 1.5rem;
+            text-transform: uppercase;
+        }
+
+        .section-title {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.2rem;
+            color: var(--accent-yellow);
+            text-transform: uppercase;
+            border-left: 4px solid var(--accent-yellow);
+            padding-left: 10px;
+            margin: 30px 0 15px 0;
+            background: linear-gradient(90deg, rgba(255, 204, 0, 0.1) 0%, transparent 100%);
+        }
+
+        .row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        .col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input, select, textarea {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--accent-yellow);
+            box-shadow: 0 0 5px rgba(255, 204, 0, 0.2);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* Image Upload Area */
+        .image-upload-zone {
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+            background-color: var(--input-bg);
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-upload-zone:hover, .image-upload-zone.active-zone {
+            border-color: var(--accent-yellow);
+            background-color: rgba(255, 204, 0, 0.05);
+        }
+
+        .image-upload-zone.active-zone::before {
+            content: 'Pressione CTRL+V para colar';
+            position: absolute;
+            top: -10px;
+            background: var(--accent-yellow);
+            color: #000;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 10px;
+            z-index: 2;
+        }
+
+        .image-upload-zone img.preview-img {
+            max-width: 100%;
+            max-height: 150px;
+            display: none;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+
+        /* PDF Preview Area (Redesigned for Official Look matching image_23850f) */
+        .pdf-panel {
+            background-color: #fff;
+            color: #000;
+            padding: 40px;
+            font-family: 'Arial', sans-serif;
+            position: relative;
+            height: fit-content;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        /* Outer border */
+        .pdf-panel::before {
+            content: '';
+            position: absolute;
+            top: 15px; left: 15px; right: 15px; bottom: 15px;
+            border: 2px solid #2c3e50;
+            pointer-events: none;
+        }
+        
+        .pdf-panel::after {
+            content: '';
+            position: absolute;
+            top: 20px; left: 20px; right: 20px; bottom: 20px;
+            border: 1px solid #2c3e50;
+            pointer-events: none;
+        }
+
+        .pdf-header {
+            text-align: center;
+            margin-bottom: 20px;
+            margin-top: 10px;
+            padding-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Main line under header */
+        .pdf-header::after {
+             content: '';
+             display: block;
+             width: 90%;
+             margin: 15px auto 0 auto;
+             border-bottom: 1px solid #2c3e50;
+        }
+
+        .pdf-header h1 {
+            font-size: 1.4rem;
+            margin: 0;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+        
+        .pdf-header h2 {
+            font-size: 1rem;
+            font-weight: normal;
+            margin: 5px 0 0 0;
+            color: #333;
+        }
+
+        .pdf-title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.3rem;
+            text-decoration: underline;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 1;
+        }
+
+        .pdf-declaration {
+            text-indent: 40px;
+            text-align: justify;
+            font-size: 1rem;
+            line-height: 1.5;
+            margin-bottom: 25px;
+            padding: 0 25px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .pdf-table {
+            width: calc(100% - 50px);
+            margin: 0 auto 25px auto;
+            border-collapse: collapse;
+            font-family: 'Arial', sans-serif;
+            position: relative;
+            z-index: 1;
+        }
+
+        .pdf-table th, .pdf-table td {
+            border: 1px solid #000;
+            padding: 8px 12px;
+            font-size: 0.9rem;
+        }
+
+        .pdf-table th {
+            background-color: #e2e2e2;
+            text-align: left;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .pdf-table td.label-cell {
+            font-weight: bold;
+            width: 40%;
+        }
+
+        .pdf-photo-box {
+            width: 80px;
+            height: 105px;
+            border: 1px solid #000;
+            position: absolute;
+            right: 40px;
+            top: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #666;
+            overflow: hidden;
+            background: #2a2d36;
+            z-index: 2;
+        }
+        .pdf-photo-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Buttons */
+        .actions-panel {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.1rem;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-yellow { background-color: var(--accent-yellow); color: #000; }
+        .btn-yellow:hover { background-color: #e6b800; }
+        .btn-blue { background-color: #2563eb; color: #fff; }
+        .btn-blue:hover { background-color: #1d4ed8; }
+    </style>
+</head>
+<body>
+
+    <!-- BOTÃO VOLTAR PARA A PÁGINA PRINCIPAL -->
+    <div style="margin-bottom: 20px;">
+        <button class="btn" style="background-color: #1f2937; color: white; width: fit-content; padding: 10px 20px;" onclick="window.history.back()">⬅ VOLTAR PARA PÁGINA DA POLÍCIA FEDERAL</button>
+    </div>
+
+    <!-- NAVEGAÇÃO -->
+    <div class="top-nav">
+        <div class="nav-item active" onclick="mudarAba('limpeza', this)">Limpeza de Ficha</div>
+        <div class="nav-item" onclick="mudarAba('alteracao', this)">Alteração de Registro</div>
+        <div class="nav-item" onclick="mudarAba('porte', this)">Porte de Armas</div>
+    </div>
+
+    <div class="container">
+        
+        <!-- ================= ABA: LIMPEZA DE FICHA ================= -->
+        <div id="tab-limpeza" class="tab-content active">
+            <div class="form-panel">
+                <div class="form-header">🧹 Certidão de Limpeza de Ficha</div>
+
+                <div class="section-title">Identificação do Requerente</div>
+                <div class="row">
+                    <div class="col">
+                        <label>Nome Completo</label>
+                        <input type="text" id="l_nome" placeholder="Nome do requerente" oninput="updatePDF()">
+                    </div>
+                    <div class="col">
+                        <label>Telefone</label>
+                        <input type="text" id="l_telefone" placeholder="Ex: 123-456" oninput="updatePDF()">
+                    </div>
+                    <div class="col">
+                        <label>Registro Geral (RG)</label>
+                        <input type="text" id="l_rg" placeholder="Ex: 1234" oninput="updatePDF()">
+                    </div>
+                </div>
+
+                <div class="section-title">Dados da Emissão</div>
+                <div class="row">
+                    <div class="col">
+                        <label>Protocolo de Emissão</label>
+                        <input type="text" id="l_protocolo" readonly>
+                    </div>
+                    <div class="col">
+                        <label>Data de Emissão (Hoje)</label>
+                        <input type="text" id="l_data" readonly>
+                    </div>
+                </div>
+
+                <div class="section-title">Identificação do Advogado</div>
+                <div class="row">
+                    <div class="col">
+                        <label>Nome do Advogado</label>
+                        <input type="text" id="l_advogado" placeholder="Nome completo do representante" oninput="updatePDF()">
+                    </div>
+                    <div class="col">
+                        <label>Passaporte do Advogado</label>
+                        <input type="text" id="l_adv_pass" placeholder="Número do passaporte" oninput="updatePDF()">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label>Telefone do Advogado</label>
+                        <input type="text" id="l_adv_tel" placeholder="Telefone de contato" oninput="updatePDF()">
+                    </div>
+                </div>
+
+                <div class="section-title">Detalhes da Limpeza</div>
+                <div class="row">
+                    <div class="col">
+                        <label>Artigos a serem limpos</label>
+                        <textarea id="l_artigos" placeholder="Liste os artigos criminais a serem removidos..." oninput="updatePDF()"></textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label>Tipo de Limpeza</label>
+                        <select id="l_tipo" onchange="updatePDF()">
+                            <option value="Limpeza Total">Limpeza Total</option>
+                            <option value="Limpeza Parcial">Limpeza Parcial</option>
+                            <option value="Ajuste Administrativo">Ajuste Administrativo</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="section-title">Dados do Oficial Responsável</div>
+                <div class="row">
+                    <div class="col">
+                        <label>ID Funcional (Oficial)</label>
+                        <input type="text" id="l_id_oficial" placeholder="Ex: 12345" oninput="updatePDF()">
+                    </div>
+                    <div class="col">
+                        <label>Nome do Policial</label>
+                        <input type="text" id="l_nome_oficial" placeholder="Nome completo" oninput="updatePDF()">
+                    </div>
+                </div>
+
+                <div class="section-title">Anexos & Evidências</div>
+                <div class="row">
+                    <div class="col">
+                        <label>Foto do Cidadão (3x4) / Rosto</label>
+                        <div class="image-upload-zone" id="zone_l_cidadao" onclick="activateZone(this)">
+                            <span>📷 Clique aqui e dê CTRL+V</span>
+                            <img class="preview-img">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= ABA: ALTERAÇÃO DE REGISTRO ================= -->
+        <div id="tab-alteracao" class="tab-content">
+            <div class="form-panel">
+                <div class="form-header">🔄 Alteração de Registro Civil</div>
+
+                <div class="section-title">Dados da Emissão</div>
+                <div class="row">
+                    <div class="col">
+                        <label>Protocolo de Emissão</label>
+                        <input type="text" id="a_protocolo" readonly>
+                    </div>
+                    <div class="col">
+                        <label>Data de Emissão (Hoje)</label>
+                        <input type="text" id="a_data" readonly>
+                    </div>
+                </div>
+
+                <div class="section-title">1. Identificação Antiga</div>
+                <div class="row">
+                    <div class="col">
+                        <label>Nome Antigo</label>
+                        <input type="text" id="a_nome_antigo" placeholder="Nome anterior" oninput="updatePDF()">
+                    </div>
+                    <div class="col">
+                        <label>Passaporte Antigo</label>
+                        <input type="text" id="a_pass_antigo" placeholder="ID anterior" oninput="updatePDF()">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label>Telefone Antigo</label>
+                        <input type="text" id="a_tel_antigo" placeholder="Contato anterior" oninput="updatePDF()">
+                    </div>
+                    <div class="col">
+                        <label>RG Antigo</label>
+                        <input type="text" id="a_rg_antigo" placeholder="RG anterior" oninput="updatePDF()">
+                    </div>
+                </div>
+
+                <div class="section-title">2. Identificação Solicitada</div>
+                <div class="row">
+                    <div class="col">
+                        <label>Novo Nome</label>
+                        <input type="text" id="a_nome_novo" placeholder="Nome solicitado" oninput="updatePDF()">
+                    </div>
+                    <div class="col">
+                        <label>Novo Passaporte</label>
+                        <input type="text" id="a_pass_novo" placeholder="ID solicitado" oninput="updatePDF()">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label>Novo Telefone</label>
+                        <input type="text" id="a_tel_novo" placeholder="Contato solicitado" oninput="updatePDF()">
+                    </div>
+                    <div class="col">
+                        <label>Novo RG</label>
+                        <input type="text" id="a_rg_novo" placeholder="RG solicitado" oninput="updatePDF()">
+                    </div>
+                </div>
+
+                <div class="section-title">3. Informações do Procedimento</div>
+                <div class="row">
+                    <div class="col">
+                        <label>Próxima Permissão (+15 Dias)</label>
+                        <input type="text" id="a_prox_perm" readonly>
+                    </div>
+                </div>
+                
+                <div class="section-title">Identificação do Advogado</div>
+                <div class="row">
+                    <div class="col">
+                        <label>Nome do Advogado</label>
+                        <input type="text" id="a_advogado" placeholder="Nome do advogado responsável" oninput="updatePDF()">
+                    </div>
+                    <div class="col">
+                        <label>Passaporte do Advogado</label>
+                        <input type="text" id="a_adv_pass" placeholder="Número do passaporte" oninput="updatePDF()">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label>Telefone do Advogado</label>
+                        <input type="text" id="a_adv_tel" placeholder="Telefone de contato" oninput="updatePDF()">
+                    </div>
+                </div>
+
+                <div class="section-title">Dados do Oficial Responsável</div>
+                <div class="row">
+                    <div class="col">
+                        <label>ID Funcional (Oficial)</label>
+                        <input type="text" id="a_id_oficial" placeholder="Ex: 12345" oninput="updatePDF()">
+                    </div>
+                    <div class="col">
+                        <label>Nome do Policial</label>
+                        <input type="text" id="a_nome_oficial" placeholder="Nome completo" oninput="updatePDF()">
+                    </div>
+                </div>
+
+                <div class="section-title">Anexos</div>
+                <div class="row">
+                    <div class="col">
+                        <label>Foto do Cidadão (3x4)</label>
+                        <div class="image-upload-zone" id="zone_a_cidadao" onclick="activateZone(this)">
+                            <span>📷 Clique aqui e dê CTRL+V (Foto 3x4 Nova)</span>
+                            <img class="preview-img">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= ABA: PORTE DE ARMAS ================= -->
+        <div id="tab-porte" class="tab-content">
+            <div class="form-panel">
+                <div class="form-header">🔫 Porte de Armas de Fogo</div>
+
+                <div class="section-title">Identificação do Requerente</div>
+                <div class="row">
+                    <div class="col">
+                        <label>Nome Completo</label>
+                        <input type="text" id="p_nome" placeholder="Nome do requerente" oninput="updatePDF()">
+                    </div>
+                    <div class="col">
+                        <label>Passaporte / ID</label>
+                        <input type="text" id="p_passaporte" placeholder="Ex: 123" oninput="updatePDF()">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label>Telefone</label>
+                        <input type="text" id="p_telefone" placeholder="Ex: 123-456" oninput="updatePDF()">
+                    </div>
+                    <div class="col">
+                        <label>Registro Geral (RG)</label>
+                        <input type="text" id="p_rg" placeholder="Ex: 1234" oninput="updatePDF()">
+                    </div>
+                </div>
+
+                <div class="section-title">Dados da Emissão</div>
+                <div class="row">
+                    <div class="col">
+                        <label>Protocolo de Emissão</label>
+                        <input type="text" id="p_protocolo" readonly>
+                    </div>
+                    <div class="col">
+                        <label>Data de Emissão (Hoje)</label>
+                        <input type="text" id="p_data" readonly>
+                    </div>
+                </div>
+
+                <div class="section-title">Identificação do Advogado</div>
+                <div class="row">
+                    <div class="col">
+                        <label>Nome do Advogado</label>
+                        <input type="text" id="p_advogado" placeholder="Nome completo do representante" oninput="updatePDF()">
+                    </div>
+                    <div class="col">
+                        <label>Passaporte do Advogado</label>
+                        <input type="text" id="p_adv_pass" placeholder="Número do passaporte" oninput="updatePDF()">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label>Telefone do Advogado</label>
+                        <input type="text" id="p_adv_tel" placeholder="Telefone de contato" oninput="updatePDF()">
+                    </div>
+                </div>
+
+                <div class="section-title">Dados do Porte de Armas</div>
+                <div class="row">
+                    <div class="col">
+                        <label>Validade do Porte</label>
+                        <input type="text" id="p_validade" placeholder="Ex: 1 ano / Vitalício" oninput="updatePDF()">
+                    </div>
+                    <div class="col">
+                        <label>Categoria do Porte</label>
+                        <select id="p_categoria" onchange="updatePDF()">
+                            <option value="Defesa Pessoal">Defesa Pessoal</option>
+                            <option value="Colecionador/Atirador/Caçador (CAC)">Colecionador/Atirador/Caçador (CAC)</option>
+                            <option value="Segurança Privada">Segurança Privada</option>
+                            <option value="Funcional">Funcional</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="section-title">Dados do Oficial Responsável</div>
+                <div class="row">
+                    <div class="col">
+                        <label>ID Funcional (Oficial)</label>
+                        <input type="text" id="p_id_oficial" placeholder="Ex: 12345" oninput="updatePDF()">
+                    </div>
+                    <div class="col">
+                        <label>Nome do Policial</label>
+                        <input type="text" id="p_nome_oficial" placeholder="Nome completo" oninput="updatePDF()">
+                    </div>
+                </div>
+
+                <div class="section-title">Anexos</div>
+                <div class="row">
+                    <div class="col">
+                        <label>Foto do Cidadão (3x4)</label>
+                        <div class="image-upload-zone" id="zone_p_cidadao" onclick="activateZone(this)">
+                            <span>📷 Clique aqui e dê CTRL+V</span>
+                            <img class="preview-img">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= LADO DIREITO: PDF E BOTÕES ================= -->
+        <div>
+            <!-- PDF LIMPEZA -->
+            <div id="pdf-limpeza" class="pdf-panel tab-content active">
+                <div class="pdf-header">
+                    <h1>REPÚBLICA FEDERATIVA DO BRASIL</h1>
+                    <h2>Ministério da Justiça e Segurança Pública</h2>
+                    <h2>Departamento de Polícia Federal</h2>
+                </div>
+                <div class="pdf-title">CERTIDÃO DE LIMPEZA DE FICHA</div>
+                
+                <!-- Photos based on image_23850f style -->
+                <div class="pdf-photo-box" id="pdf_l_box_cidadao">FOTO CIDADÃO</div>
+
+                <p class="pdf-declaration">
+                    O <strong>Departamento de Polícia Federal</strong>, no uso de suas atribuições legais, certifica que o cidadão abaixo identificado passou por procedimento oficial de regularização de antecedentes.
+                </p>
+
+                <table class="pdf-table">
+                    <thead><tr><th colspan="2">DADOS DO REQUERENTE</th></tr></thead>
+                    <tbody>
+                        <tr><td class="label-cell">NOME COMPLETO:</td><td id="pdf_l_nome">---</td></tr>
+                        <tr><td class="label-cell">REGISTRO GERAL (RG):</td><td id="pdf_l_rg">---</td></tr>
+                        <tr><td class="label-cell">TELEFONE:</td><td id="pdf_l_telefone">---</td></tr>
+                    </tbody>
+                </table>
+
+                <table class="pdf-table">
+                    <thead><tr><th colspan="2">DADOS DO PROCEDIMENTO</th></tr></thead>
+                    <tbody>
+                        <tr><td class="label-cell">PROTOCOLO:</td><td id="pdf_l_protocolo">---</td></tr>
+                        <tr><td class="label-cell">DATA DA EXECUÇÃO:</td><td id="pdf_l_data">---</td></tr>
+                        <tr><td class="label-cell">TIPO DE LIMPEZA:</td><td id="pdf_l_tipo">Limpeza Total</td></tr>
+                        <tr><td class="label-cell">ARTIGOS REMOVIDOS:</td><td id="pdf_l_artigos">---</td></tr>
+                    </tbody>
+                </table>
+
+                <table class="pdf-table">
+                    <thead><tr><th colspan="2">RESPONSÁVEIS</th></tr></thead>
+                    <tbody>
+                        <tr><td class="label-cell">OFICIAL DA POLÍCIA FEDERAL:</td><td id="pdf_l_oficial">---</td></tr>
+                        <tr><td class="label-cell">ADVOGADO ACOMPANHANTE:</td><td id="pdf_l_advogado">---</td></tr>
+                        <tr><td class="label-cell">PASSAPORTE ADVOGADO:</td><td id="pdf_l_adv_pass">---</td></tr>
+                        <tr><td class="label-cell">TELEFONE ADVOGADO:</td><td id="pdf_l_adv_tel">---</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- PDF ALTERAÇÃO -->
+            <div id="pdf-alteracao" class="pdf-panel tab-content">
+                <div class="pdf-header">
+                    <h1>REPÚBLICA FEDERATIVA DO BRASIL</h1>
+                    <h2>Ministério da Justiça e Segurança Pública</h2>
+                    <h2>Departamento de Polícia Federal</h2>
+                </div>
+                <div class="pdf-title">CERTIDÃO DE ALTERAÇÃO DE REGISTRO CIVIL</div>
+                
+                <div class="pdf-photo-box" id="pdf_a_box_cidadao">FOTO CIDADÃO</div>
+
+                <p class="pdf-declaration">
+                    O <strong>Departamento de Polícia Federal</strong> defere o pedido de alteração de registro civil, atualizando os dados do requerente no sistema federal conforme especificado abaixo.
+                </p>
+
+                <table class="pdf-table">
+                    <thead><tr><th colspan="2">IDENTIFICAÇÃO ANTERIOR (REVOGADA)</th></tr></thead>
+                    <tbody>
+                        <tr><td class="label-cell">NOME ANTIGO:</td><td id="pdf_a_nome_antigo">---</td></tr>
+                        <tr><td class="label-cell">PASSAPORTE ANTIGO:</td><td id="pdf_a_pass_antigo">---</td></tr>
+                        <tr><td class="label-cell">RG ANTIGO:</td><td id="pdf_a_rg_antigo">---</td></tr>
+                    </tbody>
+                </table>
+
+                <table class="pdf-table">
+                    <thead><tr><th colspan="2">IDENTIFICAÇÃO ATUALIZADA (VIGENTE)</th></tr></thead>
+                    <tbody>
+                        <tr><td class="label-cell">NOVO NOME:</td><td id="pdf_a_nome_novo">---</td></tr>
+                        <tr><td class="label-cell">NOVO PASSAPORTE:</td><td id="pdf_a_pass_novo">---</td></tr>
+                        <tr><td class="label-cell">NOVO RG:</td><td id="pdf_a_rg_novo">---</td></tr>
+                        <tr><td class="label-cell">NOVO TELEFONE:</td><td id="pdf_a_tel_novo">---</td></tr>
+                    </tbody>
+                </table>
+
+                <table class="pdf-table">
+                    <thead><tr><th colspan="2">DADOS DO PROCEDIMENTO</th></tr></thead>
+                    <tbody>
+                        <tr><td class="label-cell">PROTOCOLO:</td><td id="pdf_a_protocolo">---</td></tr>
+                        <tr><td class="label-cell">DATA DA ALTERAÇÃO:</td><td id="pdf_a_data">---</td></tr>
+                        <tr><td class="label-cell">PRÓX. PERMISSÃO (+15D):</td><td id="pdf_a_prox_perm">---</td></tr>
+                        <tr><td class="label-cell">OFICIAL RESPONSÁVEL:</td><td id="pdf_a_oficial">---</td></tr>
+                        <tr><td class="label-cell">ADVOGADO:</td><td id="pdf_a_advogado">---</td></tr>
+                        <tr><td class="label-cell">PASSAPORTE ADVOGADO:</td><td id="pdf_a_adv_pass">---</td></tr>
+                        <tr><td class="label-cell">TELEFONE ADVOGADO:</td><td id="pdf_a_adv_tel">---</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- PDF PORTE -->
+            <div id="pdf-porte" class="pdf-panel tab-content">
+                <div class="pdf-header">
+                    <h1>REPÚBLICA FEDERATIVA DO BRASIL</h1>
+                    <h2>Ministério da Justiça e Segurança Pública</h2>
+                    <h2>Departamento de Polícia Federal</h2>
+                </div>
+                <div class="pdf-title">AUTORIZAÇÃO DE PORTE DE ARMA DE FOGO</div>
+                
+                <div class="pdf-photo-box" id="pdf_p_box_cidadao">FOTO CIDADÃO</div>
+
+                <p class="pdf-declaration">
+                    O <strong>Departamento de Polícia Federal</strong>, no uso de suas atribuições legais, concede a autorização de Porte de Arma de Fogo para o requerente qualificado, nos limites da validade e categoria concedida.
+                </p>
+
+                <table class="pdf-table">
+                    <thead><tr><th colspan="2">DADOS DO TITULAR</th></tr></thead>
+                    <tbody>
+                        <tr><td class="label-cell">NOME COMPLETO:</td><td id="pdf_p_nome">---</td></tr>
+                        <tr><td class="label-cell">PASSAPORTE / ID:</td><td id="pdf_p_passaporte">---</td></tr>
+                        <tr><td class="label-cell">REGISTRO GERAL (RG):</td><td id="pdf_p_rg">---</td></tr>
+                        <tr><td class="label-cell">TELEFONE:</td><td id="pdf_p_telefone">---</td></tr>
+                    </tbody>
+                </table>
+
+                <table class="pdf-table">
+                    <thead><tr><th colspan="2">ESPECIFICAÇÕES DO PORTE</th></tr></thead>
+                    <tbody>
+                        <tr><td class="label-cell">PROTOCOLO:</td><td id="pdf_p_protocolo">---</td></tr>
+                        <tr><td class="label-cell">DATA DE EMISSÃO:</td><td id="pdf_p_data">---</td></tr>
+                        <tr><td class="label-cell">VALIDADE DO PORTE:</td><td id="pdf_p_validade">---</td></tr>
+                        <tr><td class="label-cell">CATEGORIA:</td><td id="pdf_p_categoria">Defesa Pessoal</td></tr>
+                    </tbody>
+                </table>
+
+                <table class="pdf-table">
+                    <thead><tr><th colspan="2">RESPONSÁVEIS</th></tr></thead>
+                    <tbody>
+                        <tr><td class="label-cell">OFICIAL RESPONSÁVEL:</td><td id="pdf_p_oficial">---</td></tr>
+                        <tr><td class="label-cell">ADVOGADO:</td><td id="pdf_p_advogado">---</td></tr>
+                        <tr><td class="label-cell">PASSAPORTE ADVOGADO:</td><td id="pdf_p_adv_pass">---</td></tr>
+                        <tr><td class="label-cell">TELEFONE ADVOGADO:</td><td id="pdf_p_adv_tel">---</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- BOTÕES -->
+            <div class="actions-panel">
+                <button class="btn btn-blue" onclick="gerarPDF()">📄 Baixar PDF</button>
+                <button class="btn btn-yellow" onclick="enviarWebhook()">🚀 Salvar Registro</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========================================================
+        // 🚨 INSIRA SUAS URLs DOS WEBHOOKS AQUI:
+        const WEBHOOK_LIMPEZA = "URL_WEBHOOK_LIMPEZA_AQUI";
+        const WEBHOOK_ALTERACAO = "URL_WEBHOOK_ALTERACAO_AQUI";
+        const WEBHOOK_PORTE = "URL_WEBHOOK_PORTE_AQUI";
+        // ========================================================
+
+        let abaAtual = 'limpeza';
+
+        // Inicialização de Datas e Protocolos
+        function iniciarDados() {
+            const dataHoje = new Date().toLocaleDateString('pt-BR');
+            
+            // Calculo +15 dias
+            let data15 = new Date();
+            data15.setDate(data15.getDate() + 15);
+            const dataMais15 = data15.toLocaleDateString('pt-BR');
+
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            
+            let pL = 'PF-'; for(let i=0; i<6; i++) pL += chars.charAt(Math.floor(Math.random() * chars.length));
+            let pA = 'PF-'; for(let i=0; i<6; i++) pA += chars.charAt(Math.floor(Math.random() * chars.length));
+            let pP = 'PF-'; for(let i=0; i<6; i++) pP += chars.charAt(Math.floor(Math.random() * chars.length));
+
+            // Setar Limpeza
+            document.getElementById('l_data').value = dataHoje;
+            document.getElementById('pdf_l_data').innerText = dataHoje;
+            document.getElementById('l_protocolo').value = pL;
+            document.getElementById('pdf_l_protocolo').innerText = pL;
+
+            // Setar Alteração
+            document.getElementById('a_data').value = dataHoje;
+            document.getElementById('pdf_a_data').innerText = dataHoje;
+            document.getElementById('a_prox_perm').value = dataMais15;
+            document.getElementById('pdf_a_prox_perm').innerText = dataMais15;
+            document.getElementById('a_protocolo').value = pA;
+            document.getElementById('pdf_a_protocolo').innerText = pA;
+            
+            // Setar Porte
+            document.getElementById('p_data').value = dataHoje;
+            document.getElementById('pdf_p_data').innerText = dataHoje;
+            document.getElementById('p_protocolo').value = pP;
+            document.getElementById('pdf_p_protocolo').innerText = pP;
+        }
+        iniciarDados();
+
+        // Sistema de Abas
+        function mudarAba(aba, elementoNav) {
+            abaAtual = aba;
+            // Atualizar botões de navegação
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            elementoNav.classList.add('active');
+
+            // Atualizar abas
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(`tab-${aba}`).classList.add('active');
+            document.getElementById(`pdf-${aba}`).classList.add('active');
+        }
+
+        // Atualizar PDF em Tempo Real
+        function updatePDF() {
+            const getVal = (id) => document.getElementById(id).value || '---';
+            
+            if (abaAtual === 'limpeza') {
+                document.getElementById('pdf_l_nome').innerText = getVal('l_nome');
+                document.getElementById('pdf_l_rg').innerText = getVal('l_rg');
+                document.getElementById('pdf_l_telefone').innerText = getVal('l_telefone');
+                document.getElementById('pdf_l_oficial').innerText = getVal('l_nome_oficial') + " (ID: " + getVal('l_id_oficial') + ")";
+                document.getElementById('pdf_l_advogado').innerText = getVal('l_advogado');
+                document.getElementById('pdf_l_adv_pass').innerText = getVal('l_adv_pass');
+                document.getElementById('pdf_l_adv_tel').innerText = getVal('l_adv_tel');
+                document.getElementById('pdf_l_artigos').innerText = getVal('l_artigos');
+                document.getElementById('pdf_l_tipo').innerText = document.getElementById('l_tipo').value;
+            } else if (abaAtual === 'alteracao') {
+                document.getElementById('pdf_a_nome_antigo').innerText = getVal('a_nome_antigo');
+                document.getElementById('pdf_a_pass_antigo').innerText = getVal('a_pass_antigo');
+                document.getElementById('pdf_a_rg_antigo').innerText = getVal('a_rg_antigo');
+                
+                document.getElementById('pdf_a_nome_novo').innerText = getVal('a_nome_novo');
+                document.getElementById('pdf_a_pass_novo').innerText = getVal('a_pass_novo');
+                document.getElementById('pdf_a_rg_novo').innerText = getVal('a_rg_novo');
+                document.getElementById('pdf_a_tel_novo').innerText = getVal('a_tel_novo');
+                
+                document.getElementById('pdf_a_advogado').innerText = getVal('a_advogado');
+                document.getElementById('pdf_a_adv_pass').innerText = getVal('a_adv_pass');
+                document.getElementById('pdf_a_adv_tel').innerText = getVal('a_adv_tel');
+                document.getElementById('pdf_a_oficial').innerText = getVal('a_nome_oficial') + " (ID: " + getVal('a_id_oficial') + ")";
+            } else if (abaAtual === 'porte') {
+                document.getElementById('pdf_p_nome').innerText = getVal('p_nome');
+                document.getElementById('pdf_p_passaporte').innerText = getVal('p_passaporte');
+                document.getElementById('pdf_p_rg').innerText = getVal('p_rg');
+                document.getElementById('pdf_p_telefone').innerText = getVal('p_telefone');
+                
+                document.getElementById('pdf_p_validade').innerText = getVal('p_validade');
+                document.getElementById('pdf_p_categoria').innerText = document.getElementById('p_categoria').value;
+                
+                document.getElementById('pdf_p_advogado').innerText = getVal('p_advogado');
+                document.getElementById('pdf_p_adv_pass').innerText = getVal('p_adv_pass');
+                document.getElementById('pdf_p_adv_tel').innerText = getVal('p_adv_tel');
+                document.getElementById('pdf_p_oficial').innerText = getVal('p_nome_oficial') + " (ID: " + getVal('p_id_oficial') + ")";
+            }
+        }
+
+        // CTRL+V para Imagens
+        let activeZone = null;
+        function activateZone(element) {
+            document.querySelectorAll('.image-upload-zone').forEach(el => el.classList.remove('active-zone'));
+            element.classList.add('active-zone');
+            activeZone = element;
+        }
+
+        document.addEventListener('paste', function(e) {
+            if (!activeZone) return; 
+
+            const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+            for (let index in items) {
+                const item = items[index];
+                if (item.kind === 'file') {
+                    const blob = item.getAsFile();
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const base64 = event.target.result;
+                        const imgEl = activeZone.querySelector('img');
+                        const spanEl = activeZone.querySelector('span');
+                        
+                        imgEl.src = base64;
+                        imgEl.style.display = 'block';
+                        spanEl.style.display = 'none';
+
+                        // Espelhar no PDF correspondente
+                        if (activeZone.id === 'zone_l_cidadao') {
+                            document.getElementById('pdf_l_box_cidadao').innerHTML = `<img src="${base64}" style="width:100%; height:100%; object-fit:cover;">`;
+                        } else if (activeZone.id === 'zone_a_cidadao') {
+                            document.getElementById('pdf_a_box_cidadao').innerHTML = `<img src="${base64}" style="width:100%; height:100%; object-fit:cover;">`;
+                        } else if (activeZone.id === 'zone_p_cidadao') {
+                            document.getElementById('pdf_p_box_cidadao').innerHTML = `<img src="${base64}" style="width:100%; height:100%; object-fit:cover;">`;
+                        }
+                    };
+                    reader.readAsDataURL(blob);
+                }
+            }
+        });
+
+        // Gerar PDF
+        function gerarPDF() {
+            const elementId = `pdf-${abaAtual}`;
+            const element = document.getElementById(elementId);
+            
+            let nome = "Documento";
+            if(abaAtual === 'limpeza') nome = document.getElementById('l_nome').value || 'Cidadao';
+            else if(abaAtual === 'alteracao') nome = document.getElementById('a_nome_novo').value || 'Cidadao';
+            else if(abaAtual === 'porte') nome = document.getElementById('p_nome').value || 'Cidadao';
+            
+            const opt = {
+                margin:       0.2,
+                filename:     `PF_${abaAtual.toUpperCase()}_${nome.replace(/\s+/g, '_')}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(element).save();
+        }
+
+        // Enviar Webhook
+        async function enviarWebhook() {
+            let webhookURL;
+            if (abaAtual === 'limpeza') webhookURL = WEBHOOK_LIMPEZA;
+            else if (abaAtual === 'alteracao') webhookURL = WEBHOOK_ALTERACAO;
+            else if (abaAtual === 'porte') webhookURL = WEBHOOK_PORTE;
+
+            if (webhookURL.startsWith("URL_WEBHOOK")) {
+                alert(`❌ Você precisa inserir a URL do Webhook de ${abaAtual.toUpperCase()} no código fonte (linha ~600).`);
+                return;
+            }
+
+            let embedTitle, embedFields, embedColor;
+
+            if (abaAtual === 'limpeza') {
+                embedTitle = "🧹 Polícia Federal - Limpeza de Ficha";
+                embedColor = 16763904; // Amarelo
+                embedFields = [
+                    { name: "Cidadão", value: document.getElementById('l_nome').value || 'N/A', inline: true },
+                    { name: "RG", value: document.getElementById('l_rg').value || 'N/A', inline: true },
+                    { name: "Protocolo", value: document.getElementById('l_protocolo').value, inline: true },
+                    { name: "Oficial Responsável", value: document.getElementById('l_nome_oficial').value || 'N/A', inline: true },
+                    { name: "Advogado", value: document.getElementById('l_advogado').value || 'Nenhum', inline: true },
+                    { name: "Tipo", value: document.getElementById('l_tipo').value, inline: true },
+                    { name: "Artigos Limpos", value: document.getElementById('l_artigos').value || 'Nenhum especificado' }
+                ];
+            } else if (abaAtual === 'alteracao') {
+                embedTitle = "🔄 Polícia Federal - Alteração de Registro";
+                embedColor = 3447003; // Azul
+                embedFields = [
+                    { name: "Nome Antigo", value: document.getElementById('a_nome_antigo').value || 'N/A', inline: true },
+                    { name: "Novo Nome", value: document.getElementById('a_nome_novo').value || 'N/A', inline: true },
+                    { name: "Novo Passaporte", value: document.getElementById('a_pass_novo').value || 'N/A', inline: true },
+                    { name: "Oficial (ID - Nome)", value: document.getElementById('a_id_oficial').value + " - " + document.getElementById('a_nome_oficial').value, inline: false },
+                    { name: "Protocolo", value: document.getElementById('a_protocolo').value, inline: true },
+                    { name: "Próxima Alteração", value: document.getElementById('a_prox_perm').value, inline: true }
+                ];
+            } else if (abaAtual === 'porte') {
+                embedTitle = "🔫 Polícia Federal - Porte de Armas";
+                embedColor = 15158332; // Vermelho
+                embedFields = [
+                    { name: "Cidadão", value: document.getElementById('p_nome').value || 'N/A', inline: true },
+                    { name: "Passaporte / RG", value: (document.getElementById('p_passaporte').value || 'N/A') + " / " + (document.getElementById('p_rg').value || 'N/A'), inline: true },
+                    { name: "Protocolo", value: document.getElementById('p_protocolo').value, inline: true },
+                    { name: "Validade", value: document.getElementById('p_validade').value || 'N/A', inline: true },
+                    { name: "Categoria", value: document.getElementById('p_categoria').value, inline: true },
+                    { name: "Oficial Responsável", value: document.getElementById('p_nome_oficial').value || 'N/A', inline: true }
+                ];
+            }
+
+            const payload = {
+                username: "Departamento de Polícia Federal",
+                avatar_url: "https://i.imgur.com/4M34hi2.png", 
+                embeds: [{
+                    title: embedTitle,
+                    color: embedColor,
+                    fields: embedFields,
+                    footer: { text: "Sistema Integrado da PF" },
+                    timestamp: new Date().toISOString()
+                }]
+            };
+
+            try {
+                const response = await fetch(webhookURL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (response.ok) alert("✅ Registro enviado com sucesso para a Base!");
+                else alert("❌ Erro ao enviar para o Webhook.");
+            } catch (error) {
+                alert("❌ Erro de conexão.");
+            }
+        }
+    </script>
+</body>
+</html>
