@@ -3,164 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel do Tribunal de Justiça</title>
+    <title>Painel de Controle - Corregedoria</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <style>
         body { 
-            background: radial-gradient(circle at top, #0f172a 0%, #020617 100%); 
-            color: #e2e8f0; 
+            background: radial-gradient(circle at top, #121826 0%, #07090e 70%); 
+            color: #e0e0e0; 
             font-family: 'Inter', sans-serif; 
-            min-height: 100vh; 
-            margin: 0;
-            padding-bottom: 50px;
+            min-height: 100vh;
         }
-        
-        /* Navbar */
-        .navbar-tj { 
-            background: rgba(15, 23, 42, 0.95); 
+        .navbar-pf { 
+            background: rgba(17, 24, 39, 0.95); 
             backdrop-filter: blur(10px);
             border-bottom: 2px solid #b58d3d; 
-            padding: 12px 30px; 
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            padding: 15px 30px; 
         }
-        .navbar-tj .brand-title { 
+        .navbar-pf img { height: 55px; object-fit: contain; }
+        .navbar-pf .brand-title { 
             color: #ffffff; 
             font-family: 'Playfair Display', serif;
             font-weight: 700; 
             font-size: 1.25em; 
             letter-spacing: 1.5px; 
+            margin-left: 20px; 
         }
-        
-        .container-main { padding: 30px 20px; max-width: 1400px; margin: 0 auto; }
-
-        /* Cards de Estatísticas */
+        .container-main { padding: 40px 20px; max-width: 1300px; margin: 0 auto; }
         .stats-card { 
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); 
-            border: 1px solid #334155; 
+            background: linear-gradient(135deg, #121826 0%, #0d1117 100%); 
+            border: 1px solid #1f2937; 
             border-radius: 10px; 
             padding: 24px; 
             display: flex; 
             align-items: center; 
             justify-content: space-between; 
             margin-bottom: 25px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            transition: transform 0.2s;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
         }
-        .stats-card h3 { font-size: 2.2em; margin: 0; color: #ffffff; font-weight: 700; font-family: 'Playfair Display', serif; }
-        .stats-card p { margin: 0; color: #94a3b8; font-size: 0.85em; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
-        .stats-icon { font-size: 2.5em; color: #b58d3d; opacity: 0.9; }
-
-        /* Caixas de Seção */
-        .section-box {
-            background-color: #0f172a;
-            border: 1px solid #1e293b;
-            border-radius: 8px;
-            margin-bottom: 30px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        .stats-card h3 { font-size: 2em; margin: 0; color: #ffffff; font-weight: 700; font-family: 'Playfair Display', serif; }
+        .stats-card p { margin: 0; color: #8b95a5; font-size: 0.8em; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+        .stats-icon { font-size: 2.2em; color: #b58d3d; opacity: 0.9; }
+        .section-box { 
+            background: linear-gradient(135deg, #121826 0%, #0d1117 100%); 
+            border: 1px solid #1f2937; 
+            border-radius: 10px; 
+            padding: 30px; 
+            margin-bottom: 30px; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
         }
-        .section-header {
-            background-color: #1e293b;
-            padding: 15px 20px;
-            font-size: 1.1rem;
+        .section-title { 
+            color: #b58d3d; 
+            border-bottom: 1px solid #1f2937; 
+            padding-bottom: 12px; 
+            margin-bottom: 24px; 
+            font-size: 1em; 
             font-weight: 600;
-            color: #b58d3d;
-            border-bottom: 1px solid #334155;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-family: 'Playfair Display', serif;
+            letter-spacing: 1.5px;
+            text-transform: uppercase; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
         }
-
-        /* Tabelas */
-        .table-tj { width: 100%; color: #e2e8f0; font-size: 0.9rem; margin-bottom: 0; }
-        .table-tj th { background-color: #162032; color: #94a3b8; font-weight: 600; padding: 12px 20px; border-bottom: 1px solid #334155; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.5px;}
-        .table-tj td { background-color: #0f172a; padding: 15px 20px; border-bottom: 1px solid #1e293b; vertical-align: middle; }
-        .table-tj tr:hover td { background-color: #1e293b; }
+        .doc-category-title {
+            color: #d4af37;
+            font-size: 1.1em;
+            font-weight: 600;
+            border-bottom: 1px solid #374151;
+            padding-bottom: 8px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .table-pf { color: #e0e0e0; background-color: #0d1117; font-size: 0.9em; border-radius: 6px; overflow: hidden; margin-bottom: 0; }
+        .table-pf th { background-color: #161b22; color: #b58d3d; border-color: #1f2937; padding: 14px; font-weight: 600; }
+        .table-pf td { background-color: #0d1117; color: #e0e0e0; border-color: #1f2937; padding: 14px; }
+        .badge-andamento { background-color: #b45309; color: #fff; padding: 6px 12px; font-weight: 500; border-radius: 4px; }
+        .btn-gold { background-color: #b58d3d; color: #ffffff; font-weight: 600; border: none; padding: 8px 18px; border-radius: 6px; transition: all 0.3s; }
+        .btn-gold:hover { background-color: #c49a3c; color: #ffffff; }
+        .forca-title { color: #e0e0e0; font-size: 1.1em; margin-top: 20px; margin-bottom: 15px; font-weight: 600; font-family: 'Playfair Display', serif; border-left: 4px solid #b58d3d; padding-left: 10px; display: flex; align-items: center; }
+        .forca-logo { height: 28px; width: 28px; object-fit: contain; margin-right: 10px; vertical-align: middle; }
         
-        .badge-status { padding: 5px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
-        .bg-andamento { background-color: #b45309; color: #fef3c7; }
+        .timer-text { font-family: monospace; font-size: 1.05em; padding: 4px 8px; border-radius: 4px; border: 1px solid; display: inline-block; }
+        .timer-verde { color: #10b981; border-color: #047857; background: #022c22; }
+        .timer-amarelo { color: #f59e0b; border-color: #b45309; background: #451a03; }
         
-        .btn-action { background-color: transparent; border: 1px solid #475569; color: #cbd5e1; padding: 6px 12px; border-radius: 4px; font-size: 0.85rem; transition: 0.2s; cursor: pointer; }
-        .btn-action:hover { background-color: #b58d3d; border-color: #b58d3d; color: #fff; }
-        
-        .btn-gold { background-color: #b58d3d; color: #fff; border: none; padding: 6px 15px; border-radius: 4px; font-weight: 600; font-size: 0.85rem; transition: 0.2s; text-decoration: none; display: inline-block; cursor: pointer; }
-        .btn-gold:hover { background-color: #c49a3c; color: #fff; }
-
+        @keyframes piscarVermelho {
+            0% { opacity: 1; background: #7f1d1d; border-color: #ef4444; color: #fca5a5; }
+            50% { opacity: 0.4; background: #450a0a; border-color: #991b1b; color: #f87171; }
+            100% { opacity: 1; background: #7f1d1d; border-color: #ef4444; color: #fca5a5; }
+        }
+        .timer-vermelho-piscando {
+            animation: piscarVermelho 1s infinite;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
 
-    <nav class="navbar navbar-tj d-flex justify-content-between align-items-center">
+    <nav class="navbar navbar-pf d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center">
-            <i class="fas fa-balance-scale fs-3 me-3" style="color: #b58d3d;"></i>
-            <span class="brand-title">TRIBUNAL DE JUSTIÇA - DASHBOARD</span>
+            <img id="imgBrasao" src="img/pf.png" alt="Brasão">
+            <span class="brand-title" id="tituloInstituicao">PAINEL ADMINISTRATIVO - CORREGEDORIA</span>
         </div>
         <div>
-            <span class="me-4 text-muted" id="userEmailDisplay" style="font-size: 0.9rem;"><i class="fas fa-user-tie"></i> carregando...</span>
-            <a href="tj-publicacoes.html" class="btn btn-outline-warning btn-sm me-2"><i class="fas fa-book"></i> Publicações</a>
-            <a href="dashboard.html" class="btn btn-outline-info btn-sm me-2" id="btnAdminVoltar" style="display: none;"><i class="fas fa-shield-alt"></i> Painel Polícia</a>
+            <a href="finalizados.html" class="btn btn-outline-success btn-sm me-2"><i class="fas fa-check-double"></i> Finalizados</a>
+            <a href="admin.html" class="btn btn-outline-warning btn-sm me-2" id="btnAdmin" style="display: none;"><i class="fas fa-users-cog"></i> Gerenciar Usuários</a>
+            <a href="mensagens.html" class="btn btn-outline-info btn-sm me-2" id="btnMensagensAdmin" style="display: none;"><i class="fas fa-paper-plane"></i> Enviar Mensagens</a>
+            <a href="tj-dashboard.html" class="btn btn-outline-primary btn-sm me-2" id="btnTribunalAdmin" style="display: none;"><i class="fas fa-balance-scale"></i> Tribunal de Justiça</a>
+            <a href="sistema_pf.html" class="btn btn-outline-secondary btn-sm me-2" id="btnSistemaPF" style="display: none;"><i class="fas fa-shield-alt"></i> Sistema PF</a>
             <button onclick="fazerLogout()" class="btn btn-outline-light btn-sm"><i class="fas fa-sign-out-alt"></i> Sair</button>
         </div>
     </nav>
 
     <div class="container-main">
-        <div class="row mb-2">
+        <div class="row">
             <div class="col-md-4">
                 <div class="stats-card">
-                    <div><p>Processos Ativos</p><h3 id="statProcessos">0</h3></div>
-                    <i class="fas fa-folder-open stats-icon"></i>
+                    <div><p>Documentos em Andamento</p><h3 id="countAndamento">00</h3></div>
+                    <i class="fas fa-spinner stats-icon"></i>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="stats-card">
-                    <div><p>Mandados Pendentes</p><h3>0</h3></div>
-                    <i class="fas fa-scroll stats-icon"></i>
+                    <div><p>Documentos Finalizados</p><h3 id="countFinalizados">00</h3></div>
+                    <i class="fas fa-check-double stats-icon"></i>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="stats-card">
-                    <div><p>Despachos P/ Assinar</p><h3 id="statDespachos" style="color: #fca5a5;">0</h3></div>
-                    <i class="fas fa-pen-nib stats-icon" style="color: #ef4444;"></i>
+                    <div><p>Portarias / Intimações</p><h3 id="countOutros">00</h3></div>
+                    <i class="fas fa-file-signature stats-icon"></i>
                 </div>
             </div>
         </div>
 
         <div class="section-box">
-            <div class="section-header">
-                <div><i class="fas fa-gavel"></i> Processos em Andamento</div>
-                <a href="tj-novo-processo.html" class="btn-gold" id="btnNovoProcesso" style="display: none;"><i class="fas fa-plus"></i> Novo Processo</a>
+            <div class="section-title">
+                <span><i class="fas fa-clock"></i> Documentos em Andamento</span>
+                <a href="gerador.html" class="btn btn-gold btn-sm"><i class="fas fa-plus"></i> Novo Documento</a>
             </div>
-            <div class="table-responsive">
-                <table class="table-tj">
-                    <thead><tr><th>Nº Processo</th><th>Classe Processual</th><th>Partes (Autor x Réu)</th><th>Data</th><th>Status</th><th class="text-center">Ação</th></tr></thead>
-                    <tbody id="tabelaProcessos"><tr><td colspan="6" class="text-center text-muted">Nenhum processo em andamento.</td></tr></tbody>
-                </table>
-            </div>
-        </div>
+            
+            <div class="doc-category-title mt-2"><i class="fas fa-folder-open"></i> Inquéritos Policiais</div>
+            <div id="containerAndamentoInqueritos"></div>
 
-        <div class="section-box border-warning" style="border-color: #8a6a1c !important;">
-            <div class="section-header" style="background-color: #1a150b;"><div style="color: #e3b341;"><i class="fas fa-inbox"></i> Caixa de Despachos Pendentes</div></div>
-            <div class="table-responsive">
-                <table class="table-tj">
-                    <thead><tr><th>Nº Processo Referência</th><th>Tipo de Decisão/Despacho</th><th>Data da Conclusão</th><th>Mesa do Juiz</th><th class="text-center">Ação</th></tr></thead>
-                    <tbody id="tabelaDespachos"><tr><td colspan="5" class="text-center text-muted">Nenhum despacho pendente.</td></tr></tbody>
-                </table>
-            </div>
+            <div class="doc-category-title"><i class="fas fa-search"></i> Investigações</div>
+            <div id="containerAndamentoInvestigacoes"></div>
+            
+            <div class="doc-category-title"><i class="fas fa-file-signature"></i> Portarias</div>
+            <div id="containerAndamentoPortarias"></div>
+            
+            <div class="doc-category-title"><i class="fas fa-envelope-open-text"></i> Intimações</div>
+            <div id="containerAndamentoIntimacoes"></div>
         </div>
+    </div>
 
-        <div class="section-box border-info" style="border-color: #0369a1 !important;">
-            <div class="section-header" style="background-color: #082f49; color: #38bdf8; border-bottom-color: #0369a1;"><div><i class="fas fa-shield-alt"></i> Inquéritos Policiais (Ministério Público)</div></div>
-            <div class="table-responsive">
-                <table class="table-tj">
-                    <thead><tr><th>Nº Inquérito</th><th>Origem (Força Policial)</th><th>Investigado / Indiciado</th><th>Data Recebimento</th><th>Status</th><th class="text-center">Ações</th></tr></thead>
-                    <tbody id="tabelaInqueritosMP"><tr><td colspan="6" class="text-center text-muted">Carregando inquéritos...</td></tr></tbody>
-                </table>
+    <!-- MODAL DE MENSAGENS DO SISTEMA -->
+    <div class="modal fade" id="modalMensagemSistema" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="background-color: #111827; border: 1px solid #b58d3d; color: #fff;">
+                <div class="modal-header" style="border-bottom: 1px solid #1f2937;">
+                    <h5 class="modal-title" style="color: #b58d3d; font-family: 'Playfair Display', serif;"><i class="fas fa-envelope-open-text"></i> Nova Mensagem da Administração</h5>
+                </div>
+                <div class="modal-body">
+                    <p id="textoMensagemRecebida" style="font-size: 1.05em; line-height: 1.6;"></p>
+                    <input type="hidden" id="idMensagemRecebida">
+                </div>
+                <div class="modal-footer" style="border-top: 1px solid #1f2937;">
+                    <button type="button" class="btn" style="background-color: #b58d3d; color: #fff; font-weight: bold;" onclick="marcarMensagemComoLida()">Ciente, fechar</button>
+                </div>
             </div>
         </div>
     </div>
@@ -172,193 +186,356 @@
         const supabaseKey = 'sb_publishable_353TT6z3RbRHvIpbQiaK1g_dWt1qAyU';
         const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
-        let isJuiz = false;
-        let isPromotor = false;
+        let emailUsuarioLogado = '';
+        let instituicaoUsuarioLogado = '';
 
-        document.addEventListener('DOMContentLoaded', async function() {
-            const emailLogado = localStorage.getItem('usuario_logado_email');
-            if (!emailLogado) {
+        const brasoesInstituicoes = {
+            'POLÍCIA FEDERAL': 'img/pf.png',
+            'POLÍCIA CIVIL': 'img/pc.png',
+            'POLÍCIA MILITAR': 'img/pm.png',
+            'POLÍCIA RODOVIÁRIA FEDERAL (PRF)': 'img/prf.png',
+            'ROTA': 'img/rota.png',
+            'BOPE': 'img/bope.png',
+            'EXÉRCITO BRASILEIRO': 'img/exercito.png'
+        };
+
+        async function verificarAcesso() {
+            emailUsuarioLogado = localStorage.getItem('usuario_logado_email');
+            
+            if (!emailUsuarioLogado) {
                 window.location.href = 'index.html';
                 return;
             }
 
-            document.getElementById('userEmailDisplay').innerHTML = `<i class="fas fa-user-tie"></i> ${emailLogado}`;
-            if (emailLogado === "kira@yagami.gov") {
-                document.getElementById('btnAdminVoltar').style.display = "inline-block";
-                isJuiz = true;
-                isPromotor = true;
-            } else {
-                const cargo = localStorage.getItem(`inst_${emailLogado}`);
-                if (cargo === 'JUIZ') {
-                    isJuiz = true;
-                    isPromotor = true; 
-                } else if (cargo === 'PROMOTOR') {
-                    isPromotor = true;
-                }
+            if (emailUsuarioLogado === "kira@yagami.gov") {
+                instituicaoUsuarioLogado = 'POLÍCIA FEDERAL';
+                document.getElementById('btnAdmin').style.display = 'inline-block';
+                document.getElementById('btnMensagensAdmin').style.display = 'inline-block'; 
+                document.getElementById('btnTribunalAdmin').style.display = 'inline-block';
+                document.getElementById('btnSistemaPF').style.display = 'inline-block';
+                document.getElementById('tituloInstituicao').innerText = "PAINEL ADMINISTRATIVO - POLÍCIA FEDERAL";
+                document.getElementById('imgBrasao').src = brasoesInstituicoes['POLÍCIA FEDERAL'];
+                return;
             }
 
-            if (isJuiz || isPromotor) {
-                document.getElementById('btnNovoProcesso').style.display = "inline-block";
+            const { data, error } = await supabaseClient
+                .from('perfis_usuarios') 
+                .select('*')
+                .eq('email', emailUsuarioLogado)
+                .single();
+
+            if (error || !data || data.status === 'Bloqueado') {
+                alert("Sessão expirada ou acesso revogado.");
+                localStorage.removeItem('usuario_logado_email');
+                window.location.href = 'index.html';
+                return;
             }
 
-            carregarProcessosEmAndamento();
-            carregarInqueritosMP();
-            carregarDespachosPendentes();
-        });
-        
-        function formatarDataSegura(item) {
-            let dataStr = item.data_criacao || item.data_inicio;
-            if (!dataStr && item.dados_extras) {
-                try {
-                    let ext = JSON.parse(item.dados_extras);
-                    dataStr = ext.dataDecisao || ext.dataAutuacao;
-                } catch(e) {}
+            instituicaoUsuarioLogado = data.instituicao || localStorage.getItem(`inst_${emailUsuarioLogado}`) || 'POLÍCIA FEDERAL';
+            const instNormalizada = instituicaoUsuarioLogado.trim().toUpperCase();
+            document.getElementById('tituloInstituicao').innerText = `PAINEL ADMINISTRATIVO - ${instNormalizada}`;
+            
+            if (brasoesInstituicoes[instNormalizada]) {
+                document.getElementById('imgBrasao').src = brasoesInstituicoes[instNormalizada];
             }
-            if (!dataStr) return 'Desconhecida';
-            let d = new Date(dataStr);
-            return isNaN(d.getTime()) ? 'Desconhecida' : d.toLocaleDateString('pt-BR');
+
+            if (instNormalizada === 'POLÍCIA FEDERAL') {
+                document.getElementById('btnSistemaPF').style.display = 'inline-block';
+            }
         }
 
-        function fazerLogout() {
+        async function fazerLogout() {
             localStorage.removeItem('usuario_logado_email');
-            window.location.href = 'index.html'; 
+            await supabaseClient.auth.signOut();
+            window.location.href = 'index.html';
         }
 
-        async function apagarDocumentoTJ(id, numero) {
+        function visualizarInquerito(id) {
+            window.location.href = `gerador.html?id=${id}`;
+        }
+
+        async function finalizarInquerito(id, numero) {
+            const meuEmailAdmin = "kira@yagami.gov"; 
+            if (emailUsuarioLogado !== meuEmailAdmin && !instituicaoUsuarioLogado.includes('FEDERAL')) {
+                alert("Apenas administradores podem finalizar documentos.");
+                return;
+            }
+
+            if (!confirm(`Deseja realmente finalizar o documento nº ${numero}? O cronômetro será parado e ele será movido para a aba de Finalizados.`)) return;
+
+            const dataFinalizacao = new Date().toISOString(); 
+
+            const { error } = await supabaseClient
+                .from('inqueritos')
+                .update({ status: 'Finalizado', data_fim: dataFinalizacao })
+                .eq('id', id);
+
+            if (error) {
+                alert("Erro ao finalizar: " + error.message);
+            } else {
+                alert("Documento finalizado com sucesso!");
+                carregarDashboard();
+            }
+        }
+
+        async function apagarInquerito(id, numero) {
+            const meuEmailAdmin = "kira@yagami.gov"; 
+            if (emailUsuarioLogado !== meuEmailAdmin) {
+                alert("Acesso negado. Apenas a administradora principal pode apagar documentos.");
+                return;
+            }
+
             if (!confirm(`ATENÇÃO: Deseja realmente APAGAR permanentemente o documento nº ${numero}?`)) return;
-            const { error } = await supabaseClient.from('inqueritos').delete().eq('id', id);
-            if (!error) { location.reload(); }
+
+            const { error } = await supabaseClient
+                .from('inqueritos')
+                .delete()
+                .eq('id', id);
+
+            if (error) {
+                alert("Erro ao apagar documento: " + error.message);
+            } else {
+                alert("Documento apagado com sucesso!");
+                carregarDashboard();
+            }
         }
 
-        async function carregarProcessosEmAndamento() {
-            const { data } = await supabaseClient.from('inqueritos').select('*').eq('status', 'Processo em Andamento').order('id', { ascending: false });
-            const tbody = document.getElementById('tabelaProcessos');
-            tbody.innerHTML = '';
+        function formatarTempoDecorrido(ms) {
+            if (ms < 0) ms = 0;
+            const dias = Math.floor(ms / (1000 * 60 * 60 * 24));
+            const horas = Math.floor((ms % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutos = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+
+            let partes = [];
+            if (dias > 0) partes.push(`${dias}d`);
+            if (horas > 0 || dias > 0) partes.push(`${horas}h`);
+            partes.push(`${minutos}m`);
             
-            if (!data || data.length === 0) {
-                document.getElementById('statProcessos').innerText = '0';
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted">Nenhum processo em andamento.</td></tr>`;
+            return partes.join(' '); 
+        }
+
+        setInterval(() => {
+            const agora = new Date().getTime();
+            document.querySelectorAll('.cronometro-ativo').forEach(el => {
+                const dataInicio = el.getAttribute('data-inicio');
+                if (dataInicio && dataInicio !== 'null') {
+                    const inicioMs = new Date(dataInicio).getTime();
+                    const diffMs = agora - inicioMs;
+                    
+                    el.innerText = formatarTempoDecorrido(diffMs);
+
+                    const umDiaMs = 24 * 60 * 60 * 1000;
+                    el.classList.remove('timer-verde', 'timer-amarelo', 'timer-vermelho-piscando');
+                    
+                    if (diffMs < umDiaMs) {
+                        el.classList.add('timer-verde'); 
+                    } else if (diffMs >= umDiaMs && diffMs < (2 * umDiaMs)) {
+                        el.classList.add('timer-amarelo'); 
+                    } else {
+                        el.classList.add('timer-vermelho-piscando'); 
+                    }
+                } else {
+                    el.innerText = "Calculando...";
+                }
+            });
+        }, 1000); 
+
+        function renderizarTabelasAgrupadas(agrupados, containerId, souAdmin) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            if (Object.keys(agrupados).length === 0) {
+                container.innerHTML = `<div class="text-center text-muted p-3 bg-dark border border-secondary rounded mb-4">Nenhum documento registrado nesta categoria.</div>`;
                 return;
             }
-            document.getElementById('statProcessos').innerText = String(data.length);
 
-            data.forEach(item => {
-                let partesStr = 'Ministério Público <span class="text-muted">x</span> Investigado';
-                if (item.dados_extras) {
-                    try {
-                        const ext = JSON.parse(item.dados_extras);
-                        if (ext.investigadoNome) partesStr = `Ministério Público <span class="text-muted">x</span> ${ext.investigadoNome}`;
-                    } catch(e) {}
-                }
+            for (const [forcaPolicial, inqueritos] of Object.entries(agrupados)) {
+                let imgIcon = brasoesInstituicoes[forcaPolicial] ? `<img src="${brasoesInstituicoes[forcaPolicial]}" alt="Brasão da ${forcaPolicial}" class="forca-logo">` : `<i class="fas fa-building" style="margin-right: 10px;"></i>`;
                 
-                const emailLogado = localStorage.getItem('usuario_logado_email');
-                let acoes = `<button class="btn-action text-info border-info me-1" title="Visualizar Processo" onclick="window.location.href='tj-processo.html?id=${item.id}'"><i class="fas fa-eye"></i> Visualizar</button>`;
-                if (emailLogado === "kira@yagami.gov") acoes += `<button class="btn-action text-danger border-danger" onclick="apagarDocumentoTJ(${item.id}, '${item.numero}')"><i class="fas fa-trash"></i></button>`;
+                let tabelaHTML = `
+                    <div class="forca-title">${imgIcon} ${forcaPolicial}</div>
+                    <div class="table-responsive">
+                        <table class="table table-pf table-hover align-middle mb-4">
+                            <thead>
+                                <tr>
+                                    <th>Nº Documento</th>
+                                    <th>Tipo</th>
+                                    <th>Encarregado(a)</th>
+                                    <th>Data de Registro</th>
+                                    <th>Tempo Aberto</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
 
-                tbody.innerHTML += `<tr>
-                    <td><strong>${item.numero || 'S/N'}</strong></td><td>Ação Penal</td><td>${partesStr}</td>
-                    <td>${formatarDataSegura(item)}</td>
-                    <td><span class="badge-status bg-andamento">Em Instrução</span></td>
-                    <td class="text-center">${acoes}</td>
-                </tr>`;
-            });
+                inqueritos.forEach(item => {
+                    const botaoApagarHTML = souAdmin ? `<button class="btn btn-sm btn-outline-danger ms-1" title="Apagar" onclick="apagarInquerito(${item.id}, '${item.numero}')"><i class="fas fa-trash"></i></button>` : '';
+                    
+                    let dataCalculo = item.data_inicio || item.created_at; 
+                    let dataFormatadaExibicao = dataCalculo ? new Date(dataCalculo).toLocaleString('pt-BR').substring(0, 16) : 'Desconhecida';
+                    let tipoDocText = item.tipo || 'Inquérito Policial';
+                    let encarregadoExibicao = item.encarregado || 'N/A';
+
+                    let tempoHTML = "";
+                    if (dataCalculo) {
+                        tempoHTML = `<span class="timer-text cronometro-ativo" data-inicio="${dataCalculo}">...</span>`;
+                    } else {
+                        tempoHTML = `<span class="text-muted">Aguardando...</span>`;
+                    }
+
+                    tabelaHTML += `
+                        <tr>
+                            <td><strong>${item.numero || 'S/N'}</strong></td>
+                            <td>${tipoDocText}</td>
+                            <td>${encarregadoExibicao}</td>
+                            <td>${dataFormatadaExibicao}</td>
+                            <td>${tempoHTML}</td>
+                            <td><span class="badge badge-andamento">${item.status}</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-info" title="Visualizar" onclick="visualizarInquerito(${item.id})"><i class="fas fa-eye"></i></button>
+                                ${souAdmin ? `<button class="btn btn-sm btn-outline-success" title="Finalizar Documento" onclick="finalizarInquerito(${item.id}, '${item.numero}')"><i class="fas fa-check"></i></button>` : ''}
+                                ${botaoApagarHTML}
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                tabelaHTML += `</tbody></table></div>`;
+                container.innerHTML += tabelaHTML;
+            }
         }
 
-        async function carregarInqueritosMP() {
-            const { data } = await supabaseClient.from('inqueritos').select('*').eq('status', 'Remetido ao MP').order('id', { ascending: false });
-            const tbody = document.getElementById('tabelaInqueritosMP');
-            tbody.innerHTML = '';
-            
-            if (!data || data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted">Nenhum inquérito aguardando ação do Ministério Público.</td></tr>`;
+        async function carregarDashboard() {
+            await verificarAcesso();
+
+            const { data, error } = await supabaseClient
+                .from('inqueritos')
+                .select('*')
+                .order('id', { ascending: false });
+
+            if (error) {
+                console.error("Erro ao carregar os dados:", error.message);
                 return;
             }
 
-            data.forEach(item => {
-                const emailLogado = localStorage.getItem('usuario_logado_email');
-                let acoes = `<button class="btn-action text-info border-info me-1" title="Visualizar Inquérito" onclick="window.location.href='tj-visualizar.html?id=${item.id}'"><i class="fas fa-eye"></i> Visualizar</button>`;
-                
-                if (isPromotor) {
-                    acoes += `<button class="btn-action text-success border-success me-1" onclick="denunciarInqueritoMP(${item.id}, '${item.numero}')"><i class="fas fa-bullhorn"></i> Denunciar</button>
-                              <button class="btn-action text-danger border-danger me-1" onclick="arquivarInqueritoMP(${item.id}, '${item.numero}')"><i class="fas fa-archive"></i> Arquivar</button>`;
-                }
-                if (emailLogado === "kira@yagami.gov") acoes += `<button class="btn-action text-danger border-danger" onclick="apagarDocumentoTJ(${item.id}, '${item.numero}')"><i class="fas fa-trash"></i></button>`;
+            let qtdAndamento = 0;
+            let qtdFinalizados = 0;
+            let qtdOutros = 0; 
 
-                tbody.innerHTML += `<tr>
-                    <td><strong>${item.numero || 'S/N'}</strong></td><td>POLÍCIA FEDERAL</td><td>Em Apuração</td>
-                    <td>${formatarDataSegura(item)}</td>
-                    <td><span class="badge-status" style="background-color: #0284c7; color: #e0f2fe;">Aguardando MP</span></td>
-                    <td class="text-center">${acoes}</td>
-                </tr>`;
-            });
-        }
+            const meuEmailAdmin = "kira@yagami.gov";
+            const souAdmin = (emailUsuarioLogado === meuEmailAdmin);
+            const userInstNormalized = (instituicaoUsuarioLogado || '').trim().toUpperCase();
+            const isPoliciaFederal = souAdmin;
 
-        async function denunciarInqueritoMP(id, numero) {
-            const motivo = window.prompt(`Informe os termos ou o motivo da DENÚNCIA para o inquérito ${numero}:`);
-            if (motivo) processarAcaoMP(id, numero, 'Aguardando Despacho (Denúncia)', motivo);
-        }
+            const andamentoInqueritos = {};
+            const andamentoInvestigacoes = {};
+            const andamentoPortarias = {};
+            const andamentoIntimacoes = {};
 
-        async function arquivarInqueritoMP(id, numero) {
-            const motivo = window.prompt(`Informe o motivo para solicitar o ARQUIVAMENTO do inquérito ${numero}:`);
-            if (motivo) processarAcaoMP(id, numero, 'Aguardando Despacho (Arquivamento)', motivo);
-        }
+            // LISTA DE STATUS DO TRIBUNAL DE JUSTIÇA QUE NÃO DEVEM APARECER COMO ANDAMENTO NA POLÍCIA
+            const statusForaDoAndamento = [
+                'Finalizado',
+                'Arquivado',
+                'Remetido ao MP',
+                'Aguardando Despacho (Denúncia)',
+                'Aguardando Despacho (Arquivamento)',
+                'Arquivado MP',
+                'Despacho Pendente',
+                'Processo em Andamento',
+                'Processo Encerrado',
+                'Intimação Expedida'
+            ];
 
-        async function processarAcaoMP(id, numero, novoStatus, motivo) {
-            const { data: inqData } = await supabaseClient.from('inqueritos').select('dados_extras').eq('id', id).single();
-            let extras = inqData && inqData.dados_extras ? JSON.parse(inqData.dados_extras) : {};
-            extras.motivoMP = motivo.trim();
+            if (data && data.length > 0) {
+                data.forEach(item => {
+                    let forcaInq = 'POLÍCIA FEDERAL'; 
+                    if (item.dados_extras) {
+                        try {
+                            const ext = JSON.parse(item.dados_extras);
+                            if (ext.forcaPolicial) forcaInq = ext.forcaPolicial.trim().toUpperCase();
+                        } catch(e){}
+                    }
 
-            const { error } = await supabaseClient.from('inqueritos').update({ status: novoStatus, dados_extras: JSON.stringify(extras) }).eq('id', id);
-            if (!error) { alert(`Ação processada e encaminhada ao Juiz!`); location.reload(); }
-        }
+                    if (!isPoliciaFederal && forcaInq !== userInstNormalized) {
+                        return; 
+                    }
 
-        async function carregarDespachosPendentes() {
-            const { data } = await supabaseClient.from('inqueritos').select('*').in('status', ['Aguardando Despacho (Denúncia)', 'Aguardando Despacho (Arquivamento)', 'Despacho Pendente']).order('id', { ascending: false });
-            const tbody = document.getElementById('tabelaDespachos');
-            tbody.innerHTML = '';
-            
-            if (!data || data.length === 0) {
-                document.getElementById('statDespachos').innerText = '0';
-                tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Nenhum despacho pendente.</td></tr>`;
-                return;
+                    let tipoDoc = item.tipo || 'Inquérito Policial';
+
+                    // Se for qualquer status referente ao MP ou ao TJ, ele contará como finalizado para a PF
+                    if (item.status === 'Finalizado' || item.status === 'Remetido ao MP' || item.status.includes('Despacho') || item.status.includes('Arquivado') || item.status.includes('Processo') || item.status.includes('Intimação')) {
+                        qtdFinalizados++;
+                        if (tipoDoc !== 'Inquérito Policial') qtdOutros++;
+                    } else if (!statusForaDoAndamento.includes(item.status)) {
+                        qtdAndamento++;
+                        if (tipoDoc !== 'Inquérito Policial') qtdOutros++;
+                        
+                        if (tipoDoc === 'Portaria') {
+                            if (!andamentoPortarias[forcaInq]) andamentoPortarias[forcaInq] = [];
+                            andamentoPortarias[forcaInq].push(item);
+                        } else if (tipoDoc === 'Intimação') {
+                            if (!andamentoIntimacoes[forcaInq]) andamentoIntimacoes[forcaInq] = [];
+                            andamentoIntimacoes[forcaInq].push(item);
+                        } else if (tipoDoc === 'Investigação') {
+                            if (!andamentoInvestigacoes[forcaInq]) andamentoInvestigacoes[forcaInq] = [];
+                            andamentoInvestigacoes[forcaInq].push(item);
+                        } else {
+                            if (!andamentoInqueritos[forcaInq]) andamentoInqueritos[forcaInq] = [];
+                            andamentoInqueritos[forcaInq].push(item);
+                        }
+                    }
+                });
             }
-            document.getElementById('statDespachos').innerText = String(data.length);
 
-            data.forEach(item => {
-                let tipoDecisao = item.status.includes('Denúncia') ? 'Recebimento de Denúncia' : (item.status.includes('Arquivamento') ? 'Homologação de Arquivamento' : 'Despacho Inicial');
-                
-                const emailLogado = localStorage.getItem('usuario_logado_email');
-                let acoes = `<button class="btn-action text-info border-info me-1" title="Visualizar Inquérito" onclick="window.location.href='tj-visualizar.html?id=${item.id}'"><i class="fas fa-eye"></i> Visualizar</button>`;
-                
-                if (isJuiz) {
-                    acoes += `<button class="btn-gold me-1" onclick="assinarDespacho(${item.id}, '${item.numero}', '${item.status}')"><i class="fas fa-signature"></i> Assinar e Publicar</button>`;
-                }
-                if (emailLogado === "kira@yagami.gov") acoes += `<button class="btn-action text-danger border-danger" onclick="apagarDocumentoTJ(${item.id}, '${item.numero}')"><i class="fas fa-trash"></i></button>`;
+            renderizarTabelasAgrupadas(andamentoInqueritos, 'containerAndamentoInqueritos', souAdmin);
+            renderizarTabelasAgrupadas(andamentoInvestigacoes, 'containerAndamentoInvestigacoes', souAdmin);
+            renderizarTabelasAgrupadas(andamentoPortarias, 'containerAndamentoPortarias', souAdmin);
+            renderizarTabelasAgrupadas(andamentoIntimacoes, 'containerAndamentoIntimacoes', souAdmin);
 
-                tbody.innerHTML += `<tr>
-                    <td><strong>${item.numero || 'S/N'}</strong></td><td>${tipoDecisao}</td>
-                    <td>${formatarDataSegura(item)}</td><td>Vara Criminal</td>
-                    <td class="text-center">${acoes}</td>
-                </tr>`;
-            });
+            document.getElementById('countAndamento').innerText = String(qtdAndamento).padStart(2, '0');
+            document.getElementById('countFinalizados').innerText = String(qtdFinalizados).padStart(2, '0');
+            document.getElementById('countOutros').innerText = String(qtdOutros).padStart(2, '0');
         }
 
-        async function assinarDespacho(id, numero, status) {
-            const { data: inqData } = await supabaseClient.from('inqueritos').select('dados_extras').eq('id', id).single();
-            let extras = inqData && inqData.dados_extras ? JSON.parse(inqData.dados_extras) : {};
-            
-            const despacho = window.prompt(`Informe o DESPACHO / DECISÃO para o documento ${numero}:`);
-            if (!despacho || despacho.trim() === "") return;
+        carregarDashboard();
 
-            extras.despachoJuiz = despacho.trim();
-            extras.dataDecisao = new Date().toISOString();
+        async function verificarMensagensDoSistema() {
+            if(!emailUsuarioLogado) return;
 
-            // CORREÇÃO: Mudança para 'Processo Encerrado' ou mantido arquivado conforme o fluxo correto, impedindo que vire um processo ativo na Polícia ou indevido no Tribunal.
-            let novoStatus = status.includes('Arquivamento') ? 'Arquivado' : 'Processo Encerrado';
-            
-            const { error } = await supabaseClient.from('inqueritos').update({ status: novoStatus, data_fim: new Date().toISOString(), dados_extras: JSON.stringify(extras) }).eq('id', id);
-            if (!error) { alert("Despacho assinado e publicado com sucesso!"); location.reload(); }
+            const { data, error } = await supabaseClient
+                .from('mensagens_sistema')
+                .select('*')
+                .eq('email_destino', emailUsuarioLogado)
+                .eq('lida', false)
+                .order('created_at', { ascending: true })
+                .limit(1);
+
+            if (data && data.length > 0) {
+                const msg = data[0];
+                document.getElementById('textoMensagemRecebida').innerText = msg.mensagem;
+                document.getElementById('idMensagemRecebida').value = msg.id;
+                
+                const modal = new bootstrap.Modal(document.getElementById('modalMensagemSistema'));
+                modal.show();
+            }
         }
+
+        async function marcarMensagemComoLida() {
+            const idMsg = document.getElementById('idMensagemRecebida').value;
+            
+            await supabaseClient.from('mensagens_sistema').update({ lida: true }).eq('id', idMsg);
+            
+            const modalElement = document.getElementById('modalMensagemSistema');
+            const modalInstance = bootstrap.Modal.getInstance(modalElement);
+            modalInstance.hide();
+            
+            setTimeout(verificarMensagensDoSistema, 1000); 
+        }
+
+        setTimeout(verificarMensagensDoSistema, 1500);
+
     </script>
 </body>
 </html>
