@@ -191,13 +191,12 @@
                 const cargo = localStorage.getItem(`inst_${emailLogado}`);
                 if (cargo === 'JUIZ') {
                     isJuiz = true;
-                    isPromotor = true; // Juiz tem hierarquia pra tudo
+                    isPromotor = true; 
                 } else if (cargo === 'PROMOTOR') {
                     isPromotor = true;
                 }
             }
 
-            // Libera o botão de Novo Processo somente para Juiz ou Promotor
             if (isJuiz || isPromotor) {
                 document.getElementById('btnNovoProcesso').style.display = "inline-block";
             }
@@ -207,7 +206,6 @@
             carregarDespachosPendentes();
         });
         
-        // FUNÇÃO DE CORREÇÃO DE DATAS INVÁLIDAS - AGORA PUXANDO DO 'data_criacao'
         function formatarDataSegura(item) {
             let dataStr = item.data_criacao || item.data_inicio;
             if (!dataStr && item.dados_extras) {
@@ -315,7 +313,6 @@
         }
 
         async function carregarDespachosPendentes() {
-            // Adicionado 'Despacho Pendente' para buscar os novos processos aqui no TJ
             const { data } = await supabaseClient.from('inqueritos').select('*').in('status', ['Aguardando Despacho (Denúncia)', 'Aguardando Despacho (Arquivamento)', 'Despacho Pendente']).order('id', { ascending: false });
             const tbody = document.getElementById('tabelaDespachos');
             tbody.innerHTML = '';
@@ -328,7 +325,6 @@
             document.getElementById('statDespachos').innerText = String(data.length);
 
             data.forEach(item => {
-                // Definindo o texto corretamente caso seja um Despacho Inicial criado pela página de novo processo
                 let tipoDecisao = item.status.includes('Denúncia') ? 'Recebimento de Denúncia' : (item.status.includes('Arquivamento') ? 'Homologação de Arquivamento' : 'Despacho Inicial');
                 
                 const emailLogado = localStorage.getItem('usuario_logado_email');
@@ -357,9 +353,10 @@
             extras.despachoJuiz = despacho.trim();
             extras.dataDecisao = new Date().toISOString();
 
-            let novoStatus = status.includes('Arquivamento') ? 'Arquivado' : 'Processo em Andamento';
+            // CORREÇÃO: Mudança para 'Processo Encerrado' ou mantido arquivado conforme o fluxo correto, impedindo que vire um processo ativo na Polícia ou indevido no Tribunal.
+            let novoStatus = status.includes('Arquivamento') ? 'Arquivado' : 'Processo Encerrado';
             
-            const { error } = await supabaseClient.from('inqueritos').update({ status: novoStatus, tipo: 'Ação Penal', dados_extras: JSON.stringify(extras) }).eq('id', id);
+            const { error } = await supabaseClient.from('inqueritos').update({ status: novoStatus, data_fim: new Date().toISOString(), dados_extras: JSON.stringify(extras) }).eq('id', id);
             if (!error) { alert("Despacho assinado e publicado com sucesso!"); location.reload(); }
         }
     </script>
