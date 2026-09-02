@@ -194,14 +194,16 @@
             margin-top: 10px;
         }
 
-        /* PDF Preview Area (Redesigned for Official Look matching image_23850f) */
+        /* PDF Preview Area */
         .pdf-panel {
             background-color: #fff;
             color: #000;
             padding: 40px;
             font-family: 'Arial', sans-serif;
             position: relative;
-            height: fit-content;
+            /* TAMANHO FIXO A4 PARA RESOLVER O ERRO DO PDF */
+            width: 794px;
+            min-height: 1123px; 
             border: 1px solid #ccc;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
@@ -683,7 +685,8 @@
         </div>
 
         <!-- ================= LADO DIREITO: PDF E BOTÕES ================= -->
-        <div>
+        <!-- SCROLL LATERAL PARA NÃO QUEBRAR O LAYOUT E MANTER O PDF NO TAMANHO CERTO -->
+        <div style="overflow-x: auto;">
             <!-- PDF LIMPEZA -->
             <div id="pdf-limpeza" class="pdf-panel tab-content active">
                 <div class="pdf-header">
@@ -987,8 +990,9 @@
             else if(abaAtual === 'alteracao') nome = document.getElementById('a_nome_novo').value || 'Cidadao';
             else if(abaAtual === 'porte') nome = document.getElementById('p_nome').value || 'Cidadao';
             
+            // MARGEM ZERADA PARA PREENCHER A FOLHA POR COMPLETO
             const opt = {
-                margin:       0.2,
+                margin:       0,
                 filename:     `PF_${abaAtual.toUpperCase()}_${nome.replace(/\s+/g, '_')}.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { scale: 2 },
