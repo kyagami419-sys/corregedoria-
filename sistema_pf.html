@@ -829,7 +829,7 @@
 
             <!-- BOTÕES -->
             <div class="actions-panel">
-                <button class="btn btn-blue" onclick="gerarPDF()">📄 Baixar PDF</button>
+                <button class="btn btn-blue" onclick="copiarDados()">📋 Copiar</button>
                 <button class="btn btn-yellow" onclick="enviarWebhook()">🚀 Salvar Registro</button>
             </div>
         </div>
@@ -980,26 +980,70 @@
             }
         });
 
-        // Gerar PDF
-        function gerarPDF() {
-            const elementId = `pdf-${abaAtual}`;
-            const element = document.getElementById(elementId);
-            
-            let nome = "Documento";
-            if(abaAtual === 'limpeza') nome = document.getElementById('l_nome').value || 'Cidadao';
-            else if(abaAtual === 'alteracao') nome = document.getElementById('a_nome_novo').value || 'Cidadao';
-            else if(abaAtual === 'porte') nome = document.getElementById('p_nome').value || 'Cidadao';
-            
-            // MARGEM ZERADA PARA PREENCHER A FOLHA POR COMPLETO
-            const opt = {
-                margin:       0,
-                filename:     `PF_${abaAtual.toUpperCase()}_${nome.replace(/\s+/g, '_')}.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2 },
-                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
-            };
+        // Copiar Dados
+        function copiarDados() {
+            const getVal = (id) => document.getElementById(id).value || '---';
+            let texto = "";
 
-            html2pdf().set(opt).from(element).save();
+            if (abaAtual === 'limpeza') {
+                texto = `*** CERTIDÃO DE LIMPEZA DE FICHA ***\n\n` +
+                        `[DADOS DO REQUERENTE]\n` +
+                        `Nome Completo: ${getVal('l_nome')}\n` +
+                        `Registro Geral (RG): ${getVal('l_rg')}\n` +
+                        `Telefone: ${getVal('l_telefone')}\n\n` +
+                        `[DADOS DO PROCEDIMENTO]\n` +
+                        `Protocolo: ${getVal('l_protocolo')}\n` +
+                        `Data da Execução: ${getVal('l_data')}\n` +
+                        `Tipo de Limpeza: ${document.getElementById('l_tipo').value}\n` +
+                        `Artigos Removidos: ${getVal('l_artigos')}\n\n` +
+                        `[RESPONSÁVEIS]\n` +
+                        `Oficial da Polícia Federal: ${getVal('l_nome_oficial')} (ID: ${getVal('l_id_oficial')})\n` +
+                        `Advogado Acompanhante: ${getVal('l_advogado')}\n` +
+                        `Passaporte Advogado: ${getVal('l_adv_pass')}\n` +
+                        `Telefone Advogado: ${getVal('l_adv_tel')}`;
+            } else if (abaAtual === 'alteracao') {
+                texto = `*** CERTIDÃO DE ALTERAÇÃO DE REGISTRO CIVIL ***\n\n` +
+                        `[IDENTIFICAÇÃO ANTERIOR (REVOGADA)]\n` +
+                        `Nome Antigo: ${getVal('a_nome_antigo')}\n` +
+                        `Passaporte Antigo: ${getVal('a_pass_antigo')}\n` +
+                        `RG Antigo: ${getVal('a_rg_antigo')}\n\n` +
+                        `[IDENTIFICAÇÃO ATUALIZADA (VIGENTE)]\n` +
+                        `Novo Nome: ${getVal('a_nome_novo')}\n` +
+                        `Novo Passaporte: ${getVal('a_pass_novo')}\n` +
+                        `Novo RG: ${getVal('a_rg_novo')}\n` +
+                        `Novo Telefone: ${getVal('a_tel_novo')}\n\n` +
+                        `[DADOS DO PROCEDIMENTO]\n` +
+                        `Protocolo: ${getVal('a_protocolo')}\n` +
+                        `Data da Alteração: ${getVal('a_data')}\n` +
+                        `Próx. Permissão (+15D): ${getVal('a_prox_perm')}\n` +
+                        `Oficial Responsável: ${getVal('a_nome_oficial')} (ID: ${getVal('a_id_oficial')})\n` +
+                        `Advogado: ${getVal('a_advogado')}\n` +
+                        `Passaporte Advogado: ${getVal('a_adv_pass')}\n` +
+                        `Telefone Advogado: ${getVal('a_adv_tel')}`;
+            } else if (abaAtual === 'porte') {
+                texto = `*** AUTORIZAÇÃO DE PORTE DE ARMA DE FOGO ***\n\n` +
+                        `[DADOS DO TITULAR]\n` +
+                        `Nome Completo: ${getVal('p_nome')}\n` +
+                        `Passaporte / ID: ${getVal('p_passaporte')}\n` +
+                        `Registro Geral (RG): ${getVal('p_rg')}\n` +
+                        `Telefone: ${getVal('p_telefone')}\n\n` +
+                        `[ESPECIFICAÇÕES DO PORTE]\n` +
+                        `Protocolo: ${getVal('p_protocolo')}\n` +
+                        `Data de Emissão: ${getVal('p_data')}\n` +
+                        `Validade do Porte: ${getVal('p_validade')}\n` +
+                        `Categoria: ${document.getElementById('p_categoria').value}\n\n` +
+                        `[RESPONSÁVEIS]\n` +
+                        `Oficial Responsável: ${getVal('p_nome_oficial')} (ID: ${getVal('p_id_oficial')})\n` +
+                        `Advogado: ${getVal('p_advogado')}\n` +
+                        `Passaporte Advogado: ${getVal('p_adv_pass')}\n` +
+                        `Telefone Advogado: ${getVal('p_adv_tel')}`;
+            }
+
+            navigator.clipboard.writeText(texto).then(() => {
+                alert("📋 Informações copiadas com sucesso!");
+            }).catch(err => {
+                alert("❌ Erro ao copiar: " + err);
+            });
         }
 
         // Enviar Webhook
@@ -1014,61 +1058,90 @@
                 return;
             }
 
-            let embedTitle, embedFields, embedColor;
+            const getVal = (id) => document.getElementById(id).value || 'N/A';
+            let embedTitle, embedFields, embedColor, imageSrc = null;
 
             if (abaAtual === 'limpeza') {
+                const imgEl = document.querySelector('#zone_l_cidadao img');
+                if (imgEl && imgEl.style.display === 'block') imageSrc = imgEl.src;
+                
                 embedTitle = "🧹 Polícia Federal - Limpeza de Ficha";
                 embedColor = 16763904; // Amarelo
                 embedFields = [
-                    { name: "Cidadão", value: document.getElementById('l_nome').value || 'N/A', inline: true },
-                    { name: "RG", value: document.getElementById('l_rg').value || 'N/A', inline: true },
-                    { name: "Protocolo", value: document.getElementById('l_protocolo').value, inline: true },
-                    { name: "Oficial Responsável", value: document.getElementById('l_nome_oficial').value || 'N/A', inline: true },
-                    { name: "Advogado", value: document.getElementById('l_advogado').value || 'Nenhum', inline: true },
+                    { name: "Cidadão", value: getVal('l_nome'), inline: true },
+                    { name: "RG", value: getVal('l_rg'), inline: true },
+                    { name: "Telefone", value: getVal('l_telefone'), inline: true },
+                    { name: "Protocolo", value: getVal('l_protocolo'), inline: true },
+                    { name: "Data", value: getVal('l_data'), inline: true },
                     { name: "Tipo", value: document.getElementById('l_tipo').value, inline: true },
-                    { name: "Artigos Limpos", value: document.getElementById('l_artigos').value || 'Nenhum especificado' }
+                    { name: "Oficial Responsável", value: `${getVal('l_nome_oficial')} (ID: ${getVal('l_id_oficial')})`, inline: false },
+                    { name: "Advogado", value: `${getVal('l_advogado')} | Pass: ${getVal('l_adv_pass')} | Tel: ${getVal('l_adv_tel')}`, inline: false },
+                    { name: "Artigos Limpos", value: getVal('l_artigos') }
                 ];
             } else if (abaAtual === 'alteracao') {
+                const imgEl = document.querySelector('#zone_a_cidadao img');
+                if (imgEl && imgEl.style.display === 'block') imageSrc = imgEl.src;
+
                 embedTitle = "🔄 Polícia Federal - Alteração de Registro";
                 embedColor = 3447003; // Azul
                 embedFields = [
-                    { name: "Nome Antigo", value: document.getElementById('a_nome_antigo').value || 'N/A', inline: true },
-                    { name: "Novo Nome", value: document.getElementById('a_nome_novo').value || 'N/A', inline: true },
-                    { name: "Novo Passaporte", value: document.getElementById('a_pass_novo').value || 'N/A', inline: true },
-                    { name: "Oficial (ID - Nome)", value: document.getElementById('a_id_oficial').value + " - " + document.getElementById('a_nome_oficial').value, inline: false },
-                    { name: "Protocolo", value: document.getElementById('a_protocolo').value, inline: true },
-                    { name: "Próxima Alteração", value: document.getElementById('a_prox_perm').value, inline: true }
+                    { name: "Dados Antigos", value: `**Nome:** ${getVal('a_nome_antigo')}\n**Passaporte:** ${getVal('a_pass_antigo')}\n**RG:** ${getVal('a_rg_antigo')}\n**Tel:** ${getVal('a_tel_antigo')}`, inline: true },
+                    { name: "Dados Novos", value: `**Nome:** ${getVal('a_nome_novo')}\n**Passaporte:** ${getVal('a_pass_novo')}\n**RG:** ${getVal('a_rg_novo')}\n**Tel:** ${getVal('a_tel_novo')}`, inline: true },
+                    { name: "Procedimento", value: `**Protocolo:** ${getVal('a_protocolo')}\n**Data:** ${getVal('a_data')}\n**Próx. Permissão:** ${getVal('a_prox_perm')}`, inline: false },
+                    { name: "Oficial Responsável", value: `${getVal('a_nome_oficial')} (ID: ${getVal('a_id_oficial')})`, inline: true },
+                    { name: "Advogado", value: `${getVal('a_advogado')} | Pass: ${getVal('a_adv_pass')}`, inline: true }
                 ];
             } else if (abaAtual === 'porte') {
+                const imgEl = document.querySelector('#zone_p_cidadao img');
+                if (imgEl && imgEl.style.display === 'block') imageSrc = imgEl.src;
+
                 embedTitle = "🔫 Polícia Federal - Porte de Armas";
                 embedColor = 15158332; // Vermelho
                 embedFields = [
-                    { name: "Cidadão", value: document.getElementById('p_nome').value || 'N/A', inline: true },
-                    { name: "Passaporte / RG", value: (document.getElementById('p_passaporte').value || 'N/A') + " / " + (document.getElementById('p_rg').value || 'N/A'), inline: true },
-                    { name: "Protocolo", value: document.getElementById('p_protocolo').value, inline: true },
-                    { name: "Validade", value: document.getElementById('p_validade').value || 'N/A', inline: true },
+                    { name: "Cidadão", value: getVal('p_nome'), inline: true },
+                    { name: "Passaporte / RG", value: `${getVal('p_passaporte')} / ${getVal('p_rg')}`, inline: true },
+                    { name: "Telefone", value: getVal('p_telefone'), inline: true },
+                    { name: "Protocolo", value: getVal('p_protocolo'), inline: true },
+                    { name: "Validade", value: getVal('p_validade'), inline: true },
                     { name: "Categoria", value: document.getElementById('p_categoria').value, inline: true },
-                    { name: "Oficial Responsável", value: document.getElementById('p_nome_oficial').value || 'N/A', inline: true }
+                    { name: "Oficial Responsável", value: `${getVal('p_nome_oficial')} (ID: ${getVal('p_id_oficial')})`, inline: false },
+                    { name: "Advogado", value: `${getVal('p_advogado')} | Pass: ${getVal('p_adv_pass')} | Tel: ${getVal('p_adv_tel')}`, inline: false }
                 ];
+            }
+
+            const embedObj = {
+                title: embedTitle,
+                color: embedColor,
+                fields: embedFields,
+                footer: { text: "Sistema Integrado da PF" },
+                timestamp: new Date().toISOString()
+            };
+
+            const formData = new FormData();
+
+            if (imageSrc) {
+                try {
+                    const res = await fetch(imageSrc);
+                    const blob = await res.blob();
+                    formData.append('file', blob, 'foto.png');
+                    embedObj.image = { url: 'attachment://foto.png' };
+                } catch(e) {
+                    console.error("Erro ao processar a imagem", e);
+                }
             }
 
             const payload = {
                 username: "Departamento de Polícia Federal",
                 avatar_url: "https://i.imgur.com/4M34hi2.png", 
-                embeds: [{
-                    title: embedTitle,
-                    color: embedColor,
-                    fields: embedFields,
-                    footer: { text: "Sistema Integrado da PF" },
-                    timestamp: new Date().toISOString()
-                }]
+                embeds: [embedObj]
             };
+
+            formData.append('payload_json', JSON.stringify(payload));
 
             try {
                 const response = await fetch(webhookURL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    body: formData
                 });
                 if (response.ok) alert("✅ Registro enviado com sucesso para a Base!");
                 else alert("❌ Erro ao enviar para o Webhook.");
