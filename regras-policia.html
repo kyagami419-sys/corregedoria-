@@ -2093,62 +2093,59 @@
                 titulo: 'Recrutamentos', 
                 icone: 'fa-users', 
                 texto: `
-                    <div class="rule-card">
-                        <div class="rule-card-header">
-                            <div class="number-badge">1</div>
-                            <h3 class="rule-card-title">Processo de Recrutamento</h3>
+                    <div class="top-cards-container">
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-info-circle"></i> RESUMO</div>
+                            <p class="card-text">Cronograma oficial e regras atualizadas para organizar o fluxo de recrutamentos e focar na DP do dia.</p>
                         </div>
-                        <p class="card-text mb-3" style="padding-left: 10px;">Integre uma das guarnições de elite do Brasil.</p>
-                        <div class="warning-box-rule">
-                            <strong>Status: Aberto</strong> • 5 Guarnições • Seg–Sex
+                        <div class="warning-card">
+                            <div class="card-title yellow"><i class="fas fa-exclamation-triangle"></i> ATENÇÃO</div>
+                            <p class="card-text">Contamos com a colaboração de todas as organizações para manter um recrutamento organizado, justo e equilibrado.</p>
                         </div>
                     </div>
 
                     <div class="rule-card">
                         <div class="rule-card-header">
-                            <div class="number-badge">2</div>
-                            <h3 class="rule-card-title">Escala de Recrutamento Semanal</h3>
+                            <div class="number-badge">1</div>
+                            <h3 class="rule-card-title">Cronograma Oficial de Recrutamentos</h3>
                         </div>
+                        <p class="card-text mb-3" style="padding-left: 10px;">A partir de agora, os recrutamentos seguirão um cronograma fixo com o objetivo de organizar o fluxo e incentivar a população a focar na DP do dia.</p>
                         <div class="table-responsive">
                             <table class="table table-dark table-borderless align-middle" style="background: transparent;">
                                 <thead>
                                     <tr style="border-bottom: 1px solid #1f2937; color: #9ca3af; font-size: 0.85rem; text-transform: uppercase;">
-                                        <th>Força</th>
-                                        <th>Dias de Recrutamento</th>
-                                        <th>1º Horário</th>
-                                        <th>2º Horário</th>
+                                        <th>Dia da Semana</th>
+                                        <th>Organização Responsável</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr style="border-bottom: 1px solid #1f2937;">
-                                        <td><strong>PCESP</strong><br><small style="color: #9ca3af;">Polícia Civil do Estado de São Paulo</small></td>
-                                        <td>Seg • Qua</td>
-                                        <td>15:00</td>
-                                        <td>20:00</td>
+                                        <td><strong>Segunda-Feira</strong></td>
+                                        <td>PRB</td>
                                     </tr>
                                     <tr style="border-bottom: 1px solid #1f2937;">
-                                        <td><strong>BOPE</strong><br><small style="color: #9ca3af;">Batalhão de Operações Policiais Especiais</small></td>
-                                        <td>Seg • Qui</td>
-                                        <td>15:00</td>
-                                        <td>20:00</td>
+                                        <td><strong>Terça-Feira</strong></td>
+                                        <td>Polícia Militar</td>
                                     </tr>
                                     <tr style="border-bottom: 1px solid #1f2937;">
-                                        <td><strong>PMERJ</strong><br><small style="color: #9ca3af;">Polícia Militar do Estado de Rio de Janeiro</small></td>
-                                        <td>Ter • Qui</td>
-                                        <td>15:00</td>
-                                        <td>20:00</td>
+                                        <td><strong>Quarta-Feira</strong></td>
+                                        <td>BOPE</td>
                                     </tr>
                                     <tr style="border-bottom: 1px solid #1f2937;">
-                                        <td><strong>EB</strong><br><small style="color: #9ca3af;">Exército Brasileiro</small></td>
-                                        <td>Ter • Sex</td>
-                                        <td>15:00</td>
-                                        <td>20:00</td>
+                                        <td><strong>Quinta-Feira</strong></td>
+                                        <td>ROTA</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #1f2937;">
+                                        <td><strong>Sexta-Feira</strong></td>
+                                        <td>Polícia Civil</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #1f2937;">
+                                        <td><strong>Sábado</strong></td>
+                                        <td>Polícia Federal</td>
                                     </tr>
                                     <tr>
-                                        <td><strong>PF</strong><br><small style="color: #9ca3af;">Polícia Federal</small></td>
-                                        <td>Qua • Sex</td>
-                                        <td>15:00</td>
-                                        <td>20:00</td>
+                                        <td><strong>Domingo</strong></td>
+                                        <td>Exército Brasileiro</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -2157,14 +2154,25 @@
 
                     <div class="rule-card">
                         <div class="rule-card-header">
-                            <div class="number-badge">3</div>
-                            <h3 class="rule-card-title">Regras Obrigatórias</h3>
+                            <div class="number-badge">2</div>
+                            <h3 class="rule-card-title">Regras de Recrutamento</h3>
                         </div>
                         <ul class="rule-list-card">
-                            <li>Cada força deve realizar <strong>2 recrutamentos por semana</strong>.</li>
-                            <li>Horários disponíveis: às <strong>15h</strong> e às <strong>20h</strong>.</li>
-                            <li>Cada recrutamento deve ter duração mínima de <strong>1 hora</strong>.</li>
-                            <li><strong>É obrigatória a presença de um responsável (Ministro)</strong> ou o recrutamento deve ser gravado (clipado). O recrutamento <strong>não pode</strong> ser feito por um oficial recém-contratado ou de cargo baixo.</li>
+                            <li>Cada DP terá até <strong>5 recrutamentos liberados por dia</strong>.</li>
+                            <li>O limite foi reduzido em 50% para que os membros tenham maior foco na organização responsável pelo recrutamento naquele dia.</li>
+                            <li>Caso o limite estabelecido seja extrapolado, a organização estará sujeita a <strong>multa/penalização da ORG</strong>.</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">3</div>
+                            <h3 class="rule-card-title">Aliciamento de Militares</h3>
+                        </div>
+                        <ul class="rule-list-card">
+                            <li>É expressamente proibido convidar, aliciar ou oferecer cargos superiores a militares pertencentes a outro DP.</li>
+                            <li><strong>Infração:</strong> Convidar ou oferecer cargos maiores para militares de outro DP.</li>
+                            <li><strong>Punição:</strong> Banimento + ADV ORG, independentemente da patente/cargo exercido pelo infrator.</li>
                         </ul>
                     </div>
 
@@ -2195,7 +2203,7 @@
                                 <p style="font-family: monospace; font-size: 0.85rem; color: #9ca3af; margin-top: 8px; margin-bottom: 0; word-break: break-all;">jaqueta 273 0; calca 207 0; blusa 15 0; sapatos 25 0; oculos -1 -1; acessorio 34 0; chapeu -1 -1; colete 0 0; mascara 0 0; maos 198 0;</p>
                             </div>
                         </div>
-                        <div class="warning-box-rule">
+                        <div style="background-color: #1f2a20; border: 1px solid #2ea043; color: #56d364; padding: 15px; border-radius: 8px; font-size: 0.95rem;">
                             <strong><i class="fas fa-exclamation-triangle"></i> Atenção:</strong> Todos os conscritos devem estar sem qualquer tipo de maquiagem, tatuagem ou cabelo pintado (somente cores naturais). Os <strong>homens</strong> devem estar com o cabelo raspado e as <strong>mulheres</strong> de cabelo preso.
                         </div>
                     </div>
