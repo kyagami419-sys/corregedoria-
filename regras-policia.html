@@ -309,6 +309,7 @@
             <a href="#" class="sidebar-item" onclick="mudarSecao('acoes', this)"><span><i class="fas fa-crosshairs"></i> Ações Policiais</span></a>
 
             <div class="sidebar-section-title">Capítulo IV</div>
+            <a href="#" class="sidebar-item" onclick="mudarSecao('alto-comando', this)"><span><i class="fas fa-star"></i> Alto Comando / Escalão</span></a>
             <a href="#" class="sidebar-item" onclick="mudarSecao('recrutamentos', this)"><span><i class="fas fa-users"></i> Recrutamentos</span></a>
             <a href="#" class="sidebar-item" onclick="mudarSecao('transferencia', this)"><span><i class="fas fa-exchange-alt"></i> Transferência</span></a>
             
@@ -2085,6 +2086,169 @@
                             <li>Rush negociável e pular caixa negociável.</li>
                             <li>Tolerância de 15 minutos em atrasos, caso não comparecer "GG" para o time que estiver completo.</li>
                         </ul>
+                    </div>
+                `
+            },
+            'alto-comando': {
+                capitulo: 'CAPÍTULO IV',
+                titulo: 'Alto Comando e Alto Escalão',
+                icone: 'fa-star',
+                texto: `
+                    <div class="top-cards-container">
+                        <div class="info-card">
+                            <div class="card-title green"><i class="fas fa-info-circle"></i> RESUMO</div>
+                            <p class="card-text">Estrutura hierárquica do Alto Comando e Alto Escalão de cada departamento policial.</p>
+                        </div>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">1</div>
+                            <h3 class="rule-card-title">Alto Comando de cada Polícia</h3>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-dark table-borderless align-middle text-center" style="background: transparent;">
+                                <thead>
+                                    <tr style="border-bottom: 1px solid #1f2937; color: #b58d3d; font-size: 0.85rem; text-transform: uppercase;">
+                                        <th>Nível</th>
+                                        <th>Federal</th>
+                                        <th>Exército</th>
+                                        <th>PRF</th>
+                                        <th>Civil</th>
+                                        <th>ROTA</th>
+                                        <th>PMERJ</th>
+                                        <th>BOPE</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="border-bottom: 1px solid #1f2937;">
+                                        <td style="color: #b58d3d; font-weight: bold; font-size: 1.1rem;">1</td>
+                                        <td>DiretorGeral</td>
+                                        <td>ComandanteGeral</td>
+                                        <td>DiretorGeral</td>
+                                        <td>DelegadoGeral</td>
+                                        <td>Coronel</td>
+                                        <td>ComandanteGeral</td>
+                                        <td>ComandoGeral</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #1f2937;">
+                                        <td style="color: #b58d3d; font-weight: bold; font-size: 1.1rem;">2</td>
+                                        <td>SubComandanteGeral</td>
+                                        <td>SubComandanteGeral</td>
+                                        <td>Diretor</td>
+                                        <td>DelegadoGeralAdj</td>
+                                        <td>TenenteCoronel</td>
+                                        <td>Comandante</td>
+                                        <td>Comando</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color: #b58d3d; font-weight: bold; font-size: 1.1rem;">3</td>
+                                        <td>Diretor</td>
+                                        <td>General</td>
+                                        <td>SubDiretor</td>
+                                        <td>Delegado</td>
+                                        <td>Major</td>
+                                        <td>SubComandante</td>
+                                        <td>SubComando</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="rule-card">
+                        <div class="rule-card-header">
+                            <div class="number-badge">2</div>
+                            <h3 class="rule-card-title">Alto Escalão de cada Polícia</h3>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-dark table-borderless align-middle text-center" style="background: transparent;">
+                                <thead>
+                                    <tr style="border-bottom: 1px solid #1f2937; color: #b58d3d; font-size: 0.85rem; text-transform: uppercase;">
+                                        <th>Nível</th>
+                                        <th>Federal</th>
+                                        <th>Exército</th>
+                                        <th>PRF</th>
+                                        <th>Civil</th>
+                                        <th>ROTA</th>
+                                        <th>PMERJ</th>
+                                        <th>BOPE</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="border-bottom: 1px solid #1f2937;">
+                                        <td style="color: #b58d3d; font-weight: bold; font-size: 1.1rem;">1</td>
+                                        <td>DiretorGeral</td>
+                                        <td>ComandanteGeral</td>
+                                        <td>DiretorGeral</td>
+                                        <td>DelegadoGeral</td>
+                                        <td>Coronel</td>
+                                        <td>ComandanteGeral</td>
+                                        <td>ComandoGeral</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #1f2937;">
+                                        <td style="color: #b58d3d; font-weight: bold; font-size: 1.1rem;">2</td>
+                                        <td>SubComandanteGeral</td>
+                                        <td>SubComandanteGeral</td>
+                                        <td>Diretor</td>
+                                        <td>DelegadoGeralAdj</td>
+                                        <td>TenenteCoronel</td>
+                                        <td>Comandante</td>
+                                        <td>Comando</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #1f2937;">
+                                        <td style="color: #b58d3d; font-weight: bold; font-size: 1.1rem;">3</td>
+                                        <td>Diretor</td>
+                                        <td>General</td>
+                                        <td>SubDiretor</td>
+                                        <td>Delegado</td>
+                                        <td>Major</td>
+                                        <td>SubComandante</td>
+                                        <td>SubComando</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #1f2937;">
+                                        <td style="color: #b58d3d; font-weight: bold; font-size: 1.1rem;">4</td>
+                                        <td>ViceDiretor</td>
+                                        <td>Coronel</td>
+                                        <td>CorregedorGeral</td>
+                                        <td>DelegadoAdj</td>
+                                        <td>Capitão</td>
+                                        <td>TenenteCoronel</td>
+                                        <td>Coronel</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #1f2937;">
+                                        <td style="color: #b58d3d; font-weight: bold; font-size: 1.1rem;">5</td>
+                                        <td>Delegado</td>
+                                        <td>Major</td>
+                                        <td>DelegadoGeral</td>
+                                        <td>Corregedoria</td>
+                                        <td>PrimeiroTenente</td>
+                                        <td>Coronel</td>
+                                        <td>TenenteCoronel</td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #1f2937;">
+                                        <td style="color: #b58d3d; font-weight: bold; font-size: 1.1rem;">6</td>
+                                        <td>Corregedoria</td>
+                                        <td>-</td>
+                                        <td>Delegado</td>
+                                        <td>-</td>
+                                        <td>SegundoTenente</td>
+                                        <td>CorregedorGeral</td>
+                                        <td>Major</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color: #b58d3d; font-weight: bold; font-size: 1.1rem;">7</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>Corregedoria</td>
+                                        <td>Corregedor</td>
+                                        <td>-</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 `
             },
