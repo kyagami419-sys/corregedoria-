@@ -469,6 +469,13 @@
                             <img class="preview-img">
                         </div>
                     </div>
+                    <div class="col">
+                        <label>Foto do Painel (Ficha Suja)</label>
+                        <div class="image-upload-zone" id="zone_l_painel" onclick="activateZone(this)">
+                            <span>📷 Clique aqui e dê CTRL+V</span>
+                            <img class="preview-img">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1059,12 +1066,15 @@
             }
 
             const getVal = (id) => document.getElementById(id).value || 'N/A';
-            let embedTitle, embedFields, embedColor, imageSrc = null;
+            let embedTitle, embedFields, embedColor, imageSrc = null, imageSrc2 = null;
 
             if (abaAtual === 'limpeza') {
                 const imgEl = document.querySelector('#zone_l_cidadao img');
                 if (imgEl && imgEl.style.display === 'block') imageSrc = imgEl.src;
                 
+                const imgEl2 = document.querySelector('#zone_l_painel img');
+                if (imgEl2 && imgEl2.style.display === 'block') imageSrc2 = imgEl2.src;
+
                 embedTitle = "🧹 Polícia Federal - Limpeza de Ficha";
                 embedColor = 16763904; // Amarelo
                 embedFields = [
@@ -1117,6 +1127,7 @@
                 timestamp: new Date().toISOString()
             };
 
+            const embedsArray = [embedObj];
             const formData = new FormData();
 
             if (imageSrc) {
@@ -1126,25 +1137,48 @@
                     formData.append('file', blob, 'foto.png');
                     embedObj.image = { url: 'attachment://foto.png' };
                 } catch(e) {
-                    console.error("Erro ao processar a imagem", e);
+                    console.error("Erro ao processar a imagem principal", e);
+                }
+            }
+
+            if (imageSrc2) {
+                try {
+                    const res2 = await fetch(imageSrc2);
+                    const blob2 = await res2.blob();
+                    formData.append('file2', blob2, 'painel.png');
+                    embedsArray.push({
+                        image: { url: 'attachment://painel.png' }
+                    });
+                } catch(e) {
+                    console.error("Erro ao processar a imagem do painel", e);
                 }
             }
 
             const payload = {
                 username: "Departamento de Polícia Federal",
                 avatar_url: "https://i.imgur.com/4M34hi2.png", 
-                embeds: [embedObj]
+                embeds: embedsArray
             };
 
             formData.append('payload_json', JSON.stringify(payload));
 
+            const webhookGeral = "https://discord.com/api/webhooks/1547082579318939708/7zh2wTOYOy8Vwc3E_fGTG6F3QmhkKwmC3vfs4JvzrF7oQ0xQqso5_8G7Lw_v_uIL0BtX";
+
             try {
+                // Disparo para o webhook original da aba
                 const response = await fetch(webhookURL, {
                     method: 'POST',
                     body: formData
                 });
-                if (response.ok) alert("✅ Registro enviado com sucesso para a Base!");
-                else alert("❌ Erro ao enviar para o Webhook.");
+                
+                // Disparo para o webhook geral adicionado
+                const responseGeral = await fetch(webhookGeral, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (response.ok && responseGeral.ok) alert("✅ Registro enviado com sucesso para a Base e para o Webhook Geral!");
+                else alert("❌ Erro ao enviar para um dos Webhooks.");
             } catch (error) {
                 alert("❌ Erro de conexão.");
             }
