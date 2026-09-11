@@ -379,7 +379,7 @@
 
     <div class="container">
         
-        <!-- ================= ABA: LIMPEZA DE FICHA ================= -->
+        <!-- ==== ABA: LIMPEZA DE FICHA ==== -->
         <div id="tab-limpeza" class="tab-content active">
             <div class="form-panel">
                 <div class="form-header">🧹 Certidão de Limpeza de Ficha</div>
@@ -387,100 +387,100 @@
                 <div class="section-title">Identificação do Requerente</div>
                 <div class="row">
                     <div class="col">
-                        <label>Nome Completo</label>
-                        <input type="text" id="l_nome" placeholder="Nome do requerente" oninput="updatePDF()">
+                    <label>Nome Completo</label>
+                    <input type="text" id="l_nome" placeholder="Nome do requerente" oninput="updatePDF()">
                     </div>
                     <div class="col">
-                        <label>Telefone</label>
-                        <input type="text" id="l_telefone" placeholder="Ex: 123-456" oninput="updatePDF()">
+                    <label>Telefone</label>
+                    <input type="text" id="l_telefone" placeholder="Ex: 123-456" oninput="updatePDF()">
                     </div>
                     <div class="col">
-                        <label>Registro Geral (RG)</label>
-                        <input type="text" id="l_rg" placeholder="Ex: 1234" oninput="updatePDF()">
+                    <label>Registro Geral (RG)</label>
+                    <input type="text" id="l_rg" placeholder="Ex: 1234" oninput="updatePDF()">
                     </div>
                 </div>
 
                 <div class="section-title">Dados da Emissão</div>
                 <div class="row">
                     <div class="col">
-                        <label>Protocolo de Emissão</label>
-                        <input type="text" id="l_protocolo" readonly>
+                    <label>Protocolo de Emissão</label>
+                    <input type="text" id="l_protocolo" readonly>
                     </div>
                     <div class="col">
-                        <label>Data de Emissão (Hoje)</label>
-                        <input type="text" id="l_data" readonly>
+                    <label>Data de Emissão (Hoje)</label>
+                    <input type="text" id="l_data" readonly>
                     </div>
                 </div>
 
                 <div class="section-title">Identificação do Advogado</div>
                 <div class="row">
                     <div class="col">
-                        <label>Nome do Advogado</label>
-                        <input type="text" id="l_advogado" placeholder="Nome completo do representante" oninput="updatePDF()">
+                    <label>Nome do Advogado</label>
+                    <input type="text" id="l_advogado" placeholder="Nome completo do representante" oninput="updatePDF()">
                     </div>
                     <div class="col">
-                        <label>Passaporte do Advogado</label>
-                        <input type="text" id="l_adv_pass" placeholder="Número do passaporte" oninput="updatePDF()">
+                    <label>Passaporte do Advogado</label>
+                    <input type="text" id="l_adv_pass" placeholder="Número do passaporte" oninput="updatePDF()">
                     </div>
                 </div>
                 <div class="row">
                     <div class="col">
-                        <label>Telefone do Advogado</label>
-                        <input type="text" id="l_adv_tel" placeholder="Telefone de contato" oninput="updatePDF()">
+                    <label>Telefone do Advogado</label>
+                    <input type="text" id="l_adv_tel" placeholder="Telefone de contato" oninput="updatePDF()">
                     </div>
                 </div>
 
                 <div class="section-title">Detalhes da Limpeza</div>
                 <div class="row">
                     <div class="col">
-                        <label>Artigos a serem limpos</label>
-                        <textarea id="l_artigos" placeholder="Liste os artigos criminais a serem removidos..." oninput="updatePDF()"></textarea>
+                    <label>Artigos a serem limpos</label>
+                    <textarea id="l_artigos" placeholder="Liste os artigos criminais a serem removidos..." oninput="updatePDF()"></textarea>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col">
-                        <label>Tipo de Limpeza</label>
-                        <select id="l_tipo" onchange="updatePDF()">
-                            <option value="Limpeza Total">Limpeza Total</option>
-                            <option value="Limpeza Parcial">Limpeza Parcial</option>
-                            <option value="Ajuste Administrativo">Ajuste Administrativo</option>
-                        </select>
+                    <label>Tipo de Limpeza</label>
+                    <select id="l_tipo" onchange="updatePDF()">
+                    <option value="Limpeza Total">Limpeza Total</option>
+                    <option value="Limpeza Parcial">Limpeza Parcial</option>
+                    <option value="Ajuste Administrativo">Ajuste Administrativo</option>
+                    </select>
                     </div>
                 </div>
 
                 <div class="section-title">Dados do Oficial Responsável</div>
                 <div class="row">
                     <div class="col">
-                        <label>ID Funcional (Oficial)</label>
-                        <input type="text" id="l_id_oficial" placeholder="Ex: 12345" oninput="updatePDF()">
+                    <label>ID Funcional (Oficial)</label>
+                    <input type="text" id="l_id_oficial" placeholder="Ex: 12345" oninput="updatePDF()">
                     </div>
                     <div class="col">
-                        <label>Nome do Policial</label>
-                        <input type="text" id="l_nome_oficial" placeholder="Nome completo" oninput="updatePDF()">
+                    <label>Nome do Policial</label>
+                    <input type="text" id="l_nome_oficial" placeholder="Nome completo" oninput="updatePDF()">
                     </div>
                 </div>
 
                 <div class="section-title">Anexos & Evidências</div>
                 <div class="row">
                     <div class="col">
-                        <label>Foto do Cidadão (3x4) / Rosto</label>
-                        <div class="image-upload-zone" id="zone_l_cidadao" onclick="activateZone(this)">
-                            <span>📷 Clique aqui e dê CTRL+V</span>
-                            <img class="preview-img">
-                        </div>
+                    <label>Foto do Cidadão (3x4) / Rosto</label>
+                    <div class="image-upload-zone" id="zone_l_cidadao" onclick="activateZone(this)">
+                    <span>📷 Clique aqui e dê CTRL+V</span>
+                    <img class="preview-img">
+                    </div>
                     </div>
                     <div class="col">
-                        <label>Foto do Painel (Ficha Suja)</label>
-                        <div class="image-upload-zone" id="zone_l_painel" onclick="activateZone(this)">
-                            <span>📷 Clique aqui e dê CTRL+V</span>
-                            <img class="preview-img">
-                        </div>
+                    <label>Foto do Painel (Ficha Suja)</label>
+                    <div class="image-upload-zone" id="zone_l_painel" onclick="activateZone(this)">
+                    <span>📷 Clique aqui e dê CTRL+V</span>
+                    <img class="preview-img">
+                    </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- ================= ABA: ALTERAÇÃO DE REGISTRO ================= -->
+        <!-- ==== ABA: ALTERAÇÃO DE REGISTRO ==== -->
         <div id="tab-alteracao" class="tab-content">
             <div class="form-panel">
                 <div class="form-header">🔄 Alteração de Registro Civil</div>
@@ -488,111 +488,111 @@
                 <div class="section-title">Dados da Emissão</div>
                 <div class="row">
                     <div class="col">
-                        <label>Protocolo de Emissão</label>
-                        <input type="text" id="a_protocolo" readonly>
+                    <label>Protocolo de Emissão</label>
+                    <input type="text" id="a_protocolo" readonly>
                     </div>
                     <div class="col">
-                        <label>Data de Emissão (Hoje)</label>
-                        <input type="text" id="a_data" readonly>
+                    <label>Data de Emissão (Hoje)</label>
+                    <input type="text" id="a_data" readonly>
                     </div>
                 </div>
 
                 <div class="section-title">1. Identificação Antiga</div>
                 <div class="row">
                     <div class="col">
-                        <label>Nome Antigo</label>
-                        <input type="text" id="a_nome_antigo" placeholder="Nome anterior" oninput="updatePDF()">
+                    <label>Nome Antigo</label>
+                    <input type="text" id="a_nome_antigo" placeholder="Nome anterior" oninput="updatePDF()">
                     </div>
                     <div class="col">
-                        <label>Passaporte Antigo</label>
-                        <input type="text" id="a_pass_antigo" placeholder="ID anterior" oninput="updatePDF()">
+                    <label>Passaporte Antigo</label>
+                    <input type="text" id="a_pass_antigo" placeholder="ID anterior" oninput="updatePDF()">
                     </div>
                 </div>
                 <div class="row">
                     <div class="col">
-                        <label>Telefone Antigo</label>
-                        <input type="text" id="a_tel_antigo" placeholder="Contato anterior" oninput="updatePDF()">
+                    <label>Telefone Antigo</label>
+                    <input type="text" id="a_tel_antigo" placeholder="Contato anterior" oninput="updatePDF()">
                     </div>
                     <div class="col">
-                        <label>RG Antigo</label>
-                        <input type="text" id="a_rg_antigo" placeholder="RG anterior" oninput="updatePDF()">
+                    <label>RG Antigo</label>
+                    <input type="text" id="a_rg_antigo" placeholder="RG anterior" oninput="updatePDF()">
                     </div>
                 </div>
 
                 <div class="section-title">2. Identificação Solicitada</div>
                 <div class="row">
                     <div class="col">
-                        <label>Novo Nome</label>
-                        <input type="text" id="a_nome_novo" placeholder="Nome solicitado" oninput="updatePDF()">
+                    <label>Novo Nome</label>
+                    <input type="text" id="a_nome_novo" placeholder="Nome solicitado" oninput="updatePDF()">
                     </div>
                     <div class="col">
-                        <label>Novo Passaporte</label>
-                        <input type="text" id="a_pass_novo" placeholder="ID solicitado" oninput="updatePDF()">
+                    <label>Novo Passaporte</label>
+                    <input type="text" id="a_pass_novo" placeholder="ID solicitado" oninput="updatePDF()">
                     </div>
                 </div>
                 <div class="row">
                     <div class="col">
-                        <label>Novo Telefone</label>
-                        <input type="text" id="a_tel_novo" placeholder="Contato solicitado" oninput="updatePDF()">
+                    <label>Novo Telefone</label>
+                    <input type="text" id="a_tel_novo" placeholder="Contato solicitado" oninput="updatePDF()">
                     </div>
                     <div class="col">
-                        <label>Novo RG</label>
-                        <input type="text" id="a_rg_novo" placeholder="RG solicitado" oninput="updatePDF()">
+                    <label>Novo RG</label>
+                    <input type="text" id="a_rg_novo" placeholder="RG solicitado" oninput="updatePDF()">
                     </div>
                 </div>
 
                 <div class="section-title">3. Informações do Procedimento</div>
                 <div class="row">
                     <div class="col">
-                        <label>Próxima Permissão (+15 Dias)</label>
-                        <input type="text" id="a_prox_perm" readonly>
+                    <label>Próxima Permissão (+15 Dias)</label>
+                    <input type="text" id="a_prox_perm" readonly>
                     </div>
                 </div>
                 
                 <div class="section-title">Identificação do Advogado</div>
                 <div class="row">
                     <div class="col">
-                        <label>Nome do Advogado</label>
-                        <input type="text" id="a_advogado" placeholder="Nome do advogado responsável" oninput="updatePDF()">
+                    <label>Nome do Advogado</label>
+                    <input type="text" id="a_advogado" placeholder="Nome do advogado responsável" oninput="updatePDF()">
                     </div>
                     <div class="col">
-                        <label>Passaporte do Advogado</label>
-                        <input type="text" id="a_adv_pass" placeholder="Número do passaporte" oninput="updatePDF()">
+                    <label>Passaporte do Advogado</label>
+                    <input type="text" id="a_adv_pass" placeholder="Número do passaporte" oninput="updatePDF()">
                     </div>
                 </div>
                 <div class="row">
                     <div class="col">
-                        <label>Telefone do Advogado</label>
-                        <input type="text" id="a_adv_tel" placeholder="Telefone de contato" oninput="updatePDF()">
+                    <label>Telefone do Advogado</label>
+                    <input type="text" id="a_adv_tel" placeholder="Telefone de contato" oninput="updatePDF()">
                     </div>
                 </div>
 
                 <div class="section-title">Dados do Oficial Responsável</div>
                 <div class="row">
                     <div class="col">
-                        <label>ID Funcional (Oficial)</label>
-                        <input type="text" id="a_id_oficial" placeholder="Ex: 12345" oninput="updatePDF()">
+                    <label>ID Funcional (Oficial)</label>
+                    <input type="text" id="a_id_oficial" placeholder="Ex: 12345" oninput="updatePDF()">
                     </div>
                     <div class="col">
-                        <label>Nome do Policial</label>
-                        <input type="text" id="a_nome_oficial" placeholder="Nome completo" oninput="updatePDF()">
+                    <label>Nome do Policial</label>
+                    <input type="text" id="a_nome_oficial" placeholder="Nome completo" oninput="updatePDF()">
                     </div>
                 </div>
 
                 <div class="section-title">Anexos</div>
                 <div class="row">
                     <div class="col">
-                        <label>Foto do Cidadão (3x4)</label>
-                        <div class="image-upload-zone" id="zone_a_cidadao" onclick="activateZone(this)">
-                            <span>📷 Clique aqui e dê CTRL+V (Foto 3x4 Nova)</span>
-                            <img class="preview-img">
-                        </div>
+                    <label>Foto do Cidadão (3x4)</label>
+                    <div class="image-upload-zone" id="zone_a_cidadao" onclick="activateZone(this)">
+                    <span>📷 Clique aqui e dê CTRL+V (Foto 3x4 Nova)</span>
+                    <img class="preview-img">
+                    </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- ================= ABA: PORTE DE ARMAS ================= -->
+        <!-- ==== ABA: PORTE DE ARMAS ==== -->
         <div id="tab-porte" class="tab-content">
             <div class="form-panel">
                 <div class="form-header">🔫 Porte de Armas de Fogo</div>
@@ -600,98 +600,98 @@
                 <div class="section-title">Identificação do Requerente</div>
                 <div class="row">
                     <div class="col">
-                        <label>Nome Completo</label>
-                        <input type="text" id="p_nome" placeholder="Nome do requerente" oninput="updatePDF()">
+                    <label>Nome Completo</label>
+                    <input type="text" id="p_nome" placeholder="Nome do requerente" oninput="updatePDF()">
                     </div>
                     <div class="col">
-                        <label>Passaporte / ID</label>
-                        <input type="text" id="p_passaporte" placeholder="Ex: 123" oninput="updatePDF()">
+                    <label>Passaporte / ID</label>
+                    <input type="text" id="p_passaporte" placeholder="Ex: 123" oninput="updatePDF()">
                     </div>
                 </div>
                 <div class="row">
                     <div class="col">
-                        <label>Telefone</label>
-                        <input type="text" id="p_telefone" placeholder="Ex: 123-456" oninput="updatePDF()">
+                    <label>Telefone</label>
+                    <input type="text" id="p_telefone" placeholder="Ex: 123-456" oninput="updatePDF()">
                     </div>
                     <div class="col">
-                        <label>Registro Geral (RG)</label>
-                        <input type="text" id="p_rg" placeholder="Ex: 1234" oninput="updatePDF()">
+                    <label>Registro Geral (RG)</label>
+                    <input type="text" id="p_rg" placeholder="Ex: 1234" oninput="updatePDF()">
                     </div>
                 </div>
 
                 <div class="section-title">Dados da Emissão</div>
                 <div class="row">
                     <div class="col">
-                        <label>Protocolo de Emissão</label>
-                        <input type="text" id="p_protocolo" readonly>
+                    <label>Protocolo de Emissão</label>
+                    <input type="text" id="p_protocolo" readonly>
                     </div>
                     <div class="col">
-                        <label>Data de Emissão (Hoje)</label>
-                        <input type="text" id="p_data" readonly>
+                    <label>Data de Emissão (Hoje)</label>
+                    <input type="text" id="p_data" readonly>
                     </div>
                 </div>
 
                 <div class="section-title">Identificação do Advogado</div>
                 <div class="row">
                     <div class="col">
-                        <label>Nome do Advogado</label>
-                        <input type="text" id="p_advogado" placeholder="Nome completo do representante" oninput="updatePDF()">
+                    <label>Nome do Advogado</label>
+                    <input type="text" id="p_advogado" placeholder="Nome completo do representante" oninput="updatePDF()">
                     </div>
                     <div class="col">
-                        <label>Passaporte do Advogado</label>
-                        <input type="text" id="p_adv_pass" placeholder="Número do passaporte" oninput="updatePDF()">
+                    <label>Passaporte do Advogado</label>
+                    <input type="text" id="p_adv_pass" placeholder="Número do passaporte" oninput="updatePDF()">
                     </div>
                 </div>
                 <div class="row">
                     <div class="col">
-                        <label>Telefone do Advogado</label>
-                        <input type="text" id="p_adv_tel" placeholder="Telefone de contato" oninput="updatePDF()">
+                    <label>Telefone do Advogado</label>
+                    <input type="text" id="p_adv_tel" placeholder="Telefone de contato" oninput="updatePDF()">
                     </div>
                 </div>
 
                 <div class="section-title">Dados do Porte de Armas</div>
                 <div class="row">
                     <div class="col">
-                        <label>Validade do Porte</label>
-                        <input type="text" id="p_validade" placeholder="Ex: 1 ano / Vitalício" oninput="updatePDF()">
+                    <label>Validade do Porte</label>
+                    <input type="text" id="p_validade" placeholder="Ex: 1 ano / Vitalício" oninput="updatePDF()">
                     </div>
                     <div class="col">
-                        <label>Categoria do Porte</label>
-                        <select id="p_categoria" onchange="updatePDF()">
-                            <option value="Defesa Pessoal">Defesa Pessoal</option>
-                            <option value="Colecionador/Atirador/Caçador (CAC)">Colecionador/Atirador/Caçador (CAC)</option>
-                            <option value="Segurança Privada">Segurança Privada</option>
-                            <option value="Funcional">Funcional</option>
-                        </select>
+                    <label>Categoria do Porte</label>
+                    <select id="p_categoria" onchange="updatePDF()">
+                    <option value="Defesa Pessoal">Defesa Pessoal</option>
+                    <option value="Colecionador/Atirador/Caçador (CAC)">Colecionador/Atirador/Caçador (CAC)</option>
+                    <option value="Segurança Privada">Segurança Privada</option>
+                    <option value="Funcional">Funcional</option>
+                    </select>
                     </div>
                 </div>
 
                 <div class="section-title">Dados do Oficial Responsável</div>
                 <div class="row">
                     <div class="col">
-                        <label>ID Funcional (Oficial)</label>
-                        <input type="text" id="p_id_oficial" placeholder="Ex: 12345" oninput="updatePDF()">
+                    <label>ID Funcional (Oficial)</label>
+                    <input type="text" id="p_id_oficial" placeholder="Ex: 12345" oninput="updatePDF()">
                     </div>
                     <div class="col">
-                        <label>Nome do Policial</label>
-                        <input type="text" id="p_nome_oficial" placeholder="Nome completo" oninput="updatePDF()">
+                    <label>Nome do Policial</label>
+                    <input type="text" id="p_nome_oficial" placeholder="Nome completo" oninput="updatePDF()">
                     </div>
                 </div>
 
                 <div class="section-title">Anexos</div>
                 <div class="row">
                     <div class="col">
-                        <label>Foto do Cidadão (3x4)</label>
-                        <div class="image-upload-zone" id="zone_p_cidadao" onclick="activateZone(this)">
-                            <span>📷 Clique aqui e dê CTRL+V</span>
-                            <img class="preview-img">
-                        </div>
+                    <label>Foto do Cidadão (3x4)</label>
+                    <div class="image-upload-zone" id="zone_p_cidadao" onclick="activateZone(this)">
+                    <span>📷 Clique aqui e dê CTRL+V</span>
+                    <img class="preview-img">
+                    </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- ================= LADO DIREITO: PDF E BOTÕES ================= -->
+        <!-- ==== LADO DIREITO: PDF E BOTÕES ==== -->
         <!-- SCROLL LATERAL PARA NÃO QUEBRAR O LAYOUT E MANTER O PDF NO TAMANHO CERTO -->
         <div style="overflow-x: auto;">
             <!-- PDF LIMPEZA -->
@@ -713,29 +713,29 @@
                 <table class="pdf-table">
                     <thead><tr><th colspan="2">DADOS DO REQUERENTE</th></tr></thead>
                     <tbody>
-                        <tr><td class="label-cell">NOME COMPLETO:</td><td id="pdf_l_nome">---</td></tr>
-                        <tr><td class="label-cell">REGISTRO GERAL (RG):</td><td id="pdf_l_rg">---</td></tr>
-                        <tr><td class="label-cell">TELEFONE:</td><td id="pdf_l_telefone">---</td></tr>
+                    <tr><td class="label-cell">NOME COMPLETO:</td><td id="pdf_l_nome">---</td></tr>
+                    <tr><td class="label-cell">REGISTRO GERAL (RG):</td><td id="pdf_l_rg">---</td></tr>
+                    <tr><td class="label-cell">TELEFONE:</td><td id="pdf_l_telefone">---</td></tr>
                     </tbody>
                 </table>
 
                 <table class="pdf-table">
                     <thead><tr><th colspan="2">DADOS DO PROCEDIMENTO</th></tr></thead>
                     <tbody>
-                        <tr><td class="label-cell">PROTOCOLO:</td><td id="pdf_l_protocolo">---</td></tr>
-                        <tr><td class="label-cell">DATA DA EXECUÇÃO:</td><td id="pdf_l_data">---</td></tr>
-                        <tr><td class="label-cell">TIPO DE LIMPEZA:</td><td id="pdf_l_tipo">Limpeza Total</td></tr>
-                        <tr><td class="label-cell">ARTIGOS REMOVIDOS:</td><td id="pdf_l_artigos">---</td></tr>
+                    <tr><td class="label-cell">PROTOCOLO:</td><td id="pdf_l_protocolo">---</td></tr>
+                    <tr><td class="label-cell">DATA DA EXECUÇÃO:</td><td id="pdf_l_data">---</td></tr>
+                    <tr><td class="label-cell">TIPO DE LIMPEZA:</td><td id="pdf_l_tipo">Limpeza Total</td></tr>
+                    <tr><td class="label-cell">ARTIGOS REMOVIDOS:</td><td id="pdf_l_artigos">---</td></tr>
                     </tbody>
                 </table>
 
                 <table class="pdf-table">
                     <thead><tr><th colspan="2">RESPONSÁVEIS</th></tr></thead>
                     <tbody>
-                        <tr><td class="label-cell">OFICIAL DA POLÍCIA FEDERAL:</td><td id="pdf_l_oficial">---</td></tr>
-                        <tr><td class="label-cell">ADVOGADO ACOMPANHANTE:</td><td id="pdf_l_advogado">---</td></tr>
-                        <tr><td class="label-cell">PASSAPORTE ADVOGADO:</td><td id="pdf_l_adv_pass">---</td></tr>
-                        <tr><td class="label-cell">TELEFONE ADVOGADO:</td><td id="pdf_l_adv_tel">---</td></tr>
+                    <tr><td class="label-cell">OFICIAL DA POLÍCIA FEDERAL:</td><td id="pdf_l_oficial">---</td></tr>
+                    <tr><td class="label-cell">ADVOGADO ACOMPANHANTE:</td><td id="pdf_l_advogado">---</td></tr>
+                    <tr><td class="label-cell">PASSAPORTE ADVOGADO:</td><td id="pdf_l_adv_pass">---</td></tr>
+                    <tr><td class="label-cell">TELEFONE ADVOGADO:</td><td id="pdf_l_adv_tel">---</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -758,32 +758,32 @@
                 <table class="pdf-table">
                     <thead><tr><th colspan="2">IDENTIFICAÇÃO ANTERIOR (REVOGADA)</th></tr></thead>
                     <tbody>
-                        <tr><td class="label-cell">NOME ANTIGO:</td><td id="pdf_a_nome_antigo">---</td></tr>
-                        <tr><td class="label-cell">PASSAPORTE ANTIGO:</td><td id="pdf_a_pass_antigo">---</td></tr>
-                        <tr><td class="label-cell">RG ANTIGO:</td><td id="pdf_a_rg_antigo">---</td></tr>
+                    <tr><td class="label-cell">NOME ANTIGO:</td><td id="pdf_a_nome_antigo">---</td></tr>
+                    <tr><td class="label-cell">PASSAPORTE ANTIGO:</td><td id="pdf_a_pass_antigo">---</td></tr>
+                    <tr><td class="label-cell">RG ANTIGO:</td><td id="pdf_a_rg_antigo">---</td></tr>
                     </tbody>
                 </table>
 
                 <table class="pdf-table">
                     <thead><tr><th colspan="2">IDENTIFICAÇÃO ATUALIZADA (VIGENTE)</th></tr></thead>
                     <tbody>
-                        <tr><td class="label-cell">NOVO NOME:</td><td id="pdf_a_nome_novo">---</td></tr>
-                        <tr><td class="label-cell">NOVO PASSAPORTE:</td><td id="pdf_a_pass_novo">---</td></tr>
-                        <tr><td class="label-cell">NOVO RG:</td><td id="pdf_a_rg_novo">---</td></tr>
-                        <tr><td class="label-cell">NOVO TELEFONE:</td><td id="pdf_a_tel_novo">---</td></tr>
+                    <tr><td class="label-cell">NOVO NOME:</td><td id="pdf_a_nome_novo">---</td></tr>
+                    <tr><td class="label-cell">NOVO PASSAPORTE:</td><td id="pdf_a_pass_novo">---</td></tr>
+                    <tr><td class="label-cell">NOVO RG:</td><td id="pdf_a_rg_novo">---</td></tr>
+                    <tr><td class="label-cell">NOVO TELEFONE:</td><td id="pdf_a_tel_novo">---</td></tr>
                     </tbody>
                 </table>
 
                 <table class="pdf-table">
                     <thead><tr><th colspan="2">DADOS DO PROCEDIMENTO</th></tr></thead>
                     <tbody>
-                        <tr><td class="label-cell">PROTOCOLO:</td><td id="pdf_a_protocolo">---</td></tr>
-                        <tr><td class="label-cell">DATA DA ALTERAÇÃO:</td><td id="pdf_a_data">---</td></tr>
-                        <tr><td class="label-cell">PRÓX. PERMISSÃO (+15D):</td><td id="pdf_a_prox_perm">---</td></tr>
-                        <tr><td class="label-cell">OFICIAL RESPONSÁVEL:</td><td id="pdf_a_oficial">---</td></tr>
-                        <tr><td class="label-cell">ADVOGADO:</td><td id="pdf_a_advogado">---</td></tr>
-                        <tr><td class="label-cell">PASSAPORTE ADVOGADO:</td><td id="pdf_a_adv_pass">---</td></tr>
-                        <tr><td class="label-cell">TELEFONE ADVOGADO:</td><td id="pdf_a_adv_tel">---</td></tr>
+                    <tr><td class="label-cell">PROTOCOLO:</td><td id="pdf_a_protocolo">---</td></tr>
+                    <tr><td class="label-cell">DATA DA ALTERAÇÃO:</td><td id="pdf_a_data">---</td></tr>
+                    <tr><td class="label-cell">PRÓX. PERMISSÃO (+15D):</td><td id="pdf_a_prox_perm">---</td></tr>
+                    <tr><td class="label-cell">OFICIAL RESPONSÁVEL:</td><td id="pdf_a_oficial">---</td></tr>
+                    <tr><td class="label-cell">ADVOGADO:</td><td id="pdf_a_advogado">---</td></tr>
+                    <tr><td class="label-cell">PASSAPORTE ADVOGADO:</td><td id="pdf_a_adv_pass">---</td></tr>
+                    <tr><td class="label-cell">TELEFONE ADVOGADO:</td><td id="pdf_a_adv_tel">---</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -806,30 +806,30 @@
                 <table class="pdf-table">
                     <thead><tr><th colspan="2">DADOS DO TITULAR</th></tr></thead>
                     <tbody>
-                        <tr><td class="label-cell">NOME COMPLETO:</td><td id="pdf_p_nome">---</td></tr>
-                        <tr><td class="label-cell">PASSAPORTE / ID:</td><td id="pdf_p_passaporte">---</td></tr>
-                        <tr><td class="label-cell">REGISTRO GERAL (RG):</td><td id="pdf_p_rg">---</td></tr>
-                        <tr><td class="label-cell">TELEFONE:</td><td id="pdf_p_telefone">---</td></tr>
+                    <tr><td class="label-cell">NOME COMPLETO:</td><td id="pdf_p_nome">---</td></tr>
+                    <tr><td class="label-cell">PASSAPORTE / ID:</td><td id="pdf_p_passaporte">---</td></tr>
+                    <tr><td class="label-cell">REGISTRO GERAL (RG):</td><td id="pdf_p_rg">---</td></tr>
+                    <tr><td class="label-cell">TELEFONE:</td><td id="pdf_p_telefone">---</td></tr>
                     </tbody>
                 </table>
 
                 <table class="pdf-table">
                     <thead><tr><th colspan="2">ESPECIFICAÇÕES DO PORTE</th></tr></thead>
                     <tbody>
-                        <tr><td class="label-cell">PROTOCOLO:</td><td id="pdf_p_protocolo">---</td></tr>
-                        <tr><td class="label-cell">DATA DE EMISSÃO:</td><td id="pdf_p_data">---</td></tr>
-                        <tr><td class="label-cell">VALIDADE DO PORTE:</td><td id="pdf_p_validade">---</td></tr>
-                        <tr><td class="label-cell">CATEGORIA:</td><td id="pdf_p_categoria">Defesa Pessoal</td></tr>
+                    <tr><td class="label-cell">PROTOCOLO:</td><td id="pdf_p_protocolo">---</td></tr>
+                    <tr><td class="label-cell">DATA DE EMISSÃO:</td><td id="pdf_p_data">---</td></tr>
+                    <tr><td class="label-cell">VALIDADE DO PORTE:</td><td id="pdf_p_validade">---</td></tr>
+                    <tr><td class="label-cell">CATEGORIA:</td><td id="pdf_p_categoria">Defesa Pessoal</td></tr>
                     </tbody>
                 </table>
 
                 <table class="pdf-table">
                     <thead><tr><th colspan="2">RESPONSÁVEIS</th></tr></thead>
                     <tbody>
-                        <tr><td class="label-cell">OFICIAL RESPONSÁVEL:</td><td id="pdf_p_oficial">---</td></tr>
-                        <tr><td class="label-cell">ADVOGADO:</td><td id="pdf_p_advogado">---</td></tr>
-                        <tr><td class="label-cell">PASSAPORTE ADVOGADO:</td><td id="pdf_p_adv_pass">---</td></tr>
-                        <tr><td class="label-cell">TELEFONE ADVOGADO:</td><td id="pdf_p_adv_tel">---</td></tr>
+                    <tr><td class="label-cell">OFICIAL RESPONSÁVEL:</td><td id="pdf_p_oficial">---</td></tr>
+                    <tr><td class="label-cell">ADVOGADO:</td><td id="pdf_p_advogado">---</td></tr>
+                    <tr><td class="label-cell">PASSAPORTE ADVOGADO:</td><td id="pdf_p_adv_pass">---</td></tr>
+                    <tr><td class="label-cell">TELEFONE ADVOGADO:</td><td id="pdf_p_adv_tel">---</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -843,12 +843,12 @@
     </div>
 
     <script>
-        // ========================================================
+        // ====
         // 🚨 INSIRA SUAS URLs DOS WEBHOOKS AQUI:
         const WEBHOOK_LIMPEZA = "URL_WEBHOOK_LIMPEZA_AQUI";
         const WEBHOOK_ALTERACAO = "URL_WEBHOOK_ALTERACAO_AQUI";
         const WEBHOOK_PORTE = "URL_WEBHOOK_PORTE_AQUI";
-        // ========================================================
+        // ====
 
         let abaAtual = 'limpeza';
 
@@ -965,22 +965,22 @@
                     const blob = item.getAsFile();
                     const reader = new FileReader();
                     reader.onload = function(event) {
-                        const base64 = event.target.result;
-                        const imgEl = activeZone.querySelector('img');
-                        const spanEl = activeZone.querySelector('span');
-                        
-                        imgEl.src = base64;
-                        imgEl.style.display = 'block';
-                        spanEl.style.display = 'none';
+                    const base64 = event.target.result;
+                    const imgEl = activeZone.querySelector('img');
+                    const spanEl = activeZone.querySelector('span');
+                    
+                    imgEl.src = base64;
+                    imgEl.style.display = 'block';
+                    spanEl.style.display = 'none';
 
-                        // Espelhar no PDF correspondente
-                        if (activeZone.id === 'zone_l_cidadao') {
-                            document.getElementById('pdf_l_box_cidadao').innerHTML = `<img src="${base64}" style="width:100%; height:100%; object-fit:cover;">`;
-                        } else if (activeZone.id === 'zone_a_cidadao') {
-                            document.getElementById('pdf_a_box_cidadao').innerHTML = `<img src="${base64}" style="width:100%; height:100%; object-fit:cover;">`;
-                        } else if (activeZone.id === 'zone_p_cidadao') {
-                            document.getElementById('pdf_p_box_cidadao').innerHTML = `<img src="${base64}" style="width:100%; height:100%; object-fit:cover;">`;
-                        }
+                    // Espelhar no PDF correspondente
+                    if (activeZone.id === 'zone_l_cidadao') {
+                    document.getElementById('pdf_l_box_cidadao').innerHTML = `<img src="${base64}" style="width:100%; height:100%; object-fit:cover;">`;
+                    } else if (activeZone.id === 'zone_a_cidadao') {
+                    document.getElementById('pdf_a_box_cidadao').innerHTML = `<img src="${base64}" style="width:100%; height:100%; object-fit:cover;">`;
+                    } else if (activeZone.id === 'zone_p_cidadao') {
+                    document.getElementById('pdf_p_box_cidadao').innerHTML = `<img src="${base64}" style="width:100%; height:100%; object-fit:cover;">`;
+                    }
                     };
                     reader.readAsDataURL(blob);
                 }
@@ -994,56 +994,56 @@
 
             if (abaAtual === 'limpeza') {
                 texto = `*** CERTIDÃO DE LIMPEZA DE FICHA ***\n\n` +
-                        `[DADOS DO REQUERENTE]\n` +
-                        `Nome Completo: ${getVal('l_nome')}\n` +
-                        `Registro Geral (RG): ${getVal('l_rg')}\n` +
-                        `Telefone: ${getVal('l_telefone')}\n\n` +
-                        `[DADOS DO PROCEDIMENTO]\n` +
-                        `Protocolo: ${getVal('l_protocolo')}\n` +
-                        `Data da Execução: ${getVal('l_data')}\n` +
-                        `Tipo de Limpeza: ${document.getElementById('l_tipo').value}\n` +
-                        `Artigos Removidos: ${getVal('l_artigos')}\n\n` +
-                        `[RESPONSÁVEIS]\n` +
-                        `Oficial da Polícia Federal: ${getVal('l_nome_oficial')} (ID: ${getVal('l_id_oficial')})\n` +
-                        `Advogado Acompanhante: ${getVal('l_advogado')}\n` +
-                        `Passaporte Advogado: ${getVal('l_adv_pass')}\n` +
-                        `Telefone Advogado: ${getVal('l_adv_tel')}`;
+                    `[DADOS DO REQUERENTE]\n` +
+                    `Nome Completo: ${getVal('l_nome')}\n` +
+                    `Registro Geral (RG): ${getVal('l_rg')}\n` +
+                    `Telefone: ${getVal('l_telefone')}\n\n` +
+                    `[DADOS DO PROCEDIMENTO]\n` +
+                    `Protocolo: ${getVal('l_protocolo')}\n` +
+                    `Data da Execução: ${getVal('l_data')}\n` +
+                    `Tipo de Limpeza: ${document.getElementById('l_tipo').value}\n` +
+                    `Artigos Removidos: ${getVal('l_artigos')}\n\n` +
+                    `[RESPONSÁVEIS]\n` +
+                    `Oficial da Polícia Federal: ${getVal('l_nome_oficial')} (ID: ${getVal('l_id_oficial')})\n` +
+                    `Advogado Acompanhante: ${getVal('l_advogado')}\n` +
+                    `Passaporte Advogado: ${getVal('l_adv_pass')}\n` +
+                    `Telefone Advogado: ${getVal('l_adv_tel')}`;
             } else if (abaAtual === 'alteracao') {
                 texto = `*** CERTIDÃO DE ALTERAÇÃO DE REGISTRO CIVIL ***\n\n` +
-                        `[IDENTIFICAÇÃO ANTERIOR (REVOGADA)]\n` +
-                        `Nome Antigo: ${getVal('a_nome_antigo')}\n` +
-                        `Passaporte Antigo: ${getVal('a_pass_antigo')}\n` +
-                        `RG Antigo: ${getVal('a_rg_antigo')}\n\n` +
-                        `[IDENTIFICAÇÃO ATUALIZADA (VIGENTE)]\n` +
-                        `Novo Nome: ${getVal('a_nome_novo')}\n` +
-                        `Novo Passaporte: ${getVal('a_pass_novo')}\n` +
-                        `Novo RG: ${getVal('a_rg_novo')}\n` +
-                        `Novo Telefone: ${getVal('a_tel_novo')}\n\n` +
-                        `[DADOS DO PROCEDIMENTO]\n` +
-                        `Protocolo: ${getVal('a_protocolo')}\n` +
-                        `Data da Alteração: ${getVal('a_data')}\n` +
-                        `Próx. Permissão (+15D): ${getVal('a_prox_perm')}\n` +
-                        `Oficial Responsável: ${getVal('a_nome_oficial')} (ID: ${getVal('a_id_oficial')})\n` +
-                        `Advogado: ${getVal('a_advogado')}\n` +
-                        `Passaporte Advogado: ${getVal('a_adv_pass')}\n` +
-                        `Telefone Advogado: ${getVal('a_adv_tel')}`;
+                    `[IDENTIFICAÇÃO ANTERIOR (REVOGADA)]\n` +
+                    `Nome Antigo: ${getVal('a_nome_antigo')}\n` +
+                    `Passaporte Antigo: ${getVal('a_pass_antigo')}\n` +
+                    `RG Antigo: ${getVal('a_rg_antigo')}\n\n` +
+                    `[IDENTIFICAÇÃO ATUALIZADA (VIGENTE)]\n` +
+                    `Novo Nome: ${getVal('a_nome_novo')}\n` +
+                    `Novo Passaporte: ${getVal('a_pass_novo')}\n` +
+                    `Novo RG: ${getVal('a_rg_novo')}\n` +
+                    `Novo Telefone: ${getVal('a_tel_novo')}\n\n` +
+                    `[DADOS DO PROCEDIMENTO]\n` +
+                    `Protocolo: ${getVal('a_protocolo')}\n` +
+                    `Data da Alteração: ${getVal('a_data')}\n` +
+                    `Próx. Permissão (+15D): ${getVal('a_prox_perm')}\n` +
+                    `Oficial Responsável: ${getVal('a_nome_oficial')} (ID: ${getVal('a_id_oficial')})\n` +
+                    `Advogado: ${getVal('a_advogado')}\n` +
+                    `Passaporte Advogado: ${getVal('a_adv_pass')}\n` +
+                    `Telefone Advogado: ${getVal('a_adv_tel')}`;
             } else if (abaAtual === 'porte') {
                 texto = `*** AUTORIZAÇÃO DE PORTE DE ARMA DE FOGO ***\n\n` +
-                        `[DADOS DO TITULAR]\n` +
-                        `Nome Completo: ${getVal('p_nome')}\n` +
-                        `Passaporte / ID: ${getVal('p_passaporte')}\n` +
-                        `Registro Geral (RG): ${getVal('p_rg')}\n` +
-                        `Telefone: ${getVal('p_telefone')}\n\n` +
-                        `[ESPECIFICAÇÕES DO PORTE]\n` +
-                        `Protocolo: ${getVal('p_protocolo')}\n` +
-                        `Data de Emissão: ${getVal('p_data')}\n` +
-                        `Validade do Porte: ${getVal('p_validade')}\n` +
-                        `Categoria: ${document.getElementById('p_categoria').value}\n\n` +
-                        `[RESPONSÁVEIS]\n` +
-                        `Oficial Responsável: ${getVal('p_nome_oficial')} (ID: ${getVal('p_id_oficial')})\n` +
-                        `Advogado: ${getVal('p_advogado')}\n` +
-                        `Passaporte Advogado: ${getVal('p_adv_pass')}\n` +
-                        `Telefone Advogado: ${getVal('p_adv_tel')}`;
+                    `[DADOS DO TITULAR]\n` +
+                    `Nome Completo: ${getVal('p_nome')}\n` +
+                    `Passaporte / ID: ${getVal('p_passaporte')}\n` +
+                    `Registro Geral (RG): ${getVal('p_rg')}\n` +
+                    `Telefone: ${getVal('p_telefone')}\n\n` +
+                    `[ESPECIFICAÇÕES DO PORTE]\n` +
+                    `Protocolo: ${getVal('p_protocolo')}\n` +
+                    `Data de Emissão: ${getVal('p_data')}\n` +
+                    `Validade do Porte: ${getVal('p_validade')}\n` +
+                    `Categoria: ${document.getElementById('p_categoria').value}\n\n` +
+                    `[RESPONSÁVEIS]\n` +
+                    `Oficial Responsável: ${getVal('p_nome_oficial')} (ID: ${getVal('p_id_oficial')})\n` +
+                    `Advogado: ${getVal('p_advogado')}\n` +
+                    `Passaporte Advogado: ${getVal('p_adv_pass')}\n` +
+                    `Telefone Advogado: ${getVal('p_adv_tel')}`;
             }
 
             navigator.clipboard.writeText(texto).then(() => {
@@ -1056,9 +1056,19 @@
         // Enviar Webhook
         async function enviarWebhook() {
             let webhookURL;
-            if (abaAtual === 'limpeza') webhookURL = 'https://discord.com/api/webhooks/1544786300383658094/GoifATauNUbZAViMd3DLzdxvmkeJjcfwOaCLfVl4ob26qbduzMfoQ73HaL15qAfxi0p4';
-            else if (abaAtual === 'alteracao') webhookURL = 'https://discord.com/api/webhooks/1544786794325745804/M5Zde3C65-wjKm6hCcUV-gVs52mr3QbrfVpnuOSuh6xE62Wj7-_3FiKzpnrB2n9VC9lC';
-            else if (abaAtual === 'porte') webhookURL = 'https://discord.com/api/webhooks/1544786578256433152/ORuatgcc4Q9wwgDfJB_ak0en-j4WVcfgRFIpq1O9-PLhJgZCAPlfA132ba4S-s4eRv_P';
+            let webhookExtra;
+            if (abaAtual === 'limpeza') {
+                webhookURL = 'https://discord.com/api/webhooks/1544786300383658094/GoifATauNUbZAViMd3DLzdxvmkeJjcfwOaCLfVl4ob26qbduzMfoQ73HaL15qAfxi0p4';
+                webhookExtra = 'https://discord.com/api/webhooks/1548031428619542660/os8lh5jPuOjrLjAE_Iv9LDxaRt2G8KmGTy6qoPQp2bEJn9dbqnazM-d-6Ih0OAl8KDSQ';
+            }
+            else if (abaAtual === 'alteracao') {
+                webhookURL = 'https://discord.com/api/webhooks/1544786794325745804/M5Zde3C65-wjKm6hCcUV-gVs52mr3QbrfVpnuOSuh6xE62Wj7-_3FiKzpnrB2n9VC9lC';
+                webhookExtra = 'https://discord.com/api/webhooks/1548031186839015546/Oug-NY4YJYLPDGo1mqmlq2PEJpIEoxfiIvGuBT5SYO0VGTr8H7ujVehYikU5oW4pVEvS';
+            }
+            else if (abaAtual === 'porte') {
+                webhookURL = 'https://discord.com/api/webhooks/1544786578256433152/ORuatgcc4Q9wwgDfJB_ak0en-j4WVcfgRFIpq1O9-PLhJgZCAPlfA132ba4S-s4eRv_P';
+                webhookExtra = 'https://discord.com/api/webhooks/1548031547905544286/LNFqPk8lBztMNYhAnzK77_dBviObBBvcFpqD-4l-JxeI0GYnuvK5E5JWEY5mvp1HjQ0c';
+            }
 
             if (webhookURL.startsWith("URL_WEBHOOK")) {
                 alert(`❌ Você precisa inserir a URL do Webhook de ${abaAtual.toUpperCase()} no código fonte (linha ~600).`);
@@ -1078,15 +1088,9 @@
                 embedTitle = "🧹 Polícia Federal - Limpeza de Ficha";
                 embedColor = 16763904; // Amarelo
                 embedFields = [
-                    { name: "Cidadão", value: getVal('l_nome'), inline: true },
-                    { name: "RG", value: getVal('l_rg'), inline: true },
-                    { name: "Telefone", value: getVal('l_telefone'), inline: true },
-                    { name: "Protocolo", value: getVal('l_protocolo'), inline: true },
-                    { name: "Data", value: getVal('l_data'), inline: true },
-                    { name: "Tipo", value: document.getElementById('l_tipo').value, inline: true },
-                    { name: "Oficial Responsável", value: `${getVal('l_nome_oficial')} (ID: ${getVal('l_id_oficial')})`, inline: false },
-                    { name: "Advogado", value: `${getVal('l_advogado')} | Pass: ${getVal('l_adv_pass')} | Tel: ${getVal('l_adv_tel')}`, inline: false },
-                    { name: "Artigos Limpos", value: getVal('l_artigos') }
+                    { name: "👤 Dados do Requerente", value: `**Nome:** ${getVal('l_nome')}\n**RG:** ${getVal('l_rg')}\n**Telefone:** ${getVal('l_telefone')}`, inline: false },
+                    { name: "📁 Dados do Procedimento", value: `**Protocolo:** ${getVal('l_protocolo')}\n**Data da Execução:** ${getVal('l_data')}\n**Tipo de Limpeza:** ${document.getElementById('l_tipo').value}\n**Artigos Removidos:** ${getVal('l_artigos')}`, inline: false },
+                    { name: "🛡️ Responsáveis", value: `**Oficial:** ${getVal('l_nome_oficial')} (ID: ${getVal('l_id_oficial')})\n**Advogado:** ${getVal('l_advogado')} | Pass: ${getVal('l_adv_pass')} | Tel: ${getVal('l_adv_tel')}`, inline: false }
                 ];
             } else if (abaAtual === 'alteracao') {
                 const imgEl = document.querySelector('#zone_a_cidadao img');
@@ -1095,11 +1099,10 @@
                 embedTitle = "🔄 Polícia Federal - Alteração de Registro";
                 embedColor = 3447003; // Azul
                 embedFields = [
-                    { name: "Dados Antigos", value: `**Nome:** ${getVal('a_nome_antigo')}\n**Passaporte:** ${getVal('a_pass_antigo')}\n**RG:** ${getVal('a_rg_antigo')}\n**Tel:** ${getVal('a_tel_antigo')}`, inline: true },
-                    { name: "Dados Novos", value: `**Nome:** ${getVal('a_nome_novo')}\n**Passaporte:** ${getVal('a_pass_novo')}\n**RG:** ${getVal('a_rg_novo')}\n**Tel:** ${getVal('a_tel_novo')}`, inline: true },
-                    { name: "Procedimento", value: `**Protocolo:** ${getVal('a_protocolo')}\n**Data:** ${getVal('a_data')}\n**Próx. Permissão:** ${getVal('a_prox_perm')}`, inline: false },
-                    { name: "Oficial Responsável", value: `${getVal('a_nome_oficial')} (ID: ${getVal('a_id_oficial')})`, inline: true },
-                    { name: "Advogado", value: `${getVal('a_advogado')} | Pass: ${getVal('a_adv_pass')}`, inline: true }
+                    { name: "🪪 Identificação Anterior (Revogada)", value: `**Nome:** ${getVal('a_nome_antigo')}\n**Passaporte:** ${getVal('a_pass_antigo')}\n**RG:** ${getVal('a_rg_antigo')}\n**Tel:** ${getVal('a_tel_antigo')}`, inline: true },
+                    { name: "🆔 Identificação Atualizada (Vigente)", value: `**Nome:** ${getVal('a_nome_novo')}\n**Passaporte:** ${getVal('a_pass_novo')}\n**RG:** ${getVal('a_rg_novo')}\n**Tel:** ${getVal('a_tel_novo')}`, inline: true },
+                    { name: "📁 Dados do Procedimento", value: `**Protocolo:** ${getVal('a_protocolo')}\n**Data:** ${getVal('a_data')}\n**Próx. Permissão (+15D):** ${getVal('a_prox_perm')}`, inline: false },
+                    { name: "🛡️ Responsáveis", value: `**Oficial:** ${getVal('a_nome_oficial')} (ID: ${getVal('a_id_oficial')})\n**Advogado:** ${getVal('a_advogado')} | Pass: ${getVal('a_adv_pass')} | Tel: ${getVal('a_adv_tel')}`, inline: false }
                 ];
             } else if (abaAtual === 'porte') {
                 const imgEl = document.querySelector('#zone_p_cidadao img');
@@ -1108,14 +1111,9 @@
                 embedTitle = "🔫 Polícia Federal - Porte de Armas";
                 embedColor = 15158332; // Vermelho
                 embedFields = [
-                    { name: "Cidadão", value: getVal('p_nome'), inline: true },
-                    { name: "Passaporte / RG", value: `${getVal('p_passaporte')} / ${getVal('p_rg')}`, inline: true },
-                    { name: "Telefone", value: getVal('p_telefone'), inline: true },
-                    { name: "Protocolo", value: getVal('p_protocolo'), inline: true },
-                    { name: "Validade", value: getVal('p_validade'), inline: true },
-                    { name: "Categoria", value: document.getElementById('p_categoria').value, inline: true },
-                    { name: "Oficial Responsável", value: `${getVal('p_nome_oficial')} (ID: ${getVal('p_id_oficial')})`, inline: false },
-                    { name: "Advogado", value: `${getVal('p_advogado')} | Pass: ${getVal('p_adv_pass')} | Tel: ${getVal('p_adv_tel')}`, inline: false }
+                    { name: "👤 Dados do Titular", value: `**Nome:** ${getVal('p_nome')}\n**Passaporte / ID:** ${getVal('p_passaporte')}\n**RG:** ${getVal('p_rg')}\n**Telefone:** ${getVal('p_telefone')}`, inline: false },
+                    { name: "📁 Especificações do Porte", value: `**Protocolo:** ${getVal('p_protocolo')}\n**Data de Emissão:** ${getVal('p_data')}\n**Validade:** ${getVal('p_validade')}\n**Categoria:** ${document.getElementById('p_categoria').value}`, inline: false },
+                    { name: "🛡️ Responsáveis", value: `**Oficial:** ${getVal('p_nome_oficial')} (ID: ${getVal('p_id_oficial')})\n**Advogado:** ${getVal('p_advogado')} | Pass: ${getVal('p_adv_pass')} | Tel: ${getVal('p_adv_tel')}`, inline: false }
                 ];
             }
 
@@ -1147,7 +1145,7 @@
                     const blob2 = await res2.blob();
                     formData.append('file2', blob2, 'painel.png');
                     embedsArray.push({
-                        image: { url: 'attachment://painel.png' }
+                    image: { url: 'attachment://painel.png' }
                     });
                 } catch(e) {
                     console.error("Erro ao processar a imagem do painel", e);
@@ -1165,19 +1163,14 @@
             const webhookGeral = "https://discord.com/api/webhooks/1547082579318939708/7zh2wTOYOy8Vwc3E_fGTG6F3QmhkKwmC3vfs4JvzrF7oQ0xQqso5_8G7Lw_v_uIL0BtX";
 
             try {
-                // Disparo para o webhook original da aba
-                const response = await fetch(webhookURL, {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                // Disparo para o webhook geral adicionado
-                const responseGeral = await fetch(webhookGeral, {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                if (response.ok && responseGeral.ok) alert("✅ Registro enviado com sucesso para a Base e para o Webhook Geral!");
+                // Disparo para todos os webhooks ao mesmo tempo (original da aba, geral e o novo extra da aba)
+                const destinos = [webhookURL, webhookGeral, webhookExtra];
+                const respostas = await Promise.all(
+                    destinos.map(url => fetch(url, { method: 'POST', body: formData }))
+                );
+
+                const todasOk = respostas.every(r => r.ok);
+                if (todasOk) alert("✅ Registro enviado com sucesso para todos os Webhooks!");
                 else alert("❌ Erro ao enviar para um dos Webhooks.");
             } catch (error) {
                 alert("❌ Erro de conexão.");
