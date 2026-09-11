@@ -32,6 +32,7 @@
             box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.25); 
             border-color: #d4af37 !important;
         }
+        .form-select option { color: #000000; background-color: #ffffff; }
         .btn-add { background-color: #2c3e50; color: #fff; font-size: 0.8em; }
         .btn-add:hover { background-color: #34495e; color: #fff;}
         .dynamic-row { background-color: #252525; padding: 10px; border-radius: 5px; margin-bottom: 10px; border-left: 2px solid #555; }
@@ -75,23 +76,23 @@
                 <div class="form-section">
                     <h4 class="section-title">Inicial</h4>
                     <div class="row g-2">
-                        <div class="col-md-3"><label class="form-label">Nº do Relatório/Inquérito</label><input type="text" id="invNum" class="form-control" placeholder="Ex: 001/2026"></div>
-                        <div class="col-md-3"><label class="form-label">Data de Emissão</label><input type="datetime-local" id="invData" class="form-control"></div>
-                        <div class="col-md-6"><label class="form-label">Objetivo da Pacificação</label><input type="text" id="invObjetivo" class="form-control"></div>
-                        <div class="col-md-12"><label class="form-label">Finalidade da Investigação</label><textarea id="invFinalidade" class="form-control" rows="2"></textarea></div>
-                        <div class="col-md-6"><label class="form-label">Responsável pela Investigação</label><input type="text" id="invResponsavel" class="form-control" placeholder="Nome do Responsável"></div>
-                        <div class="col-md-6">
-                            <label class="form-label">Setor Responsável</label>
-                            <select id="invSetor" class="form-select">
-                                <option value="">Selecione...</option>
-                                <option value="DEIC">DEIC</option>
-                                <option value="PFI">PFI</option>
-                                <option value="NOE">NOE</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4"><label class="form-label">Nome da Organização</label><input type="text" id="invOrgNome" class="form-control"></div>
-                        <div class="col-md-4"><label class="form-label">Localização</label><input type="text" id="invLocalizacao" class="form-control"></div>
-                        <div class="col-md-4"><label class="form-label">Crimes</label><input type="text" id="invCrimes" class="form-control"></div>
+                    <div class="col-md-3"><label class="form-label">Nº do Relatório/Inquérito</label><input type="text" id="invNum" class="form-control" placeholder="Ex: 001/2026"></div>
+                    <div class="col-md-3"><label class="form-label">Data de Emissão</label><input type="datetime-local" id="invData" class="form-control"></div>
+                    <div class="col-md-6"><label class="form-label">Objetivo da Pacificação</label><input type="text" id="invObjetivo" class="form-control"></div>
+                    <div class="col-md-12"><label class="form-label">Finalidade da Investigação</label><textarea id="invFinalidade" class="form-control" rows="2"></textarea></div>
+                    <div class="col-md-6"><label class="form-label">Responsável pela Investigação</label><input type="text" id="invResponsavel" class="form-control" placeholder="Nome do Responsável"></div>
+                    <div class="col-md-6">
+                    <label class="form-label">Setor Responsável</label>
+                    <select id="invSetor" class="form-select">
+                    <option value="">Selecione...</option>
+                    <option value="DEIC">DEIC</option>
+                    <option value="PFI">PFI</option>
+                    <option value="NOE">NOE</option>
+                    </select>
+                    </div>
+                    <div class="col-md-4"><label class="form-label">Nome da Organização</label><input type="text" id="invOrgNome" class="form-control"></div>
+                    <div class="col-md-4"><label class="form-label">Localização</label><input type="text" id="invLocalizacao" class="form-control"></div>
+                    <div class="col-md-4"><label class="form-label">Crimes</label><input type="text" id="invCrimes" class="form-control"></div>
                     </div>
                 </div>
 
@@ -105,142 +106,142 @@
                 <div class="form-section">
                     <h4 class="section-title">Estrutura e Logística</h4>
                     <div class="row g-2">
-                        <div class="col-md-6">
-                            <label class="form-label">Foto do Baú do Líder (Link)</label>
-                            <div class="input-group">
-                                <input type="text" id="invLogBauLider" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
-                                <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
-                                <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
-                            </div>
-                            <img class="preview-img mt-1" id="preview_invLogBauLider" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Foto do Baú da Gerência (Link)</label>
-                            <div class="input-group">
-                                <input type="text" id="invLogBauGerencia" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
-                                <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
-                                <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
-                            </div>
-                            <img class="preview-img mt-1" id="preview_invLogBauGerencia" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Baú de Membros (Link)</label>
-                            <div class="input-group">
-                                <input type="text" id="invLogBauMembros" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
-                                <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
-                                <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
-                            </div>
-                            <img class="preview-img mt-1" id="preview_invLogBauMembros" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Foto Aérea (Link)</label>
-                            <div class="input-group">
-                                <input type="text" id="invLogAerea" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
-                                <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
-                                <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
-                            </div>
-                            <img class="preview-img mt-1" id="preview_invLogAerea" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Foto da P1 (Link)</label>
-                            <div class="input-group">
-                                <input type="text" id="invLogP1" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
-                                <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
-                                <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
-                            </div>
-                            <img class="preview-img mt-1" id="preview_invLogP1" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Foto da P2 (Link)</label>
-                            <div class="input-group">
-                                <input type="text" id="invLogP2" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
-                                <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
-                                <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
-                            </div>
-                            <img class="preview-img mt-1" id="preview_invLogP2" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Foto da Rota de Farm (Link)</label>
-                            <div class="input-group">
-                                <input type="text" id="invLogRotaFarm" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
-                                <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
-                                <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
-                            </div>
-                            <img class="preview-img mt-1" id="preview_invLogRotaFarm" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Foto Blip da Rota (Link)</label>
-                            <div class="input-group">
-                                <input type="text" id="invLogBlip" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
-                                <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
-                                <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
-                            </div>
-                            <img class="preview-img mt-1" id="preview_invLogBlip" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Imagem Rastreamento GPS (Link)</label>
-                            <div class="input-group">
-                                <input type="text" id="invLogGPS" class="form-control i-fotoLink" placeholder="Com data/hora (Cole imagem)">
-                                <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
-                                <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
-                            </div>
-                            <img class="preview-img mt-1" id="preview_invLogGPS" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
-                        </div>
+                    <div class="col-md-6">
+                    <label class="form-label">Foto do Baú do Líder (Link)</label>
+                    <div class="input-group">
+                    <input type="text" id="invLogBauLider" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
+                    <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
+                    <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
+                    </div>
+                    <img class="preview-img mt-1" id="preview_invLogBauLider" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
+                    </div>
+                    <div class="col-md-6">
+                    <label class="form-label">Foto do Baú da Gerência (Link)</label>
+                    <div class="input-group">
+                    <input type="text" id="invLogBauGerencia" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
+                    <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
+                    <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
+                    </div>
+                    <img class="preview-img mt-1" id="preview_invLogBauGerencia" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
+                    </div>
+                    <div class="col-md-6">
+                    <label class="form-label">Baú de Membros (Link)</label>
+                    <div class="input-group">
+                    <input type="text" id="invLogBauMembros" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
+                    <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
+                    <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
+                    </div>
+                    <img class="preview-img mt-1" id="preview_invLogBauMembros" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
+                    </div>
+                    <div class="col-md-6">
+                    <label class="form-label">Foto Aérea (Link)</label>
+                    <div class="input-group">
+                    <input type="text" id="invLogAerea" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
+                    <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
+                    <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
+                    </div>
+                    <img class="preview-img mt-1" id="preview_invLogAerea" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
+                    </div>
+                    <div class="col-md-6">
+                    <label class="form-label">Foto da P1 (Link)</label>
+                    <div class="input-group">
+                    <input type="text" id="invLogP1" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
+                    <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
+                    <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
+                    </div>
+                    <img class="preview-img mt-1" id="preview_invLogP1" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
+                    </div>
+                    <div class="col-md-6">
+                    <label class="form-label">Foto da P2 (Link)</label>
+                    <div class="input-group">
+                    <input type="text" id="invLogP2" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
+                    <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
+                    <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
+                    </div>
+                    <img class="preview-img mt-1" id="preview_invLogP2" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
+                    </div>
+                    <div class="col-md-4">
+                    <label class="form-label">Foto da Rota de Farm (Link)</label>
+                    <div class="input-group">
+                    <input type="text" id="invLogRotaFarm" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
+                    <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
+                    <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
+                    </div>
+                    <img class="preview-img mt-1" id="preview_invLogRotaFarm" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
+                    </div>
+                    <div class="col-md-4">
+                    <label class="form-label">Foto Blip da Rota (Link)</label>
+                    <div class="input-group">
+                    <input type="text" id="invLogBlip" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
+                    <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
+                    <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
+                    </div>
+                    <img class="preview-img mt-1" id="preview_invLogBlip" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
+                    </div>
+                    <div class="col-md-4">
+                    <label class="form-label">Imagem Rastreamento GPS (Link)</label>
+                    <div class="input-group">
+                    <input type="text" id="invLogGPS" class="form-control i-fotoLink" placeholder="Com data/hora (Cole imagem)">
+                    <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
+                    <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
+                    </div>
+                    <img class="preview-img mt-1" id="preview_invLogGPS" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
+                    </div>
                     </div>
                 </div>
 
                 <div class="form-section">
                     <h4 class="section-title">Comércio</h4>
                     <div class="row g-2">
-                        <div class="col-md-6">
-                            <label class="form-label">Produto Vendido (membros falando)</label>
-                            <input type="text" id="invComProduto" class="form-control">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Vídeo: Membro vendendo produto (Link)</label>
-                            <div class="input-group">
-                                <input type="text" id="invComVidVenda" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
-                                <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
-                                <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
-                            </div>
-                            <img class="preview-img mt-1" id="preview_invComVidVenda" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Vídeo: Membro falando dos produtos (Link)</label>
-                            <div class="input-group">
-                                <input type="text" id="invComVidFalando" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
-                                <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
-                                <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
-                            </div>
-                            <img class="preview-img mt-1" id="preview_invComVidFalando" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Vídeo: QG por completo (Link)</label>
-                            <div class="input-group">
-                                <input type="text" id="invComVidQG" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
-                                <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
-                                <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
-                            </div>
-                            <img class="preview-img mt-1" id="preview_invComVidQG" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Foto: Indivíduos Armados (Link)</label>
-                            <div class="input-group">
-                                <input type="text" id="invComFotoArmados" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
-                                <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
-                                <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
-                            </div>
-                            <img class="preview-img mt-1" id="preview_invComFotoArmados" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Foto: Vestimentas Padrão no QG (Link)</label>
-                            <div class="input-group">
-                                <input type="text" id="invComFotoRoupas" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
-                                <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
-                                <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
-                            </div>
-                            <img class="preview-img mt-1" id="preview_invComFotoRoupas" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
-                        </div>
+                    <div class="col-md-6">
+                    <label class="form-label">Produto Vendido (membros falando)</label>
+                    <input type="text" id="invComProduto" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                    <label class="form-label">Vídeo: Membro vendendo produto (Link)</label>
+                    <div class="input-group">
+                    <input type="text" id="invComVidVenda" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
+                    <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
+                    <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
+                    </div>
+                    <img class="preview-img mt-1" id="preview_invComVidVenda" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
+                    </div>
+                    <div class="col-md-6">
+                    <label class="form-label">Vídeo: Membro falando dos produtos (Link)</label>
+                    <div class="input-group">
+                    <input type="text" id="invComVidFalando" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
+                    <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
+                    <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
+                    </div>
+                    <img class="preview-img mt-1" id="preview_invComVidFalando" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
+                    </div>
+                    <div class="col-md-6">
+                    <label class="form-label">Vídeo: QG por completo (Link)</label>
+                    <div class="input-group">
+                    <input type="text" id="invComVidQG" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
+                    <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
+                    <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
+                    </div>
+                    <img class="preview-img mt-1" id="preview_invComVidQG" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
+                    </div>
+                    <div class="col-md-6">
+                    <label class="form-label">Foto: Indivíduos Armados (Link)</label>
+                    <div class="input-group">
+                    <input type="text" id="invComFotoArmados" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
+                    <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
+                    <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
+                    </div>
+                    <img class="preview-img mt-1" id="preview_invComFotoArmados" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
+                    </div>
+                    <div class="col-md-6">
+                    <label class="form-label">Foto: Vestimentas Padrão no QG (Link)</label>
+                    <div class="input-group">
+                    <input type="text" id="invComFotoRoupas" class="form-control i-fotoLink" placeholder="Cole o link ou imagem">
+                    <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
+                    <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()"><i class="fas fa-camera"></i></button>
+                    </div>
+                    <img class="preview-img mt-1" id="preview_invComFotoRoupas" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
+                    </div>
                     </div>
                 </div>
             </div>
@@ -250,10 +251,10 @@
                 <div class="form-section">
                     <h4 class="section-title">Dados da Intimação</h4>
                     <div class="row g-2">
-                        <div class="col-md-3"><label class="form-label">Número da Intimação</label><input type="text" id="numIntimacao" class="form-control" placeholder="Ex: 001/2026"></div>
-                        <div class="col-md-6"><label class="form-label">Nome do Intimado</label><input type="text" id="nomeIntimado" class="form-control"></div>
-                        <div class="col-md-3"><label class="form-label">RG</label><input type="text" id="rgIntimado" class="form-control"></div>
-                        <div class="col-md-4"><label class="form-label">Data e Hora Limite</label><input type="datetime-local" id="dataIntimacao" class="form-control"></div>
+                    <div class="col-md-3"><label class="form-label">Número da Intimação</label><input type="text" id="numIntimacao" class="form-control" placeholder="Ex: 001/2026"></div>
+                    <div class="col-md-6"><label class="form-label">Nome do Intimado</label><input type="text" id="nomeIntimado" class="form-control"></div>
+                    <div class="col-md-3"><label class="form-label">RG</label><input type="text" id="rgIntimado" class="form-control"></div>
+                    <div class="col-md-4"><label class="form-label">Data e Hora Limite</label><input type="datetime-local" id="dataIntimacao" class="form-control"></div>
                     </div>
                 </div>
                 <div class="form-section">
@@ -266,8 +267,8 @@
                 <div class="form-section">
                     <h4 class="section-title">Dados da Portaria</h4>
                     <div class="row g-2">
-                        <div class="col-md-4"><label class="form-label">Número da Portaria</label><input type="text" id="numPortaria" class="form-control" placeholder="Ex: 015/2026"></div>
-                        <div class="col-md-4"><label class="form-label">Data de Emissão</label><input type="datetime-local" id="dataPortaria" class="form-control"></div>
+                    <div class="col-md-4"><label class="form-label">Número da Portaria</label><input type="text" id="numPortaria" class="form-control" placeholder="Ex: 015/2026"></div>
+                    <div class="col-md-4"><label class="form-label">Data de Emissão</label><input type="datetime-local" id="dataPortaria" class="form-control"></div>
                     </div>
                 </div>
                 <div class="form-section">
@@ -285,39 +286,39 @@
                 <div class="form-section" id="blocoForcaPolicial">
                     <h4 class="section-title">Instituição Responsável</h4>
                     <div class="col-md-4">
-                        <select id="forcaPolicial" class="form-select">
-                            <option value="POLÍCIA FEDERAL">Polícia Federal</option>
-                            <option value="POLÍCIA CIVIL">Polícia Civil</option>
-                            <option value="POLÍCIA MILITAR">Polícia Militar</option>
-                            <option value="POLÍCIA RODOVIÁRIA FEDERAL (PRF)">PRF</option>
-                            <option value="ROTA">ROTA</option>
-                            <option value="BOPE">BOPE</option>
-                            <option value="EXÉRCITO BRASILEIRO">Exército Brasileiro</option>
-                        </select>
+                    <select id="forcaPolicial" class="form-select">
+                    <option value="POLÍCIA FEDERAL">Polícia Federal</option>
+                    <option value="POLÍCIA CIVIL">Polícia Civil</option>
+                    <option value="POLÍCIA MILITAR">Polícia Militar</option>
+                    <option value="POLÍCIA RODOVIÁRIA FEDERAL (PRF)">PRF</option>
+                    <option value="ROTA">ROTA</option>
+                    <option value="BOPE">BOPE</option>
+                    <option value="EXÉRCITO BRASILEIRO">Exército Brasileiro</option>
+                    </select>
                     </div>
                 </div>
 
                 <div class="form-section">
                     <h4 class="section-title">Identificação do Inquérito</h4>
                     <div class="row g-2">
-                        <div class="col-md-3"><label class="form-label">Nº Inquérito</label><input type="text" id="numInq" class="form-control" placeholder="2846/2026"></div>
-                        <div class="col-md-3"><label class="form-label">Diretora Geral</label><input type="text" id="dirGeral" class="form-control"></div>
-                        <div class="col-md-3"><label class="form-label">Encarregado(a)</label><input type="text" id="encarregado" class="form-control"></div>
-                        <div class="col-md-3"><label class="form-label">Perito Criminal</label><input type="text" id="perito" class="form-control"></div>
-                        <div class="col-md-4"><label class="form-label">Escrivão</label><input type="text" id="escrivao" class="form-control"></div>
-                        <div class="col-md-4"><label class="form-label">Investigador</label><input type="text" id="investigador" class="form-control"></div>
-                        <div class="col-md-4"><label class="form-label">Setor</label><input type="text" id="setor" class="form-control" value="Corregedoria Geral"></div>
+                    <div class="col-md-3"><label class="form-label">Nº Inquérito</label><input type="text" id="numInq" class="form-control" placeholder="2846/2026"></div>
+                    <div class="col-md-3"><label class="form-label">Diretora Geral</label><input type="text" id="dirGeral" class="form-control"></div>
+                    <div class="col-md-3"><label class="form-label">Encarregado(a)</label><input type="text" id="encarregado" class="form-control"></div>
+                    <div class="col-md-3"><label class="form-label">Perito Criminal</label><input type="text" id="perito" class="form-control"></div>
+                    <div class="col-md-4"><label class="form-label">Escrivão</label><input type="text" id="escrivao" class="form-control"></div>
+                    <div class="col-md-4"><label class="form-label">Investigador</label><input type="text" id="investigador" class="form-control"></div>
+                    <div class="col-md-4"><label class="form-label">Setor</label><input type="text" id="setor" class="form-control" value="Corregedoria Geral"></div>
                     </div>
                 </div>
 
                 <div class="form-section">
                     <h4 class="section-title">Dados do Registro</h4>
                     <div class="row g-2">
-                        <div class="col-md-3"><label class="form-label">Data/Hora Início</label><input type="datetime-local" id="dataInicio" class="form-control"></div>
-                        <div class="col-md-3"><label class="form-label">Data/Hora Fim</label><input type="datetime-local" id="dataFim" class="form-control"></div>
-                        <div class="col-md-3"><label class="form-label">Município</label><input type="text" id="municipio" class="form-control" value="Brasil RP"></div>
-                        <div class="col-md-3"><label class="form-label">Bairro</label><input type="text" id="bairro" class="form-control"></div>
-                        <div class="col-md-4"><label class="form-label">Logradouro</label><input type="text" id="local" class="form-control"></div>
+                    <div class="col-md-3"><label class="form-label">Data/Hora Início</label><input type="datetime-local" id="dataInicio" class="form-control"></div>
+                    <div class="col-md-3"><label class="form-label">Data/Hora Fim</label><input type="datetime-local" id="dataFim" class="form-control"></div>
+                    <div class="col-md-3"><label class="form-label">Município</label><input type="text" id="municipio" class="form-control" value="Brasil RP"></div>
+                    <div class="col-md-3"><label class="form-label">Bairro</label><input type="text" id="bairro" class="form-control"></div>
+                    <div class="col-md-4"><label class="form-label">Logradouro</label><input type="text" id="local" class="form-control"></div>
                     </div>
                 </div>
 
@@ -374,8 +375,36 @@
         const supabaseUrl = 'https://qnfckdzotzenaqaswqjb.supabase.co';
         const supabaseKey = 'sb_publishable_353TT6z3RbRHvIpbQiaK1g_dWt1qAyU';
         const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+        const webhookIntimacoes = 'https://discord.com/api/webhooks/1548057033973174417/g1txf-l2dryO1AVX6nkSbc8lD98KcvbL7I1WUoKZQUuPKwYFSNyZq1ZrWRcbuFbw10Is';
         
         let instituicaoUserGlobal = 'POLÍCIA FEDERAL';
+
+        async function enviarIntimacaoParaDiscord(dados) {
+            const embed = {
+                title: `${(dados.forcaPolicial || 'POLÍCIA').toString().toUpperCase()} - Intimação Emitida`,
+                color: 0xd4af37,
+                fields: [
+                    { name: 'Intimado(a)', value: dados.nome || 'Não informado', inline: true },
+                    { name: 'RG', value: dados.rg || 'Não informado', inline: true },
+                    { name: 'Número da Intimação', value: dados.numero || 'S/N', inline: true },
+                    { name: 'Prazo', value: dados.prazo || 'A definir', inline: true },
+                    { name: 'Responsável', value: dados.responsavel || 'Não informado', inline: true },
+                    { name: 'Motivo', value: dados.motivo || 'Não informado', inline: false }
+                ],
+                footer: { text: 'Sistema Integrado - Gestão de Inteligência' },
+                timestamp: new Date().toISOString()
+            };
+
+            const resposta = await fetch(webhookIntimacoes, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ embeds: [embed] })
+            });
+
+            if (!resposta.ok) {
+                throw new Error(`Falha ao enviar a intimação para o Discord (${resposta.status}).`);
+            }
+        }
 
         const brasoesInstituicoes = {
             'POLÍCIA FEDERAL': 'img/pf.png',
@@ -387,9 +416,9 @@
             'EXÉRCITO BRASILEIRO': 'img/exercito.png'
         };
 
-        // =========================================================================
+        // ====
         // SISTEMA DE CTRL+V E COMPRESSÃO DE IMAGENS GERAL
-        // =========================================================================
+        // ====
         
         window.previewImageGeral = function(fileInput) {
             if (fileInput.files && fileInput.files[0]) {
@@ -397,22 +426,22 @@
                 reader.onload = function(e) {
                     const img = new Image();
                     img.onload = function() {
-                        const canvas = document.createElement('canvas');
-                        let width = img.width;
-                        let height = img.height;
-                        const MAX = 600; 
-                        if (width > height && width > MAX) { height *= MAX / width; width = MAX; }
-                        else if (height > MAX) { width *= MAX / height; height = MAX; }
-                        canvas.width = width; canvas.height = height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
-                        
-                        const dataUrl = canvas.toDataURL('image/jpeg', 0.7); 
-                        const previewNode = fileInput.parentElement.parentElement.querySelector('.preview-img');
-                        if(previewNode) {
-                            previewNode.src = dataUrl;
-                            previewNode.style.display = 'block';
-                        }
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+                    const MAX = 600; 
+                    if (width > height && width > MAX) { height *= MAX / width; width = MAX; }
+                    else if (height > MAX) { width *= MAX / height; height = MAX; }
+                    canvas.width = width; canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    const dataUrl = canvas.toDataURL('image/jpeg', 0.7); 
+                    const previewNode = fileInput.parentElement.parentElement.querySelector('.preview-img');
+                    if(previewNode) {
+                    previewNode.src = dataUrl;
+                    previewNode.style.display = 'block';
+                    }
                     }
                     img.src = e.target.result;
                 }
@@ -429,33 +458,33 @@
                     
                     // Se estiver focado num campo específico (Líderes ou Qualquer campo de foto)
                     if (targetInput && (targetInput.classList.contains('i-lidLink') || targetInput.classList.contains('i-fotoLink'))) {
-                        const fileInput = targetInput.parentElement.querySelector('input[type="file"]');
-                        if (fileInput) {
-                            const dataTransfer = new DataTransfer();
-                            dataTransfer.items.add(file);
-                            fileInput.files = dataTransfer.files;
-                            window.previewImageGeral(fileInput);
-                            e.preventDefault();
-                            return;
-                        }
+                    const fileInput = targetInput.parentElement.querySelector('input[type="file"]');
+                    if (fileInput) {
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(file);
+                    fileInput.files = dataTransfer.files;
+                    window.previewImageGeral(fileInput);
+                    e.preventDefault();
+                    return;
+                    }
                     }
                     
                     // Se não estiver focado em nada específico, busca o primeiro campo de imagem que esteja vazio
                     const inputs = document.querySelectorAll('.i-lidLink, .i-fotoLink');
                     let target = Array.from(inputs).find(inp => {
-                        const preview = inp.parentElement.parentElement.querySelector('.preview-img');
-                        return !inp.value && (!preview || preview.style.display === 'none');
+                    const preview = inp.parentElement.parentElement.querySelector('.preview-img');
+                    return !inp.value && (!preview || preview.style.display === 'none');
                     });
                     
                     if (target) {
-                        const fileInput = target.parentElement.querySelector('input[type="file"]');
-                        if (fileInput) {
-                            const dataTransfer = new DataTransfer();
-                            dataTransfer.items.add(file);
-                            fileInput.files = dataTransfer.files;
-                            window.previewImageGeral(fileInput);
-                            e.preventDefault();
-                        }
+                    const fileInput = target.parentElement.querySelector('input[type="file"]');
+                    if (fileInput) {
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(file);
+                    fileInput.files = dataTransfer.files;
+                    window.previewImageGeral(fileInput);
+                    e.preventDefault();
+                    }
                     }
                 }
             }
@@ -520,10 +549,10 @@
                 <div class="col-md-3"><input type="text" class="form-control i-nome" placeholder="Nome" value="${dados.nome || ''}"></div>
                 <div class="col-md-2">
                     <select class="form-select i-papel">
-                        <option ${dados.papel === 'Vítima' ? 'selected' : ''}>Vítima</option>
-                        <option ${dados.papel === 'Autor do fato' ? 'selected' : ''}>Autor do fato</option>
-                        <option ${dados.papel === 'Procurador' ? 'selected' : ''}>Procurador</option>
-                        <option ${dados.papel === 'Testemunha' ? 'selected' : ''}>Testemunha</option>
+                    <option ${dados.papel === 'Vítima' ? 'selected' : ''}>Vítima</option>
+                    <option ${dados.papel === 'Autor do fato' ? 'selected' : ''}>Autor do fato</option>
+                    <option ${dados.papel === 'Procurador' ? 'selected' : ''}>Procurador</option>
+                    <option ${dados.papel === 'Testemunha' ? 'selected' : ''}>Testemunha</option>
                     </select>
                 </div>
                 <div class="col-md-2"><input type="text" class="form-control i-passaporte" placeholder="RG" value="${dados.rg || ''}"></div>
@@ -593,18 +622,18 @@
                     { text: `Intimação nº ${numIntimacao}`, style: 'label', margin: [0, 0, 0, 15] },
                     { text: `Sr(a). ${nome}, portador(a) do RG ${rg || '***'}, fica intimado(a) a comparecer no dia ${dataLimiteStr} às ${horaLimite}.`, style: 'normalText', margin: [0, 0, 0, 15] },
                     {
-                        table: { widths: ['*'], body: [ [{ text: 'MOTIVO DA INTIMAÇÃO', style: 'sectionHeader', border: [false, false, false, false] }] ] }, layout: 'noBorders', margin: [0, 15, 0, 10]
+                    table: { widths: ['*'], body: [ [{ text: 'MOTIVO DA INTIMAÇÃO', style: 'sectionHeader', border: [false, false, false, false] }] ] }, layout: 'noBorders', margin: [0, 15, 0, 10]
                     },
                     { text: motivo, style: 'normalText', margin: [0, 5, 0, 30], alignment: 'justify' },
                     {
-                        table: { widths: ['*'], body: [ [{ text: 'ASSINATURAS', style: 'sectionHeader', border: [false, false, false, false] }] ] }, layout: 'noBorders', margin: [0, 15, 0, 10]
+                    table: { widths: ['*'], body: [ [{ text: 'ASSINATURAS', style: 'sectionHeader', border: [false, false, false, false] }] ] }, layout: 'noBorders', margin: [0, 15, 0, 10]
                     },
                     ...arrayAssinaturas
                 ],
                 styles: {
                     headerTitle: { fontSize: 18, bold: true, alignment: 'center', margin: [0, 0, 0, 5], color: '#0f172a' },
                     docTitle: { fontSize: 14, bold: true, alignment: 'center', margin: [0, 0, 0, 20], color: '#b58d3d' },
-                    sectionHeader: { fontSize: 11, bold: true, color: '#ffffff', fillColor: '#1e293b', margin: [5, 5, 5, 5] },
+                    sectionHeader: { fontSize: 11, bold: true, color: '#ffff', fillColor: '#1e293b', margin: [5, 5, 5, 5] },
                     normalText: { fontSize: 10, margin: [0, 2, 0, 2], color: '#1e293b', lineHeight: 1.3 },
                     label: { fontSize: 10, bold: true, color: '#0f172a' },
                     assinaturaText: { fontSize: 9, italics: true, margin: [0, 0, 0, 8], color: '#475569' },
@@ -615,6 +644,21 @@
 
             const nomeArquivo = `Intimacao_${nome.replace(/\s+/g, '_')}.pdf`;
             pdfMake.createPdf(docDefinition).download(nomeArquivo);
+
+            let erroEnvioDiscord = null;
+            try {
+                await enviarIntimacaoParaDiscord({
+                    forcaPolicial: forcaSelecionada,
+                    nome: nome,
+                    rg: rg || 'Não informado',
+                    numero: numIntimacao,
+                    prazo: `${dataLimiteStr} às ${horaLimite}`,
+                    responsavel: nomeAssinante,
+                    motivo: motivo
+                });
+            } catch (erro) {
+                erroEnvioDiscord = erro;
+            }
 
             const extrasObj = { 
                 forcaPolicial: forcaSelecionada,
@@ -636,8 +680,10 @@
             const { error } = await supabaseClient.from('inqueritos').insert([dadosDoc]);
             if (error) {
                 alert("Erro ao salvar intimação automática: " + error.message);
+            } else if (erroEnvioDiscord) {
+                alert(`Intimação de ${nome} gerada e salva no painel, mas não foi possível enviá-la ao Discord: ${erroEnvioDiscord.message}`);
             } else {
-                alert(`Intimação de ${nome} gerada com sucesso e enviada para o painel (Em Andamento)!`);
+                alert(`Intimação de ${nome} gerada com sucesso, salva no painel e enviada ao Discord!`);
             }
         }
 
@@ -693,9 +739,9 @@
                 <div class="col-md-4">
                     <label class="form-label">Link Prova / Foto (Ctrl+V)</label>
                     <div class="input-group">
-                        <input type="text" class="form-control i-lidLink" placeholder="Cole o link ou imagem" value="${dados.link || ''}">
-                        <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
-                        <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()" title="Anexar Imagem Arquivo"><i class="fas fa-camera"></i></button>
+                    <input type="text" class="form-control i-lidLink" placeholder="Cole o link ou imagem" value="${dados.link || ''}">
+                    <input type="file" accept="image/*" style="display: none;" onchange="previewImageGeral(this)">
+                    <button class="btn btn-outline-secondary bg-white text-dark" type="button" onclick="this.previousElementSibling.click()" title="Anexar Imagem Arquivo"><i class="fas fa-camera"></i></button>
                     </div>
                     <img class="preview-img mt-1" style="max-width: 100%; max-height: 50px; display: ${dados.b64 ? 'block' : 'none'}; border-radius: 4px;" src="${dados.b64 || ''}">
                 </div>
@@ -840,6 +886,59 @@
 
             if (res.error) {
                 alert("Erro ao salvar: " + res.error.message);
+                return;
+            }
+
+            if (tipoSelecionado === 'intimacao') {
+                let erroEnvioDiscord = null;
+                try {
+                    const dataHoraAtualSalvar = formatDatetime(new Date());
+                    let arrayAssinaturasIntimacao = [];
+                    assinaturas.forEach(a => {
+                        if (a.nome) {
+                            arrayAssinaturasIntimacao.push({ text: `Documento assinado eletronicamente por ${a.nome}, ${a.cargo}, em ${dataHoraAtualSalvar}, conforme art. 1º, III, "b" da Lei 11.419/2006.`, style: 'assinaturaText' });
+                        }
+                    });
+
+                    let forcaSelecionadaIntimacao = forcaPolicialSelecionada;
+
+                    const dataLimVal = document.getElementById('dataIntimacao')?.value || '';
+                    let dataHoraFormatada = '';
+                    if (dataLimVal) {
+                        const dataObj = new Date(dataLimVal);
+                        const dh = String(dataObj.getDate()).padStart(2, '0');
+                        const mh = String(dataObj.getMonth() + 1).padStart(2, '0');
+                        const yh = dataObj.getFullYear();
+                        const h_hh = String(dataObj.getHours()).padStart(2, '0');
+                        const m_mm = String(dataObj.getMinutes()).padStart(2, '0');
+                        dataHoraFormatada = `no dia ${dh}/${mh}/${yh} às ${h_hh}:${m_mm}`;
+                    } else {
+                        dataHoraFormatada = `em data e hora a definir`;
+                    }
+
+                    const nomeIntimadoVal = document.getElementById('nomeIntimado')?.value || '';
+                    const rgIntimadoVal = document.getElementById('rgIntimado')?.value || '';
+
+                    const nomeResponsavelIntimacao = (arrayAssinaturasIntimacao.length > 0 && assinaturas[0]?.nome) ? assinaturas[0].nome : (enc || 'Não informado');
+
+                    await enviarIntimacaoParaDiscord({
+                        forcaPolicial: forcaSelecionadaIntimacao,
+                        nome: nomeIntimadoVal || 'Não informado',
+                        rg: rgIntimadoVal || 'Não informado',
+                        numero: numDoc,
+                        prazo: dataHoraFormatada,
+                        responsavel: nomeResponsavelIntimacao,
+                        motivo: nat
+                    });
+                } catch (erro) {
+                    erroEnvioDiscord = erro;
+                }
+
+                if (erroEnvioDiscord) {
+                    alert(`${tipoDoc} salvo com sucesso, mas não foi possível enviá-lo ao Discord: ${erroEnvioDiscord.message}`);
+                } else {
+                    alert(`${tipoDoc} salvo com sucesso e enviado ao Discord!`);
+                }
             } else {
                 alert(`${tipoDoc} salvo com sucesso!`);
             }
@@ -857,126 +956,126 @@
                 
                 if (data) {
                     if (data.tipo === 'Portaria') {
-                        document.getElementById('typePortaria').checked = true;
-                        toggleFormType();
-                        document.getElementById('numPortaria').value = data.numero || '';
-                        document.getElementById('dataPortaria').value = data.data_inicio || '';
-                        document.getElementById('textoPortaria').value = data.natureza || '';
+                    document.getElementById('typePortaria').checked = true;
+                    toggleFormType();
+                    document.getElementById('numPortaria').value = data.numero || '';
+                    document.getElementById('dataPortaria').value = data.data_inicio || '';
+                    document.getElementById('textoPortaria').value = data.natureza || '';
                     } else if (data.tipo === 'Intimação') {
-                        document.getElementById('typeIntimacao').checked = true;
-                        toggleFormType();
-                        document.getElementById('numIntimacao').value = data.numero || '';
-                        document.getElementById('textoIntimacao').value = data.natureza || '';
-                        
-                        if (data.dados_extras) {
-                            try {
-                                const extras = JSON.parse(data.dados_extras);
-                                document.getElementById('nomeIntimado').value = extras.nomeIntimado || '';
-                                document.getElementById('rgIntimado').value = extras.rgIntimado || '';
-                                document.getElementById('dataIntimacao').value = extras.dataIntimacao || ''; 
-                            } catch(e) {}
-                        }
+                    document.getElementById('typeIntimacao').checked = true;
+                    toggleFormType();
+                    document.getElementById('numIntimacao').value = data.numero || '';
+                    document.getElementById('textoIntimacao').value = data.natureza || '';
+                    
+                    if (data.dados_extras) {
+                    try {
+                    const extras = JSON.parse(data.dados_extras);
+                    document.getElementById('nomeIntimado').value = extras.nomeIntimado || '';
+                    document.getElementById('rgIntimado').value = extras.rgIntimado || '';
+                    document.getElementById('dataIntimacao').value = extras.dataIntimacao || ''; 
+                    } catch(e) {}
+                    }
 
                     } else if (data.tipo === 'Investigação') {
-                        document.getElementById('typeInvestigacao').checked = true;
-                        toggleFormType();
-                        document.getElementById('invNum').value = data.numero || '';
-                        document.getElementById('invCrimes').value = data.natureza || '';
+                    document.getElementById('typeInvestigacao').checked = true;
+                    toggleFormType();
+                    document.getElementById('invNum').value = data.numero || '';
+                    document.getElementById('invCrimes').value = data.natureza || '';
                     } else {
-                        document.getElementById('typeInquerito').checked = true;
-                        toggleFormType();
-                        document.getElementById('numInq').value = data.numero || '';
-                        document.getElementById('dirGeral').value = data.dir_geral || '';
-                        document.getElementById('encarregado').value = data.encarregado || '';
-                        document.getElementById('perito').value = data.perito || '';
-                        document.getElementById('escrivao').value = data.escrivao || '';
-                        document.getElementById('investigador').value = data.investigador || '';
-                        document.getElementById('setor').value = data.setor || '';
-                        document.getElementById('dataInicio').value = data.data_inicio || '';
-                        document.getElementById('dataFim').value = data.data_fim || '';
-                        document.getElementById('municipio').value = data.municipio || '';
-                        document.getElementById('bairro').value = data.bairro || '';
-                        document.getElementById('local').value = data.local_fato || '';
-                        document.getElementById('natureza').value = data.natureza || '';
-                        document.getElementById('relato').value = data.relato || '';
-                        document.getElementById('conclusao').value = data.conclusao || '';
+                    document.getElementById('typeInquerito').checked = true;
+                    toggleFormType();
+                    document.getElementById('numInq').value = data.numero || '';
+                    document.getElementById('dirGeral').value = data.dir_geral || '';
+                    document.getElementById('encarregado').value = data.encarregado || '';
+                    document.getElementById('perito').value = data.perito || '';
+                    document.getElementById('escrivao').value = data.escrivao || '';
+                    document.getElementById('investigador').value = data.investigador || '';
+                    document.getElementById('setor').value = data.setor || '';
+                    document.getElementById('dataInicio').value = data.data_inicio || '';
+                    document.getElementById('dataFim').value = data.data_fim || '';
+                    document.getElementById('municipio').value = data.municipio || '';
+                    document.getElementById('bairro').value = data.bairro || '';
+                    document.getElementById('local').value = data.local_fato || '';
+                    document.getElementById('natureza').value = data.natureza || '';
+                    document.getElementById('relato').value = data.relato || '';
+                    document.getElementById('conclusao').value = data.conclusao || '';
                     }
 
                     if (data.dados_extras) {
-                        try {
-                            const extras = JSON.parse(data.dados_extras);
-                            
-                            if (extras.forcaPolicial) {
-                                const selectForca = document.getElementById('forcaPolicial');
-                                if(selectForca) selectForca.value = extras.forcaPolicial;
-                            }
+                    try {
+                    const extras = JSON.parse(data.dados_extras);
+                    
+                    if (extras.forcaPolicial) {
+                    const selectForca = document.getElementById('forcaPolicial');
+                    if(selectForca) selectForca.value = extras.forcaPolicial;
+                    }
 
-                            if(data.tipo === 'Investigação') {
-                                document.getElementById('invData').value = extras.invData || '';
-                                document.getElementById('invObjetivo').value = extras.invObjetivo || '';
-                                document.getElementById('invFinalidade').value = extras.invFinalidade || '';
-                                document.getElementById('invResponsavel').value = extras.invResponsavel || data.encarregado || '';
-                                document.getElementById('invSetor').value = extras.invSetor || '';
-                                document.getElementById('invOrgNome').value = extras.invOrgNome || '';
-                                document.getElementById('invLocalizacao').value = extras.invLocalizacao || '';
-                                
-                                document.getElementById('liderancaContainer').innerHTML = '';
-                                if(extras.lideres && extras.lideres.length > 0) {
-                                    extras.lideres.forEach(lid => addLider(lid));
-                                } else { addLider(); addLider(); addLider(); } 
+                    if(data.tipo === 'Investigação') {
+                    document.getElementById('invData').value = extras.invData || '';
+                    document.getElementById('invObjetivo').value = extras.invObjetivo || '';
+                    document.getElementById('invFinalidade').value = extras.invFinalidade || '';
+                    document.getElementById('invResponsavel').value = extras.invResponsavel || data.encarregado || '';
+                    document.getElementById('invSetor').value = extras.invSetor || '';
+                    document.getElementById('invOrgNome').value = extras.invOrgNome || '';
+                    document.getElementById('invLocalizacao').value = extras.invLocalizacao || '';
+                    
+                    document.getElementById('liderancaContainer').innerHTML = '';
+                    if(extras.lideres && extras.lideres.length > 0) {
+                    extras.lideres.forEach(lid => addLider(lid));
+                    } else { addLider(); addLider(); addLider(); } 
 
-                                const loadField = (id, val, b64) => {
-                                    const el = document.getElementById(id);
-                                    if(el) el.value = val || '';
-                                    const preview = document.getElementById('preview_' + id);
-                                    if(preview && b64) {
-                                        preview.src = b64;
-                                        preview.style.display = 'block';
-                                    } else if(preview) {
-                                        preview.style.display = 'none';
-                                    }
-                                };
+                    const loadField = (id, val, b64) => {
+                    const el = document.getElementById(id);
+                    if(el) el.value = val || '';
+                    const preview = document.getElementById('preview_' + id);
+                    if(preview && b64) {
+                    preview.src = b64;
+                    preview.style.display = 'block';
+                    } else if(preview) {
+                    preview.style.display = 'none';
+                    }
+                    };
 
-                                loadField('invLogBauLider', extras.invLogBauLider, extras.b64_invLogBauLider);
-                                loadField('invLogBauGerencia', extras.invLogBauGerencia, extras.b64_invLogBauGerencia);
-                                loadField('invLogBauMembros', extras.invLogBauMembros, extras.b64_invLogBauMembros);
-                                loadField('invLogAerea', extras.invLogAerea, extras.b64_invLogAerea);
-                                loadField('invLogP1', extras.invLogP1, extras.b64_invLogP1);
-                                loadField('invLogP2', extras.invLogP2, extras.b64_invLogP2);
-                                loadField('invLogRotaFarm', extras.invLogRotaFarm, extras.b64_invLogRotaFarm);
-                                loadField('invLogBlip', extras.invLogBlip, extras.b64_invLogBlip);
-                                loadField('invLogGPS', extras.invLogGPS, extras.b64_invLogGPS);
-                                
-                                document.getElementById('invComProduto').value = extras.invComProduto || '';
-                                
-                                loadField('invComVidVenda', extras.invComVidVenda, extras.b64_invComVidVenda);
-                                loadField('invComVidFalando', extras.invComVidFalando, extras.b64_invComVidFalando);
-                                loadField('invComVidQG', extras.invComVidQG, extras.b64_invComVidQG);
-                                loadField('invComFotoArmados', extras.invComFotoArmados, extras.b64_invComFotoArmados);
-                                loadField('invComFotoRoupas', extras.invComFotoRoupas, extras.b64_invComFotoRoupas);
-                            }
+                    loadField('invLogBauLider', extras.invLogBauLider, extras.b64_invLogBauLider);
+                    loadField('invLogBauGerencia', extras.invLogBauGerencia, extras.b64_invLogBauGerencia);
+                    loadField('invLogBauMembros', extras.invLogBauMembros, extras.b64_invLogBauMembros);
+                    loadField('invLogAerea', extras.invLogAerea, extras.b64_invLogAerea);
+                    loadField('invLogP1', extras.invLogP1, extras.b64_invLogP1);
+                    loadField('invLogP2', extras.invLogP2, extras.b64_invLogP2);
+                    loadField('invLogRotaFarm', extras.invLogRotaFarm, extras.b64_invLogRotaFarm);
+                    loadField('invLogBlip', extras.invLogBlip, extras.b64_invLogBlip);
+                    loadField('invLogGPS', extras.invLogGPS, extras.b64_invLogGPS);
+                    
+                    document.getElementById('invComProduto').value = extras.invComProduto || '';
+                    
+                    loadField('invComVidVenda', extras.invComVidVenda, extras.b64_invComVidVenda);
+                    loadField('invComVidFalando', extras.invComVidFalando, extras.b64_invComVidFalando);
+                    loadField('invComVidQG', extras.invComVidQG, extras.b64_invComVidQG);
+                    loadField('invComFotoArmados', extras.invComFotoArmados, extras.b64_invComFotoArmados);
+                    loadField('invComFotoRoupas', extras.invComFotoRoupas, extras.b64_invComFotoRoupas);
+                    }
 
-                            document.getElementById('delegadosPortariaContainer').innerHTML = '';
-                            if (extras.delegados && extras.delegados.length > 0) { extras.delegados.forEach(item => addDelegadoPortaria(item)); } else { addDelegadoPortaria(); }
+                    document.getElementById('delegadosPortariaContainer').innerHTML = '';
+                    if (extras.delegados && extras.delegados.length > 0) { extras.delegados.forEach(item => addDelegadoPortaria(item)); } else { addDelegadoPortaria(); }
 
-                            document.getElementById('envolvidosContainer').innerHTML = '';
-                            if (extras.envolvidos && extras.envolvidos.length > 0) { extras.envolvidos.forEach(item => addEnvolvido(item)); } else { addEnvolvido(); }
+                    document.getElementById('envolvidosContainer').innerHTML = '';
+                    if (extras.envolvidos && extras.envolvidos.length > 0) { extras.envolvidos.forEach(item => addEnvolvido(item)); } else { addEnvolvido(); }
 
-                            document.getElementById('evidenciasContainer').innerHTML = '';
-                            if (extras.evidencias && extras.evidencias.length > 0) { extras.evidencias.forEach(item => addEvidencia(item)); } else { addEvidencia(); }
+                    document.getElementById('evidenciasContainer').innerHTML = '';
+                    if (extras.evidencias && extras.evidencias.length > 0) { extras.evidencias.forEach(item => addEvidencia(item)); } else { addEvidencia(); }
 
-                            document.getElementById('depoimentosContainer').innerHTML = '';
-                            if (extras.depoimentos && extras.depoimentos.length > 0) { extras.depoimentos.forEach(item => addDepoimento(item)); } else { addDepoimento(); }
+                    document.getElementById('depoimentosContainer').innerHTML = '';
+                    if (extras.depoimentos && extras.depoimentos.length > 0) { extras.depoimentos.forEach(item => addDepoimento(item)); } else { addDepoimento(); }
 
-                            document.getElementById('assinaturasContainer').innerHTML = '';
-                            if (extras.assinaturas && extras.assinaturas.length > 0) { extras.assinaturas.forEach(item => addAssinatura(item)); } else { addAssinatura(); }
-                        } catch (e) {
-                            addLider(); addLider(); addLider();
-                            addDelegadoPortaria(); addEnvolvido(); addEvidencia(); addDepoimento(); addAssinatura();
-                        }
+                    document.getElementById('assinaturasContainer').innerHTML = '';
+                    if (extras.assinaturas && extras.assinaturas.length > 0) { extras.assinaturas.forEach(item => addAssinatura(item)); } else { addAssinatura(); }
+                    } catch (e) {
+                    addLider(); addLider(); addLider();
+                    addDelegadoPortaria(); addEnvolvido(); addEvidencia(); addDepoimento(); addAssinatura();
+                    }
                     } else {
-                        addLider(); addLider(); addLider();
-                        addDelegadoPortaria(); addEnvolvido(); addEvidencia(); addDepoimento(); addAssinatura();
+                    addLider(); addLider(); addLider();
+                    addDelegadoPortaria(); addEnvolvido(); addEvidencia(); addDepoimento(); addAssinatura();
                     }
                 }
             } else {
@@ -995,9 +1094,9 @@
             return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR');
         }
 
-        // =========================================================================
+        // ====
         // GERAÇÃO DE PDF OTIMIZADA PARA IMAGENS COLADAS
-        // =========================================================================
+        // ====
         function gerarPDF() {
             const tipoSelecionado = document.querySelector('input[name="docType"]:checked').value;
             const isPortaria = (tipoSelecionado === 'portaria');
@@ -1021,7 +1120,7 @@
                 styles: {
                     headerTitle: { fontSize: 18, bold: true, alignment: 'center', margin: [0, 0, 0, 5], color: '#0f172a' },
                     docTitle: { fontSize: 14, bold: true, alignment: 'center', margin: [0, 0, 0, 20], color: '#b58d3d' },
-                    sectionHeader: { fontSize: 11, bold: true, color: '#ffffff', fillColor: '#1e293b', margin: [5, 5, 5, 5] },
+                    sectionHeader: { fontSize: 11, bold: true, color: '#ffff', fillColor: '#1e293b', margin: [5, 5, 5, 5] },
                     normalText: { fontSize: 10, margin: [0, 2, 0, 2], color: '#1e293b', lineHeight: 1.3 },
                     label: { fontSize: 10, bold: true, color: '#0f172a' },
                     assinaturaText: { fontSize: 9, italics: true, margin: [0, 0, 0, 8], color: '#475569' },
@@ -1146,17 +1245,17 @@
                     const lB64 = (previewImg && previewImg.style.display !== 'none' && previewImg.src.startsWith('data:')) ? previewImg.src : null;
                     
                     if(lNome) {
-                        arrayLideres.push({ 
-                            text: `• Líder ${String(index).padStart(2, '0')} - Nome: ${lNome} | RG: ${lRG} | Função: ${lFunc}\n  Prova/Foto: ${lLink || (lB64 ? 'Imagem Anexada Logo Abaixo' : 'N/A')}`, 
-                            style: 'normalText', 
-                            margin: [0, 0, 0, lB64 ? 4 : 6] 
-                        });
-                        
-                        if (lB64) {
-                            arrayLideres.push({ image: lB64, fit: [250, 250], margin: [10, 0, 0, 10] });
-                        }
-                        
-                        index++;
+                    arrayLideres.push({ 
+                    text: `• Líder ${String(index).padStart(2, '0')} - Nome: ${lNome} | RG: ${lRG} | Função: ${lFunc}\n  Prova/Foto: ${lLink || (lB64 ? 'Imagem Anexada Logo Abaixo' : 'N/A')}`, 
+                    style: 'normalText', 
+                    margin: [0, 0, 0, lB64 ? 4 : 6] 
+                    });
+                    
+                    if (lB64) {
+                    arrayLideres.push({ image: lB64, fit: [250, 250], margin: [10, 0, 0, 10] });
+                    }
+                    
+                    index++;
                     }
                 });
 
