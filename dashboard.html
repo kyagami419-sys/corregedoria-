@@ -146,6 +146,9 @@
                 <a href="gerador.html" class="btn btn-gold btn-sm"><i class="fas fa-plus"></i> Novo Documento</a>
             </div>
             
+            <div class="doc-category-title mt-2"><i class="fas fa-clipboard-check"></i> Procedimentos Administrativos Disciplinares (PAD)</div>
+            <div id="containerAndamentoPAD"></div>
+
             <div class="doc-category-title mt-2"><i class="fas fa-folder-open"></i> Inquéritos Policiais</div>
             <div id="containerAndamentoInqueritos"></div>
 
@@ -449,6 +452,7 @@
             const userInstNormalized = (instituicaoUsuarioLogado || '').trim().toUpperCase();
             const isPoliciaFederal = souAdmin;
 
+            const andamentoPAD = {};
             const andamentoInqueritos = {};
             const andamentoInvestigacoes = {};
             const andamentoPortarias = {};
@@ -489,7 +493,10 @@
                         qtdAndamento++;
                         if (tipoDoc !== 'Inquérito Policial') qtdOutros++;
                         
-                        if (tipoDoc === 'Portaria') {
+                        if (tipoDoc === 'PAD') {
+                            if (!andamentoPAD[forcaInq]) andamentoPAD[forcaInq] = [];
+                            andamentoPAD[forcaInq].push(item);
+                        } else if (tipoDoc === 'Portaria') {
                             if (!andamentoPortarias[forcaInq]) andamentoPortarias[forcaInq] = [];
                             andamentoPortarias[forcaInq].push(item);
                         } else if (tipoDoc === 'Intimação') {
@@ -506,6 +513,7 @@
                 });
             }
 
+            renderizarTabelasAgrupadas(andamentoPAD, 'containerAndamentoPAD', souAdmin);
             renderizarTabelasAgrupadas(andamentoInqueritos, 'containerAndamentoInqueritos', souAdmin);
             renderizarTabelasAgrupadas(andamentoInvestigacoes, 'containerAndamentoInvestigacoes', souAdmin);
             renderizarTabelasAgrupadas(andamentoPortarias, 'containerAndamentoPortarias', souAdmin);
