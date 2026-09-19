@@ -65,9 +65,13 @@
 
                 <input type="radio" class="btn-check" name="docType" id="typeIntimacao" value="intimacao" autocomplete="off" onchange="toggleFormType()">
                 <label class="btn btn-outline-gold" for="typeIntimacao">Intimação</label>
+
+                <!-- PAD - ACRESCENTADO -->
+                <input type="radio" class="btn-check" name="docType" id="typePAD" value="pad" autocomplete="off" onchange="toggleFormType()">
+                <label class="btn btn-outline-gold" for="typePAD">PAD</label>
                 
                 <input type="radio" class="btn-check" name="docType" id="typeInvestigacao" value="investigacao" autocomplete="off" onchange="toggleFormType()" style="display:none;">
-                <label class="btn btn-outline-gold" for="typeInvestigacao" id="lblInvestigacao" style="display:none;">Investigações</label>
+                <label class="btn btn-outline-gold" for="typeInvestigacao" id="lblInvestigacao">Investigações</label>
             </div>
 
             <!-- BLOCO DE INVESTIGAÇÃO -->
@@ -242,6 +246,35 @@
                             <img class="preview-img mt-1" id="preview_invComFotoRoupas" style="max-width: 100%; max-height: 50px; display: none; border-radius: 4px;" src="">
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- BLOCO PAD - ACRESCENTADO -->
+            <div id="blocoPAD" style="display: none;">
+                <div class="form-section">
+                    <h4 class="section-title">Dados da PAD</h4>
+                    <div class="row g-2">
+                        <div class="col-md-4"><label class="form-label">Data</label><input type="datetime-local" id="padData" class="form-control"></div>
+                        <div class="col-md-4"><label class="form-label">Nome da PAD</label><input type="text" id="padNome" class="form-control" placeholder="Ex: PAD 001/2026"></div>
+                        <div class="col-md-4"><label class="form-label">Responsável pela PAD</label><input type="text" id="padResponsavel" class="form-control" placeholder="Nome do responsável"></div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h4 class="section-title">Envolvidos</h4>
+                    <div id="padEnvolvidosContainer"></div>
+                    <button type="button" class="btn btn-add mt-2" onclick="addPadEnvolvido()"><i class="fas fa-plus"></i> Adicionar Envolvido</button>
+                </div>
+
+                <div class="form-section">
+                    <h4 class="section-title">Provas / Evidências</h4>
+                    <div id="padEvidenciasContainer"></div>
+                    <button type="button" class="btn btn-add mt-2" onclick="addPadEvidencia()"><i class="fas fa-plus"></i> Adicionar Evidência</button>
+                </div>
+
+                <div class="form-section">
+                    <h4 class="section-title">Texto da PAD</h4>
+                    <textarea id="padTexto" class="form-control" rows="12" placeholder="Escreva aqui o conteúdo completo da PAD..."></textarea>
                 </div>
             </div>
 
@@ -494,10 +527,12 @@
             const isIntimacao = (tipoSelecionado === 'intimacao');
             const isInvestigacao = (tipoSelecionado === 'investigacao');
             const isInquerito = (tipoSelecionado === 'inquerito');
+            const isPAD = (tipoSelecionado === 'pad');
 
             document.getElementById('blocoPortaria').style.display = isPortaria ? 'block' : 'none';
             document.getElementById('blocoIntimacao').style.display = isIntimacao ? 'block' : 'none';
             document.getElementById('blocoInvestigacao').style.display = isInvestigacao ? 'block' : 'none';
+            document.getElementById('blocoPAD').style.display = isPAD ? 'block' : 'none';
             document.getElementById('blocoInquerito').style.display = isInquerito ? 'block' : 'none';
             document.getElementById('blocoForcaPolicial').style.display = (isInquerito || isInvestigacao) ? 'block' : 'none';
         }
@@ -653,6 +688,34 @@
             container.appendChild(row);
         }
 
+        // =========================================================================
+        // PAD - CAMPOS DINÂMICOS (ACRESCENTADO)
+        // =========================================================================
+        function addPadEnvolvido(dados = {}) {
+            const container = document.getElementById('padEnvolvidosContainer');
+            if(!container) return;
+            const row = document.createElement('div');
+            row.className = 'row g-2 dynamic-row';
+            row.innerHTML = `
+                <div class="col-md-5"><input type="text" class="form-control i-padEnvNome" placeholder="Nome do envolvido" value="${dados.nome || ''}"></div>
+                <div class="col-md-3"><input type="text" class="form-control i-padEnvRG" placeholder="RG / ID" value="${dados.rg || ''}"></div>
+                <div class="col-md-3"><input type="text" class="form-control i-padEnvCargo" placeholder="Cargo / Patente" value="${dados.cargo || ''}"></div>
+                <div class="col-md-1"><button type="button" class="btn btn-danger btn-sm w-100" onclick="this.parentElement.parentElement.remove()"><i class="fas fa-trash"></i></button></div>`;
+            container.appendChild(row);
+        }
+
+        function addPadEvidencia(dados = {}) {
+            const container = document.getElementById('padEvidenciasContainer');
+            if(!container) return;
+            const row = document.createElement('div');
+            row.className = 'row g-2 dynamic-row';
+            row.innerHTML = `
+                <div class="col-md-3"><input type="text" class="form-control i-padProvaNome" placeholder="Nome / descrição" value="${dados.nome || ''}"></div>
+                <div class="col-md-8"><input type="text" class="form-control i-padProvaLink" placeholder="Link da prova" value="${dados.link || ''}"></div>
+                <div class="col-md-1"><button type="button" class="btn btn-danger btn-sm w-100" onclick="this.parentElement.parentElement.remove()"><i class="fas fa-trash"></i></button></div>`;
+            container.appendChild(row);
+        }
+
         function addDepoimento(dados = {}) {
             const container = document.getElementById('depoimentosContainer');
             if(!container) return;
@@ -729,6 +792,12 @@
                 nat = document.getElementById('invCrimes')?.value || 'Investigação Registrada';
                 dtInit = document.getElementById('invData')?.value || null; 
                 enc = document.getElementById('invResponsavel')?.value || 'Não informado'; 
+            } else if (tipoSelecionado === 'pad') {
+                tipoDoc = 'PAD';
+                numDoc = document.getElementById('padNome')?.value || 'S/N';
+                nat = document.getElementById('padTexto')?.value || 'Procedimento Administrativo Disciplinar';
+                dtInit = document.getElementById('padData')?.value || null;
+                enc = document.getElementById('padResponsavel')?.value || 'Não informado';
             }
 
             let delegados = []; document.querySelectorAll('#delegadosPortariaContainer .dynamic-row').forEach(row => { delegados.push({ nome: row.querySelector('.i-delNome').value, mat: row.querySelector('.i-delMat').value }); });
@@ -736,6 +805,9 @@
             let evidencias = []; document.querySelectorAll('#evidenciasContainer .dynamic-row').forEach(row => { evidencias.push({ nome: row.querySelector('.i-provaNome').value, link: row.querySelector('.i-provaLink').value }); });
             let depoimentos = []; document.querySelectorAll('#depoimentosContainer .dynamic-row').forEach(row => { depoimentos.push({ nome: row.querySelector('.i-depNome').value, link: row.querySelector('.i-depLink').value }); });
             let assinaturas = []; document.querySelectorAll('#assinaturasContainer .dynamic-row').forEach(row => { assinaturas.push({ nome: row.querySelector('.i-assNome').value, cargo: row.querySelector('.i-assCargo').value }); });
+
+            let padEnvolvidos = []; document.querySelectorAll('#padEnvolvidosContainer .dynamic-row').forEach(row => { padEnvolvidos.push({ nome: row.querySelector('.i-padEnvNome').value, rg: row.querySelector('.i-padEnvRG').value, cargo: row.querySelector('.i-padEnvCargo').value }); });
+            let padEvidencias = []; document.querySelectorAll('#padEvidenciasContainer .dynamic-row').forEach(row => { padEvidencias.push({ nome: row.querySelector('.i-padProvaNome').value, link: row.querySelector('.i-padProvaLink').value }); });
 
             let lideres = [];
             document.querySelectorAll('#liderancaContainer .dynamic-row').forEach(row => {
@@ -807,7 +879,15 @@
                 invComFotoArmados: document.getElementById('invComFotoArmados')?.value || '',
                 b64_invComFotoArmados: getB64('invComFotoArmados'),
                 invComFotoRoupas: document.getElementById('invComFotoRoupas')?.value || '',
-                b64_invComFotoRoupas: getB64('invComFotoRoupas')
+                b64_invComFotoRoupas: getB64('invComFotoRoupas'),
+
+                // PAD - ACRESCENTADO
+                padData: document.getElementById('padData')?.value || '',
+                padNome: document.getElementById('padNome')?.value || '',
+                padResponsavel: document.getElementById('padResponsavel')?.value || '',
+                padEnvolvidos: padEnvolvidos,
+                padEvidencias: padEvidencias,
+                padTexto: document.getElementById('padTexto')?.value || ''
             };
 
             const dadosDoc = {
@@ -882,6 +962,12 @@
                         toggleFormType();
                         document.getElementById('invNum').value = data.numero || '';
                         document.getElementById('invCrimes').value = data.natureza || '';
+                    } else if (data.tipo === 'PAD') {
+                        document.getElementById('typePAD').checked = true;
+                        toggleFormType();
+                        document.getElementById('padNome').value = data.numero || '';
+                        document.getElementById('padData').value = data.data_inicio || '';
+                        document.getElementById('padResponsavel').value = data.encarregado || '';
                     } else {
                         document.getElementById('typeInquerito').checked = true;
                         toggleFormType();
@@ -956,6 +1042,19 @@
                                 loadField('invComFotoRoupas', extras.invComFotoRoupas, extras.b64_invComFotoRoupas);
                             }
 
+                            if(data.tipo === 'PAD') {
+                                document.getElementById('padData').value = extras.padData || data.data_inicio || '';
+                                document.getElementById('padNome').value = extras.padNome || data.numero || '';
+                                document.getElementById('padResponsavel').value = extras.padResponsavel || data.encarregado || '';
+                                document.getElementById('padTexto').value = extras.padTexto || data.natureza || '';
+
+                                document.getElementById('padEnvolvidosContainer').innerHTML = '';
+                                if (extras.padEnvolvidos && extras.padEnvolvidos.length > 0) { extras.padEnvolvidos.forEach(item => addPadEnvolvido(item)); } else { addPadEnvolvido(); }
+
+                                document.getElementById('padEvidenciasContainer').innerHTML = '';
+                                if (extras.padEvidencias && extras.padEvidencias.length > 0) { extras.padEvidencias.forEach(item => addPadEvidencia(item)); } else { addPadEvidencia(); }
+                            }
+
                             document.getElementById('delegadosPortariaContainer').innerHTML = '';
                             if (extras.delegados && extras.delegados.length > 0) { extras.delegados.forEach(item => addDelegadoPortaria(item)); } else { addDelegadoPortaria(); }
 
@@ -970,18 +1069,27 @@
 
                             document.getElementById('assinaturasContainer').innerHTML = '';
                             if (extras.assinaturas && extras.assinaturas.length > 0) { extras.assinaturas.forEach(item => addAssinatura(item)); } else { addAssinatura(); }
+
+                            if (data.tipo !== 'PAD') {
+                                document.getElementById('padEnvolvidosContainer').innerHTML = '';
+                                document.getElementById('padEvidenciasContainer').innerHTML = '';
+                                addPadEnvolvido(); addPadEvidencia();
+                            }
                         } catch (e) {
                             addLider(); addLider(); addLider();
                             addDelegadoPortaria(); addEnvolvido(); addEvidencia(); addDepoimento(); addAssinatura();
+                            addPadEnvolvido(); addPadEvidencia();
                         }
                     } else {
                         addLider(); addLider(); addLider();
                         addDelegadoPortaria(); addEnvolvido(); addEvidencia(); addDepoimento(); addAssinatura();
+                        addPadEnvolvido(); addPadEvidencia();
                     }
                 }
             } else {
                 addLider(); addLider(); addLider(); 
                 addDelegadoPortaria(); addEnvolvido(); addEvidencia(); addDepoimento(); addAssinatura();
+                addPadEnvolvido(); addPadEvidencia();
             }
         };
 
@@ -1003,6 +1111,7 @@
             const isPortaria = (tipoSelecionado === 'portaria');
             const isIntimacao = (tipoSelecionado === 'intimacao');
             const isInvestigacao = (tipoSelecionado === 'investigacao');
+            const isPAD = (tipoSelecionado === 'pad');
             
             const dataHoraAtual = formatDatetime(new Date());
             let arrayAssinaturas = [];
@@ -1119,6 +1228,46 @@
                     { text: motivo, style: 'normalText', margin: [0, 5, 0, 30], alignment: 'justify' },
                     buildSectionHeader('ASSINATURAS'),
                     ...arrayAssinaturas
+                ];
+            }
+            else if (isPAD) {
+                const nomePAD = document.getElementById('padNome').value || 'S/N';
+                const dataPAD = document.getElementById('padData').value || '';
+                const responsavelPAD = document.getElementById('padResponsavel').value || 'Não informado';
+                const textoPAD = document.getElementById('padTexto').value || 'Nenhum texto informado.';
+
+                let arrayPadEnvolvidos = [];
+                document.querySelectorAll('#padEnvolvidosContainer .dynamic-row').forEach(row => {
+                    const nome = row.querySelector('.i-padEnvNome').value || 'Não informado';
+                    const rg = row.querySelector('.i-padEnvRG').value || '***';
+                    const cargo = row.querySelector('.i-padEnvCargo').value || 'Não informado';
+                    arrayPadEnvolvidos.push({ text: `• ${nome} | RG/ID: ${rg} | Cargo/Patente: ${cargo}`, style: 'normalText' });
+                });
+
+                let arrayPadEvidencias = [];
+                document.querySelectorAll('#padEvidenciasContainer .dynamic-row').forEach(row => {
+                    const nome = row.querySelector('.i-padProvaNome').value;
+                    const link = row.querySelector('.i-padProvaLink').value;
+                    if(nome || link) arrayPadEvidencias.push({ text: `• ${nome || 'Prova'}: ${link || 'Sem link informado'}`, style: 'normalText' });
+                });
+
+                nomeArquivo = `PAD_${nomePAD.replace(/\//g, '-').replace(/\s+/g, '_')}.pdf`;
+
+                docDefinition.content = [
+                    { text: forcaSelecionada.toUpperCase(), style: 'headerTitle' },
+                    { text: 'PROCEDIMENTO ADMINISTRATIVO DISCIPLINAR - PAD', style: 'docTitle' },
+                    buildSectionHeader('DADOS DA PAD'),
+                    { text: [{text:'Nome da PAD: ', style:'label'}, nomePAD], style: 'normalText' },
+                    { text: [{text:'Data: ', style:'label'}, formatDatetime(dataPAD)], style: 'normalText' },
+                    { text: [{text:'Responsável: ', style:'label'}, responsavelPAD], style: 'normalText' },
+                    buildSectionHeader('ENVOLVIDOS'),
+                    (arrayPadEnvolvidos.length > 0 ? arrayPadEnvolvidos : { text: 'Nenhum envolvido registrado.', style: 'normalText' }),
+                    buildSectionHeader('PROVAS / EVIDÊNCIAS'),
+                    (arrayPadEvidencias.length > 0 ? arrayPadEvidencias : { text: 'Nenhuma prova registrada.', style: 'normalText' }),
+                    buildSectionHeader('PAD'),
+                    { text: textoPAD, style: 'normalText', alignment: 'justify' },
+                    buildSectionHeader('ASSINATURAS'),
+                    (arrayAssinaturas.length > 0 ? arrayAssinaturas : { text: 'Nenhuma assinatura registrada.', style: 'assinaturaText' })
                 ];
             }
             else if (isInvestigacao) {
